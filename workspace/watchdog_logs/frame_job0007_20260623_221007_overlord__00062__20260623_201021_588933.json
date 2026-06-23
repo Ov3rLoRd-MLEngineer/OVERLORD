@@ -1,0 +1,16 @@
+{
+  "shot_id": "job0007_20260623_221007_overlord__00062_",
+  "verdict": "FAIL",
+  "passed": false,
+  "issues": [
+    "Zone noire excessive : 45%"
+  ],
+  "metrics": {
+    "dimensions": "1344x1984",
+    "sharpness": 4082.3,
+    "brightness": 46.7,
+    "color_diversity": 61.2,
+    "black_pct": 44.6,
+    "white_pct": 0.4
+  }
+}

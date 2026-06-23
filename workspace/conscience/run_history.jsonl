@@ -51,3 +51,5 @@
 {"timestamp": "2026-06-23T17:26:54.609705", "run_id": "maestro_20260623_172555", "health": "STABLE", "blocs_ok": 3, "score_moyen": 80.0, "critic_checks": 3, "duration_s": 53.8, "errors": [], "media_type": "anime"}
 {"timestamp": "2026-06-23T17:37:02.429475", "run_id": "maestro_20260623_173635", "health": "UNKNOWN", "blocs_ok": 5, "score_moyen": 0, "critic_checks": 0, "duration_s": 20.9, "errors": [], "media_type": "anime"}
 {"timestamp": "2026-06-23T17:53:58.737576", "run_id": "maestro_20260623_174628", "health": "STABLE", "blocs_ok": 6, "score_moyen": 80.0, "critic_checks": 4, "duration_s": 448.8, "errors": [], "media_type": "anime"}
+{"timestamp": "2026-06-23T21:53:41.336974", "run_id": "maestro_20260623_215305", "health": "STABLE", "blocs_ok": 4, "score_moyen": 80.0, "critic_checks": 3, "duration_s": 35.7, "errors": [], "media_type": "anime"}
+{"timestamp": "2026-06-23T22:11:05.883526", "run_id": "maestro_20260623_220259", "health": "STABLE", "blocs_ok": 6, "score_moyen": 80.0, "critic_checks": 4, "duration_s": 480.4, "errors": [], "media_type": "anime"}

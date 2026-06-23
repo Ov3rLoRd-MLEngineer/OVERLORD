@@ -1,8 +1,8 @@
 {
   "project_id": "anime_evangelion_battle_asuka",
-  "run_id": "maestro_20260623_174628",
-  "created_at": "2026-06-23T15:46:29.535812+00:00",
-  "updated_at": "2026-06-23T15:53:58.724611+00:00",
+  "run_id": "maestro_20260623_220259",
+  "created_at": "2026-06-23T20:03:00.250495+00:00",
+  "updated_at": "2026-06-23T20:11:05.872720+00:00",
   "state": "completed",
   "config": {
     "media_type": "anime",
@@ -13,11 +13,11 @@
     "strength": 1.0,
     "width": 1024,
     "height": 1536,
-    "narrative_context": "## Narrative Continuity Context\n\n### Established Characters\n- **The Mysterious Detective**: Antagonist-turned-ally: A detective who knows more about Asuka's past than he sh\n- **Conan Edogawa**: Detective, Asuka's ally: \n\n### Previous Episodes (most recent first)\n- **Evangelion Battle: Asuka - The Detective's Puzzle**: Asuka Langley Soryu, a troubled Evangelion pilot, teams up with a detective to unravel the mystery b\n- **evangelion battle asuka: New Chapter**: A new story unfolds in the world of evangelion battle asuka.\n- **Evangelion: Asuka's Standoff**: In the midst of the Third Impact, Asuka pilots her mecha against a new menace while also dealing wit\n\n### Continuity Rules\n- Keep character personalities consistent with established profiles\n- Reference or build upon previous events if dramatically relevant\n- Maintain visual style consistency (same universe aesthetic)\n"
+    "narrative_context": "## Narrative Continuity Context\n\n### Established Characters\n- **The Mysterious Detective**: Antagonist-turned-ally: A detective who knows more about Asuka's past than he sh\n- **Conan Edogawa**: Detective, Asuka's ally: \n\n### Previous Episodes (most recent first)\n- **evangelion battle asuka: New Chapter**: A new story unfolds in the world of evangelion battle asuka.\n- **Evangelion Battle: Asuka - The Detective's Puzzle**: Asuka Langley Soryu, a troubled Evangelion pilot, teams up with a detective to unravel the mystery b\n- **evangelion battle asuka: New Chapter**: A new story unfolds in the world of evangelion battle asuka.\n\n### Continuity Rules\n- Keep character personalities consistent with established profiles\n- Reference or build upon previous events if dramatically relevant\n- Maintain visual style consistency (same universe aesthetic)\n"
   },
   "data": {
     "sourcing": {
-      "generated_at": "2026-06-23T15:47:02.670442+00:00",
+      "generated_at": "2026-06-23T20:03:16.694379+00:00",
       "media_type": "anime",
       "top_reddit": [],
       "top_rss": [
@@ -57,7 +57,38 @@
           "date": "Thu, 11 Jun 2026 15:00:00 GMT"
         }
       ],
-      "top_trends": [],
+      "top_trends": [
+        {
+          "keyword": "dragon ball",
+          "avg_interest": 44,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "webtoon",
+          "avg_interest": 25,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "comic book",
+          "avg_interest": 2,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "anime 2025",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "manga trending",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        }
+      ],
       "hot_keywords": [
         "episode",
         "anime",
@@ -79,94 +110,54 @@
       "raw_count": {
         "reddit": 0,
         "rss": 60,
-        "trends": 0
+        "trends": 7
       }
     },
     "scenario": {
-      "title": "Evangelion: Battle Asuka - The Crimson Detective",
-      "logline": "Asuka Sohryu Langley Shikinami joins forces with a mysterious detective to unravel a conspiracy that threatens the future of humanity.",
+      "title": "Evangelion Battle Asuka: The Detective's Conundrum",
+      "logline": "In a world on the brink of disaster, Asuka uncovers a hidden threat that could alter the fate of humanity forever.",
       "genre": [
         "Action",
-        "Mystery",
-        "Sci-fi"
+        "Drama",
+        "Mystery"
       ],
-      "media_type": "Animated Series",
-      "duration_estimate": "6 episodes",
-      "target_audience": "14-25 years old",
-      "synopsis": "In the aftermath of the Second Impact, NERV recruits Asuka Sohryu Langley Shikinami to pilot an Evangelion unit. While adapting to her new life, she encounters a secret society planning to exploit the power of the Angels for their own gain. To unravel this conspiracy, Asuka teams up with a mysterious detective with connections to her past.",
+      "media_type": "Anime - Short Episode",
+      "duration_estimate": "22 minutes",
+      "target_audience": "Teenagers and Young Adults",
+      "synopsis": "As the Third Child of NERV, Asuka struggles to maintain her composure amidst the constant battles against Angels. However, when a mysterious artifact appears, she takes it upon herself to unravel its secrets with the help of a local detective, ultimately leading them both on an adventure that will test their courage and resolve.",
       "acts": {
-        "Act1": [
-          {
-            "scene": "Asuka joins NERV and meets other pilots"
-          },
-          {
-            "scene": "Asuka's first mission in an Evangelion unit goes awry"
-          }
+        "Act 1": [
+          "Introduction to Asuka's daily life",
+          "Discovery of the artifact",
+          "Meeting the detective"
         ],
-        "Act2": [
-          {
-            "scene": "Asuka encounters the detective, who offers help"
-          },
-          {
-            "scene": "Asuka and the detective uncover a secret society's plan"
-          }
+        "Act 2": [
+          "Investigation begins",
+          "Reveal of the artifact's power",
+          "Danger escalates"
         ],
-        "Act3": [
-          {
-            "scene": "The secret society attacks NERV, Asuka and her allies fight back"
-          },
-          {
-            "scene": "Asuka confronts the leader of the secret society in an epic battle"
-          }
-        ],
-        "Act4": [
-          {
-            "scene": "The conspiracy is unraveled, the Angels' true purpose is revealed"
-          },
-          {
-            "scene": "Asuka and her allies prepare for the next battle"
-          }
-        ],
-        "Act5": [
-          {
-            "scene": "Final battle against a powerful Angel"
-          },
-          {
-            "scene": "Asuka and her allies secure a victory, but at a cost"
-          }
+        "Act 3": [
+          "Clash with the antagonist",
+          "Resolution of the mystery",
+          "Conclusion and implications for Asuka's future"
         ]
       },
       "characters": {
-        "Asuka Sohryu Langley Shikinami": {
-          "role": "Protagonist, Eva pilot"
-        },
-        "Mysterious Detective": {
-          "role": "Ally, Asuka's partner in the investigation"
-        },
-        "Ritsuko Akagi": {
-          "role": "NERV researcher, secondary character"
-        },
-        "Misato Katsuragi": {
-          "role": "Commander of NERV, secondary character"
-        }
+        "Asuka Langley Soryu": "Evangelion Pilot, strong-willed, emotional",
+        "Detective Conan": "Genius detective with supernatural abilities",
+        "Gendo Ikari": "NERV Commander, Asuka's father figure",
+        "Misato Katsuragi": "Asuka's Commanding Officer"
       },
-      "visual_style": "Combines detailed mecha designs with distinctive character features, inspired by classic Shonen styles.",
+      "visual_style": "Highly detailed and vibrant anime art style, similar to popular Shonen series",
       "color_palette": [
-        "Crimson red, metallic silver, navy blue"
+        "Vibrant reds, deep blues, electric yellows"
       ],
-      "music_mood": "Epic orchestral score with modern electronic elements to heighten action scenes",
-      "transmedia_notes": [
-        {
-          "note": "Potential for spin-offs featuring the detective character's backstory"
-        },
-        {
-          "note": "Opportunities for merchandise and collaboration with Crunchyroll"
-        }
-      ],
+      "music_mood": "Energetic, suspenseful, emotional",
+      "transmedia_notes": "Potential for tie-ins with Crunchyroll and merchandise centered around the mystery artifact",
       "_meta": {
-        "final_score": 85,
+        "final_score": 78,
         "iterations": 1,
-        "saved_to": "workspace\\scripts\\20260623_154717_Evangelion:_Battle_Asuka_-_The_Crimson_D.json",
+        "saved_to": "workspace\\scripts\\20260623_200329_Evangelion_Battle_Asuka:_The_Detective's.json",
         "fallback": false
       },
       "universe": "evangelion battle asuka"
@@ -184,6 +175,6 @@
   "errors": [],
   "metadata": {
     "hostname": "DESKTOP-5NVH4BN",
-    "python": "3.12.10"
+    "python": "3.12.3"
   }
 }

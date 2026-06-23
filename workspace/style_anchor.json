@@ -1,8 +1,8 @@
 {
-  "run_id": "maestro_20260623_174628",
+  "run_id": "maestro_20260623_220259",
   "emotion_arc": "wonder",
-  "base_seed": 32589,
-  "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+  "base_seed": 61315,
+  "lora": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
   "palette": [
     "vibrant blue",
     "golden yellow",

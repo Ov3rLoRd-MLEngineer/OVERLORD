@@ -298,5 +298,25 @@
     "score": 85,
     "report_json": "workspace\\reports\\20260623_175358_maestro_20260623_174628.json",
     "report_md": "workspace\\reports\\20260623_175358_maestro_20260623_174628.md"
+  },
+  {
+    "run_id": "maestro_20260623_215305",
+    "timestamp": "2026-06-23T21:53:41.260589",
+    "scenario": "evangelion battle asuka: New Chapter",
+    "images": 644,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260623_215341_maestro_20260623_215305.json",
+    "report_md": "workspace\\reports\\20260623_215341_maestro_20260623_215305.md"
+  },
+  {
+    "run_id": "maestro_20260623_220259",
+    "timestamp": "2026-06-23T22:11:00.791744",
+    "scenario": "Evangelion Battle Asuka: The Detective's Conundrum",
+    "images": 708,
+    "video": true,
+    "score": 78,
+    "report_json": "workspace\\reports\\20260623_221100_maestro_20260623_220259.json",
+    "report_md": "workspace\\reports\\20260623_221100_maestro_20260623_220259.md"
   }
 ]

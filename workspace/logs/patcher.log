@@ -757,3 +757,9 @@ Le probleme : llama3 enveloppe souvent le JSON dans du texte conversationnel.
 [2026-06-23 18:04:21] [INFO] ── [FIND_REPLACE] agents/style_continuity.py
 [2026-06-23 18:04:21] [INFO]   Backup → workspace\patch_backups\style_continuity.py.20260623_180421.bak
 [2026-06-23 18:04:21] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/style_continuity.py
+[2026-06-23 21:52:51] [ERR ] Bundle introuvable : patch_bundle_director_universe.txt
+[2026-06-23 21:56:47] [INFO] Format bundle détecté : find_replace
+[2026-06-23 21:56:47] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 21:56:47] [INFO] ── [FIND_REPLACE] agents/director.py
+[2026-06-23 21:56:47] [INFO]   Backup → workspace\patch_backups\director.py.20260623_215647.bak
+[2026-06-23 21:56:47] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/director.py

@@ -1,0 +1,9 @@
+==== FILE: agents/director.py ====
+==== FIND ====
+            self.bus.write("director.creative_risk",   intent.creative_risk,       agent_id="director", confidence=0.8)
+            self.log.info(f"[DIRECTOR] ✓ Intention publiée sur context_bus (9 clés)")
+==== REPLACE ====
+            self.bus.write("director.creative_risk",   intent.creative_risk,       agent_id="director", confidence=0.8)
+            self.bus.write("director.universe",        self.series,                agent_id="director", confidence=1.0)
+            self.log.info(f"[DIRECTOR] ✓ Intention publiée sur context_bus (10 clés)")
+==== END ====

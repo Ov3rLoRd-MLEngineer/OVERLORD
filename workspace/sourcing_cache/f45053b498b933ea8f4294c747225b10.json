@@ -14,13 +14,13 @@
     },
     {
       "keyword": "dragon ball",
-      "avg_interest": 48,
+      "avg_interest": 44,
       "geo": "FR",
       "source": "google_trends"
     },
     {
       "keyword": "webtoon",
-      "avg_interest": 27,
+      "avg_interest": 25,
       "geo": "FR",
       "source": "google_trends"
     },
@@ -31,5 +31,5 @@
       "source": "google_trends"
     }
   ],
-  "_ts": 1782182257.2600656
+  "_ts": 1782244991.689924
 }

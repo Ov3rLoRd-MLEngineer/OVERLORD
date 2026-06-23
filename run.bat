@@ -4,5 +4,4 @@
 ::   run.bat --media-type anime --universe "evangelion battle asuka"
 ::   run.bat --media-type anime --universe "evangelion battle asuka" --no-qc
 ::   run.bat --bible --media-type anime --universe "evangelion battle asuka"
-::   run.bat --no-qc --media-type anime --universe "evangelion battle asuka" --batch 3
-py -3.12 maestro.py %*
+C:\Users\Ov3rL0rD\AppData\Local\Programs\Python\Python312\python.exe maestro.py %*

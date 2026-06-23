@@ -351,7 +351,8 @@ class Director:
             self.bus.write("director.world_context",   intent.world_context,       agent_id="director", confidence=0.8)
             self.bus.write("director.personality_lead",intent.personality_lead,    agent_id="director", confidence=0.9)
             self.bus.write("director.creative_risk",   intent.creative_risk,       agent_id="director", confidence=0.8)
-            self.log.info(f"[DIRECTOR] ✓ Intention publiée sur context_bus (9 clés)")
+            self.bus.write("director.universe",        self.series,                agent_id="director", confidence=1.0)
+            self.log.info(f"[DIRECTOR] ✓ Intention publiée sur context_bus (10 clés)")
         except Exception as e:
             self.log.warning(f"[DIRECTOR] Publication bus : {e}")
 
