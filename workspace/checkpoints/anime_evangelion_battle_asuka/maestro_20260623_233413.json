@@ -1,0 +1,217 @@
+{
+  "project_id": "anime_evangelion_battle_asuka",
+  "run_id": "maestro_20260623_233413",
+  "created_at": "2026-06-23T21:34:14.458760+00:00",
+  "updated_at": "2026-06-23T21:39:30.665999+00:00",
+  "state": "completed",
+  "config": {
+    "media_type": "anime",
+    "episode": 1,
+    "universe": "evangelion battle asuka",
+    "no_qc": true,
+    "openpose_path": "workspace\\poses\\asuka_skeleton.png",
+    "duration": "short",
+    "strength": 1.0,
+    "width": 1024,
+    "height": 1536,
+    "narrative_context": "## Narrative Continuity Context\n\n### Established Characters\n- **The Mysterious Detective**: Antagonist-turned-ally: A detective who knows more about Asuka's past than he sh\n- **Conan Edogawa**: Detective, Asuka's ally: \n\n### Previous Episodes (most recent first)\n- **evangelion battle asuka: New Chapter**: A new story unfolds in the world of evangelion battle asuka.\n- **Evangelion Battle: Asuka - The Detective's Puzzle**: Asuka Langley Soryu, a troubled Evangelion pilot, teams up with a detective to unravel the mystery b\n- **evangelion battle asuka: New Chapter**: A new story unfolds in the world of evangelion battle asuka.\n\n### Continuity Rules\n- Keep character personalities consistent with established profiles\n- Reference or build upon previous events if dramatically relevant\n- Maintain visual style consistency (same universe aesthetic)\n"
+  },
+  "data": {
+    "sourcing": {
+      "generated_at": "2026-06-23T21:34:22.587786+00:00",
+      "media_type": "anime",
+      "top_reddit": [],
+      "top_rss": [
+        {
+          "source": "rss/crunchyroll",
+          "title": "Detective Conan - Episode 1204 - Who Kidnapped Conan and Azusa? (Part One)",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire3-tmb/51920b05b811656f1204b6f47f66607c1781546286_thumb.jpg\" /><br />Conan and Azusa vanish while being followed by some suspicious people.",
+          "link": "http://www.crunchyroll.com/fr/watch/G2XUN0DPZ/who-kidnapped-conan-and-azusa-part-one",
+          "date": "Sat, 20 Jun 2026 11:30:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Crunchyroll Presents: The Anime Effect Season 2 - Episode 65 - Black Clover Bombshells, Marvel Manga Returns and Dr. STONE in Fortnite?!",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire3-tmb/ea762f1b323d25df69a47154b73aed341781841998_thumb.jpg\" /><br />It's another big week for anime news, y'all! We're breaking down the headlines this week including news on Marvel’s Mangaverse returning, Dr. STONE coming to Fortnite and a Code Lyoko",
+          "link": "http://www.crunchyroll.com/fr/watch/G31UVXZ7W/black-clover-bombshells-marvel-manga-returns-and-dr-stone-in-fortnite",
+          "date": "Fri, 19 Jun 2026 23:00:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Detective Conan - Episode 1203 - Sonoko and Conan's Spooky Story Night",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire1-tmb/e69af475fd5dc5330cab92d75f6dee501780614578_thumb.jpg\" /><br />Conan and Sonoko are attacked by a Hannya and get lost in the woods.",
+          "link": "http://www.crunchyroll.com/fr/watch/GPWU8KD23/sonoko-and-conans-spooky-story-night",
+          "date": "Sat, 13 Jun 2026 11:30:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Crunchyroll Presents: The Anime Effect Season 2 - Episode 64 - Anime Expo, Persona 6, and the Anime Moments We’ll NEVER Forget",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire2-tmb/ac860fc3c155900f1ee0ab2317a4114a1781224933_thumb.jpg\" /><br />Anime is bigger than EVER, so The Anime Effect is breaking down why 1 in 5 Americans now watch it. PLUS, the hosts unpack huge Anime Expo updates, recent gaming reveals like Persona 6",
+          "link": "http://www.crunchyroll.com/fr/watch/GVWU804P4/anime-expo-persona-6-and-the-anime-moments-well-never-forget",
+          "date": "Fri, 12 Jun 2026 23:00:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Mr. Osomatsu 4th season - Episode 13 - The Matsuno Ten",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire2-tmb/286cd57beab31d4bc7bb02beab0ed4221781031008_thumb.jpg\" /><br />The sextuplets and their friends take part in a music program.",
+          "link": "http://www.crunchyroll.com/fr/watch/G0DUMNJ5V/the-matsuno-ten",
+          "date": "Thu, 11 Jun 2026 15:00:00 GMT"
+        }
+      ],
+      "top_trends": [
+        {
+          "keyword": "dragon ball",
+          "avg_interest": 42,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "webtoon",
+          "avg_interest": 24,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "comic book",
+          "avg_interest": 1,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "anime 2025",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "manga trending",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        }
+      ],
+      "hot_keywords": [
+        "episode",
+        "anime",
+        "season",
+        "conan",
+        "crunchyroll",
+        "presents",
+        "effect",
+        "detective",
+        "news",
+        "1204",
+        "kidnapped",
+        "azusa",
+        "part",
+        "black",
+        "clover"
+      ],
+      "brief": "Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts viraux : N/A.",
+      "raw_count": {
+        "reddit": 0,
+        "rss": 60,
+        "trends": 7
+      }
+    },
+    "scenario": {
+      "title": "Evangelion Battle: Asuka",
+      "logline": "Asuka faces her darkest demons as she battles an Angel and confronts a psychological crisis within NERV's walls.",
+      "genre": [
+        "Action",
+        "Drama",
+        "Sci-Fi"
+      ],
+      "media_type": "Anime Series",
+      "duration_estimate": "Short (5 episodes)",
+      "target_audience": "Teen & Young Adult",
+      "synopsis": "In the heart of Tokyo-3, Asuka grapples with her inner turmoil as she pilots Unit-02 against formidable Angels. As NERV braces for another impending attack, Asuka's sync ratio falters, pushing her to the brink of madness. With help from unlikely allies and a newfound determination, she must conquer her demons and protect humanity.",
+      "acts": [
+        {
+          "act_number": "1",
+          "scenes": [
+            "Asuka's LCL dream sequence",
+            "NERV briefing on the incoming Angel",
+            "Asuka's psychological evaluation",
+            "Unit-02 preparations"
+          ]
+        },
+        {
+          "act_number": "2",
+          "scenes": [
+            "Angel attack",
+            "EVA unit combat",
+            "Asuka's sync ratio drops",
+            "Rei attempts to aid Asuka"
+          ]
+        },
+        {
+          "act_number": "3",
+          "scenes": [
+            "Asuka confronts her inner demons",
+            "Shinji offers support",
+            "Misato gives Asuka a pep talk",
+            "Asuka regains control of Unit-02"
+          ]
+        },
+        {
+          "act_number": "4",
+          "scenes": [
+            "Final Angel battle",
+            "Asuka's sync ratio fluctuates",
+            "Gendo intervenes",
+            "EVA unit victory"
+          ]
+        },
+        {
+          "act_number": "5",
+          "scenes": [
+            "Aftermath of the battle",
+            "Asuka reflects on her journey",
+            "Closing NERV meeting",
+            "Asuka looks to the future with renewed resolve"
+          ]
+        }
+      ],
+      "characters": [
+        "Asuka Langley Soryu",
+        "Rei Ayanami (optional)",
+        "Shinji Ikari (optional)",
+        "Misato Katsuragi",
+        "Gendo Ikari"
+      ],
+      "visual_style": "Hideaki Anno direction, bold colors, psychological tension, dramatic lighting",
+      "color_palette": [
+        "Neon blues and reds",
+        "Shadows and grays for psychological scenes"
+      ],
+      "music_mood": [
+        "Intense action themes",
+        "Emotional ballads",
+        "Techno beats for battle sequences"
+      ],
+      "transmedia_notes": "Potential spin-off manga, merchandise featuring Asuka, soundtrack album release on Crunchyroll",
+      "_meta": {
+        "final_score": 85,
+        "iterations": 1,
+        "saved_to": "workspace\\scripts\\20260623_213436_Evangelion_Battle:_Asuka.json",
+        "fallback": false
+      },
+      "universe": "evangelion battle asuka"
+    },
+    "storyboard": {
+      "shots": 7
+    }
+  },
+  "completed": [
+    "sourcing",
+    "scenario",
+    "storyboard"
+  ],
+  "current": null,
+  "errors": [],
+  "metadata": {
+    "hostname": "DESKTOP-5NVH4BN",
+    "python": "3.12.3"
+  }
+}

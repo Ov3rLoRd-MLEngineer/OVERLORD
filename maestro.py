@@ -1269,6 +1269,8 @@ if __name__ == "__main__":
                         help="Executer le Run 0 : generation fiches personnages + Style DNA")
     parser.add_argument("--no-qc",       action="store_true",
                         help="Sauter le Quality Control V2.20 (CLIP+inpaint+pacing)")
+    parser.add_argument("--pose",         default="",
+                        help="Chemin skeleton OpenPose pour ControlNet")
     args = parser.parse_args()
 
     cfg = {}
@@ -1286,6 +1288,9 @@ if __name__ == "__main__":
         cfg["run_bible_visuelle"] = True
     if getattr(args, "no_qc", False):
         cfg["no_qc"] = True
+    # V2.20 ControlNet -- chemin skeleton OpenPose injecte dans tous les jobs
+    if getattr(args, "pose", None):
+        cfg["openpose_path"] = args.pose
     cfg.setdefault("duration", "short")
     cfg.setdefault("strength", 1.0)
     cfg.setdefault("width",    1024)

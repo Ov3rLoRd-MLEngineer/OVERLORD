@@ -51,13 +51,53 @@ def _parse(raw: str) -> dict | None:
     return None
 
 
-def _fallback_shots(script: dict, n: int = 6) -> dict:
+# Tags positifs par univers pour le fallback -- garantit la cohérence visuelle
+# même quand le LLM échoue
+_UNIVERSE_FALLBACK_TAGS = {
+    "evangelion": (
+        "Asuka Langley Soryu, orange hair, blue eyes, twin tails, "
+        "red plugsuit, Neon Genesis Evangelion, EVA-02, NERV, "
+        "anime style, masterpiece, best quality"
+    ),
+    "asuka": (
+        "Asuka Langley Soryu, orange hair, blue eyes, "
+        "red plugsuit, EVA-02, anime style, masterpiece, best quality"
+    ),
+    "rei": (
+        "Rei Ayanami, blue hair, red eyes, white plugsuit, "
+        "EVA-00, Neon Genesis Evangelion, anime style, masterpiece, best quality"
+    ),
+    "gundam": (
+        "mobile suit pilot, cockpit, mecha battle, "
+        "Gundam, anime style, masterpiece, best quality"
+    ),
+    "default": (
+        "anime style, masterpiece, best quality, highly detailed, "
+        "sharp focus, vibrant colors, cinematic composition"
+    ),
+}
+
+def _get_universe_tags(script: dict, media_type: str = "") -> str:
+    """Retourne les tags positifs de base selon l'univers du script."""
+    universe = (
+        script.get("universe", "") or
+        script.get("title", "") or
+        media_type or ""
+    ).lower()
+    for key, tags in _UNIVERSE_FALLBACK_TAGS.items():
+        if key in universe:
+            return tags
+    return _UNIVERSE_FALLBACK_TAGS["default"]
+
+
+def _fallback_shots(script: dict, n: int = 6, media_type: str = "") -> dict:
     """
     Genere un storyboard minimal quand le LLM echoue.
-    Utilise les scenes du script comme base.
+    Utilise les scenes du script comme base + tags univers pour cohérence visuelle.
     """
-    title  = script.get("title", "Episode")
-    scenes = script.get("scenes", []) or script.get("acts", [])
+    title       = script.get("title", "Episode")
+    scenes      = script.get("scenes", []) or script.get("acts", [])
+    base_tags   = _get_universe_tags(script, media_type)
     shots  = []
     if scenes:
         for i, scene in enumerate(scenes[:n]):
@@ -72,7 +112,7 @@ def _fallback_shots(script: dict, n: int = 6) -> dict:
                 "shot_id":     f"S{i+1:02d}",
                 "scene":        i + 1,
                 "description":  desc[:200] or f"Scene {i+1}",
-                "positive":    f"anime style, {title}, {desc[:80]}",
+                "positive":    f"{base_tags}, {desc[:80]}",
                 "negative":    "bad quality, blurry, deformed",
                 "cfg_scale":    7.0,
                 "steps":        28,
@@ -209,7 +249,7 @@ Genere entre 4 et 8 shots. JSON uniquement, pas de texte."""
     _log.warning(
         "[STORYBOARD] Echec LLM apres 3 tentatives -- "
         "utilisation du fallback minimal")
-    result = _fallback_shots(script)
+    result = _fallback_shots(script, media_type=media_type)
     n = len(result["shots"])
     _log.info(f"[STORYBOARD] Fallback minimal -- {n} shots")
     if BUS_OK:
@@ -318,11 +358,14 @@ def run_storyboard(script: dict, media_type: str = "anime",
         universe = script.get("universe", "") or media_type
         # V2.20 : propager universe et character dans chaque job avant translation
         _character = cfg.get("character", "") if "cfg" in dir() else ""
+        _openpose = cfg.get("openpose_path", "") if "cfg" in dir() else ""
         for job in jobs:
             if universe:
                 job["universe"] = universe
             if _character:
                 job["character"] = _character
+            if _openpose:
+                job["openpose_path"] = _openpose
         jobs = translate_storyboard(jobs, universe=universe, logger=_log)
         # Injecter la duree de plan recommandee dans chaque job
         for job in jobs:

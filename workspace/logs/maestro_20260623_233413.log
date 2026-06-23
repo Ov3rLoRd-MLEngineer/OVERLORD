@@ -1,0 +1,201 @@
+2026-06-23 23:34:14 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-23 23:34:14 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-23 23:34:14 [INFO    ] [CHECKPOINT] Aucun checkpoint pour 'anime_evangelion_battle_asuka'
+2026-06-23 23:34:14 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260623_233413
+2026-06-23 23:34:14 [INFO    ] [GPU] Optimisation pour : rtx5080 — RTX 5080 16GB — cible Ov3rLoRd (35 steps valide Jerémy)
+2026-06-23 23:34:14 [ERROR   ] [GPU] Workflow introuvable : Combined_V35_API.json
+2026-06-23 23:34:14 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-23 23:34:14 [INFO    ] [GPU] Optimisation auto : rtx5080
+2026-06-23 23:34:14 [INFO    ] ============================================================
+2026-06-23 23:34:14 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-23 23:34:14 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260623_233413
+2026-06-23 23:34:14 [INFO    ]   Critique : OK
+2026-06-23 23:34:14 [INFO    ]   Watchdog : OK
+2026-06-23 23:34:14 [INFO    ]   Director : OK
+2026-06-23 23:34:14 [INFO    ]   Bus      : OK
+2026-06-23 23:34:14 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-23 23:34:14 [INFO    ] ============================================================
+2026-06-23 23:34:14 [INFO    ] =======================================================
+2026-06-23 23:34:14 [INFO    ] BLOC 1 -- SOURCING
+2026-06-23 23:34:14 [INFO    ] =======================================================
+2026-06-23 23:34:14 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-23 23:34:15 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-23 23:34:15 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-23 23:34:16 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-23 23:34:16 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-23 23:34:17 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-23 23:34:17 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-23 23:34:18 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-23 23:34:19 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-23 23:34:19 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-23 23:34:20 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-23 23:34:20 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-23 23:34:21 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-23 23:34:21 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-23 23:34:22 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-23 23:34:22 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 66 mots-cles
+2026-06-23 23:34:22 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts ...
+2026-06-23 23:34:22 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-23 23:34:22 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-23 23:34:22 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts 
+2026-06-23 23:34:22 [INFO    ] [NARRATIVE] Contexte inter-épisodes injecté
+2026-06-23 23:34:22 [INFO    ] =======================================================
+2026-06-23 23:34:22 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-23 23:34:22 [INFO    ] =======================================================
+2026-06-23 23:34:22 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-23 23:34:22 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-23 23:34:32 [DEBUG   ] [LLM] Ollama/mistral OK (2093 chars)
+2026-06-23 23:34:32 [INFO    ] [SCENARISTE] Script genere : 'Evangelion Battle: Asuka'
+2026-06-23 23:34:32 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-23 23:34:36 [DEBUG   ] [LLM] Ollama/mistral OK (1309 chars)
+2026-06-23 23:34:36 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-23 23:34:36 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-23 23:34:36 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260623_213436_Evangelion_Battle:_Asuka.json
+2026-06-23 23:34:36 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-23 23:34:36 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-23 23:34:36 [INFO    ] [SCENARIO] OK 'Evangelion Battle: Asuka'
+2026-06-23 23:34:36 [INFO    ] =======================================================
+2026-06-23 23:34:36 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-23 23:34:36 [INFO    ] =======================================================
+2026-06-23 23:34:36 [INFO    ] [STORYBOARD] Generation -- titre='Evangelion Battle: Asuka'
+2026-06-23 23:34:44 [INFO    ] [STORYBOARD] OK -- 7 shots generes
+2026-06-23 23:34:44 [INFO    ] [STORYBOARD] Sauvegarde -> 20260623_233444_Evangelion Battle: Asuka.json
+2026-06-23 23:34:44 [INFO    ] [STORYBOARD] 7 jobs ComfyUI prepares
+2026-06-23 23:34:44 [INFO    ] [STORYBOARD] Métadonnées passes studio ajoutées à 7 jobs
+2026-06-23 23:34:44 [INFO    ] [TRANSLATOR] Traduction shot : detailed, dynamic, vibrant colors...
+2026-06-23 23:34:45 [DEBUG   ] [LLM] Ollama/mistral OK (413 chars)
+2026-06-23 23:34:45 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:45 [INFO    ] [TRANSLATOR] JSON repare : 6 champs recuperes
+2026-06-23 23:34:45 [INFO    ] [TRANSLATOR] OK shot_type=extreme_long_shot | lighting=high_contrast | acting=determination
+2026-06-23 23:34:45 [DEBUG   ] [TRANSLATOR] Shot 1/7 traduit
+2026-06-23 23:34:45 [INFO    ] [TRANSLATOR] Traduction shot : realistic human body movements, smooth animation...
+2026-06-23 23:34:46 [DEBUG   ] [LLM] Ollama/mistral OK (426 chars)
+2026-06-23 23:34:46 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:46 [INFO    ] [TRANSLATOR] JSON repare : 6 champs recuperes
+2026-06-23 23:34:46 [INFO    ] [TRANSLATOR] OK shot_type=medium_long_shot | lighting=natural_daylight | acting=determination
+2026-06-23 23:34:46 [DEBUG   ] [TRANSLATOR] Shot 2/7 traduit
+2026-06-23 23:34:46 [INFO    ] [TRANSLATOR] Traduction shot : intense action, dynamic camera angles...
+2026-06-23 23:34:48 [DEBUG   ] [LLM] Ollama/mistral OK (492 chars)
+2026-06-23 23:34:48 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:48 [INFO    ] [TRANSLATOR] JSON repare : 6 champs recuperes
+2026-06-23 23:34:48 [WARNING ] [TRANSLATOR] shot_type invalide 'varies' -> medium_shot
+2026-06-23 23:34:48 [WARNING ] [TRANSLATOR] acting_intent invalide 'determination, fear, rage' -> neutral
+2026-06-23 23:34:48 [WARNING ] [TRANSLATOR] camera_movement invalide 'fast_cut, slow_pan, dolly_forward, zoom_in, tracking_shot' -> static
+2026-06-23 23:34:48 [INFO    ] [TRANSLATOR] Reparation appliquee sur intent invalide
+2026-06-23 23:34:48 [INFO    ] [TRANSLATOR] OK shot_type=medium_shot | lighting=high_contrast | acting=neutral
+2026-06-23 23:34:48 [DEBUG   ] [TRANSLATOR] Shot 3/7 traduit
+2026-06-23 23:34:48 [INFO    ] [TRANSLATOR] Traduction shot : expressive facial features, emotional intensity...
+2026-06-23 23:34:49 [DEBUG   ] [LLM] Ollama/mistral OK (529 chars)
+2026-06-23 23:34:49 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:49 [INFO    ] [TRANSLATOR] JSON repare : 5 champs recuperes
+2026-06-23 23:34:49 [WARNING ] [TRANSLATOR] negative_prompt vide -> negative_bank contextuel
+2026-06-23 23:34:49 [INFO    ] [TRANSLATOR] Reparation appliquee sur intent invalide
+2026-06-23 23:34:49 [INFO    ] [TRANSLATOR] OK shot_type=over_the_shoulder | lighting=natural_daylight | acting=determination
+2026-06-23 23:34:49 [DEBUG   ] [TRANSLATOR] Shot 4/7 traduit
+2026-06-23 23:34:49 [INFO    ] [TRANSLATOR] Traduction shot : dramatic poses, well-timed explosions...
+2026-06-23 23:34:50 [DEBUG   ] [LLM] Ollama/mistral OK (450 chars)
+2026-06-23 23:34:50 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:50 [INFO    ] [TRANSLATOR] JSON repare : 6 champs recuperes
+2026-06-23 23:34:50 [WARNING ] [TRANSLATOR] acting_intent invalide 'dramatic' -> neutral
+2026-06-23 23:34:50 [INFO    ] [TRANSLATOR] Reparation appliquee sur intent invalide
+2026-06-23 23:34:50 [INFO    ] [TRANSLATOR] OK shot_type=birds_eye | lighting=high_contrast | acting=neutral
+2026-06-23 23:34:50 [DEBUG   ] [TRANSLATOR] Shot 5/7 traduit
+2026-06-23 23:34:50 [INFO    ] [TRANSLATOR] Traduction shot : impressive destruction of surroundings...
+2026-06-23 23:34:51 [DEBUG   ] [LLM] Ollama/mistral OK (380 chars)
+2026-06-23 23:34:51 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:51 [INFO    ] [TRANSLATOR] JSON repare : 6 champs recuperes
+2026-06-23 23:34:51 [WARNING ] [TRANSLATOR] acting_intent invalide 'destruction' -> neutral
+2026-06-23 23:34:51 [INFO    ] [TRANSLATOR] Reparation appliquee sur intent invalide
+2026-06-23 23:34:51 [INFO    ] [TRANSLATOR] OK shot_type=birds_eye | lighting=high_contrast | acting=neutral
+2026-06-23 23:34:51 [DEBUG   ] [TRANSLATOR] Shot 6/7 traduit
+2026-06-23 23:34:51 [INFO    ] [TRANSLATOR] Traduction shot : good use of camera angles for drama...
+2026-06-23 23:34:52 [DEBUG   ] [LLM] Ollama/mistral OK (422 chars)
+2026-06-23 23:34:52 [WARNING ] [TRANSLATOR] JSON standard invalide -- tentative reparation troncature
+2026-06-23 23:34:52 [INFO    ] [TRANSLATOR] JSON repare : 6 champs recuperes
+2026-06-23 23:34:52 [INFO    ] [TRANSLATOR] OK shot_type=dutch_angle | lighting=dramatic | acting=determination
+2026-06-23 23:34:52 [DEBUG   ] [TRANSLATOR] Shot 7/7 traduit
+2026-06-23 23:34:52 [INFO    ] [TRANSLATOR] Storyboard traduit : 7 shots
+2026-06-23 23:34:52 [INFO    ] [STORYBOARD] Prompt Translator OK -- intents de realisation injectes
+2026-06-23 23:34:52 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-23 23:34:52 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-23 23:34:52 [INFO    ] [STORYBOARD] OK 7 jobs
+2026-06-23 23:34:52 [INFO    ] [CHARS] Personnage détecté : Asuka Langley Soryu
+2026-06-23 23:34:52 [INFO    ] [CHAR] Injection Asuka Langley Soryu dans 7 jobs (LoRa: asuka-langley-soryuu-classic-ponyxl...)
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 1: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 2: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 3: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 4: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 5: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 6: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [DEBUG   ] [CHAR] Job 7: default → asuka langley, asuka langley soryu, red hair, long...
+2026-06-23 23:34:52 [INFO    ] [STYLE] Ancre créée — seed=64445 | lora=asuka-langley-soryuu-classic-ponyxl... | arc=wonder
+2026-06-23 23:34:52 [INFO    ] [STYLE] Application continuité à 7 jobs | lora=asuka-langley-soryuu-classic-ponyxl-lora
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 1 seed=64445 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 2 seed=64582 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 3 seed=64719 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 4 seed=64856 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 5 seed=64993 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 6 seed=65130 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [DEBUG   ] [STYLE] Job 7 seed=65267 | lora=asuka-langley-soryuu-classic-p...
+2026-06-23 23:34:52 [INFO    ] [STYLE] Continuité appliquée — seed_range=[64445, 65267]
+2026-06-23 23:34:52 [INFO    ] [STYLE] Continuité appliquée à 7 jobs
+2026-06-23 23:34:52 [WARNING ] [NARRATIVE] Mémoire échouée : 'str' object has no attribute 'get'
+2026-06-23 23:34:52 [INFO    ] =======================================================
+2026-06-23 23:34:52 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-23 23:34:52 [INFO    ] =======================================================
+2026-06-23 23:34:52 [INFO    ] [GPU] VRAM ComfyUI libérée avant batch
+2026-06-23 23:34:52 [INFO    ] [QUALITY_GATE] Workflow fallback actif -- quality gate skipped
+2026-06-23 23:34:52 [INFO    ] [PROMPT_ENG] Upsampling 7 jobs...
+2026-06-23 23:34:56 [DEBUG   ] [LLM] Ollama/mistral OK (536 chars)
+2026-06-23 23:34:56 [INFO    ] [PROMPT_ENG] Job 1/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:34:58 [DEBUG   ] [LLM] Ollama/mistral OK (361 chars)
+2026-06-23 23:34:58 [INFO    ] [PROMPT_ENG] Job 2/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:35:01 [DEBUG   ] [LLM] Ollama/mistral OK (556 chars)
+2026-06-23 23:35:01 [INFO    ] [PROMPT_ENG] Job 3/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:35:04 [DEBUG   ] [LLM] Ollama/mistral OK (432 chars)
+2026-06-23 23:35:04 [INFO    ] [PROMPT_ENG] Job 4/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:35:07 [DEBUG   ] [LLM] Ollama/mistral OK (340 chars)
+2026-06-23 23:35:07 [INFO    ] [PROMPT_ENG] Job 5/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:35:10 [DEBUG   ] [LLM] Ollama/mistral OK (536 chars)
+2026-06-23 23:35:10 [INFO    ] [PROMPT_ENG] Job 6/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:35:13 [DEBUG   ] [LLM] Ollama/mistral OK (521 chars)
+2026-06-23 23:35:13 [INFO    ] [PROMPT_ENG] Job 7/7 | lora=asuka-langley-soryuu-classic-ponyxl...
+2026-06-23 23:35:13 [INFO    ] [PROMPT_ENG] OK — 7 jobs enrichis
+2026-06-23 23:35:13 [INFO    ] [PROMPT_ENG] Jobs enrichis : 7
+2026-06-23 23:39:20 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00001_ -> PASS | nettete=2326.8 | luminosite=41.2 | OK
+2026-06-23 23:39:20 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00002_ -> WARN | nettete=4136.5 | luminosite=79.2 | problemes=['[WARN] Zone noire importante : 20%']
+2026-06-23 23:39:20 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00003_ -> PASS | nettete=1938.7 | luminosite=61.6 | OK
+2026-06-23 23:39:21 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00004_ -> PASS | nettete=3217.0 | luminosite=94.8 | OK
+2026-06-23 23:39:21 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00005_ -> PASS | nettete=4139.4 | luminosite=75.7 | OK
+2026-06-23 23:39:22 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00006_ -> PASS | nettete=2642.4 | luminosite=71.5 | OK
+2026-06-23 23:39:22 [INFO    ] [WATCHDOG/FRAME] job0006_20260623_233918_overlord__00007_ -> PASS | nettete=3178.5 | luminosite=62.8 | OK
+2026-06-23 23:39:23 [WARNING ] [WATCHDOG] Rupture style : frame 1->2 (drift=0.359)
+2026-06-23 23:39:23 [WARNING ] [WATCHDOG] 1 rupture(s) de style aux frames : [2]
+2026-06-23 23:39:23 [INFO    ] [CRITIQUE] production->postprod | PASS | score=80 | OK
+2026-06-23 23:39:23 [INFO    ] [PRODUCTION] OK 7 succes | 0 echecs
+2026-06-23 23:39:23 [INFO    ] [QC] no_qc=True -- skipped
+2026-06-23 23:39:23 [INFO    ] =======================================================
+2026-06-23 23:39:23 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-23 23:39:23 [INFO    ] =======================================================
+2026-06-23 23:39:23 [INFO    ] [POST-PROD] Archive run depuis bus : workspace\archive\maestro_20260623_233413_prod
+2026-06-23 23:39:23 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-23 23:39:23 [WARNING ] [POST-PROD] Fallback : 28 images alpha
+2026-06-23 23:39:23 [INFO    ] [VIDEO] Assemblage 28 images -> workspace\exports\20260623_233923_untitled.mp4
+2026-06-23 23:39:25 [INFO    ] [VIDEO] OK Video creee : workspace\exports\20260623_233923_untitled.mp4
+2026-06-23 23:39:25 [INFO    ] [POST-PROD] OK Export final -> workspace\exports\20260623_233923_untitled.mp4
+2026-06-23 23:39:25 [INFO    ] [POST-PROD] OK Export -> workspace\exports\20260623_233923_untitled.mp4
+2026-06-23 23:39:25 [INFO    ] =======================================================
+2026-06-23 23:39:25 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-23 23:39:25 [INFO    ] =======================================================
+2026-06-23 23:39:25 [INFO    ] [3D] Moteurs disponibles : []
+2026-06-23 23:39:25 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-23 23:39:25 [INFO    ] [REPORTER] Génération rapport run=maestro_20260623_233413
+2026-06-23 23:39:25 [INFO    ] [REPORTER] OK — JSON: 20260623_233925_maestro_20260623_233413.json | MD: 20260623_233925_maestro_20260623_233413.md
+2026-06-23 23:39:25 [INFO    ] [REPORTER] Résumé : 28 images | vidéo: True
+2026-06-23 23:39:30 [INFO    ] [WATCHDOG] Arrete
+2026-06-23 23:39:30 [INFO    ] [WATCHDOG] Bilan : 7 frames | echecs=0 | ComfyUI uptime=315s
+2026-06-23 23:39:30 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260623_233413
+2026-06-23 23:39:30 [INFO    ] [CRITIQUE] Bilan : 4 verifications | score moyen=80.0 | sante=STABLE
+2026-06-23 23:39:30 [INFO    ] ============================================================
+2026-06-23 23:39:30 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260623_233413 | duree=311s
+2026-06-23 23:39:30 [INFO    ] ============================================================

@@ -318,5 +318,35 @@
     "score": 78,
     "report_json": "workspace\\reports\\20260623_221100_maestro_20260623_220259.json",
     "report_md": "workspace\\reports\\20260623_221100_maestro_20260623_220259.md"
+  },
+  {
+    "run_id": "maestro_20260623_231148",
+    "timestamp": "2026-06-23T23:19:05.996745",
+    "scenario": "Evangelion Battle: Asuka",
+    "images": 788,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260623_231906_maestro_20260623_231148.json",
+    "report_md": "workspace\\reports\\20260623_231906_maestro_20260623_231148.md"
+  },
+  {
+    "run_id": "maestro_20260623_232342",
+    "timestamp": "2026-06-23T23:31:42.545354",
+    "scenario": "Evangelion Battle: Asuka",
+    "images": 852,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260623_233142_maestro_20260623_232342.json",
+    "report_md": "workspace\\reports\\20260623_233142_maestro_20260623_232342.md"
+  },
+  {
+    "run_id": "maestro_20260623_233413",
+    "timestamp": "2026-06-23T23:39:25.636639",
+    "scenario": "Evangelion Battle: Asuka",
+    "images": 28,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260623_233925_maestro_20260623_233413.json",
+    "report_md": "workspace\\reports\\20260623_233925_maestro_20260623_233413.md"
   }
 ]

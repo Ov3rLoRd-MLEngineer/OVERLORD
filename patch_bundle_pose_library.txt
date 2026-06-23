@@ -1,0 +1,39 @@
+==== FILE: agents/storyboard.py ====
+==== FIND ====
+        _openpose = cfg.get("openpose_path", "") if "cfg" in dir() else ""
+        for job in jobs:
+            if universe:
+                job["universe"] = universe
+            if _character:
+                job["character"] = _character
+            if _openpose:
+                job["openpose_path"] = _openpose
+==== REPLACE ====
+        _openpose = cfg.get("openpose_path", "") if "cfg" in dir() else ""
+        # V2.20 pose_library -- si pas de pose globale, chercher par shot
+        try:
+            from agents.pose_library import get_pose as _get_pose
+            _pose_lib_ok = True
+        except Exception:
+            _pose_lib_ok = False
+
+        for job in jobs:
+            if universe:
+                job["universe"] = universe
+            if _character:
+                job["character"] = _character
+            # Priorite : --pose global > pose_library par shot
+            if _openpose:
+                job["openpose_path"] = _openpose
+            elif _pose_lib_ok:
+                _intent    = job.get("_intent", {})
+                _shot_type = _intent.get("shot_type", "")
+                _acting    = _intent.get("acting_intent", "")
+                _pose      = _get_pose(
+                    character    = _character or "asuka",
+                    shot_type    = _shot_type,
+                    acting_intent= _acting,
+                )
+                if _pose:
+                    job["openpose_path"] = _pose
+==== END ====

@@ -1,0 +1,36 @@
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "controlnet-openpose-sdxl-1.0.safetensors"}},
+==== REPLACE ====
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "OpenPoseXL2.safetensors"}},
+==== END ====
+
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+        "502":{"class_type": "LoadImage",
+               "inputs": {"image": "openpose_placeholder.png", "upload": "image"}},
+==== REPLACE ====
+        "502":{"class_type": "LoadImage",
+               "inputs": {"image": "openpose_placeholder.png", "upload": "image"}},
+        "503":{"class_type": "DWPreprocessor",
+               "inputs": {"image": ["502",0],
+                          "detect_hand": "enable",
+                          "detect_body": "enable",
+                          "detect_face": "enable",
+                          "resolution": 512}},
+==== END ====
+
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+        "501":{"class_type": "ControlNetApplyAdvanced",
+               "inputs": {"positive": ["87",0], "negative": ["111",0],
+                          "control_net": ["500",0], "image": ["502",0],
+                          "strength": 1.0, "start_percent": 0.0, "end_percent": 1.0}},
+==== REPLACE ====
+        "501":{"class_type": "ControlNetApplyAdvanced",
+               "inputs": {"positive": ["87",0], "negative": ["111",0],
+                          "control_net": ["500",0], "image": ["503",0],
+                          "strength": 0.85, "start_percent": 0.0, "end_percent": 0.85}},
+==== END ====

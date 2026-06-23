@@ -2,6 +2,27 @@
   "articles": [
     {
       "source": "rss/kotaku",
+      "title": "Marathon’s First PVE-Only Mode Sounds Sick And Is Designed For Solo Players",
+      "summary": "<img alt=\"Marathon Vandal\" class=\"attachment-full size-full wp-post-image\" height=\"1080\" src=\"https://kotaku.com/app/uploads/2026/06/marathon-vandal.jpg\" style=\"height: auto; margin: auto;\" width=\"1920\" /><br /><br />I want to play Vault Breaker right now, but have to wait until July 21",
+      "link": "https://kotaku.com/marathons-first-pve-only-mode-sounds-sick-and-is-designed-for-solo-players-2000709650",
+      "date": "Tue, 23 Jun 2026 21:03:22 +0000"
+    },
+    {
+      "source": "rss/kotaku",
+      "title": "Netflix Reveals Surprisingly Gory Game From The Makers Of Oxenfree That Stars Zoë Kravitz And Sadie Sink",
+      "summary": "<img alt=\"Unhinged Key Art featuring two hands reaching for a glowing cell phone with the text &quot;Netflix Presents Unhinged Your Phone Won&#039;t Die But You Might&quot;\" class=\"attachment-full size-full wp-post-image\" height=\"934\" src=\"https://kotaku.com/app/uploads/2026/06/Unhinged-key-art.jpg\"",
+      "link": "https://kotaku.com/unhinged-netflix-night-school-studio-zoe-kravitz-sadie-sink-2000709608",
+      "date": "Tue, 23 Jun 2026 20:50:06 +0000"
+    },
+    {
+      "source": "rss/kotaku",
+      "title": "A24 Fans Mourn Its Death After The Backrooms Studio Signs $75 Million Google AI Deal: ‘Membership Cancelled’",
+      "summary": "<img alt=\"A24 Official Logo With An I In It\" class=\"attachment-full size-full wp-post-image\" height=\"813\" src=\"https://kotaku.com/app/uploads/2026/06/A24-official-logo-with-an-I-in-it.jpg\" style=\"height: auto; margin: auto;\" width=\"1455\" /><br /><br />A24's 'artificial-intelligence research partners",
+      "link": "https://kotaku.com/a24-ai-backrooms-google-deepmind-deal-2000709598",
+      "date": "Tue, 23 Jun 2026 20:07:56 +0000"
+    },
+    {
+      "source": "rss/kotaku",
       "title": "Tom Cruise’s Next Movie Has The Weirdest Trailer I’ve Seen In A Long Time",
       "summary": "<img alt=\"Tomc\" class=\"attachment-full size-full wp-post-image\" height=\"1080\" src=\"https://kotaku.com/app/uploads/2026/06/tomc.jpg\" style=\"height: auto; margin: auto;\" width=\"1920\" /><br /><br />The new <i>Digger</i> trailer spent two minutes hyping up the main actor",
       "link": "https://kotaku.com/tom-cruises-next-movie-has-the-weirdest-trailer-ive-seen-in-a-long-time-2000709604",
@@ -48,28 +69,7 @@
       "summary": "<img alt=\"Ramguy\" class=\"attachment-full size-full wp-post-image\" height=\"1080\" src=\"https://kotaku.com/app/uploads/2026/06/ramguy.jpg\" style=\"height: auto; margin: auto;\" width=\"1920\" /><br /><br />If that sounds a lot like a cartel, well, you wouldn't be the first person to point that out",
       "link": "https://kotaku.com/valve-says-the-companies-making-ram-give-them-a-price-and-if-they-say-no-they-never-talk-to-us-again-2000709575",
       "date": "Tue, 23 Jun 2026 18:28:42 +0000"
-    },
-    {
-      "source": "rss/kotaku",
-      "title": "An 11th-Hour ARG Clue Is Upending A Year’s Worth Of Deltarune Fan Theories",
-      "summary": "<img alt=\"Ut74wnfzr19h1\" class=\"attachment-full size-full wp-post-image\" height=\"295\" src=\"https://kotaku.com/app/uploads/2026/06/ut74wnfzr19h1.jpg\" style=\"height: auto; margin: auto;\" width=\"524\" /><br /><br />Used up",
-      "link": "https://kotaku.com/arg-clue-deltarune-fan-theory-last-minute-2000709558",
-      "date": "Tue, 23 Jun 2026 17:09:10 +0000"
-    },
-    {
-      "source": "rss/kotaku",
-      "title": "God Of War Laufey’s Star Just Sent Fans On A Scavenger Hunt",
-      "summary": "<img alt=\"\" class=\"attachment-full size-full wp-post-image\" height=\"1080\" src=\"https://kotaku.com/app/uploads/2026/06/image-62.jpg\" style=\"height: auto; margin: auto;\" width=\"1920\" /><br /><br />Fans are looking through old interviews after Deborah Ann Woll said she’s known about <em>Laufey</em> for",
-      "link": "https://kotaku.com/god-of-war-laufey-deborah-ann-woll-ragnarok-interview-2000709565",
-      "date": "Tue, 23 Jun 2026 16:54:58 +0000"
-    },
-    {
-      "source": "rss/kotaku",
-      "title": "Pinball Pivots To Millennial Nostalgia And Gives Sonic A $10,000 Machine Of His Own",
-      "summary": "<img alt=\"Sonic The Hedgehog Pinball\" class=\"attachment-full size-full wp-post-image\" height=\"1080\" src=\"https://kotaku.com/app/uploads/2026/06/sonic_the_hedgehog_pinball_main.jpg\" style=\"height: auto; margin: auto;\" width=\"1920\" /><br /><br />The first <i>Sonic</i> pinball machine is pricey but loo",
-      "link": "https://kotaku.com/pinball-pivots-to-millennial-nostalgia-and-gives-sonic-a-10000-machine-of-his-own-2000709102",
-      "date": "Tue, 23 Jun 2026 16:00:38 +0000"
     }
   ],
-  "_ts": 1782244989.5869968
+  "_ts": 1782249118.3769364
 }

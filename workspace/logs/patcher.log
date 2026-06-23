@@ -763,3 +763,78 @@ Le probleme : llama3 enveloppe souvent le JSON dans du texte conversationnel.
 [2026-06-23 21:56:47] [INFO] ── [FIND_REPLACE] agents/director.py
 [2026-06-23 21:56:47] [INFO]   Backup → workspace\patch_backups\director.py.20260623_215647.bak
 [2026-06-23 21:56:47] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/director.py
+[2026-06-23 22:37:53] [INFO] Format bundle détecté : find_replace
+[2026-06-23 22:37:53] [INFO] 2 patch(es) détecté(s)
+[2026-06-23 22:37:53] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-23 22:37:53] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260623_223753.bak
+[2026-06-23 22:37:53] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-23 22:37:53] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-23 22:37:53] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260623_223753.bak
+[2026-06-23 22:37:53] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-23 22:42:33] [INFO] Format bundle détecté : find_replace
+[2026-06-23 22:42:33] [INFO] 5 patch(es) détecté(s)
+[2026-06-23 22:42:33] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 22:42:33] [INFO]   Backup → workspace\patch_backups\scenario.py.20260623_224233.bak
+[2026-06-23 22:42:33] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/scenario.py
+[2026-06-23 22:42:33] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 22:42:33] [INFO]   Backup → workspace\patch_backups\scenario.py.20260623_224233.bak
+[2026-06-23 22:42:33] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/scenario.py
+[2026-06-23 22:42:33] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 22:42:33] [INFO]   Backup → workspace\patch_backups\scenario.py.20260623_224233.bak
+[2026-06-23 22:42:33] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/scenario.py
+[2026-06-23 22:42:33] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:42:33] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_224233.bak
+[2026-06-23 22:42:33] [OK  ]   ✓ FIND_REPLACE appliqué dans agent_supervisor_v2.py
+[2026-06-23 22:42:33] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:42:33] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_224233.bak
+[2026-06-23 22:42:33] [OK  ]   ✓ FIND_REPLACE appliqué dans agent_supervisor_v2.py
+[2026-06-23 22:49:15] [INFO] Format bundle détecté : find_replace
+[2026-06-23 22:49:15] [INFO] 5 patch(es) détecté(s)
+[2026-06-23 22:49:15] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 22:49:15] [INFO]   Backup → workspace\patch_backups\scenario.py.20260623_224915.bak
+[2026-06-23 22:49:15] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/scenario.py
+[2026-06-23 22:49:15] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 22:49:15] [ERR ]   Texte FIND non trouvé dans agents/scenario.py
+[2026-06-23 22:49:15] [ERR ]   Début FIND attendu : '    system = (\n        "You are a professional screenwriter specialized in popul'
+[2026-06-23 22:49:15] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 22:49:15] [ERR ]   Texte FIND non trouvé dans agents/scenario.py
+[2026-06-23 22:49:15] [ERR ]   Début FIND attendu : '        if attempt > 1:\n            log.info(f"[SCENARISTE] Retry {attempt}/{MAX'
+[2026-06-23 22:49:15] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:49:15] [ERR ]   Texte FIND non trouvé dans agent_supervisor_v2.py
+[2026-06-23 22:49:15] [ERR ]   Début FIND attendu : '        "62": {"class_type": "LoraLoader",\n               "inputs": {"model": ["'
+[2026-06-23 22:49:15] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:49:15] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_224915.bak
+[2026-06-23 22:49:15] [OK  ]   ✓ FIND_REPLACE appliqué dans agent_supervisor_v2.py
+[2026-06-23 22:55:49] [ERR ] Bundle introuvable : patch_bundle_controlnet_v2.txt
+[2026-06-23 22:56:04] [INFO] Format bundle détecté : find_replace
+[2026-06-23 22:56:04] [INFO] 3 patch(es) détecté(s)
+[2026-06-23 22:56:04] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:56:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_225604.bak
+[2026-06-23 22:56:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agent_supervisor_v2.py
+[2026-06-23 22:56:04] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:56:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_225604.bak
+[2026-06-23 22:56:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agent_supervisor_v2.py
+[2026-06-23 22:56:04] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-23 22:56:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_225604.bak
+[2026-06-23 22:56:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agent_supervisor_v2.py
+[2026-06-23 23:05:14] [INFO] Format bundle détecté : find_replace
+[2026-06-23 23:05:14] [INFO] 3 patch(es) détecté(s)
+[2026-06-23 23:05:14] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 23:05:14] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_230514.bak
+[2026-06-23 23:05:14] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 23:05:14] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 23:05:14] [ERR ]   Texte FIND non trouvé dans maestro.py
+[2026-06-23 23:05:14] [ERR ]   Début FIND attendu : '    parser.add_argument("--no-qc",       action="store_true",\n                  '
+[2026-06-23 23:05:14] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-23 23:05:14] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260623_230514.bak
+[2026-06-23 23:05:14] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-23 23:10:06] [INFO] Format bundle détecté : find_replace
+[2026-06-23 23:10:06] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 23:10:06] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 23:10:06] [ERR ]   Texte FIND non trouvé dans maestro.py
+[2026-06-23 23:10:06] [ERR ]   Début FIND attendu : '    parser.add_argument("--no-qc",       action="store_true",\n                  '
+[2026-06-23 23:11:18] [INFO] Format bundle détecté : find_replace
+[2026-06-23 23:11:18] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 23:11:18] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 23:11:18] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_231118.bak
+[2026-06-23 23:11:18] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py

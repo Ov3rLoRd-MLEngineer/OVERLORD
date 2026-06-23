@@ -1,0 +1,12 @@
+==== FILE: maestro.py ====
+==== FIND ====
+    parser.add_argument("--no-qc",       action="store_true",
+                        help="Sauter le Quality Control V2.20 (CLIP+inpaint+pacing)")
+    args = parser.parse_args()
+==== REPLACE ====
+    parser.add_argument("--no-qc",       action="store_true",
+                        help="Sauter le Quality Control V2.20 (CLIP+inpaint+pacing)")
+    parser.add_argument("--pose",         default="",
+                        help="Chemin skeleton OpenPose pour ControlNet")
+    args = parser.parse_args()
+==== END ====

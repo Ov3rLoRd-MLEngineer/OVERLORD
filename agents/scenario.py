@@ -51,6 +51,76 @@ QUALITY_CRITERIA = [
     "hook within the first 10 seconds",
 ]
 
+# Contraintes dures par univers -- injectees dans le system prompt
+# pour empecher Mistral de deriver vers un genre sans rapport
+UNIVERSE_SYSTEM_CONSTRAINTS = {
+    "evangelion": (
+        "CRITICAL CONSTRAINT: This script MUST feature Asuka Langley Soryu as the MAIN character. "
+        "Setting: Neon Genesis Evangelion universe (Tokyo-3, NERV, Angels, EVA units). "
+        "Visual style: Hideaki Anno direction, bold colors, psychological tension, dramatic lighting. "
+        "FORBIDDEN: detective stories, generic school romance, slice-of-life unrelated to EVA. "
+        "MANDATORY elements (pick at least 2): EVA unit combat, NERV operations, "
+        "Angel encounter, pilot psychological crisis, AT Field, LCL, sync ratio. "
+        "Characters: Asuka (main), optionally Rei / Shinji / Misato / Gendo. "
+    ),
+    "gundam": (
+        "CRITICAL CONSTRAINT: Gundam universe. Mobile suit combat, space colonies, "
+        "political conflict are mandatory. No slice-of-life. "
+    ),
+    "dragon ball": (
+        "CRITICAL CONSTRAINT: Dragon Ball universe. Saiyans, Ki blasts, "
+        "martial arts tournament or villain arc. No detective stories. "
+    ),
+    "one piece": (
+        "CRITICAL CONSTRAINT: One Piece universe. Pirates, Devil Fruits, "
+        "Grand Line adventures. Luffy as main or supporting character. "
+    ),
+}
+
+
+def _get_universe_constraint(universe: str) -> str:
+    """Retourne la contrainte système pour l'univers donné."""
+    u = universe.lower()
+    for key, constraint in UNIVERSE_SYSTEM_CONSTRAINTS.items():
+        if key in u:
+            return constraint
+    return ""
+
+# Contraintes dures par univers -- injectees dans le system prompt
+# pour empecher Mistral de deriver vers un genre sans rapport
+UNIVERSE_SYSTEM_CONSTRAINTS = {
+    "evangelion": (
+        "CRITICAL CONSTRAINT: This script MUST feature Asuka Langley Soryu as the MAIN character. "
+        "Setting: Neon Genesis Evangelion universe (Tokyo-3, NERV, Angels, EVA units). "
+        "Visual style: Hideaki Anno direction, bold colors, psychological tension, dramatic lighting. "
+        "FORBIDDEN: detective stories, generic school romance, slice-of-life unrelated to EVA. "
+        "MANDATORY elements (pick at least 2): EVA unit combat, NERV operations, "
+        "Angel encounter, pilot psychological crisis, AT Field, LCL, sync ratio. "
+        "Characters: Asuka (main), optionally Rei / Shinji / Misato / Gendo. "
+    ),
+    "gundam": (
+        "CRITICAL CONSTRAINT: Gundam universe. Mobile suit combat, space colonies, "
+        "political conflict are mandatory. No slice-of-life. "
+    ),
+    "dragon ball": (
+        "CRITICAL CONSTRAINT: Dragon Ball universe. Saiyans, Ki blasts, "
+        "martial arts tournament or villain arc. No detective stories. "
+    ),
+    "one piece": (
+        "CRITICAL CONSTRAINT: One Piece universe. Pirates, Devil Fruits, "
+        "Grand Line adventures. Luffy as main or supporting character. "
+    ),
+}
+
+
+def _get_universe_constraint(universe: str) -> str:
+    """Retourne la contrainte système pour l'univers donné."""
+    u = universe.lower()
+    for key, constraint in UNIVERSE_SYSTEM_CONSTRAINTS.items():
+        if key in u:
+            return constraint
+    return ""
+
 
 def _llm(prompt: str, system: str = "", logger: logging.Logger = None) -> str:
     log = logger or logging.getLogger("scenario.llm")
@@ -137,16 +207,23 @@ def generate_script(trend_report: dict, media_type: str = "anime",
     )
     universe_ctx = f"Target universe: {universe}.\n" if universe else ""
 
+    # Contrainte univers dure -- empeche Mistral de deriver
+    universe_constraint = _get_universe_constraint(universe)
+
     system = (
         "You are a professional screenwriter specialized in popular media. "
         "You generate actionable, structured scripts adapted for AI-automated production. "
         "Your scripts are rich in visual detail. "
-        "Reply ONLY with valid JSON, no backticks, no explanation, no markdown."
+        + (universe_constraint + " " if universe_constraint else "")
+        + "Reply ONLY with valid JSON, no backticks, no explanation, no markdown."
     )
 
     prompt = (
         f"{universe_ctx}Format: {format_desc}. Duration: {duration}.\n\n"
-        f"Trends:\nBrief: {brief}\nViral posts: {top_posts}\nKeywords: {hot_kw}\n\n"
+        + (f"UNIVERSE LOCK: Write ONLY about {universe}. Ignore unrelated trends.\n\n"
+           if universe else "")
+        + f"Trends (use only if relevant to {universe or media_type}):\n"
+        + f"Brief: {brief}\nViral posts: {top_posts}\nKeywords: {hot_kw}\n\n"
         "Generate a strict JSON script with these fields: "
         "title, logline, genre, media_type, duration_estimate, target_audience, "
         "synopsis, acts (with scenes), characters, visual_style, color_palette, "
@@ -157,10 +234,12 @@ def generate_script(trend_report: dict, media_type: str = "anime",
     for attempt in range(1, MAX_GENERATE_RETRIES + 1):
         if attempt > 1:
             log.info(f"[SCENARISTE] Retry {attempt}/{MAX_GENERATE_RETRIES}")
-            # Simplified prompt on retry
+            # Retry simplifie mais avec contrainte univers maintenue
             prompt = (
-                f"Write a short anime script about: {universe or media_type}.\n"
-                "Return ONLY a JSON object with: title, logline, genre, synopsis, "
+                f"Write a short anime script strictly about: {universe or media_type}.\n"
+                + (f"MANDATORY: main character is from {universe}. Stay in this universe.\n"
+                   if universe else "")
+                + "Return ONLY a JSON object with: title, logline, genre, synopsis, "
                 "acts, characters, visual_style. No markdown, no explanation."
             )
 

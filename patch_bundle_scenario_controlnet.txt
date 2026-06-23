@@ -1,0 +1,199 @@
+==== FILE: agents/scenario.py ====
+==== FIND ====
+QUALITY_CRITERIA = [
+    "coherent narrative pacing",
+    "clearly defined central conflict",
+    "character arc present",
+    "strong visual potential (adaptable to images)",
+    "hook within the first 10 seconds",
+]
+==== REPLACE ====
+QUALITY_CRITERIA = [
+    "coherent narrative pacing",
+    "clearly defined central conflict",
+    "character arc present",
+    "strong visual potential (adaptable to images)",
+    "hook within the first 10 seconds",
+]
+
+# Contraintes dures par univers -- injectees dans le system prompt
+# pour empecher Mistral de deriver vers un genre sans rapport
+UNIVERSE_SYSTEM_CONSTRAINTS = {
+    "evangelion": (
+        "CRITICAL CONSTRAINT: This script MUST feature Asuka Langley Soryu as the MAIN character. "
+        "Setting: Neon Genesis Evangelion universe (Tokyo-3, NERV, Angels, EVA units). "
+        "Visual style: Hideaki Anno direction, bold colors, psychological tension, dramatic lighting. "
+        "FORBIDDEN: detective stories, generic school romance, slice-of-life unrelated to EVA. "
+        "MANDATORY elements (pick at least 2): EVA unit combat, NERV operations, "
+        "Angel encounter, pilot psychological crisis, AT Field, LCL, sync ratio. "
+        "Characters: Asuka (main), optionally Rei / Shinji / Misato / Gendo. "
+    ),
+    "gundam": (
+        "CRITICAL CONSTRAINT: Gundam universe. Mobile suit combat, space colonies, "
+        "political conflict are mandatory. No slice-of-life. "
+    ),
+    "dragon ball": (
+        "CRITICAL CONSTRAINT: Dragon Ball universe. Saiyans, Ki blasts, "
+        "martial arts tournament or villain arc. No detective stories. "
+    ),
+    "one piece": (
+        "CRITICAL CONSTRAINT: One Piece universe. Pirates, Devil Fruits, "
+        "Grand Line adventures. Luffy as main or supporting character. "
+    ),
+}
+
+
+def _get_universe_constraint(universe: str) -> str:
+    """Retourne la contrainte système pour l'univers donné."""
+    u = universe.lower()
+    for key, constraint in UNIVERSE_SYSTEM_CONSTRAINTS.items():
+        if key in u:
+            return constraint
+    return ""
+==== END ====
+
+==== FILE: agents/scenario.py ====
+==== FIND ====
+    system = (
+        "You are a professional screenwriter specialized in popular media. "
+        "You generate actionable, structured scripts adapted for AI-automated production. "
+        "Your scripts are rich in visual detail. "
+        "Reply ONLY with valid JSON, no backticks, no explanation, no markdown."
+    )
+
+    prompt = (
+        f"{universe_ctx}Format: {format_desc}. Duration: {duration}.\n\n"
+        f"Trends:\nBrief: {brief}\nViral posts: {top_posts}\nKeywords: {hot_kw}\n\n"
+        "Generate a strict JSON script with these fields: "
+        "title, logline, genre, media_type, duration_estimate, target_audience, "
+        "synopsis, acts (with scenes), characters, visual_style, color_palette, "
+        "music_mood, transmedia_notes.\n"
+        "All values must be in English. Output raw JSON only."
+    )
+==== REPLACE ====
+    # Contrainte univers dure -- empeche Mistral de deriver
+    universe_constraint = _get_universe_constraint(universe)
+
+    system = (
+        "You are a professional screenwriter specialized in popular media. "
+        "You generate actionable, structured scripts adapted for AI-automated production. "
+        "Your scripts are rich in visual detail. "
+        + (universe_constraint + " " if universe_constraint else "")
+        + "Reply ONLY with valid JSON, no backticks, no explanation, no markdown."
+    )
+
+    prompt = (
+        f"{universe_ctx}Format: {format_desc}. Duration: {duration}.\n\n"
+        + (f"UNIVERSE LOCK: Write ONLY about {universe}. Ignore unrelated trends.\n\n"
+           if universe else "")
+        + f"Trends (use only if relevant to {universe or media_type}):\n"
+        + f"Brief: {brief}\nViral posts: {top_posts}\nKeywords: {hot_kw}\n\n"
+        "Generate a strict JSON script with these fields: "
+        "title, logline, genre, media_type, duration_estimate, target_audience, "
+        "synopsis, acts (with scenes), characters, visual_style, color_palette, "
+        "music_mood, transmedia_notes.\n"
+        "All values must be in English. Output raw JSON only."
+    )
+==== END ====
+
+==== FILE: agents/scenario.py ====
+==== FIND ====
+        if attempt > 1:
+            log.info(f"[SCENARISTE] Retry {attempt}/{MAX_GENERATE_RETRIES}")
+            # Simplified prompt on retry
+            prompt = (
+                f"Write a short anime script about: {universe or media_type}.\n"
+                "Return ONLY a JSON object with: title, logline, genre, synopsis, "
+                "acts, characters, visual_style. No markdown, no explanation."
+            )
+==== REPLACE ====
+        if attempt > 1:
+            log.info(f"[SCENARISTE] Retry {attempt}/{MAX_GENERATE_RETRIES}")
+            # Retry simplifie mais avec contrainte univers maintenue
+            prompt = (
+                f"Write a short anime script strictly about: {universe or media_type}.\n"
+                + (f"MANDATORY: main character is from {universe}. Stay in this universe.\n"
+                   if universe else "")
+                + "Return ONLY a JSON object with: title, logline, genre, synopsis, "
+                "acts, characters, visual_style. No markdown, no explanation."
+            )
+==== END ====
+
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+        "62": {"class_type": "LoraLoader",
+               "inputs": {"model": ["1",0], "clip": ["1",1],
+                          "lora_name": DEFAULT_LORA_MAIN,
+                          "strength_model": 1.0, "strength_clip": 1.0}},
+        "87": {"class_type": "CLIPTextEncode",
+               "inputs": {"text": DEFAULT_POSITIVE, "clip": ["62",1]}},
+        "111":{"class_type": "CLIPTextEncode",
+               "inputs": {"text": DEFAULT_NEGATIVE, "clip": ["62",1]}},
+        "104":{"class_type": "EmptyLatentImage",
+               "inputs": {"width": 1344, "height": 1984, "batch_size": 1}},
+        "112":{"class_type": "KSampler",
+               "inputs": {"model": ["62",0], "positive": ["87",0],
+                          "negative": ["111",0], "latent_image": ["104",0],
+                          "seed": 0, "steps": 35, "cfg": 7.0,
+                          "sampler_name": "dpmpp_2m_sde",
+                          "scheduler": "karras", "denoise": 1.0}},
+        "6":  {"class_type": "VAEDecode",
+               "inputs": {"samples": ["112",0], "vae": ["1",2]}},
+        "334":{"class_type": "SaveImage",
+               "inputs": {"images": ["6",0],
+                          "filename_prefix": "overlord_"}},
+    }
+==== REPLACE ====
+        "62": {"class_type": "LoraLoader",
+               "inputs": {"model": ["1",0], "clip": ["1",1],
+                          "lora_name": DEFAULT_LORA_MAIN,
+                          "strength_model": 1.0, "strength_clip": 1.0}},
+        "87": {"class_type": "CLIPTextEncode",
+               "inputs": {"text": DEFAULT_POSITIVE, "clip": ["62",1]}},
+        "111":{"class_type": "CLIPTextEncode",
+               "inputs": {"text": DEFAULT_NEGATIVE, "clip": ["62",1]}},
+        "104":{"class_type": "EmptyLatentImage",
+               "inputs": {"width": 1344, "height": 1984, "batch_size": 1}},
+        "112":{"class_type": "KSampler",
+               "inputs": {"model": ["62",0], "positive": ["87",0],
+                          "negative": ["111",0], "latent_image": ["104",0],
+                          "seed": 0, "steps": 35, "cfg": 7.0,
+                          "sampler_name": "dpmpp_2m_sde",
+                          "scheduler": "karras", "denoise": 1.0}},
+        "6":  {"class_type": "VAEDecode",
+               "inputs": {"samples": ["112",0], "vae": ["1",2]}},
+        "334":{"class_type": "SaveImage",
+               "inputs": {"images": ["6",0],
+                          "filename_prefix": "overlord_"}},
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "controlnet-openpose-sdxl-1.0.safetensors"}},
+        "501":{"class_type": "ControlNetApplyAdvanced",
+               "inputs": {"positive": ["87",0], "negative": ["111",0],
+                          "control_net": ["500",0], "image": ["502",0],
+                          "strength": 1.0, "start_percent": 0.0, "end_percent": 1.0}},
+        "502":{"class_type": "LoadImage",
+               "inputs": {"image": "openpose_placeholder.png", "upload": "image"}},
+    }
+==== END ====
+
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+    set_node(ADV_POS_87,   "text",         job.get("positive", DEFAULT_POSITIVE))
+    set_node(ADV_POS_99,   "text",         job.get("positive", DEFAULT_POSITIVE))
+==== REPLACE ====
+    set_node(ADV_POS_87,   "text",         job.get("positive", DEFAULT_POSITIVE))
+    set_node(ADV_POS_99,   "text",         job.get("positive", DEFAULT_POSITIVE))
+
+    # V2.20 ControlNet OpenPose -- actif si une pose de reference est fournie dans le job
+    _pose_path = job.get("openpose_path", "")
+    if _pose_path and "502" in wf:
+        import os as _os
+        if _os.path.exists(_pose_path):
+            wf["502"]["inputs"]["image"] = _pose_path
+            # Brancher le ControlNet sur le KSampler (remplace positive/negative directs)
+            wf["112"]["inputs"]["positive"] = ["501", 0]
+            wf["112"]["inputs"]["negative"] = ["501", 1]
+            logger.info(f"[SUPERVISOR] ControlNet OpenPose actif : {_pose_path}")
+        else:
+            logger.debug(f"[SUPERVISOR] ControlNet skipped -- pose introuvable : {_pose_path}")
+==== END ====

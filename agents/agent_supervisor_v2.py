@@ -235,6 +235,20 @@ def load_workflow() -> dict:
         "334":{"class_type": "SaveImage",
                "inputs": {"images": ["6",0],
                           "filename_prefix": "overlord_"}},
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "OpenPoseXL2.safetensors"}},
+        "501":{"class_type": "ControlNetApplyAdvanced",
+               "inputs": {"positive": ["87",0], "negative": ["111",0],
+                          "control_net": ["500",0], "image": ["503",0],
+                          "strength": 0.85, "start_percent": 0.0, "end_percent": 0.85}},
+        "502":{"class_type": "LoadImage",
+               "inputs": {"image": "openpose_placeholder.png", "upload": "image"}},
+        "503":{"class_type": "DWPreprocessor",
+               "inputs": {"image": ["502",0],
+                          "detect_hand": "enable",
+                          "detect_body": "enable",
+                          "detect_face": "enable",
+                          "resolution": 512}},
     }
 
 def get_comfy_status() -> dict:
@@ -354,6 +368,32 @@ def patch_workflow(wf: dict, job: dict) -> dict:
     set_node(ADV_SEED_ID,  "seed",         seed)
     set_node(ADV_POS_87,   "text",         job.get("positive", DEFAULT_POSITIVE))
     set_node(ADV_POS_99,   "text",         job.get("positive", DEFAULT_POSITIVE))
+
+    # V2.20 ControlNet OpenPose -- actif si une pose de reference est fournie dans le job
+    _pose_path = job.get("openpose_path", "")
+    if _pose_path and "502" in wf:
+        import os as _os
+        if _os.path.exists(_pose_path):
+            wf["502"]["inputs"]["image"] = _pose_path
+            # Brancher le ControlNet sur le KSampler (remplace positive/negative directs)
+            wf["112"]["inputs"]["positive"] = ["501", 0]
+            wf["112"]["inputs"]["negative"] = ["501", 1]
+            logger.info(f"[SUPERVISOR] ControlNet OpenPose actif : {_pose_path}")
+        else:
+            logger.debug(f"[SUPERVISOR] ControlNet skipped -- pose introuvable : {_pose_path}")
+
+    # V2.20 ControlNet OpenPose -- actif si une pose de reference est fournie dans le job
+    _pose_path = job.get("openpose_path", "")
+    if _pose_path and "502" in wf:
+        import os as _os
+        if _os.path.exists(_pose_path):
+            wf["502"]["inputs"]["image"] = _pose_path
+            # Brancher le ControlNet sur le KSampler (remplace positive/negative directs)
+            wf["112"]["inputs"]["positive"] = ["501", 0]
+            wf["112"]["inputs"]["negative"] = ["501", 1]
+            logger.info(f"[SUPERVISOR] ControlNet OpenPose actif : {_pose_path}")
+        else:
+            logger.debug(f"[SUPERVISOR] ControlNet skipped -- pose introuvable : {_pose_path}")
     # V2.20 : negative_bank -- prompt negatif contextuel par personnage/shot/univers
     if NEGBANK_OK:
         _intent  = job.get("_intent", {})

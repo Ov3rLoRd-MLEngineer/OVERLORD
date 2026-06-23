@@ -1,0 +1,40 @@
+==== FILE: maestro.py ====
+==== FIND ====
+    if getattr(args, "no_qc", False):
+        cfg["no_qc"] = True
+==== REPLACE ====
+    if getattr(args, "no_qc", False):
+        cfg["no_qc"] = True
+    # V2.20 ControlNet -- chemin skeleton OpenPose injecte dans tous les jobs
+    if getattr(args, "pose", None):
+        cfg["openpose_path"] = args.pose
+==== END ====
+
+==== FILE: maestro.py ====
+==== FIND ====
+    parser.add_argument("--no-qc",       action="store_true",
+                        help="Sauter le Quality Control (CLIP+inpaint+pacing)")
+==== REPLACE ====
+    parser.add_argument("--no-qc",       action="store_true",
+                        help="Sauter le Quality Control (CLIP+inpaint+pacing)")
+    parser.add_argument("--pose",         default="",
+                        help="Chemin skeleton OpenPose pour ControlNet (ex: workspace/poses/asuka_skeleton.png)")
+==== END ====
+
+==== FILE: agents/storyboard.py ====
+==== FIND ====
+        for job in jobs:
+            if universe:
+                job["universe"] = universe
+            if _character:
+                job["character"] = _character
+==== REPLACE ====
+        _openpose = cfg.get("openpose_path", "") if "cfg" in dir() else ""
+        for job in jobs:
+            if universe:
+                job["universe"] = universe
+            if _character:
+                job["character"] = _character
+            if _openpose:
+                job["openpose_path"] = _openpose
+==== END ====

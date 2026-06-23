@@ -1,0 +1,41 @@
+{
+  "run_id": "maestro_20260623_232342",
+  "elapsed_s": 480.4,
+  "checks": 31,
+  "comfy_uptime_s": 465,
+  "frames_analyzed": 8,
+  "frames_failed": 3,
+  "frame_fail_rate": "38%",
+  "circuit_breakers": {
+    "comfyui": {
+      "name": "comfyui",
+      "state": "CLOSED",
+      "failures": 0,
+      "window": 5
+    },
+    "anthropic": {
+      "name": "anthropic",
+      "state": "CLOSED",
+      "failures": 0,
+      "window": 5
+    },
+    "sourcing": {
+      "name": "sourcing",
+      "state": "CLOSED",
+      "failures": 0,
+      "window": 1
+    },
+    "scenario": {
+      "name": "scenario",
+      "state": "CLOSED",
+      "failures": 0,
+      "window": 1
+    },
+    "storyboard": {
+      "name": "storyboard",
+      "state": "CLOSED",
+      "failures": 0,
+      "window": 1
+    }
+  }
+}

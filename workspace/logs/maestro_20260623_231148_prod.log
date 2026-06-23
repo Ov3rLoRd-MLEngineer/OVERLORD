@@ -1,0 +1,26 @@
+2026-06-23 23:12:59 [INFO    ] [SUPERVISOR] Batch started : 8 jobs | run_id=maestro_20260623_231148_prod
+2026-06-23 23:12:59 [INFO    ] [SUPERVISOR] Job 1/8 | hash=dc786dba
+2026-06-23 23:12:59 [DEBUG   ] [SUPERVISOR] Queued : 537bd40b-12de-4a38-b350-ac6168d91718
+2026-06-23 23:13:50 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S01 id=18 verdict=PASS
+2026-06-23 23:13:50 [INFO    ] [SUPERVISOR] Job 2/8 | hash=ab1c0a2a
+2026-06-23 23:13:50 [DEBUG   ] [SUPERVISOR] Queued : a98e4698-cf7b-4198-b9ee-e043a3902fbe
+2026-06-23 23:14:33 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S02 id=19 verdict=PASS
+2026-06-23 23:14:33 [INFO    ] [SUPERVISOR] Job 3/8 | hash=0ea50fdc
+2026-06-23 23:14:33 [DEBUG   ] [SUPERVISOR] Queued : 56b2646f-d3e9-41fa-a253-90fa8370fb81
+2026-06-23 23:15:10 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S03 id=20 verdict=PASS
+2026-06-23 23:15:10 [INFO    ] [SUPERVISOR] Job 4/8 | hash=0ca86d2a
+2026-06-23 23:15:10 [DEBUG   ] [SUPERVISOR] Queued : 7290238a-3658-4237-8092-6b52aba7c487
+2026-06-23 23:15:49 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S04 id=21 verdict=PASS
+2026-06-23 23:15:49 [INFO    ] [SUPERVISOR] Job 5/8 | hash=cec91fae
+2026-06-23 23:15:49 [DEBUG   ] [SUPERVISOR] Queued : d20a72aa-17cc-41a7-853a-c75f5fbdad8f
+2026-06-23 23:16:26 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S05 id=22 verdict=PASS
+2026-06-23 23:16:26 [INFO    ] [SUPERVISOR] Job 6/8 | hash=d2fffe63
+2026-06-23 23:16:26 [DEBUG   ] [SUPERVISOR] Queued : 7d0727a0-dbce-43db-aa06-d640e607a173
+2026-06-23 23:17:03 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S06 id=23 verdict=PASS
+2026-06-23 23:17:03 [INFO    ] [SUPERVISOR] Job 7/8 | hash=30ec0268
+2026-06-23 23:17:03 [DEBUG   ] [SUPERVISOR] Queued : 3fb89ebf-e546-4f35-abd2-8172ff43060f
+2026-06-23 23:17:40 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S07 id=24 verdict=PASS
+2026-06-23 23:17:40 [INFO    ] [SUPERVISOR] Job 8/8 | hash=f3b20157
+2026-06-23 23:17:40 [DEBUG   ] [SUPERVISOR] Queued : 504300b7-75ed-408d-9826-6ee0d410f87c
+2026-06-23 23:18:21 [DEBUG   ] [AUDIT] Frame logged : run=maestro_20260623_231148_prod shot=S08 id=25 verdict=PASS
+2026-06-23 23:18:21 [INFO    ] [SUPERVISOR] Batch complete : 8/8 succes

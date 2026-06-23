@@ -8,10 +8,10 @@
     },
     {
       "keyword": "comic book",
-      "avg_interest": 2,
+      "avg_interest": 1,
       "geo": "FR",
       "source": "google_trends"
     }
   ],
-  "_ts": 1782244994.6931624
+  "_ts": 1782249123.0760126
 }

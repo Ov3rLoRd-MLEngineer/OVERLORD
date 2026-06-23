@@ -1,0 +1,363 @@
+"""
+agents/scenario.py — Scenariste + Script Doctor V1.49t
+- Prompts full English (mistral JSON reliability)
+- Retry x2 in generate_script before failure
+- Minimal fallback script if all retries fail
+- Human-facing logs stay in French
+"""
+
+import json
+import logging
+from datetime import datetime, timezone
+from pathlib import Path
+
+try:
+    from agents.overlord_utils import fallback_llm, safe_json_parse, get_api_key, build_headers
+    UTILS_OK = True
+except ImportError:
+    UTILS_OK = False
+    fallback_llm    = None
+    safe_json_parse = None
+
+try:
+    from agents.context_bus import get_bus
+    BUS_OK = True
+except ImportError:
+    BUS_OK = False
+
+CLAUDE_MODEL = "claude-sonnet-4-6"
+SCRIPT_DIR   = Path("workspace/scripts")
+
+MEDIA_FORMATS = {
+    "anime":     "Japanese animated series (Shonen/Shounen style)",
+    "manga":     "manga divided into panels and speech bubbles",
+    "comics":    "Western comics (Marvel/DC style)",
+    "3d":        "3D CGI short film",
+    "photoreal": "photorealistic video / proof of concept",
+    "art":       "illustration series / artistic poster",
+    "game":      "video game (game design document + 2D/3D assets)",
+    "short":     "short anime film (< 5 min)",
+    "film":      "feature-length anime film (90 min)",
+}
+
+MAX_SCRIPT_ITERATIONS = 3
+MAX_GENERATE_RETRIES  = 2
+
+QUALITY_CRITERIA = [
+    "coherent narrative pacing",
+    "clearly defined central conflict",
+    "character arc present",
+    "strong visual potential (adaptable to images)",
+    "hook within the first 10 seconds",
+]
+
+# Contraintes dures par univers -- injectees dans le system prompt
+# pour empecher Mistral de deriver vers un genre sans rapport
+UNIVERSE_SYSTEM_CONSTRAINTS = {
+    "evangelion": (
+        "CRITICAL CONSTRAINT: This script MUST feature Asuka Langley Soryu as the MAIN character. "
+        "Setting: Neon Genesis Evangelion universe (Tokyo-3, NERV, Angels, EVA units). "
+        "Visual style: Hideaki Anno direction, bold colors, psychological tension, dramatic lighting. "
+        "FORBIDDEN: detective stories, generic school romance, slice-of-life unrelated to EVA. "
+        "MANDATORY elements (pick at least 2): EVA unit combat, NERV operations, "
+        "Angel encounter, pilot psychological crisis, AT Field, LCL, sync ratio. "
+        "Characters: Asuka (main), optionally Rei / Shinji / Misato / Gendo. "
+    ),
+    "gundam": (
+        "CRITICAL CONSTRAINT: Gundam universe. Mobile suit combat, space colonies, "
+        "political conflict are mandatory. No slice-of-life. "
+    ),
+    "dragon ball": (
+        "CRITICAL CONSTRAINT: Dragon Ball universe. Saiyans, Ki blasts, "
+        "martial arts tournament or villain arc. No detective stories. "
+    ),
+    "one piece": (
+        "CRITICAL CONSTRAINT: One Piece universe. Pirates, Devil Fruits, "
+        "Grand Line adventures. Luffy as main or supporting character. "
+    ),
+}
+
+
+def _get_universe_constraint(universe: str) -> str:
+    """Retourne la contrainte système pour l'univers donné."""
+    u = universe.lower()
+    for key, constraint in UNIVERSE_SYSTEM_CONSTRAINTS.items():
+        if key in u:
+            return constraint
+    return ""
+
+
+def _llm(prompt: str, system: str = "", logger: logging.Logger = None) -> str:
+    log = logger or logging.getLogger("scenario.llm")
+    if not UTILS_OK or not fallback_llm:
+        log.error("[SCENARIO] overlord_utils unavailable")
+        return ""
+    return fallback_llm(prompt, system=system, model=CLAUDE_MODEL,
+                        max_tokens=4000, logger=log)
+
+
+def _parse(raw: str, logger: logging.Logger = None) -> dict | None:
+    if not UTILS_OK or not safe_json_parse:
+        try:
+            return json.loads(raw.strip())
+        except Exception:
+            return None
+    ok, data, _ = safe_json_parse(raw, logger=logger)
+    return data if ok else None
+
+
+def _fallback_script(universe: str, media_type: str) -> dict:
+    """Minimal valid script used when all LLM retries fail."""
+    title = f"{universe or 'Unknown'}: New Chapter"
+    return {
+        "title":            title,
+        "logline":          f"A new story unfolds in the world of {universe or 'anime'}.",
+        "genre":            ["action", "adventure"],
+        "media_type":       media_type,
+        "duration_estimate": "5 min",
+        "target_audience":  "teens and young adults",
+        "synopsis":         f"An unexpected event disrupts the world of {universe or 'the story'}. "
+                            "The protagonist must face an unknown threat and discover their true power.",
+        "acts": [
+            {
+                "act": 1,
+                "title": "The Trigger",
+                "scenes": [
+                    {"scene": 1, "description": "Establishing shot of the world.", "visual_notes": "Wide establishing shot, vibrant colors."},
+                    {"scene": 2, "description": "The protagonist faces an unexpected challenge.", "visual_notes": "Close-up on face, dramatic lighting."},
+                ]
+            },
+            {
+                "act": 2,
+                "title": "The Confrontation",
+                "scenes": [
+                    {"scene": 3, "description": "Conflict escalates.", "visual_notes": "Dynamic action shot, speed lines."},
+                    {"scene": 4, "description": "Moment of doubt then resolve.", "visual_notes": "Split composition: doubt vs determination."},
+                ]
+            },
+            {
+                "act": 3,
+                "title": "Resolution",
+                "scenes": [
+                    {"scene": 5, "description": "Climax and resolution.", "visual_notes": "Full-frame impact shot, triumphant pose."},
+                    {"scene": 6, "description": "Return to calm, new status quo.", "visual_notes": "Peaceful wide shot, warm palette."},
+                ]
+            }
+        ],
+        "characters": [
+            {"name": "Protagonist", "role": "hero", "description": "Determined, evolving throughout the story."},
+            {"name": "Antagonist",  "role": "villain", "description": "Powerful and mysterious."},
+        ],
+        "visual_style":     "anime style, clean lines, expressive faces, dynamic compositions",
+        "color_palette":    ["vibrant blue", "warm orange", "deep purple"],
+        "music_mood":       "epic orchestral with electronic elements",
+        "transmedia_notes": "Adaptable to manga panels and short promotional clips.",
+        "_fallback":        True,
+    }
+
+
+# ── Script generator ──────────────────────────────────────────────────
+def generate_script(trend_report: dict, media_type: str = "anime",
+                    duration: str = "short", universe: str = "",
+                    logger: logging.Logger = None) -> dict:
+    log = logger or logging.getLogger("scenario.writer")
+    log.info(f"[SCENARISTE] Generation — media={media_type} | duree={duration}")
+
+    format_desc = MEDIA_FORMATS.get(media_type, media_type)
+    hot_kw      = ", ".join(trend_report.get("hot_keywords", [])[:8])
+    brief       = trend_report.get("brief", "No brief available.")
+    top_posts   = "\n".join(
+        f"- {p['title']} (score: {p.get('score', 0)})"
+        for p in trend_report.get("top_reddit", [])[:3]
+    )
+    universe_ctx = f"Target universe: {universe}.\n" if universe else ""
+
+    # Contrainte univers dure -- empeche Mistral de deriver
+    universe_constraint = _get_universe_constraint(universe)
+
+    system = (
+        "You are a professional screenwriter specialized in popular media. "
+        "You generate actionable, structured scripts adapted for AI-automated production. "
+        "Your scripts are rich in visual detail. "
+        + (universe_constraint + " " if universe_constraint else "")
+        + "Reply ONLY with valid JSON, no backticks, no explanation, no markdown."
+    )
+
+    prompt = (
+        f"{universe_ctx}Format: {format_desc}. Duration: {duration}.\n\n"
+        + (f"UNIVERSE LOCK: Write ONLY about {universe}. Ignore unrelated trends.\n\n"
+           if universe else "")
+        + f"Trends (use only if relevant to {universe or media_type}):\n"
+        + f"Brief: {brief}\nViral posts: {top_posts}\nKeywords: {hot_kw}\n\n"
+        "Generate a strict JSON script with these fields: "
+        "title, logline, genre, media_type, duration_estimate, target_audience, "
+        "synopsis, acts (with scenes), characters, visual_style, color_palette, "
+        "music_mood, transmedia_notes.\n"
+        "All values must be in English. Output raw JSON only."
+    )
+
+    for attempt in range(1, MAX_GENERATE_RETRIES + 1):
+        if attempt > 1:
+            log.info(f"[SCENARISTE] Retry {attempt}/{MAX_GENERATE_RETRIES}")
+            # Simplified prompt on retry
+            prompt = (
+                f"Write a short anime script about: {universe or media_type}.\n"
+                "Return ONLY a JSON object with: title, logline, genre, synopsis, "
+                "acts, characters, visual_style. No markdown, no explanation."
+            )
+
+        raw    = _llm(prompt, system=system, logger=log)
+        result = _parse(raw, logger=log)
+        if result:
+            log.info(f"[SCENARISTE] Script genere : '{result.get('title', '?')}'")
+            return result
+        log.warning(f"[SCENARISTE] JSON invalide (tentative {attempt}/{MAX_GENERATE_RETRIES})")
+
+    log.error("[SCENARISTE] Toutes les tentatives echouees — utilisation du fallback")
+    fb = _fallback_script(universe, media_type)
+    log.info(f"[SCENARISTE] Fallback script : '{fb['title']}'")
+    return fb
+
+
+# ── Script Doctor ─────────────────────────────────────────────────────
+def review_script(script: dict, iteration: int = 1,
+                  logger: logging.Logger = None) -> dict:
+    log = logger or logging.getLogger("scenario.doctor")
+    log.info(f"[SCRIPT DOCTOR] Revision iteration {iteration}")
+
+    criteria_list = "\n".join(f"- {c}" for c in QUALITY_CRITERIA)
+    script_json   = json.dumps(script, ensure_ascii=False, indent=2)[:3000]
+
+    system = (
+        "You are an expert in script development and narrative analysis. "
+        "Reply ONLY with valid JSON, no backticks, no explanation."
+    )
+    prompt = (
+        f"Analyze this script against these criteria:\n{criteria_list}\n\n"
+        f"Script:\n{script_json}\n\n"
+        "Return JSON with: score_global (0-100), criteria_scores, validated (bool), "
+        "strengths, weaknesses, correction_instructions. "
+        "All values in English. Output raw JSON only."
+    )
+
+    raw    = _llm(prompt, system=system, logger=log)
+    result = _parse(raw, logger=log)
+    if result:
+        log.info(f"[SCRIPT DOCTOR] Score={result.get('score_global', 0)}/100 | "
+                 f"Valide={'oui' if result.get('validated') else 'non'}")
+        return result
+    return {"validated": True, "score_global": 50, "correction_instructions": ""}
+
+
+def improve_script(script: dict, review: dict,
+                   logger: logging.Logger = None) -> dict:
+    log          = logger or logging.getLogger("scenario.improve")
+    instructions = review.get("correction_instructions", "")
+    weaknesses   = "\n".join(f"- {w}" for w in review.get("weaknesses", []))
+    script_json  = json.dumps(script, ensure_ascii=False, indent=2)[:3000]
+
+    system = (
+        "You are an expert screenwriter. "
+        "Reply ONLY with valid JSON, no backticks, no explanation."
+    )
+    prompt = (
+        f"Improve this script.\nWeaknesses:\n{weaknesses}\n"
+        f"Instructions:\n{instructions}\n\nCurrent script:\n{script_json}\n\n"
+        "Return the improved script in the same JSON format. "
+        "All values in English. Output raw JSON only."
+    )
+
+    raw    = _llm(prompt, system=system, logger=log)
+    result = _parse(raw, logger=log)
+    if result:
+        log.info(f"[IMPROVE] Script ameliore : '{result.get('title', '?')}'")
+        return result
+    log.warning("[IMPROVE] JSON invalide — conservation du script precedent")
+    return script
+
+
+# ── Pipeline complet ──────────────────────────────────────────────────
+def run_scenario(trend_report: dict, media_type: str = "anime",
+                 duration: str = "short", universe: str = "",
+                 quality_threshold: int = 70,
+                 logger: logging.Logger = None) -> dict:
+    log = logger or logging.getLogger("scenario")
+    log.info(f"[SCENARIO] Pipeline demarre — media={media_type} | seuil={quality_threshold}")
+    SCRIPT_DIR.mkdir(parents=True, exist_ok=True)
+
+    script = generate_script(trend_report, media_type, duration, universe, logger=log)
+
+    # Fallback script is valid — never stop the pipeline
+    if "error" in script:
+        log.error("[SCENARIO] Echec generation initiale — fallback")
+        script = _fallback_script(universe, media_type)
+
+    best_script = script
+    best_score  = 0
+    iteration   = 1
+
+    for iteration in range(1, MAX_SCRIPT_ITERATIONS + 1):
+        review = review_script(script, iteration=iteration, logger=log)
+        score  = int(review.get("score_global", 0))
+        if score > best_score:
+            best_score  = score
+            best_script = script
+        if review.get("validated") and score >= quality_threshold:
+            log.info(f"[SCENARIO] OK Valide iteration {iteration} — score={score}")
+            break
+        if iteration < MAX_SCRIPT_ITERATIONS:
+            log.info(f"[SCENARIO] Iteration {iteration} score={score} < {quality_threshold} — amelioration...")
+            script = improve_script(script, review, logger=log)
+    else:
+        log.warning(f"[SCENARIO] Seuil non atteint — meilleur score={best_score}")
+        script = best_script
+
+    ts         = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
+    title_safe = script.get("title", "untitled").replace(" ", "_")[:40]
+    out_path   = SCRIPT_DIR / f"{ts}_{title_safe}.json"
+    out_path.write_text(json.dumps(script, indent=2, ensure_ascii=False), encoding="utf-8")
+    log.info(f"[SCENARIO] Script sauvegarde -> {out_path}")
+
+    script["_meta"] = {
+        "final_score": best_score,
+        "iterations":  iteration,
+        "saved_to":    str(out_path),
+        "fallback":    script.get("_fallback", False),
+    }
+    # V2.20 : propager universe dans le script pour storyboard/supervisor
+    if universe:
+        script["universe"] = universe
+
+    if BUS_OK:
+        try:
+            bus = get_bus()
+            bus.write("scenario.title",    script.get("title", ""),  agent_id="scenario")
+            bus.write("scenario.genre",    script.get("genre", []),   agent_id="scenario")
+            bus.write("scenario.score",    best_score,                agent_id="scenario")
+            bus.write("scenario.saved_to", str(out_path),             agent_id="scenario")
+            bus.write("scenario.scenes",   sum(
+                len(a.get("scenes", [])) for a in script.get("acts", [])
+            ), agent_id="scenario")
+        except Exception as e:
+            log.warning(f"[SCENARIO] Publication bus echouee : {e}")
+
+    return script
+
+
+if __name__ == "__main__":
+    import sys, io
+    if hasattr(sys.stdout, 'buffer'):
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    logging.basicConfig(level=logging.INFO)
+    fake_report = {
+        "media_type":   "anime",
+        "brief":        "Dragon Ball epic battles dominate trends",
+        "hot_keywords": ["dragon ball", "super saiyan", "tournament", "epic fight"],
+        "top_reddit":   [{"title": "New Dragon Ball arc leaked!", "score": 45000}],
+    }
+    script = run_scenario(fake_report, media_type="anime", universe="Dragon Ball Super")
+    print(json.dumps({
+        "title":    script.get("title"),
+        "score":    script.get("_meta", {}).get("final_score"),
+        "fallback": script.get("_meta", {}).get("fallback"),
+    }, indent=2))

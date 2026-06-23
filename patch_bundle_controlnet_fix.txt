@@ -1,0 +1,8 @@
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "controlnet-openpose-sdxl-1.0.safetensors"}},
+==== REPLACE ====
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "OpenPoseXL2.safetensors"}},
+==== END ====

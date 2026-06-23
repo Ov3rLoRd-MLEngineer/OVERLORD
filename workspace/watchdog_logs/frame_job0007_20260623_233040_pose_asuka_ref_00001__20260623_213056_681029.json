@@ -1,0 +1,17 @@
+{
+  "shot_id": "job0007_20260623_233040_pose_asuka_ref_00001_",
+  "verdict": "FAIL",
+  "passed": false,
+  "issues": [
+    "Image trop sombre (brightness=1)",
+    "Zone noire excessive : 99%"
+  ],
+  "metrics": {
+    "dimensions": "512x512",
+    "sharpness": 166.8,
+    "brightness": 1.0,
+    "color_diversity": 14.5,
+    "black_pct": 99.0,
+    "white_pct": 0.1
+  }
+}
