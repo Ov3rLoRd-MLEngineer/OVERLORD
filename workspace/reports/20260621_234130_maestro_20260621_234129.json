@@ -1,0 +1,38 @@
+{
+  "run_id": "maestro_20260621_234129",
+  "timestamp": "2026-06-21T23:41:30.262787",
+  "universe": "?",
+  "blocs": {},
+  "images": [],
+  "loras_used": [],
+  "prompts": [],
+  "scores": {},
+  "summary": {
+    "scenario": "Evangelion: Reborn Episodes",
+    "shots": 8,
+    "images_ok": 0,
+    "video": false,
+    "loras_used": [],
+    "emotion_arc": "wonder",
+    "mode": "balance"
+  },
+  "bus": {
+    "director.mode": "balance",
+    "director.emotion_arc": "wonder",
+    "director.quality_threshold": 73,
+    "scenario.title": "Evangelion: Reborn Episodes",
+    "scenario.score": 83,
+    "scenario.scenes": 0,
+    "storyboard.shots_count": 8,
+    "production.success": 8,
+    "production.failed": 0,
+    "postprod.video": "",
+    "watchdog.frames_analyzed": 0
+  },
+  "scenario_title": "Evangelion: Reborn Episodes",
+  "scenario_score": 83,
+  "image_count": 0,
+  "production_success": 8,
+  "production_failed": 0,
+  "video_path": ""
+}

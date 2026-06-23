@@ -1,0 +1,64 @@
+{
+  "title": "Conan's Christmas Case",
+  "logline": "A special episode of Detective Conan featuring a series of holiday-themed mysteries that test the limits of the detective's skill set.",
+  "genre": [
+    "Crime",
+    "Mystery",
+    "Drama"
+  ],
+  "media_type": "Anime",
+  "duration_estimate": "25 minutes",
+  "target_audience": [
+    "Teens",
+    "Young Adults"
+  ],
+  "synopsis": "During the holiday season, a series of strange incidents occur around Tokyo. Conan and his friends must work together to solve these mysterious cases while also enjoying the festive atmosphere.",
+  "acts": [
+    {
+      "title": "Act I: The Christmas Tree Mystery",
+      "scenes": [
+        {
+          "panel1": "A tree lot is robbed, leaving only presents behind.",
+          "panel2": "Conan deduces the identity of the thief."
+        },
+        {
+          "panel1": "Conan and Ran visit a department store for Christmas shopping.",
+          "panel2": "They witness an attempted theft."
+        }
+      ]
+    },
+    {
+      "title": "Act II: The Santa Claus Imposter",
+      "scenes": [
+        {
+          "panel1": "A man dressed as Santa Claus is accused of a crime he didn't commit.",
+          "panel2": "Conan uncovers the real culprit."
+        }
+      ]
+    },
+    {
+      "title": "Act III: The New Year's Eve Resolution",
+      "scenes": [
+        {
+          "panel1": "A wealthy businessman makes a mysterious New Year's resolution.",
+          "panel2": "Conan investigates and uncovers a shocking secret."
+        }
+      ]
+    }
+  ],
+  "characters": [
+    "Detective Conan",
+    "Ran Mouri",
+    "Kogoro Mouri",
+    "Ai Haibara"
+  ],
+  "visual_style": "Combination of traditional manga art style and modern anime techniques.",
+  "color_palette": [
+    "Warm holiday colors (red, green, gold), cool winter tones (blue, silver, white)"
+  ],
+  "music_mood": "A blend of suspenseful mystery music and festive holiday tunes",
+  "transmedia_notes": [
+    "Potential for tie-in merchandise such as manga books, action figures, and apparel.",
+    "Cross promotion with Crunchyroll for streaming and presentation on their platform."
+  ]
+}

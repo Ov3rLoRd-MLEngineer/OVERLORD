@@ -1,0 +1,545 @@
+{
+  "run_id": "maestro_20260622_053533",
+  "timestamp": "2026-06-22T05:35:33.983614",
+  "universe": "?",
+  "blocs": {},
+  "images": [
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00001_.png",
+      "name": "job0000_20260622_002400_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00002_.png",
+      "name": "job0000_20260622_002400_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00003_.png",
+      "name": "job0000_20260622_002400_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00004_.png",
+      "name": "job0000_20260622_002400_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00005_.png",
+      "name": "job0000_20260622_002400_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00006_.png",
+      "name": "job0000_20260622_002400_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00007_.png",
+      "name": "job0000_20260622_002400_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00008_.png",
+      "name": "job0000_20260622_002400_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0000_20260622_002400_overlord__00009_.png",
+      "name": "job0000_20260622_002400_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00001_.png",
+      "name": "job0001_20260622_002513_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00002_.png",
+      "name": "job0001_20260622_002513_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00003_.png",
+      "name": "job0001_20260622_002513_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00004_.png",
+      "name": "job0001_20260622_002513_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00005_.png",
+      "name": "job0001_20260622_002513_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00006_.png",
+      "name": "job0001_20260622_002513_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00007_.png",
+      "name": "job0001_20260622_002513_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00008_.png",
+      "name": "job0001_20260622_002513_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00009_.png",
+      "name": "job0001_20260622_002513_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0001_20260622_002513_overlord__00010_.png",
+      "name": "job0001_20260622_002513_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00001_.png",
+      "name": "job0002_20260622_002627_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00002_.png",
+      "name": "job0002_20260622_002627_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00003_.png",
+      "name": "job0002_20260622_002627_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00004_.png",
+      "name": "job0002_20260622_002627_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00005_.png",
+      "name": "job0002_20260622_002627_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00006_.png",
+      "name": "job0002_20260622_002627_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00007_.png",
+      "name": "job0002_20260622_002627_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00008_.png",
+      "name": "job0002_20260622_002627_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00009_.png",
+      "name": "job0002_20260622_002627_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00010_.png",
+      "name": "job0002_20260622_002627_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0002_20260622_002627_overlord__00011_.png",
+      "name": "job0002_20260622_002627_overlord__00011_.png",
+      "size_kb": 1859
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00001_.png",
+      "name": "job0003_20260622_002741_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00002_.png",
+      "name": "job0003_20260622_002741_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00003_.png",
+      "name": "job0003_20260622_002741_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00004_.png",
+      "name": "job0003_20260622_002741_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00005_.png",
+      "name": "job0003_20260622_002741_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00006_.png",
+      "name": "job0003_20260622_002741_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00007_.png",
+      "name": "job0003_20260622_002741_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00008_.png",
+      "name": "job0003_20260622_002741_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00009_.png",
+      "name": "job0003_20260622_002741_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00010_.png",
+      "name": "job0003_20260622_002741_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00011_.png",
+      "name": "job0003_20260622_002741_overlord__00011_.png",
+      "size_kb": 1859
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0003_20260622_002741_overlord__00012_.png",
+      "name": "job0003_20260622_002741_overlord__00012_.png",
+      "size_kb": 2007
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00001_.png",
+      "name": "job0004_20260622_002835_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00002_.png",
+      "name": "job0004_20260622_002835_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00003_.png",
+      "name": "job0004_20260622_002835_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00004_.png",
+      "name": "job0004_20260622_002835_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00005_.png",
+      "name": "job0004_20260622_002835_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00006_.png",
+      "name": "job0004_20260622_002835_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00007_.png",
+      "name": "job0004_20260622_002835_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00008_.png",
+      "name": "job0004_20260622_002835_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00009_.png",
+      "name": "job0004_20260622_002835_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00010_.png",
+      "name": "job0004_20260622_002835_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00011_.png",
+      "name": "job0004_20260622_002835_overlord__00011_.png",
+      "size_kb": 1859
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00012_.png",
+      "name": "job0004_20260622_002835_overlord__00012_.png",
+      "size_kb": 2007
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0004_20260622_002835_overlord__00013_.png",
+      "name": "job0004_20260622_002835_overlord__00013_.png",
+      "size_kb": 1615
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00001_.png",
+      "name": "job0005_20260622_002927_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00002_.png",
+      "name": "job0005_20260622_002927_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00003_.png",
+      "name": "job0005_20260622_002927_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00004_.png",
+      "name": "job0005_20260622_002927_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00005_.png",
+      "name": "job0005_20260622_002927_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00006_.png",
+      "name": "job0005_20260622_002927_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00007_.png",
+      "name": "job0005_20260622_002927_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00008_.png",
+      "name": "job0005_20260622_002927_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00009_.png",
+      "name": "job0005_20260622_002927_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00010_.png",
+      "name": "job0005_20260622_002927_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00011_.png",
+      "name": "job0005_20260622_002927_overlord__00011_.png",
+      "size_kb": 1859
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00012_.png",
+      "name": "job0005_20260622_002927_overlord__00012_.png",
+      "size_kb": 2007
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00013_.png",
+      "name": "job0005_20260622_002927_overlord__00013_.png",
+      "size_kb": 1615
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0005_20260622_002927_overlord__00014_.png",
+      "name": "job0005_20260622_002927_overlord__00014_.png",
+      "size_kb": 1864
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00001_.png",
+      "name": "job0006_20260622_003019_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00002_.png",
+      "name": "job0006_20260622_003019_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00003_.png",
+      "name": "job0006_20260622_003019_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00004_.png",
+      "name": "job0006_20260622_003019_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00005_.png",
+      "name": "job0006_20260622_003019_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00006_.png",
+      "name": "job0006_20260622_003019_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00007_.png",
+      "name": "job0006_20260622_003019_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00008_.png",
+      "name": "job0006_20260622_003019_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00009_.png",
+      "name": "job0006_20260622_003019_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00010_.png",
+      "name": "job0006_20260622_003019_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00011_.png",
+      "name": "job0006_20260622_003019_overlord__00011_.png",
+      "size_kb": 1859
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00012_.png",
+      "name": "job0006_20260622_003019_overlord__00012_.png",
+      "size_kb": 2007
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00013_.png",
+      "name": "job0006_20260622_003019_overlord__00013_.png",
+      "size_kb": 1615
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00014_.png",
+      "name": "job0006_20260622_003019_overlord__00014_.png",
+      "size_kb": 1864
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0006_20260622_003019_overlord__00015_.png",
+      "name": "job0006_20260622_003019_overlord__00015_.png",
+      "size_kb": 1974
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00001_.png",
+      "name": "job0007_20260622_003112_overlord__00001_.png",
+      "size_kb": 2821
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00002_.png",
+      "name": "job0007_20260622_003112_overlord__00002_.png",
+      "size_kb": 1759
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00003_.png",
+      "name": "job0007_20260622_003112_overlord__00003_.png",
+      "size_kb": 1954
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00004_.png",
+      "name": "job0007_20260622_003112_overlord__00004_.png",
+      "size_kb": 1654
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00005_.png",
+      "name": "job0007_20260622_003112_overlord__00005_.png",
+      "size_kb": 2232
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00006_.png",
+      "name": "job0007_20260622_003112_overlord__00006_.png",
+      "size_kb": 2298
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00007_.png",
+      "name": "job0007_20260622_003112_overlord__00007_.png",
+      "size_kb": 2113
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00008_.png",
+      "name": "job0007_20260622_003112_overlord__00008_.png",
+      "size_kb": 1934
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00009_.png",
+      "name": "job0007_20260622_003112_overlord__00009_.png",
+      "size_kb": 2389
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00010_.png",
+      "name": "job0007_20260622_003112_overlord__00010_.png",
+      "size_kb": 1700
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00011_.png",
+      "name": "job0007_20260622_003112_overlord__00011_.png",
+      "size_kb": 1859
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00012_.png",
+      "name": "job0007_20260622_003112_overlord__00012_.png",
+      "size_kb": 2007
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00013_.png",
+      "name": "job0007_20260622_003112_overlord__00013_.png",
+      "size_kb": 1615
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00014_.png",
+      "name": "job0007_20260622_003112_overlord__00014_.png",
+      "size_kb": 1864
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00015_.png",
+      "name": "job0007_20260622_003112_overlord__00015_.png",
+      "size_kb": 1974
+    },
+    {
+      "path": "workspace\\archive\\maestro_20260622_002102_prod\\job0007_20260622_003112_overlord__00016_.png",
+      "name": "job0007_20260622_003112_overlord__00016_.png",
+      "size_kb": 1841
+    }
+  ],
+  "loras_used": [],
+  "prompts": [],
+  "scores": {},
+  "summary": {
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "shots": 3,
+    "images_ok": 100,
+    "video": true,
+    "loras_used": [],
+    "emotion_arc": "wonder",
+    "mode": "balance"
+  },
+  "bus": {
+    "director.mode": "balance",
+    "director.emotion_arc": "wonder",
+    "director.quality_threshold": 73,
+    "scenario.title": "evangelion battle mecha girl: New Chapter",
+    "scenario.score": 50,
+    "scenario.scenes": 0,
+    "storyboard.shots_count": 3,
+    "production.success": 8,
+    "production.failed": 0,
+    "supervisor.archived_images": [],
+    "supervisor.archive_dir": "workspace\\archive\\maestro_20260622_002102_prod",
+    "postprod.video": "workspace\\exports\\20260622_003117_untitled.mp4",
+    "postprod.image_count": 100,
+    "prompt_engineer.jobs_enriched": 8,
+    "quality_gate.last_valid": true,
+    "quality_gate.last_errors": 0,
+    "watchdog.frames_analyzed": 0
+  },
+  "scenario_title": "evangelion battle mecha girl: New Chapter",
+  "scenario_score": 50,
+  "image_count": 100,
+  "production_success": 8,
+  "production_failed": 0,
+  "video_path": "workspace\\exports\\20260622_003117_untitled.mp4"
+}

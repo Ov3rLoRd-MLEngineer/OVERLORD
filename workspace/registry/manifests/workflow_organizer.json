@@ -1,0 +1,10 @@
+{
+  "name": "workflow_organizer",
+  "version": "V?.?",
+  "checksum": "6b671f540c85fdb1",
+  "lines": 602,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:03.113214",
+  "path": "agents\\workflow_organizer.py"
+}

@@ -1,0 +1,19 @@
+2026-06-20 00:07:49 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-20 00:07:49 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 00:07:49 [INFO    ] [CHECKPOINT] Charge : maestro_20260619_235934 | Etat : interrupted | Blocs termines : []
+2026-06-20 00:07:49 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'sourcing' (0/5 blocs deja termines : [])
+2026-06-20 00:07:49 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_000749
+2026-06-20 00:07:49 [INFO    ] ============================================================
+2026-06-20 00:07:49 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 00:07:49 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_000749
+2026-06-20 00:07:49 [INFO    ]   Critique : OK
+2026-06-20 00:07:49 [INFO    ]   Watchdog : OK
+2026-06-20 00:07:49 [INFO    ]   Director : OK
+2026-06-20 00:07:49 [INFO    ]   Bus      : OK
+2026-06-20 00:07:49 [INFO    ]   Blocs    : storyboard -> production -> postprod -> 3d
+2026-06-20 00:07:49 [INFO    ] ============================================================
+2026-06-20 00:07:49 [ERROR   ] Pas de script -- arret
+2026-06-20 00:07:54 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 00:07:54 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=15s
+2026-06-20 00:07:54 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260620_000749 | Blocs termines : []
+2026-06-20 00:07:54 [INFO    ] [CRITIQUE] Bilan : 0 verifications | score moyen=0 | sante=UNKNOWN

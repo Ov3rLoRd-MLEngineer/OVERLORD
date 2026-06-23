@@ -1,0 +1,97 @@
+2026-06-22 01:13:05 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-22 01:13:05 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-22 01:13:05 [INFO    ] [CHECKPOINT] Charge : maestro_20260622_002102 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-22 01:13:05 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260622_011305
+2026-06-22 01:13:05 [INFO    ] [GPU] Optimisation pour : rtx2070 — RTX 2070 8GB — config stable certifiée
+2026-06-22 01:13:05 [INFO    ] [GPU] Workflow déjà à jour
+2026-06-22 01:13:05 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-22 01:13:05 [INFO    ] [GPU] Optimisation auto : rtx2070
+2026-06-22 01:13:05 [INFO    ] ============================================================
+2026-06-22 01:13:05 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-22 01:13:05 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260622_011305
+2026-06-22 01:13:05 [INFO    ]   Critique : OK
+2026-06-22 01:13:05 [INFO    ]   Watchdog : OK
+2026-06-22 01:13:05 [INFO    ]   Director : OK
+2026-06-22 01:13:06 [INFO    ]   Bus      : OK
+2026-06-22 01:13:06 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-22 01:13:06 [INFO    ] ============================================================
+2026-06-22 01:13:06 [INFO    ] =======================================================
+2026-06-22 01:13:06 [INFO    ] BLOC 1 -- SOURCING
+2026-06-22 01:13:06 [INFO    ] =======================================================
+2026-06-22 01:13:06 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-22 01:13:06 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-22 01:13:06 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-22 01:13:06 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-22 01:13:06 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-22 01:13:06 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-22 01:13:06 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-22 01:13:07 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-22 01:13:08 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-22 01:13:09 [DEBUG   ] RSS crunchyroll -> 10 articles
+2026-06-22 01:13:09 [DEBUG   ] RSS animenewsnet -> 10 articles
+2026-06-22 01:13:10 [DEBUG   ] RSS kotaku -> 10 articles
+2026-06-22 01:13:10 [DEBUG   ] RSS ign -> 10 articles
+2026-06-22 01:13:10 [DEBUG   ] RSS techcrunch -> 10 articles
+2026-06-22 01:13:10 [DEBUG   ] RSS theVerge -> 10 articles
+2026-06-22 01:13:10 [DEBUG   ] Trends ['anime 2025', 'manga trending', 'dragon ball', 'webtoon', 'AI art'] -> 5 items
+2026-06-22 01:13:13 [DEBUG   ] Trends ['animated short film', 'comic book'] -> 2 items
+2026-06-22 01:13:15 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 66 mots-cles
+2026-06-22 01:13:15 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts ...
+2026-06-22 01:13:15 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-22 01:13:15 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-22 01:13:15 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts 
+2026-06-22 01:13:15 [INFO    ] [NARRATIVE] Contexte inter-épisodes injecté
+2026-06-22 01:13:15 [INFO    ] =======================================================
+2026-06-22 01:13:15 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-22 01:13:15 [INFO    ] =======================================================
+2026-06-22 01:13:15 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-22 01:13:15 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-22 01:13:34 [DEBUG   ] [LLM] Ollama/mistral OK (2415 chars)
+2026-06-22 01:13:34 [INFO    ] [SCENARISTE] Script genere : 'Evangelion: Conan's Case of the Battle Mecha Girl'
+2026-06-22 01:13:34 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-22 01:13:42 [DEBUG   ] [LLM] Ollama/mistral OK (976 chars)
+2026-06-22 01:13:42 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-22 01:13:42 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-22 01:13:42 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260621_231342_Evangelion:_Conan's_Case_of_the_Battle_M.json
+2026-06-22 01:13:42 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-22 01:13:42 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-22 01:13:42 [INFO    ] [SCENARIO] OK 'Evangelion: Conan's Case of the Battle Mecha Girl'
+2026-06-22 01:13:42 [INFO    ] =======================================================
+2026-06-22 01:13:42 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-22 01:13:42 [INFO    ] =======================================================
+2026-06-22 01:13:42 [INFO    ] [STORYBOARD] Generation -- titre='Evangelion: Conan's Case of the Battle Mecha Girl'
+2026-06-22 01:14:01 [INFO    ] [STORYBOARD] OK -- 8 shots generes
+2026-06-22 01:14:01 [INFO    ] [STORYBOARD] Sauvegarde -> 20260622_011401_Evangelion: Conan's Case of the Battle Mecha Girl.json
+2026-06-22 01:14:01 [INFO    ] [STORYBOARD] 8 jobs ComfyUI prepares
+2026-06-22 01:14:01 [ERROR   ] [MAESTRO] Erreur critique : name 'title' is not defined
+Traceback (most recent call last):
+  File "D:\OVERLORD\maestro.py", line 878, in run_pipeline
+    shotlist, jobs = block_storyboard(script, cfg, state, logger, critic, watchdog, cp_mgr)
+                     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\OVERLORD\maestro.py", line 501, in block_storyboard
+    shotlist, jobs = run_storyboard(
+                     ~~~~~~~~~~~~~~^
+        script     = script,
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        logger     = logger
+        ^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\OVERLORD\agents\storyboard.py", line 287, in run_storyboard
+    sketches_dir = Path("workspace/storyboards/sketches") / (title or "run")
+                                                             ^^^^^
+NameError: name 'title' is not defined. Did you mean: 'tuple'?
+2026-06-22 01:14:01 [INFO    ] [REPORTER] Génération rapport run=maestro_20260622_011305
+2026-06-22 01:14:01 [INFO    ] [REPORTER] OK — JSON: 20260622_011401_maestro_20260622_011305.json | MD: 20260622_011401_maestro_20260622_011305.md
+2026-06-22 01:14:01 [INFO    ] [REPORTER] Résumé : 100 images | vidéo: True
+2026-06-22 01:14:06 [INFO    ] [WATCHDOG] Arrete
+2026-06-22 01:14:06 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=60s
+2026-06-22 01:14:06 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260622_011305 | Blocs termines : ['sourcing', 'scenario']
+2026-06-22 01:14:06 [INFO    ] [CRITIQUE] Bilan : 2 verifications | score moyen=80.0 | sante=STABLE

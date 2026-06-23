@@ -1,0 +1,20 @@
+{
+  "name": "director",
+  "version": "V1.48",
+  "checksum": "086c7441aa381f4a",
+  "lines": 511,
+  "dependencies": [
+    "v130_emotion_engine",
+    "pipeline_conscience",
+    "context_bus",
+    "director",
+    "overlord_utils",
+    "v130_world_model",
+    "v130_generative_world",
+    "v130_intelligence_ext",
+    "v130_agent_personality"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.946079",
+  "path": "agents\\director.py"
+}

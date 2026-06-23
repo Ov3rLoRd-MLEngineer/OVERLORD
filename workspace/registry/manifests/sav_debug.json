@@ -1,0 +1,10 @@
+{
+  "name": "sav_debug",
+  "version": "V?.?",
+  "checksum": "dbf83a689aacca94",
+  "lines": 601,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.458595",
+  "path": "agents\\sav_debug.py"
+}

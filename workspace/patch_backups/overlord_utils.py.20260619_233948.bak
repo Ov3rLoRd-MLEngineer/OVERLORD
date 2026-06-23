@@ -1,0 +1,343 @@
+"""
+agents/overlord_utils.py -- Utilitaires centraux Ov3rLoRd V1.49q
+Fournit : get_api_key, build_headers, retry_api, safe_json_parse,
+          fallback_llm (Claude -> Ollama), ensure_workspace, ensure_env_file.
+
+V1.49q : fallback_llm() ameliore :
+  - Detection automatique si Claude indisponible ou cle absente
+  - Bascule Ollama explicite via variable d'env OV_LLM_MODE=offline
+  - Liste des modeles Ollama disponibles en cache
+  - Logging clair du mode utilise
+"""
+
+import json
+import logging
+import os
+import time
+from pathlib import Path
+from typing import Optional
+
+log = logging.getLogger("overlord_utils")
+
+# ── Constantes ────────────────────────────────────────────────────────
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+OLLAMA_URL    = "http://localhost:11434"
+DEFAULT_MODEL = "claude-sonnet-4-6"
+DEFAULT_OLLAMA_MODEL = "llama3"  # modele Ollama par defaut
+
+# ── Lecture cle API ───────────────────────────────────────────────────
+def get_api_key(env_file: Path = None) -> str:
+    """
+    Lit ANTHROPIC_API_KEY depuis :
+    1. Variable d'environnement (priorite max)
+    2. Fichier .env a la racine du projet
+    3. Fichier .env passe en parametre
+    Retourne "" si absent.
+    """
+    key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if key:
+        return key
+
+    search_paths = []
+    if env_file:
+        search_paths.append(Path(env_file))
+    # Chercher .env depuis ce fichier vers la racine
+    p = Path(__file__).resolve()
+    for _ in range(4):
+        p = p.parent
+        search_paths.append(p / ".env")
+
+    for env_path in search_paths:
+        if env_path.exists():
+            try:
+                for line in env_path.read_text(encoding="utf-8").splitlines():
+                    if line.startswith("ANTHROPIC_API_KEY="):
+                        key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                        if key:
+                            return key
+            except Exception:
+                pass
+    return ""
+
+
+def build_headers(api_key: str = None) -> dict:
+    """Construit les headers HTTP pour l'API Anthropic."""
+    key = api_key or get_api_key()
+    return {
+        "Content-Type":    "application/json",
+        "x-api-key":       key,
+        "anthropic-version": "2023-06-01",
+    }
+
+
+def retry_api(fn, retries: int = 3, delay: float = 2.0):
+    """Execute fn avec retry sur exception."""
+    for attempt in range(retries):
+        try:
+            return fn()
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(delay * (attempt + 1))
+            else:
+                raise
+
+
+def safe_json_parse(raw: str) -> tuple[bool, dict | list | None, str]:
+    """
+    Parse JSON robuste : gere les blocs ```json, les prefixes texte.
+    Retourne (success, data, error_msg).
+    """
+    if not raw:
+        return False, None, "chaine vide"
+    try:
+        # Nettoyer les blocs markdown
+        clean = raw.strip()
+        if "```json" in clean:
+            clean = clean.split("```json", 1)[1].split("```", 1)[0].strip()
+        elif "```" in clean:
+            clean = clean.split("```", 1)[1].split("```", 1)[0].strip()
+        # Trouver le premier { ou [
+        for i, c in enumerate(clean):
+            if c in "{[":
+                clean = clean[i:]
+                break
+        data = json.loads(clean)
+        return True, data, ""
+    except json.JSONDecodeError as e:
+        return False, None, str(e)
+
+
+# ── LLM Mode ─────────────────────────────────────────────────────────
+def _get_llm_mode() -> str:
+    """
+    Retourne le mode LLM actif : 'online' ou 'offline'.
+    Priorite :
+      1. Variable d'env OV_LLM_MODE (online/offline)
+      2. ANTHROPIC_API_KEY presente -> online
+      3. Sinon -> offline (Ollama)
+    """
+    mode = os.environ.get("OV_LLM_MODE", "").lower()
+    if mode in ("online", "offline"):
+        return mode
+    # Auto-detect : si cle API presente -> online
+    if get_api_key():
+        return "online"
+    return "offline"
+
+
+def _get_ollama_model() -> str:
+    """Retourne le modele Ollama a utiliser."""
+    return os.environ.get("OV_OLLAMA_MODEL", DEFAULT_OLLAMA_MODEL)
+
+
+def _call_claude(prompt: str, system: str = "",
+                 model: str = DEFAULT_MODEL,
+                 max_tokens: int = 1000) -> str:
+    """Appel direct a l'API Claude Anthropic."""
+    import requests
+    key = get_api_key()
+    if not key:
+        raise ValueError("ANTHROPIC_API_KEY absent")
+
+    messages = [{"role": "user", "content": prompt}]
+    body = {
+        "model":      model,
+        "max_tokens": max_tokens,
+        "messages":   messages,
+    }
+    if system:
+        body["system"] = system
+
+    resp = requests.post(
+        ANTHROPIC_URL,
+        headers=build_headers(key),
+        json=body,
+        timeout=60,
+    )
+    if resp.status_code == 200:
+        content = resp.json().get("content", [])
+        return "".join(c.get("text","") for c in content if c.get("type")=="text")
+    raise RuntimeError(f"Claude HTTP {resp.status_code} : {resp.text[:200]}")
+
+
+def _call_ollama(prompt: str, system: str = "",
+                 model: str = None,
+                 max_tokens: int = 1000) -> str:
+    """
+    Appel a Ollama local (http://localhost:11434).
+    Compatible avec les memes arguments que _call_claude().
+    """
+    import requests
+    ollama_model = model if model and "/" not in model and "claude" not in model.lower() \
+                   else _get_ollama_model()
+
+    # Construire le prompt avec system si present
+    full_prompt = f"{system}\n\n{prompt}" if system else prompt
+
+    try:
+        # Essai avec l'API /api/chat (plus recente, supporte system)
+        resp = requests.post(
+            f"{OLLAMA_URL}/api/chat",
+            json={
+                "model":    ollama_model,
+                "messages": [
+                    {"role": "system",    "content": system}   if system else None,
+                    {"role": "user",      "content": prompt},
+                ],
+                "stream": False,
+                "options": {"num_predict": max_tokens},
+            },
+            timeout=120,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            return data.get("message", {}).get("content", "")
+    except Exception:
+        pass
+
+    # Fallback : API /api/generate (plus ancienne)
+    try:
+        resp = requests.post(
+            f"{OLLAMA_URL}/api/generate",
+            json={"model": ollama_model, "prompt": full_prompt,
+                  "stream": False, "options": {"num_predict": max_tokens}},
+            timeout=120,
+        )
+        if resp.status_code == 200:
+            return resp.json().get("response", "")
+    except Exception as e:
+        raise RuntimeError(f"Ollama indisponible : {e}")
+
+    raise RuntimeError(f"Ollama HTTP {resp.status_code}")
+
+
+def is_ollama_available(model: str = None) -> bool:
+    """Verifie qu'Ollama tourne et que le modele est disponible."""
+    import requests
+    try:
+        r = requests.get(f"{OLLAMA_URL}/api/tags", timeout=3)
+        if r.status_code != 200:
+            return False
+        if model:
+            models = [m.get("name","") for m in r.json().get("models", [])]
+            # Ollama stocke les modeles avec tag ex: "llama3:latest"
+            return any(model in m for m in models)
+        return True
+    except Exception:
+        return False
+
+
+def fallback_llm(prompt: str, system: str = "",
+                 model: str = DEFAULT_MODEL,
+                 max_tokens: int = 1000,
+                 logger: logging.Logger = None) -> str:
+    """
+    Point d'entree LLM principal pour tous les agents Ov3rLoRd.
+
+    Logique de bascule :
+      1. Si OV_LLM_MODE=offline  -> Ollama directement (pas de tentative Claude)
+      2. Si OV_LLM_MODE=online   -> Claude uniquement
+      3. Sinon (auto) :
+         a. Claude si ANTHROPIC_API_KEY present
+         b. Ollama si Claude echoue ou cle absente
+
+    Pour forcer Ollama sans cle API :
+      set OV_LLM_MODE=offline    (dans .env ou variable Windows)
+    """
+    _log = logger or log
+    llm_mode = _get_llm_mode()
+
+    if llm_mode == "offline":
+        # Mode Ollama explicite - pas de tentative Claude
+        ollama_model = _get_ollama_model()
+        try:
+            result = _call_ollama(prompt, system=system,
+                                   model=ollama_model, max_tokens=max_tokens)
+            _log.debug(f"[LLM] Ollama/{ollama_model} OK ({len(result)} chars)")
+            return result
+        except Exception as e:
+            _log.error(f"[LLM] Ollama indisponible en mode offline : {e}")
+            return ""
+
+    # Mode online ou auto : tentative Claude
+    key = get_api_key()
+    if key:
+        try:
+            result = _call_claude(prompt, system=system,
+                                   model=model, max_tokens=max_tokens)
+            _log.debug(f"[LLM] Claude/{model} OK ({len(result)} chars)")
+            return result
+        except Exception as e:
+            _log.warning(f"[LLM] Claude echoue : {e} -- tentative Ollama")
+
+    # Fallback Ollama (si mode auto ou si Claude a echoue)
+    if llm_mode == "online":
+        # Mode online strict : pas de fallback Ollama
+        _log.error("[LLM] Claude indisponible et mode=online -- aucun fallback")
+        return ""
+
+    # Auto : essayer Ollama
+    ollama_model = _get_ollama_model()
+    try:
+        if is_ollama_available(ollama_model):
+            result = _call_ollama(prompt, system=system,
+                                   model=ollama_model, max_tokens=max_tokens)
+            _log.info(f"[LLM] Fallback Ollama/{ollama_model} OK ({len(result)} chars)")
+            return result
+        else:
+            _log.warning(f"[LLM] Ollama : modele '{ollama_model}' non disponible. "
+                          f"Lance : ollama pull {ollama_model}")
+    except Exception as e:
+        _log.error(f"[LLM] Ollama indisponible : {e}")
+
+    return ""
+
+
+# ── Workspace & .env ──────────────────────────────────────────────────
+def ensure_workspace(base: Path = None) -> Path:
+    """Cree la structure workspace/ si absente."""
+    ws = (base or Path(".")) / "workspace"
+    for sub in ["logs","scripts","storyboards","checkpoints",
+                "archive","narrative","asset_library","generation",
+                "v120_learning","dream_mode","context_bus"]:
+        (ws / sub).mkdir(parents=True, exist_ok=True)
+    return ws
+
+
+def ensure_env_file(base: Path = None) -> Path:
+    """Cree un .env minimal si absent."""
+    env_path = (base or Path(".")) / ".env"
+    if not env_path.exists():
+        env_path.write_text(
+            "# Ov3rLoRd -- Configuration\n"
+            "ANTHROPIC_API_KEY=\n"
+            "# LLM mode : online (Claude) | offline (Ollama) | auto\n"
+            "OV_LLM_MODE=auto\n"
+            "# Modele Ollama a utiliser en mode offline\n"
+            "OV_OLLAMA_MODEL=llama3\n",
+            encoding="utf-8"
+        )
+        log.info(f"[UTILS] .env cree : {env_path}")
+    return env_path
+
+
+if __name__ == "__main__":
+    import sys, io
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    logging.basicConfig(level=logging.INFO)
+
+    print("=== overlord_utils V1.49q ===\n")
+    key = get_api_key()
+    print(f"Cle API         : {'presente (' + key[:10] + '...)' if key else 'ABSENTE'}")
+    print(f"Mode LLM        : {_get_llm_mode()}")
+    print(f"Modele Ollama   : {_get_ollama_model()}")
+    print(f"Ollama dispo    : {is_ollama_available()}")
+    print(f"build_headers() : {'x-api-key' in build_headers()}")
+
+    ok, data, err = safe_json_parse('{"test": 42, "ok": true}')
+    print(f"safe_json_parse : {ok} | {data}")
+
+    print("\nTest fallback_llm (prompt minimal) :")
+    result = fallback_llm("Reponds OK en un mot.", max_tokens=10)
+    print(f"  Reponse : '{result[:50] if result else 'vide'}'\n")

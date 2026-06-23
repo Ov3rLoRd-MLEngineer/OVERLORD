@@ -1,0 +1,13 @@
+{
+  "name": "kaizen_analyzer",
+  "version": "V1.70",
+  "checksum": "2942be59a44c766e",
+  "lines": 395,
+  "dependencies": [
+    "config_manager",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.044433",
+  "path": "agents\\kaizen_analyzer.py"
+}

@@ -1,0 +1,22 @@
+2026-06-17 16:35:33 [INFO    ] ============================================================
+2026-06-17 16:35:33 [INFO    ]   ██████╗ ██╗   ██╗███████╗██████╗ ██╗      ██████╗ ██████╗ ██████╗
+2026-06-17 16:35:33 [INFO    ]   ██╔══██╗██║   ██║██╔════╝██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+2026-06-17 16:35:33 [INFO    ]   ██║  ██║██║   ██║█████╗  ██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+2026-06-17 16:35:33 [INFO    ]   PIPELINE DÉMARRÉ — run_id=maestro_20260617_163533
+2026-06-17 16:35:33 [INFO    ]   Critique : ✗ INACTIF
+2026-06-17 16:35:33 [INFO    ]   Watchdog : ✗ INACTIF
+2026-06-17 16:35:33 [INFO    ]   Blocs    : sourcing → scenario → storyboard → production → postprod → 3d
+2026-06-17 16:35:33 [INFO    ] ============================================================
+2026-06-17 16:35:33 [INFO    ] 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-06-17 16:35:33 [INFO    ] BLOC 1 — SOURCING
+2026-06-17 16:35:33 [INFO    ] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-06-17 16:35:33 [WARNING ] [SOURCING] Module indisponible — fallback config
+2026-06-17 16:35:33 [ERROR   ] [MAESTRO] Erreur critique : name 'run_sourcing' is not defined
+Traceback (most recent call last):
+  File "D:\OVERLORD\maestro.py", line 635, in run_pipeline
+    trend_report = block_sourcing(cfg, state, logger, critic, watchdog)
+  File "D:\OVERLORD\maestro.py", line 268, in block_sourcing
+    run_sourcing, {"media_type": cfg.get("media_type","anime"), "logger": logger}
+    ^^^^^^^^^^^^
+NameError: name 'run_sourcing' is not defined

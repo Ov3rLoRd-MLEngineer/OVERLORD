@@ -1,0 +1,94 @@
+2026-06-20 07:22:05 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-20 07:22:05 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 07:22:05 [INFO    ] [CHECKPOINT] Aucun checkpoint pour 'manga_default'
+2026-06-20 07:22:05 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_072204
+2026-06-20 07:22:05 [INFO    ] ============================================================
+2026-06-20 07:22:05 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 07:22:05 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_072204
+2026-06-20 07:22:05 [INFO    ]   Critique : OK
+2026-06-20 07:22:05 [INFO    ]   Watchdog : OK
+2026-06-20 07:22:05 [INFO    ]   Director : OK
+2026-06-20 07:22:05 [INFO    ]   Bus      : OK
+2026-06-20 07:22:05 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 07:22:05 [INFO    ] ============================================================
+2026-06-20 07:22:05 [INFO    ] =======================================================
+2026-06-20 07:22:05 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 07:22:05 [INFO    ] =======================================================
+2026-06-20 07:22:05 [INFO    ] [SOURCING] Demarrage — media_type=manga
+2026-06-20 07:22:05 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 07:22:05 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 07:22:05 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 07:22:05 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 07:22:06 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 07:22:06 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 07:22:06 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 07:22:06 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 07:22:06 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 07:22:06 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 07:22:07 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 07:22:07 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 07:22:07 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 07:22:07 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 07:22:08 [DEBUG   ] RSS crunchyroll -> 10 articles
+2026-06-20 07:22:08 [DEBUG   ] RSS animenewsnet -> 10 articles
+2026-06-20 07:22:09 [DEBUG   ] RSS kotaku -> 10 articles
+2026-06-20 07:22:09 [DEBUG   ] RSS ign -> 10 articles
+2026-06-20 07:22:09 [DEBUG   ] RSS techcrunch -> 10 articles
+2026-06-20 07:22:09 [DEBUG   ] RSS theVerge -> 10 articles
+2026-06-20 07:22:09 [DEBUG   ] Trends ['anime 2025', 'manga trending', 'dragon ball', 'webtoon', 'AI art'] -> 5 items
+2026-06-20 07:22:12 [DEBUG   ] Trends ['animated short film', 'comic book'] -> 2 items
+2026-06-20 07:22:14 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 07:22:14 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (manga) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 07:22:14 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 07:22:14 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 07:22:14 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (manga) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 07:22:14 [INFO    ] =======================================================
+2026-06-20 07:22:14 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 07:22:14 [INFO    ] =======================================================
+2026-06-20 07:22:14 [INFO    ] [SCENARIO] Pipeline demarre — media=manga | seuil=73
+2026-06-20 07:22:14 [INFO    ] [SCENARISTE] Generation — media=manga | duree=short
+2026-06-20 07:22:29 [DEBUG   ] [LLM] Ollama/mistral OK (1874 chars)
+2026-06-20 07:22:29 [INFO    ] [SCENARISTE] Script genere : 'Whispers of Shadows: A Conan Adventure'
+2026-06-20 07:22:29 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 07:22:37 [DEBUG   ] [LLM] Ollama/mistral OK (1298 chars)
+2026-06-20 07:22:37 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-20 07:22:37 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-20 07:22:37 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260620_052237_Whispers_of_Shadows:_A_Conan_Adventure.json
+2026-06-20 07:22:37 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-20 07:22:37 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 07:22:37 [INFO    ] [SCENARIO] OK 'Whispers of Shadows: A Conan Adventure'
+2026-06-20 07:22:37 [INFO    ] =======================================================
+2026-06-20 07:22:37 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-20 07:22:37 [INFO    ] =======================================================
+2026-06-20 07:22:37 [INFO    ] [STORYBOARD] Generation -- titre='Whispers of Shadows: A Conan Adventure'
+2026-06-20 07:22:41 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (3 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-20 07:22:54 [INFO    ] [STORYBOARD] OK -- 8 shots generes
+2026-06-20 07:22:54 [INFO    ] [STORYBOARD] Sauvegarde -> 20260620_072254_Whispers of Shadows: A Conan Adventure.json
+2026-06-20 07:22:54 [INFO    ] [STORYBOARD] 8 jobs ComfyUI prepares
+2026-06-20 07:22:54 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-20 07:22:54 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-20 07:22:54 [INFO    ] [STORYBOARD] OK 8 jobs
+2026-06-20 07:22:54 [INFO    ] =======================================================
+2026-06-20 07:22:54 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-20 07:22:54 [INFO    ] =======================================================
+2026-06-20 07:22:56 [ERROR   ] [PRODUCTION] ComfyUI hors ligne -- abandon
+2026-06-20 07:22:56 [INFO    ] =======================================================
+2026-06-20 07:22:56 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-20 07:22:56 [INFO    ] =======================================================
+2026-06-20 07:22:56 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-20 07:22:56 [WARNING ] [POST-PROD] Fallback : 0 images alpha
+2026-06-20 07:22:56 [ERROR   ] [POST-PROD] Aucune image trouvee
+2026-06-20 07:22:56 [INFO    ] [POST-PROD] OK Export -> N/A
+2026-06-20 07:22:56 [INFO    ] =======================================================
+2026-06-20 07:22:56 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-20 07:22:56 [INFO    ] =======================================================
+2026-06-20 07:22:56 [INFO    ] [3D] Moteurs disponibles : ['trimesh']
+2026-06-20 07:22:56 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-20 07:22:58 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (4 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-20 07:23:01 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 07:23:01 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=0s
+2026-06-20 07:23:01 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260620_072204
+2026-06-20 07:23:01 [INFO    ] [CRITIQUE] Bilan : 3 verifications | score moyen=80.0 | sante=STABLE
+2026-06-20 07:23:01 [INFO    ] ============================================================
+2026-06-20 07:23:01 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260620_072204 | duree=51s
+2026-06-20 07:23:01 [INFO    ] ============================================================

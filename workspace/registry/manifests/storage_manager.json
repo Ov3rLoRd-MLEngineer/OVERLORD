@@ -1,0 +1,10 @@
+{
+  "name": "storage_manager",
+  "version": "V?.?",
+  "checksum": "4a1603c6aada5aa3",
+  "lines": 610,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.612023",
+  "path": "agents\\storage_manager.py"
+}

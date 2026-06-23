@@ -1,0 +1,403 @@
+[
+  {
+    "id": "108",
+    "class_type": "CheckpointLoaderSimple",
+    "label": "Checkpoint Principal",
+    "description": "Modèle SDXL de base utilisé pour la génération",
+    "category": "production",
+    "editable": {
+      "ckpt_name": "Nom du checkpoint (.safetensors)"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "86",
+    "class_type": "CLIPSetLastLayer",
+    "label": "CLIP Layer",
+    "description": "Couche CLIP utilisée (généralement -2 pour SDXL)",
+    "category": "avancé",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "62",
+    "class_type": "Lora Loader (LoraManager)",
+    "label": "LoRA Loader",
+    "description": "LoRA appliqué sur le modèle principal",
+    "category": "production",
+    "editable": {
+      "loras": "LoRA à charger (nom + force)",
+      "text": "Trigger words manuels"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "97",
+    "class_type": "TriggerWord Toggle (LoraManager)",
+    "label": "Trigger Words",
+    "description": "Mots-déclencheurs automatiques liés au LoRA",
+    "category": "production",
+    "editable": {},
+    "default_visible": true
+  },
+  {
+    "id": "112",
+    "class_type": "Seed (rgthree)",
+    "label": "Seed Principal",
+    "description": "Graine de génération (fixe ou aléatoire)",
+    "category": "production",
+    "editable": {
+      "seed": "Seed (entier ou -1 pour aléatoire)"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "75",
+    "class_type": "easy int",
+    "label": "Largeur (Width)",
+    "description": "Largeur de l image générée en pixels",
+    "category": "production",
+    "editable": {
+      "value": "Largeur en pixels (ex: 1024)"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "77",
+    "class_type": "easy int",
+    "label": "Hauteur (Height)",
+    "description": "Hauteur de l image générée en pixels",
+    "category": "production",
+    "editable": {
+      "value": "Hauteur en pixels (ex: 1536)"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "83",
+    "class_type": "easy int",
+    "label": "Batch Size",
+    "description": "Nombre d images générées simultanément",
+    "category": "production",
+    "editable": {
+      "value": "Nombre d images par batch"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "64",
+    "class_type": "Input Parameters (Image Saver)",
+    "label": "Paramètres Sampler",
+    "description": "Steps, CFG, sampler, scheduler, denoise",
+    "category": "production",
+    "editable": {
+      "steps": "Nombre de steps",
+      "cfg": "CFG scale",
+      "sampler": "Sampler",
+      "scheduler": "Scheduler",
+      "denoise": "Denoise strength"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "87",
+    "class_type": "StringConcatenate",
+    "label": "StringConcatenate",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "99",
+    "class_type": "StringConcatenate",
+    "label": "StringConcatenate",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "98",
+    "class_type": "ImpactSwitch",
+    "label": "ImpactSwitch",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "101",
+    "class_type": "RegexReplace",
+    "label": "RegexReplace",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "103",
+    "class_type": "ImpactSwitch",
+    "label": "ImpactSwitch",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "107",
+    "class_type": "CLIPTextEncode",
+    "label": "Prompt Positif (CLIP)",
+    "description": "Encodage CLIP du prompt positif vers le modèle",
+    "category": "avancé",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "111",
+    "class_type": "CLIPTextEncode",
+    "label": "Prompt Négatif (CLIP)",
+    "description": "Encodage CLIP du prompt négatif",
+    "category": "avancé",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "102",
+    "class_type": "EmptyLatentImage",
+    "label": "EmptyLatentImage",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "104",
+    "class_type": "ImpactSwitch",
+    "label": "ImpactSwitch",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "68",
+    "class_type": "DifferentialDiffusion",
+    "label": "Differential Diffusion",
+    "description": "Contrôle la force de la diffusion différentielle",
+    "category": "production",
+    "editable": {
+      "strength": "Force differential diffusion (0.0 à 1.0)"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "24",
+    "class_type": "ImpactSwitch",
+    "label": "ImpactSwitch",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "116",
+    "class_type": "KSampler",
+    "label": "KSampler",
+    "description": "Sampler principal de génération",
+    "category": "avancé",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "100",
+    "class_type": "ImpactSwitch",
+    "label": "ImpactSwitch",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "106",
+    "class_type": "VAEDecode",
+    "label": "VAE Decode",
+    "description": "Décodeur VAE (image latente → pixels)",
+    "category": "avancé",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "36",
+    "class_type": "FaceDetailerPipe",
+    "label": "FaceDetailer (Advanced)",
+    "description": "Amélioration automatique des visages — workflow principal",
+    "category": "production",
+    "editable": {
+      "denoise": "Denoise FaceDetailer",
+      "steps": "Steps FaceDetailer"
+    },
+    "default_visible": true
+  },
+  {
+    "id": "169",
+    "class_type": "ImpactSwitch",
+    "label": "Switch Sortie Advanced",
+    "description": "Sélecteur de sortie du workflow principal",
+    "category": "avancé",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "395",
+    "class_type": "CheckpointLoaderSimple",
+    "label": "Checkpoint Detailer",
+    "description": "Modèle SDXL pour le workflow Detailer",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "349",
+    "class_type": "CLIPSetLastLayer",
+    "label": "CLIPSetLastLayer",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "303",
+    "class_type": "Lora Loader (LoraManager)",
+    "label": "LoRA Detailer",
+    "description": "LoRA appliqué dans le workflow Detailer",
+    "category": "detailer",
+    "editable": {
+      "loras": "LoRA Detailer"
+    },
+    "default_visible": false
+  },
+  {
+    "id": "382",
+    "class_type": "Seed (rgthree)",
+    "label": "Seed Detailer",
+    "description": "Seed du workflow Detailer (sync avec principal par défaut)",
+    "category": "detailer",
+    "editable": {
+      "seed": "Seed Detailer"
+    },
+    "default_visible": false
+  },
+  {
+    "id": "301",
+    "class_type": "CLIPTextEncode",
+    "label": "Prompt Positif Detailer",
+    "description": "Prompt positif du Detailer",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "380",
+    "class_type": "CLIPTextEncode",
+    "label": "Prompt Négatif Detailer",
+    "description": "Prompt négatif du Detailer",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "416",
+    "class_type": "DifferentialDiffusion",
+    "label": "DiffDiffusion Detailer",
+    "description": "Force de diffusion dans le Detailer",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "392",
+    "class_type": "UltralyticsDetectorProvider",
+    "label": "Détecteur Visage 1",
+    "description": "Modèle YOLO de détection de visages (Detailer)",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "317",
+    "class_type": "UltralyticsDetectorProvider",
+    "label": "Détecteur Visage 2",
+    "description": "Second détecteur de visages alternatif",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "383",
+    "class_type": "SAMLoader",
+    "label": "SAM Loader",
+    "description": "Modèle SAM pour la segmentation (Detailer)",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "410",
+    "class_type": "ToDetailerPipe",
+    "label": "ToDetailerPipe",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "331",
+    "class_type": "EditDetailerPipe",
+    "label": "EditDetailerPipe",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "359",
+    "class_type": "FaceDetailerPipe",
+    "label": "FaceDetailer (Detailer)",
+    "description": "Amélioration visages dans le Detailer",
+    "category": "detailer",
+    "editable": {
+      "denoise": "Denoise FaceDetailer Detailer"
+    },
+    "default_visible": false
+  },
+  {
+    "id": "339",
+    "class_type": "MaskDetailerPipe",
+    "label": "MaskDetailer",
+    "description": "Amélioration par masque (corps/zones spécifiques)",
+    "category": "detailer",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "423",
+    "class_type": "ImpactSwitch",
+    "label": "ImpactSwitch",
+    "description": "",
+    "category": "autre",
+    "editable": {},
+    "default_visible": false
+  },
+  {
+    "id": "334",
+    "class_type": "Image Saver",
+    "label": "Image Saver",
+    "description": "Sauvegarde finale de l image produite",
+    "category": "production",
+    "editable": {
+      "filename": "Format du nom de fichier"
+    },
+    "default_visible": true
+  }
+]

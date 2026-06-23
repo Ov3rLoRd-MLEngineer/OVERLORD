@@ -1,0 +1,10 @@
+{
+  "name": "audio_compositor",
+  "version": "V1.70",
+  "checksum": "ea21a03f3206ab66",
+  "lines": 309,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.812460",
+  "path": "agents\\audio_compositor.py"
+}

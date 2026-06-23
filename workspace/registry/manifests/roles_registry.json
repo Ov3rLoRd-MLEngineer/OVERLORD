@@ -1,0 +1,10 @@
+{
+  "name": "roles_registry",
+  "version": "V1.49p",
+  "checksum": "497aa13b47b5731d",
+  "lines": 208,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.418835",
+  "path": "agents\\roles_registry.py"
+}

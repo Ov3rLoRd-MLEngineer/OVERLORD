@@ -1,0 +1,34 @@
+[
+  {
+    "id": "001",
+    "positive": "masterpiece, best quality, absurdres, highly detailed, 1girl, solo, looking at viewer, anime style, detailed face, expressive eyes, dynamic pose, vibrant colors, sharp lineart, cinematic lighting, evangelion plug suit, mecha background",
+    "negative": "bad quality, worst quality, bad anatomy, deformed, blurry, extra limbs, bad hands, mutated hands, text, watermark, logo, censored, artist name, signature, patreon, twitter username",
+    "lora": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+    "strength": 0.9,
+    "width": 1024,
+    "height": 1536,
+    "tags": [
+      "evangelion",
+      "mecha",
+      "action",
+      "girl"
+    ],
+    "source": "personal"
+  },
+  {
+    "id": "002",
+    "positive": "masterpiece, best quality, absurdres, 1girl, solo, portrait, close-up, blue hair, red eyes, serious expression, rei ayanami, evangelion, white plug suit, sharp focus, anime style, detailed eyes",
+    "negative": "bad quality, worst quality, bad anatomy, deformed, blurry, extra limbs, bad hands, mutated hands, text, watermark, logo, censored, artist name, signature, patreon, twitter username",
+    "lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+    "strength": 0.85,
+    "width": 1024,
+    "height": 1536,
+    "tags": [
+      "evangelion",
+      "rei",
+      "portrait",
+      "girl"
+    ],
+    "source": "personal"
+  }
+]

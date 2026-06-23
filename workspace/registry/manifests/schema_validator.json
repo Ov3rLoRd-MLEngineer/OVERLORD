@@ -1,0 +1,12 @@
+{
+  "name": "schema_validator",
+  "version": "V1.60",
+  "checksum": "b21f08cffd8b322e",
+  "lines": 303,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.481885",
+  "path": "agents\\schema_validator.py"
+}

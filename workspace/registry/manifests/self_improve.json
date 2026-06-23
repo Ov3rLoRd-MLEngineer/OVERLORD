@@ -1,0 +1,13 @@
+{
+  "name": "self_improve",
+  "version": "V1.43",
+  "checksum": "bd7d755f6c2bc839",
+  "lines": 655,
+  "dependencies": [
+    "overlord_utils",
+    "v130_intelligence_ext"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.497203",
+  "path": "agents\\self_improve.py"
+}

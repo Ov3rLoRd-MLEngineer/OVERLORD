@@ -1,0 +1,12 @@
+{
+  "name": "v140_thermal_protection",
+  "version": "V1.40",
+  "checksum": "704f46a6e47a6778",
+  "lines": 219,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:03.025366",
+  "path": "agents\\v140_thermal_protection.py"
+}

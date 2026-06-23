@@ -1,0 +1,15 @@
+{
+  "name": "test_pipeline",
+  "version": "V1.42",
+  "checksum": "97edecc58ff5e322",
+  "lines": 298,
+  "dependencies": [
+    "watchdog",
+    "critic",
+    "sourcing",
+    "scenario"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.711121",
+  "path": "agents\\test_pipeline.py"
+}

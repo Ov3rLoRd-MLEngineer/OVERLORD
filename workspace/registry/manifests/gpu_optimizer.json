@@ -1,0 +1,13 @@
+{
+  "name": "gpu_optimizer",
+  "version": "V1.70",
+  "checksum": "de83a65327a70ab2",
+  "lines": 303,
+  "dependencies": [
+    "config_manager",
+    "gpu_optimizer"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.997806",
+  "path": "agents\\gpu_optimizer.py"
+}

@@ -1,0 +1,398 @@
+"""
+agents/storyboard.py — Agent Storyboard
+Transforme un ScriptDocument en ShotList exploitable par la production.
+
+Sortie : ShotList JSON → consommé par maestro.py → injecté dans config.json
+"""
+
+import json
+import logging
+import requests
+from datetime import datetime
+import os
+from pathlib import Path
+
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+
+# Director V1.48
+try:
+    from agents.director import get_director
+    DIRECTOR_OK = True
+except ImportError:
+    DIRECTOR_OK = False
+    get_director = None
+
+def _get_api_key() -> str:
+    import os
+    from pathlib import Path as _Path
+    key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not key:
+        env_path = _Path(__file__).parent.parent / ".env"
+        if env_path.exists():
+            for line in env_path.read_text(encoding="utf-8").splitlines():
+                if line.startswith("ANTHROPIC_API_KEY="):
+                    key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    break
+    return key
+CLAUDE_MODEL      = "claude-sonnet-4-6"
+MAX_TOKENS        = 4000
+STORYBOARD_DIR    = Path("workspace/storyboards")
+
+# Qualité loopback storyboard
+MAX_STORYBOARD_ITERATIONS = 2
+SHOT_QUALITY_THRESHOLD    = 65
+
+
+# ============================================================
+# TYPES DE PLANS (cinématographie)
+# ============================================================
+SHOT_TYPES = {
+    "ECU":  "Extreme Close-Up — détail du visage/objet",
+    "CU":   "Close-Up — tête et épaules",
+    "MCU":  "Medium Close-Up — buste",
+    "MS":   "Medium Shot — taille",
+    "MLS":  "Medium Long Shot — genoux",
+    "LS":   "Long Shot — corps entier",
+    "VLS":  "Very Long Shot — personnage dans le décor",
+    "ELS":  "Extreme Long Shot — paysage dominant",
+    "OTS":  "Over The Shoulder — par-dessus l'épaule",
+    "POV":  "Point Of View — subjectif",
+    "BIRD": "Bird's Eye View — vue aérienne",
+    "WORM": "Worm's Eye View — contre-plongée extrême",
+}
+
+# Mouvements de caméra
+CAMERA_MOVES = [
+    "static", "pan_left", "pan_right", "tilt_up", "tilt_down",
+    "zoom_in", "zoom_out", "dolly_in", "dolly_out", "crane_up",
+    "tracking", "handheld", "360_orbit",
+]
+
+
+# ============================================================
+# APPEL API CLAUDE
+# ============================================================
+def _call_claude(prompt: str, system: str = "",
+                 logger: logging.Logger = None) -> str:
+    log = logger or logging.getLogger("storyboard.claude")
+    body = {
+        "model":      CLAUDE_MODEL,
+        "max_tokens": MAX_TOKENS,
+        "messages":   [{"role": "user", "content": prompt}],
+    }
+    if system:
+        body["system"] = system
+    try:
+        resp = requests.post(
+            ANTHROPIC_URL,
+            headers={
+                "Content-Type": "application/json",
+                "x-api-key": _get_api_key(),
+                "anthropic-version": "2023-06-01",
+            },
+            json=body,
+            timeout=60
+        )
+        if resp.status_code == 200:
+            content = resp.json().get("content", [])
+            return " ".join(b["text"] for b in content if b.get("type") == "text")
+        log.error(f"API HTTP {resp.status_code}")
+        return ""
+    except Exception as e:
+        log.error(f"Erreur API : {e}")
+        return ""
+
+
+# ============================================================
+# GÉNÉRATION DE LA SHOT LIST
+# ============================================================
+def _get_emotion_suffix(scene: dict) -> str:
+    """Enrichit un plan avec les paramètres émotionnels V1.30."""
+    try:
+        from agents.v130_emotion_engine import EmotionEngine
+        eng = EmotionEngine()
+        # Déduire l'émotion depuis l'action/dialogue
+        action = scene.get("action","").lower()
+        if any(w in action for w in ["combat","fight","battle","charge"]):
+            emotion = "tension"
+        elif any(w in action for w in ["death","loss","sacrifice","farewell"]):
+            emotion = "catharsis"
+        elif any(w in action for w in ["discover","reveal","transform","awaken"]):
+            emotion = "wonder"
+        else:
+            emotion = "awe"
+        params = eng.generate_params(emotion, intensity=0.8)
+        tags = params.get("comfyui_tags","")
+        return f", {tags}" if tags else ""
+    except Exception:
+        return ""
+
+
+def generate_shotlist(script: dict,
+                      media_type: str = "anime",
+                      logger: logging.Logger = None) -> dict:
+    """
+    Génère une ShotList complète depuis un ScriptDocument.
+    Chaque shot contient un prompt ComfyUI prêt à l'emploi.
+    """
+    log = logger or logging.getLogger("storyboard.generator")
+    log.info(f"[STORYBOARD] Génération — titre='{script.get('title','?')}'")
+
+    visual_style = script.get("visual_style", "style anime japonais")
+    color_palette = ", ".join(script.get("color_palette", []))
+    characters   = json.dumps(script.get("characters", []), ensure_ascii=False)[:800]
+
+    # Extraire toutes les scènes
+    all_scenes = []
+    for act in script.get("acts", []):
+        all_scenes.extend(act.get("scenes", []))
+    scenes_json = json.dumps(all_scenes[:15], ensure_ascii=False)[:2000]
+
+    shot_types_desc = "\n".join(f"- {k}: {v}" for k, v in SHOT_TYPES.items())
+
+    system = (
+        "Tu es un directeur artistique et storyboarder professionnel spécialisé "
+        "dans la production animée assistée par IA. Tu crées des shot lists "
+        "précises avec des prompts ComfyUI optimisés pour la génération SDXL. "
+        "Réponds UNIQUEMENT en JSON valide."
+    )
+
+    prompt = f"""
+Crée une shot list détaillée pour ce projet.
+
+Titre : {script.get('title', 'Untitled')}
+Style visuel : {visual_style}
+Palette de couleurs : {color_palette}
+Type de média : {media_type}
+
+Personnages principaux :
+{characters}
+
+Scènes du script :
+{scenes_json}
+
+Types de plans disponibles :
+{shot_types_desc}
+
+Génère cette structure JSON :
+{{
+  "project_title": "...",
+  "total_shots": 0,
+  "estimated_total_duration_seconds": 0,
+  "shots": [
+    {{
+      "shot_id":         "S01_SH001",
+      "scene_ref":       "S01E01",
+      "act":             1,
+      "shot_type":       "CU",
+      "camera_move":     "static",
+      "duration_seconds": 3,
+      "characters":      ["Nom1"],
+      "location":        "Description du lieu",
+      "action":          "Ce qui se passe dans ce plan",
+      "emotion":         "Émotion dominante",
+      "comfyui_positive": "Prompt positif SDXL complet et détaillé pour ce plan",
+      "comfyui_negative": "bad quality, blurry, deformed, watermark",
+      "comfyui_width":   1024,
+      "comfyui_height":  576,
+      "transition":      "cut|fade|dissolve|wipe",
+      "audio_cue":       "Description son/musique",
+      "is_key_frame":    true/false,
+      "3d_required":     false,
+      "vfx_notes":       ""
+    }}
+  ],
+  "production_notes": {{
+    "recommended_lora":     "Description du style LoRA recommandé",
+    "consistent_elements":  ["élément1 à garder cohérent entre les shots"],
+    "color_grading":        "Instructions de color grading globales",
+    "audio_style":          "Style musical recommandé",
+    "game_assets_3d":       ["asset 3D à créer si game_required"]
+  }}
+}}
+"""
+
+    # Director — enrichissement émotionnel des shots
+    if DIRECTOR_OK:
+        try:
+            d = get_director()
+            n_shots = len(all_scenes) or 12
+            for i, scene in enumerate(all_scenes[:15]):
+                ep = d.get_emotion_for_shot(i, n_shots)
+                if ep.get("comfyui_tags"):
+                    hint = scene.get("visual_prompt_hint","")
+                    scene["visual_prompt_hint"] = f"{hint}, {', '.join(ep['comfyui_tags'][:3])}"
+        except Exception:
+            pass
+
+    raw = _call_claude(prompt, system=system, logger=log)
+    try:
+        clean = raw.strip()
+        if clean.startswith("```"):
+            clean = "\n".join(clean.split("\n")[1:-1])
+        shotlist = json.loads(clean)
+        log.info(
+            f"[STORYBOARD] {shotlist.get('total_shots', '?')} shots générés"
+        )
+        return shotlist
+    except json.JSONDecodeError as e:
+        log.error(f"JSON invalide storyboard : {e}")
+        return {"error": "json_parse_failed", "raw": raw[:500]}
+
+
+# ============================================================
+# LOOPBACK QUALITÉ STORYBOARD
+# ============================================================
+def review_shotlist(shotlist: dict,
+                    logger: logging.Logger = None) -> dict:
+    """Vérifie la cohérence cinématographique de la shot list."""
+    log = logger or logging.getLogger("storyboard.reviewer")
+    shots_sample = json.dumps(shotlist.get("shots", [])[:5], ensure_ascii=False)[:1500]
+
+    system = (
+        "Tu es un directeur de la photographie et expert en montage. "
+        "Tu analyses des shot lists pour leur qualité cinématographique. "
+        "Réponds UNIQUEMENT en JSON valide."
+    )
+    prompt = f"""
+Analyse cette shot list ({shotlist.get('total_shots','?')} plans) :
+
+Échantillon des 5 premiers plans :
+{shots_sample}
+
+Notes de production :
+{json.dumps(shotlist.get('production_notes', {}), ensure_ascii=False)}
+
+Retourne ce JSON :
+{{
+  "score_global": 0-100,
+  "validated": true/false,
+  "issues": ["problème 1", ...],
+  "prompt_quality": "évaluation des prompts ComfyUI",
+  "correction_instructions": "instructions si non validé"
+}}
+"""
+    raw = _call_claude(prompt, system=system, logger=log)
+    try:
+        clean = raw.strip()
+        if clean.startswith("```"):
+            clean = "\n".join(clean.split("\n")[1:-1])
+        review = json.loads(clean)
+        log.info(
+            f"[STORYBOARD REVIEW] Score={review.get('score_global',0)}/100 | "
+            f"Validé={'✓' if review.get('validated') else '✗'}"
+        )
+        return review
+    except json.JSONDecodeError:
+        return {"validated": True, "score_global": 60, "correction_instructions": ""}
+
+
+# ============================================================
+# CONVERSION SHOTLIST → JOBS COMFYUI
+# ============================================================
+def shotlist_to_jobs(shotlist: dict,
+                     base_lora: str = "",
+                     logger: logging.Logger = None) -> list:
+    """
+    Convertit une ShotList en liste de jobs pour agent_supervisor / config.json.
+    Chaque shot key_frame devient un job de génération ComfyUI.
+    """
+    log = logger or logging.getLogger("storyboard.converter")
+    jobs = []
+
+    prod_notes = shotlist.get("production_notes", {})
+    rec_lora   = base_lora or prod_notes.get("recommended_lora", "")
+
+    for shot in shotlist.get("shots", []):
+        # On génère uniquement les key frames (ou tous si < 30 shots)
+        total = shotlist.get("total_shots", 0)
+        if not shot.get("is_key_frame", True) and total > 30:
+            continue
+
+        job = {
+            "shot_id":  shot.get("shot_id", ""),
+            "scene_ref": shot.get("scene_ref", ""),
+            "lora":     rec_lora,
+            "det_lora": "",
+            "strength": 1.0,
+            "width":    shot.get("comfyui_width", 1024),
+            "height":   shot.get("comfyui_height", 576),
+            "positive": shot.get("comfyui_positive", ""),
+            "negative": shot.get(
+                "comfyui_negative",
+                "bad quality, blurry, deformed, watermark, signature"
+            ),
+            "_shot_meta": {
+                "shot_type":  shot.get("shot_type"),
+                "camera":     shot.get("camera_move"),
+                "duration_s": shot.get("duration_seconds"),
+                "transition": shot.get("transition"),
+                "audio_cue":  shot.get("audio_cue"),
+                "3d_needed":  shot.get("3d_required", False),
+                "vfx":        shot.get("vfx_notes", ""),
+            }
+        }
+        jobs.append(job)
+
+    log.info(f"[STORYBOARD → JOBS] {len(jobs)} jobs générés depuis {shotlist.get('total_shots','?')} shots")
+    return jobs
+
+
+# ============================================================
+# PIPELINE STORYBOARD COMPLET
+# ============================================================
+def run_storyboard(script: dict,
+                   media_type: str = "anime",
+                   base_lora: str = "",
+                   logger: logging.Logger = None) -> tuple:
+    """
+    Pipeline complet : génération + loopback + conversion en jobs.
+
+    Retourne (shotlist: dict, jobs: list)
+    """
+    log = logger or logging.getLogger("storyboard")
+    log.info(f"[STORYBOARD] Pipeline démarré")
+    STORYBOARD_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Génération
+    shotlist = generate_shotlist(script, media_type, logger=log)
+    if "error" in shotlist:
+        log.error("[STORYBOARD] Échec génération")
+        return shotlist, []
+
+    # Loopback qualité
+    for iteration in range(1, MAX_STORYBOARD_ITERATIONS + 1):
+        review = review_shotlist(shotlist, logger=log)
+        if review.get("validated") and review.get("score_global", 0) >= SHOT_QUALITY_THRESHOLD:
+            log.info(f"[STORYBOARD] ✓ Validé à l'itération {iteration}")
+            break
+        log.warning(f"[STORYBOARD] Itération {iteration} non validée — on continue avec le résultat actuel")
+
+    # Sauvegarder
+    ts    = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    title = script.get("title", "untitled").replace(" ", "_")[:30]
+    path  = STORYBOARD_DIR / f"{ts}_{title}_storyboard.json"
+    path.write_text(json.dumps(shotlist, indent=2, ensure_ascii=False), encoding="utf-8")
+    log.info(f"[STORYBOARD] Sauvegardé → {path}")
+
+    # Convertir en jobs
+    jobs = shotlist_to_jobs(shotlist, base_lora=base_lora, logger=log)
+
+    return shotlist, jobs
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    fake_script = {
+        "title": "Dragon Ball Ov3rLoRd",
+        "visual_style": "anime style, high detail, dynamic action",
+        "color_palette": ["orange", "blue", "gold"],
+        "characters": [{"name": "Goku", "visual_prompt": "1male, muscular, spiky black hair, orange gi"}],
+        "acts": [{"act": 1, "title": "L'éveil", "scenes": [
+            {"scene_id": "S01E01", "location": "Plaine désertique", "time_of_day": "Aube",
+             "characters": ["Goku"], "action": "Goku s'éveille et contemple l'horizon",
+             "visual_prompt_hint": "1male, spiky hair, orange gi, desert, sunrise, epic"}
+        ]}]
+    }
+    shotlist, jobs = run_storyboard(fake_script)
+    print(f"Shots: {shotlist.get('total_shots')}, Jobs: {len(jobs)}")

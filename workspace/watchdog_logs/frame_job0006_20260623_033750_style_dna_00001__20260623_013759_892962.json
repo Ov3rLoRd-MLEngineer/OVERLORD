@@ -1,0 +1,16 @@
+{
+  "shot_id": "job0006_20260623_033750_style_dna_00001_",
+  "verdict": "FAIL",
+  "passed": false,
+  "issues": [
+    "Zone noire excessive : 47%"
+  ],
+  "metrics": {
+    "dimensions": "1344x1984",
+    "sharpness": 1108.9,
+    "brightness": 60.2,
+    "color_diversity": 71.6,
+    "black_pct": 47.3,
+    "white_pct": 0.4
+  }
+}

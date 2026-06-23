@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-06-19T12:06:27.795135",
+  "version": "V1.49",
+  "results": [
+    {
+      "status": "✓ PASS",
+      "test": "Python version",
+      "detail": "Python 3.14.6"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Dossier agents/",
+      "detail": "D:\\OVERLORD\\agents — 81 fichiers"
+    },
+    {
+      "status": "✗ FAIL",
+      "test": "__init__.py agents",
+      "detail": "__init__.py vide (44 octets)"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "maestro.py racine",
+      "detail": "maestro.py present (30Ko)"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "overlord_utils_utf8.py",
+      "detail": "overlord_utils_utf8.py present"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Cle API (environ)",
+      "detail": "Variable d'environnement definie (sk-ant-a...)"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Cle API (.env)",
+      "detail": "Cle detectee (sk-ant-a...)"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import agents",
+      "detail": "Package agents charge : D:\\OVERLORD\\agents\\__init__.py"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import sourcing",
+      "detail": "run_sourcing importe"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import scenario",
+      "detail": "run_scenario importe"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import critic",
+      "detail": "CriticAgent importe"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import watchdog",
+      "detail": "Watchdog importe"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import overlord_utils",
+      "detail": "overlord_utils OK (fallback_llm, get_api_key, build_headers)"
+    },
+    {
+      "status": "✓ PASS",
+      "test": "Import context_bus",
+      "detail": "context_bus OK — ContextBus"
+    },
+    {
+      "status": "⚠ WARN",
+      "test": "Workspace structure",
+      "detail": "Dossiers crees : ['storyboards']"
+    },
+    {
+      "status": "○ SKIP",
+      "test": "ComfyUI",
+      "detail": "skipped (--quick)"
+    },
+    {
+      "status": "○ SKIP",
+      "test": "Ollama",
+      "detail": "skipped (--quick)"
+    },
+    {
+      "status": "○ SKIP",
+      "test": "ffmpeg",
+      "detail": "skipped (--quick)"
+    }
+  ],
+  "summary": {
+    "passed": 13,
+    "warned": 1,
+    "failed": 1
+  }
+}

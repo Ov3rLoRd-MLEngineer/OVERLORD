@@ -1,0 +1,89 @@
+2026-06-20 05:43:49 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-20 05:43:49 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 05:43:49 [INFO    ] [CHECKPOINT] Charge : maestro_20260620_054107 | Etat : storyboard | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-20 05:43:49 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_054349
+2026-06-20 05:43:49 [INFO    ] ============================================================
+2026-06-20 05:43:49 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 05:43:49 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_054349
+2026-06-20 05:43:49 [INFO    ]   Critique : OK
+2026-06-20 05:43:49 [INFO    ]   Watchdog : OK
+2026-06-20 05:43:49 [INFO    ]   Director : OK
+2026-06-20 05:43:49 [INFO    ]   Bus      : OK
+2026-06-20 05:43:49 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 05:43:49 [INFO    ] ============================================================
+2026-06-20 05:43:49 [INFO    ] =======================================================
+2026-06-20 05:43:49 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 05:43:49 [INFO    ] =======================================================
+2026-06-20 05:43:49 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-20 05:43:49 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 05:43:49 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 05:43:49 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 05:43:50 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 05:43:51 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 05:43:51 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 05:43:51 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 05:43:51 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 05:43:53 [DEBUG   ] RSS crunchyroll -> 10 articles
+2026-06-20 05:43:53 [DEBUG   ] RSS animenewsnet -> 10 articles
+2026-06-20 05:43:53 [DEBUG   ] RSS kotaku -> 10 articles
+2026-06-20 05:43:54 [DEBUG   ] RSS ign -> 10 articles
+2026-06-20 05:43:54 [DEBUG   ] RSS techcrunch -> 10 articles
+2026-06-20 05:43:54 [DEBUG   ] RSS theVerge -> 10 articles
+2026-06-20 05:43:54 [DEBUG   ] Trends ['anime 2025', 'manga trending', 'dragon ball', 'webtoon', 'AI art'] -> 5 items
+2026-06-20 05:43:57 [DEBUG   ] Trends ['animated short film', 'comic book'] -> 2 items
+2026-06-20 05:43:59 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 05:43:59 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 05:43:59 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 05:43:59 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 05:43:59 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 05:43:59 [INFO    ] =======================================================
+2026-06-20 05:43:59 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 05:43:59 [INFO    ] =======================================================
+2026-06-20 05:43:59 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-20 05:43:59 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 05:44:08 [DEBUG   ] [LLM] Ollama/mistral OK (1536 chars)
+2026-06-20 05:44:08 [INFO    ] [SCENARISTE] Script genere : 'Evangelion: Detective Mari'
+2026-06-20 05:44:08 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 05:44:15 [DEBUG   ] [LLM] Ollama/mistral OK (1074 chars)
+2026-06-20 05:44:15 [INFO    ] [SCRIPT DOCTOR] Score=82/100 | Valide=oui
+2026-06-20 05:44:15 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=82
+2026-06-20 05:44:15 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260620_034415_Evangelion:_Detective_Mari.json
+2026-06-20 05:44:15 [WARNING ] [SCENARIO] Publication bus echouee : 'str' object has no attribute 'get'
+2026-06-20 05:44:15 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-20 05:44:15 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 05:44:15 [INFO    ] [SCENARIO] OK 'Evangelion: Detective Mari'
+2026-06-20 05:44:15 [INFO    ] =======================================================
+2026-06-20 05:44:15 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-20 05:44:15 [INFO    ] =======================================================
+2026-06-20 05:44:15 [ERROR   ] [MAESTRO] Erreur critique : slice(None, 8, None)
+Traceback (most recent call last):
+  File "D:\OVERLORD\maestro.py", line 657, in run_pipeline
+    shotlist, jobs = block_storyboard(script, cfg, state, logger, critic, watchdog, cp_mgr)
+                     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\OVERLORD\maestro.py", line 389, in block_storyboard
+    shotlist, jobs = run_storyboard(
+                     ~~~~~~~~~~~~~~^
+        script     = script,
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        logger     = logger
+        ^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\OVERLORD\agents\storyboard.py", line 239, in run_storyboard
+    storyboard = generate_storyboard(script, media_type=media_type,
+                                      base_lora=base_lora, logger=_log)
+  File "D:\OVERLORD\agents\storyboard.py", line 118, in generate_storyboard
+    for i, sc in enumerate(scenes[:8]):
+                           ~~~~~~^^^^
+KeyError: slice(None, 8, None)
+2026-06-20 05:44:19 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 05:44:19 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=30s
+2026-06-20 05:44:19 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260620_054349 | Blocs termines : ['sourcing', 'scenario']
+2026-06-20 05:44:19 [INFO    ] [CRITIQUE] Bilan : 2 verifications | score moyen=80.0 | sante=STABLE

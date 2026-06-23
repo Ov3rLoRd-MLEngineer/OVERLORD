@@ -1,0 +1,1373 @@
+[
+  {
+    "job": {
+      "positive": "clear, vibrant colors, dynamic composition",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Opening scene with Goku and Piccolo in a cityscape",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001324",
+    "hash": "5fe455d8"
+  },
+  {
+    "job": {
+      "positive": "expressive facial expressions, good lighting",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Goku and Piccolo encounter a mystery",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001339",
+    "hash": "f0549e86"
+  },
+  {
+    "job": {
+      "positive": "detailed background, good use of shadows",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Goku and Piccolo investigating a crime scene",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001354",
+    "hash": "61b014c6"
+  },
+  {
+    "job": {
+      "positive": "diverse character designs, good pacing",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S04",
+        "description": "Goku and Piccolo interviewing witnesses",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001410",
+    "hash": "a0530325"
+  },
+  {
+    "job": {
+      "positive": "dynamic action sequences, good use of perspective",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S05",
+        "description": "Goku and Piccolo following a lead",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001425",
+    "hash": "c0ac7c1b"
+  },
+  {
+    "job": {
+      "positive": "mysterious atmosphere, interesting set design",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S06",
+        "description": "Goku and Piccolo discovering a hidden lair",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001440",
+    "hash": "5c5024d7"
+  },
+  {
+    "job": {
+      "positive": "epic battle scenes, good use of powers",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S07",
+        "description": "Final confrontation with the villain",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001455",
+    "hash": "0f478d0e"
+  },
+  {
+    "job": {
+      "positive": "satisfying conclusion, emotional moments",
+      "negative": "none",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S08",
+        "description": "Resolution of the case and closing scene",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_001510",
+    "hash": "5acccffd"
+  },
+  {
+    "job": {
+      "positive": "style anime, détaillé, couleurs vibrantes",
+      "negative": "pas de dynamisme",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Scene du début avec Goku et Oolong en quête",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003122",
+    "hash": "5dc14bb6"
+  },
+  {
+    "job": {
+      "positive": "architecture anime avec perspectives intéressantes",
+      "negative": "mauvais contraste",
+      "lora": "",
+      "cfg_scale": 6.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Changement de scène vers la ville",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003137",
+    "hash": "991c3e12"
+  },
+  {
+    "job": {
+      "positive": "dialogue animé, expressions expressives",
+      "negative": "pas de détail dans les personnages",
+      "lora": "",
+      "cfg_scale": 7.5,
+      "steps": 30,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Goku rencontre le détective",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003152",
+    "hash": "1dc94ae0"
+  },
+  {
+    "job": {
+      "positive": "animé avec mouvements fluides",
+      "negative": "mauvaise lumière",
+      "lora": "",
+      "cfg_scale": 6.8,
+      "steps": 34,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S04",
+        "description": "Goku et le détective enquêtent",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003207",
+    "hash": "94dd3431"
+  },
+  {
+    "job": {
+      "positive": "dialogue intense, scène de combat",
+      "negative": "pas de détail dans le combat",
+      "lora": "",
+      "cfg_scale": 7.2,
+      "steps": 36,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S05",
+        "description": "Détective et Goku confrontent le suspect",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003222",
+    "hash": "e4b7e5cd"
+  },
+  {
+    "job": {
+      "positive": "utilisation de techniques spéciales anime style",
+      "negative": "fond trop sombre",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S06",
+        "description": "Goku utilise ses pouvoirs pour résoudre le cas",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003237",
+    "hash": "cccf38e2"
+  },
+  {
+    "job": {
+      "positive": "fin heureuse anime style",
+      "negative": "mauvais angle de caméra",
+      "lora": "",
+      "cfg_scale": 6.5,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S07",
+        "description": "Fin de l'épisode avec Goku et le détective",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_003252",
+    "hash": "caca22e9"
+  },
+  {
+    "job": {
+      "positive": "vibrant colors, clear details, dynamic composition",
+      "negative": "lack of balance, too many characters",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Opening scene with both Dragon Ball and Detective Conan characters",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012012",
+    "hash": "7358023c"
+  },
+  {
+    "job": {
+      "positive": "realistic shadows, accurate perspective",
+      "negative": "inconsistent lighting, excessive action",
+      "lora": "",
+      "cfg_scale": 6.5,
+      "steps": 24,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Confrontation between Goku and Conan in a city setting",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012027",
+    "hash": "0e327262"
+  },
+  {
+    "job": {
+      "positive": "fast-paced, fluid movement, smooth transitions",
+      "negative": "overuse of camera angles, blurred background",
+      "lora": "",
+      "cfg_scale": 6.8,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Chase sequence through the city streets",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012043",
+    "hash": "ce6a699f"
+  },
+  {
+    "job": {
+      "positive": "striking contrast between characters, well-defined details",
+      "negative": "distorted anatomy, exaggerated expressions",
+      "lora": "",
+      "cfg_scale": 7.2,
+      "steps": 30,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S04",
+        "description": "Clash between Piccolo and Ranmoru in a park",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012058",
+    "hash": "4314adf7"
+  },
+  {
+    "job": {
+      "positive": "intense focus on facial expressions, atmospheric setting",
+      "negative": "too dark, lack of emotion",
+      "lora": "",
+      "cfg_scale": 6.7,
+      "steps": 26,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S05",
+        "description": "Mystery-solving scene with Shinichi and Bulma",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012113",
+    "hash": "c1347b77"
+  },
+  {
+    "job": {
+      "positive": "dramatic use of lighting, dynamic poses",
+      "negative": "poorly timed attacks, inconsistent character models",
+      "lora": "",
+      "cfg_scale": 7.1,
+      "steps": 34,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S06",
+        "description": "Battle between Frieza and Heiji in a factory",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012128",
+    "hash": "ced4be07"
+  },
+  {
+    "job": {
+      "positive": "spectacular display of power, impressive backgrounds",
+      "negative": "repetitive movements, flat colors",
+      "lora": "",
+      "cfg_scale": 6.9,
+      "steps": 30,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S07",
+        "description": "Final confrontation between Goku and Heiji",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012143",
+    "hash": "0a6d64e2"
+  },
+  {
+    "job": {
+      "positive": "emotional character interactions, striking visual effects",
+      "negative": "overuse of text, abrupt ending",
+      "lora": "",
+      "cfg_scale": 7.3,
+      "steps": 20,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S08",
+        "description": "Resolution and ending credits",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_012158",
+    "hash": "38d84a98"
+  },
+  {
+    "job": {
+      "positive": "clear, dynamic, vibrant colors",
+      "negative": "lack of detail, flat colors",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Opening scene with characters in action",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044451",
+    "hash": "b149b15b"
+  },
+  {
+    "job": {
+      "positive": "expressive, emotive, sharp focus",
+      "negative": "soft focus, lack of emotion",
+      "lora": "",
+      "cfg_scale": 7.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Close-up of main character in thought",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044506",
+    "hash": "dd7c748f"
+  },
+  {
+    "job": {
+      "positive": "detailed, busy, lively",
+      "negative": "lack of detail, static, dull",
+      "lora": "",
+      "cfg_scale": 8.0,
+      "steps": 36,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Characters in a bustling city scene",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044521",
+    "hash": "56d64921"
+  },
+  {
+    "job": {
+      "positive": "mysterious, tense, atmospheric",
+      "negative": "too bright, lacks atmosphere",
+      "lora": "",
+      "cfg_scale": 7.5,
+      "steps": 30,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S04",
+        "description": "Close-up of suspect in dark alley",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044538",
+    "hash": "4014e4ef"
+  },
+  {
+    "job": {
+      "positive": "intense, dramatic, energetic",
+      "negative": "lack of detail, too static",
+      "lora": "",
+      "cfg_scale": 8.0,
+      "steps": 34,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S05",
+        "description": "Characters in action during confrontation",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044553",
+    "hash": "a2749df1"
+  },
+  {
+    "job": {
+      "positive": "powerful, dynamic, detailed",
+      "negative": "lacks power, too blurry",
+      "lora": "",
+      "cfg_scale": 7.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S06",
+        "description": "Close-up of main character in final move",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044608",
+    "hash": "d9ce2883"
+  },
+  {
+    "job": {
+      "positive": "dramatic, heroic, vibrant",
+      "negative": "lacks drama, too bland",
+      "lora": "",
+      "cfg_scale": 8.0,
+      "steps": 36,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S07",
+        "description": "Final scene with characters posing",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044623",
+    "hash": "6662011c"
+  },
+  {
+    "job": {
+      "positive": "beautiful, peaceful, serene",
+      "negative": "too dark, lacks beauty",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S08",
+        "description": "Closing shot of setting sun",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_044638",
+    "hash": "992a4039"
+  },
+  {
+    "job": {
+      "positive": "detailed characters, vibrant colors, dynamic poses",
+      "negative": "lack of background detail, flat lighting",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Scene of Goku and Krillin training at Kame House",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045017",
+    "hash": "715462e8"
+  },
+  {
+    "job": {
+      "positive": "sharp focus, expressive face, dramatic lighting",
+      "negative": "excessive glare",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 25,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Close-up of Goku in deep concentration during training",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045108",
+    "hash": "d10939f2"
+  },
+  {
+    "job": {
+      "positive": "good composition, clear dialogue",
+      "negative": "static poses",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 30,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Goku and Krillin discussing the mission with Master Roshi",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045128",
+    "hash": "d2e4c681"
+  },
+  {
+    "job": {
+      "positive": "dramatic reveal, tense atmosphere",
+      "negative": "overuse of shadows",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 35,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S04",
+        "description": "Master Roshi revealing the identity of the suspect",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045145",
+    "hash": "dca20921"
+  },
+  {
+    "job": {
+      "positive": "busy urban setting, dynamic action",
+      "negative": "possible loss of detail in crowded areas",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 40,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S05",
+        "description": "Goku and Krillin tracking down the suspect in a cityscape",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045200",
+    "hash": "37e1bb35"
+  },
+  {
+    "job": {
+      "positive": "powerful energy wave, dramatic lighting",
+      "negative": "potential distortion in energy effects",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S06",
+        "description": "Close-up of Goku using Kamehameha against the suspect",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045215",
+    "hash": "f934a2e6"
+  },
+  {
+    "job": {
+      "positive": "destruction and debris, tense atmosphere",
+      "negative": "lack of variation in building structures",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S07",
+        "description": "Aftermath of the battle with the suspect",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045230",
+    "hash": "1a626646"
+  },
+  {
+    "job": {
+      "positive": "calm and peaceful scene, character development",
+      "negative": "simple background",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 35,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S08",
+        "description": "Goku and Krillin reflecting on the mission's success",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_045245",
+    "hash": "f212d22b"
+  },
+  {
+    "job": {
+      "positive": "high detail, dynamic lighting, vibrant colors",
+      "negative": "lack of character expression, stiff poses",
+      "lora": "",
+      "cfg_scale": 7.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Intro scene with Evangelion Unit-01 and Detective Conan",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_052936",
+    "hash": "713987d3"
+  },
+  {
+    "job": {
+      "positive": "natural interactions, expressive characters",
+      "negative": "incorrect coffee shop setting, lack of atmosphere",
+      "lora": "",
+      "cfg_scale": 6.5,
+      "steps": 24,
+      "width": 1024,
+      "height": 768,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Conan and Shinji meet for the first time in a coffee shop",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_053001",
+    "hash": "71f9a4cd"
+  },
+  {
+    "job": {
+      "positive": "dynamic action, fluid movement, dramatic camera angles",
+      "negative": "excessive use of effects, overpowered appearance",
+      "lora": "",
+      "cfg_scale": 8.0,
+      "steps": 36,
+      "width": 1920,
+      "height": 1080,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Action sequence featuring Eva battling an adversary",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_053023",
+    "hash": "a88fdf05"
+  },
+  {
+    "job": {
+      "positive": "detailed forensic work, unique integration of Eva technology",
+      "negative": "unrealistic crime scene evidence, lack of tension",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 576,
+      "_shot_meta": {
+        "shot_id": "S04",
+        "description": "Conan investigates a crime scene with Evangelion's help",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_053039",
+    "hash": "6c67fe43"
+  },
+  {
+    "job": {
+      "positive": "emotional interaction, strong character development",
+      "negative": "plain background, lack of focus on conversation",
+      "lora": "",
+      "cfg_scale": 7.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 768,
+      "_shot_meta": {
+        "shot_id": "S05",
+        "description": "Conan and Shinji discuss the mystery in a quiet setting",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_053054",
+    "hash": "4c5df9e9"
+  },
+  {
+    "job": {
+      "positive": "spectacular visuals, grand scale, intense action",
+      "negative": "too dark, difficult to see important details",
+      "lora": "",
+      "cfg_scale": 8.5,
+      "steps": 40,
+      "width": 1920,
+      "height": 1080,
+      "_shot_meta": {
+        "shot_id": "S06",
+        "description": "Epic final battle between Evangelion and the villain",
+        "scene": 3,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_053109",
+    "hash": "f8ffa091"
+  },
+  {
+    "job": {
+      "positive": "clear, vibrant colors, dynamic movement",
+      "negative": "lacking detail, poor lighting",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Introductory scene showing the bustling city of Shinjuku",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_053236",
+    "hash": "d0ecb5bb"
+  },
+  {
+    "job": {
+      "positive": "expressive character design, engaging expression",
+      "negative": "background inconsistencies, unnatural proportions",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Protagonist introduced in a café or shop",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_053251",
+    "hash": "e25ee6da"
+  },
+  {
+    "job": {
+      "positive": "happy, colorful, energetic",
+      "negative": "too dark, dull colors",
+      "lora": "",
+      "cfg_scale": 6.5,
+      "steps": 25,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Introduce new characters and their lives before joining NERV",
+        "scene": 1,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "echec apres 3 tentatives",
+    "ts": "20260620_053953",
+    "hash": "6bf017a1"
+  },
+  {
+    "job": {
+      "positive": "Prompt Positive ComfyUI in English, anime style",
+      "negative": "bad quality, blurry, deformed",
+      "lora": "",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Scene 2 description",
+        "scene": 2,
+        "_fallback": false
+      },
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260620_054218",
+    "hash": "ed7d5456"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 1, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Scene 1",
+        "scene": 1,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_01.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 17020,
+      "det_lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_055103",
+    "hash": "c1bed69a"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 2, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Scene 2",
+        "scene": 2,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_02.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 17157,
+      "det_lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_055248",
+    "hash": "6ef86ad7"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 3, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Scene 3",
+        "scene": 3,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_03.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 17294,
+      "det_lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_055433",
+    "hash": "ec928e4f"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 1, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Scene 1",
+        "scene": 1,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_01.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 42528,
+      "det_lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_061903",
+    "hash": "a89f87d7"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 2, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Scene 2",
+        "scene": 2,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_02.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 42665,
+      "det_lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_061924",
+    "hash": "e1fed701"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 3, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Scene 3",
+        "scene": 3,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_03.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 42802,
+      "det_lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_061946",
+    "hash": "544d4de5"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 1, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S01",
+        "description": "Scene 1",
+        "scene": 1,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_01.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 35390,
+      "det_lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_062144",
+    "hash": "c9214eaf"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 2, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S02",
+        "description": "Scene 2",
+        "scene": 2,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_02.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 35527,
+      "det_lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_062205",
+    "hash": "c65ab873"
+  },
+  {
+    "job": {
+      "positive": "masterpiece, best quality, absurdres, highly detailed, Scene 3, anime style, vibrant colors, sharp lineart, cinematic lighting",
+      "negative": "bad quality, blurry, deformed, inconsistent style, style change, different art style, inconsistent character design, color inconsistency",
+      "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536,
+      "_shot_meta": {
+        "shot_id": "S03",
+        "description": "Scene 3",
+        "scene": 3,
+        "_fallback": true
+      },
+      "sketch_path": "workspace\\storyboards\\sketches\\evangelion battle mecha girl_ New Chapter\\sketch_03.png",
+      "has_sketch_ref": false,
+      "sketch_prompt": "sketch, simple line art, rough composition study, black and white lines only, no shading, no color, anime style, evangelion battle mecha girl: New Chapter, ",
+      "production_passes": [
+        "background",
+        "character_a",
+        "character_b",
+        "fx"
+      ],
+      "composite_order": [
+        "background",
+        "character_b",
+        "character_a",
+        "fx"
+      ],
+      "seed": 35664,
+      "det_lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+      "strength": 1.0
+    },
+    "reason": "failed after 3 attempts",
+    "ts": "20260622_062226",
+    "hash": "594e227a"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "shot_id": "job0006_20260620_073306_overlord__00001_",
+  "verdict": "FAIL",
+  "passed": false,
+  "issues": [
+    "Image monochrome/artefact (color_std=8.3)"
+  ],
+  "metrics": {
+    "dimensions": "1024x1536",
+    "sharpness": 317.7,
+    "brightness": 159.0,
+    "color_diversity": 8.3,
+    "black_pct": 0.0,
+    "white_pct": 0.8
+  }
+}

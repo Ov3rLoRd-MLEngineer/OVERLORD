@@ -1,0 +1,26 @@
+2026-06-22 05:35:33 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-22 05:35:33 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-22 05:35:33 [INFO    ] [CHECKPOINT] Charge : maestro_20260622_053015 | Etat : interrupted | Blocs termines : ['sourcing', 'scenario']
+2026-06-22 05:35:33 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'storyboard' (2/5 blocs deja termines : ['sourcing', 'scenario'])
+2026-06-22 05:35:33 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260622_053533
+2026-06-22 05:35:33 [INFO    ] [GPU] Optimisation pour : rtx5080 — RTX 5080 16GB — cible Ov3rLoRd
+2026-06-22 05:35:33 [INFO    ] [GPU] Workflow déjà à jour
+2026-06-22 05:35:33 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-22 05:35:33 [INFO    ] [GPU] Optimisation auto : rtx5080
+2026-06-22 05:35:33 [INFO    ] ============================================================
+2026-06-22 05:35:33 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-22 05:35:33 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260622_053533
+2026-06-22 05:35:33 [INFO    ]   Critique : OK
+2026-06-22 05:35:33 [INFO    ]   Watchdog : OK
+2026-06-22 05:35:33 [INFO    ]   Director : OK
+2026-06-22 05:35:33 [INFO    ]   Bus      : OK
+2026-06-22 05:35:33 [INFO    ]   Blocs    : storyboard -> production -> postprod -> 3d
+2026-06-22 05:35:33 [INFO    ] ============================================================
+2026-06-22 05:35:33 [ERROR   ] Pas de script -- arret
+2026-06-22 05:35:33 [INFO    ] [REPORTER] Génération rapport run=maestro_20260622_053533
+2026-06-22 05:35:33 [INFO    ] [REPORTER] OK — JSON: 20260622_053533_maestro_20260622_053533.json | MD: 20260622_053533_maestro_20260622_053533.md
+2026-06-22 05:35:33 [INFO    ] [REPORTER] Résumé : 100 images | vidéo: True
+2026-06-22 05:35:39 [INFO    ] [WATCHDOG] Arrete
+2026-06-22 05:35:39 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=15s
+2026-06-22 05:35:39 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260622_053533 | Blocs termines : []
+2026-06-22 05:35:39 [INFO    ] [CRITIQUE] Bilan : 0 verifications | score moyen=0 | sante=UNKNOWN

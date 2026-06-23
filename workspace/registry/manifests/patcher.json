@@ -1,0 +1,10 @@
+{
+  "name": "patcher",
+  "version": "V1.0",
+  "checksum": "596797e33299b86e",
+  "lines": 233,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.266669",
+  "path": "agents\\patcher.py"
+}

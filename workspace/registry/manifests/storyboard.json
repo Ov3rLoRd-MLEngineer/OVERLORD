@@ -1,0 +1,13 @@
+{
+  "name": "storyboard",
+  "version": "V1.49s",
+  "checksum": "1b7481e947acf75c",
+  "lines": 336,
+  "dependencies": [
+    "overlord_utils",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.623121",
+  "path": "agents\\storyboard.py"
+}

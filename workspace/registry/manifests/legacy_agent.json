@@ -1,0 +1,10 @@
+{
+  "name": "legacy_agent",
+  "version": "V?.?",
+  "checksum": "3ca778ab1e09ac9a",
+  "lines": 703,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.083327",
+  "path": "agents\\legacy_agent.py"
+}

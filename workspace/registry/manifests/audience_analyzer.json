@@ -1,0 +1,13 @@
+{
+  "name": "audience_analyzer",
+  "version": "V1.47",
+  "checksum": "a59888d0af5e70a9",
+  "lines": 243,
+  "dependencies": [
+    "overlord_utils",
+    "audience_analyzer"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.801138",
+  "path": "agents\\audience_analyzer.py"
+}

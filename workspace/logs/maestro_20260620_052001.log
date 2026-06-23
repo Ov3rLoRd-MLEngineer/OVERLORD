@@ -1,0 +1,64 @@
+2026-06-20 05:20:01 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.FACTORY | seuil=63 | arc=wonder
+2026-06-20 05:20:01 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 05:20:01 [INFO    ] [CHECKPOINT] Aucun checkpoint pour 'anime_evangelion_battle_mecha_girl'
+2026-06-20 05:20:01 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_052001
+2026-06-20 05:20:01 [INFO    ] ============================================================
+2026-06-20 05:20:01 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 05:20:01 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_052001
+2026-06-20 05:20:01 [INFO    ]   Critique : OK
+2026-06-20 05:20:01 [INFO    ]   Watchdog : OK
+2026-06-20 05:20:01 [INFO    ]   Director : OK
+2026-06-20 05:20:01 [INFO    ]   Bus      : OK
+2026-06-20 05:20:01 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 05:20:01 [INFO    ] ============================================================
+2026-06-20 05:20:01 [INFO    ] =======================================================
+2026-06-20 05:20:01 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 05:20:01 [INFO    ] =======================================================
+2026-06-20 05:20:01 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-20 05:20:01 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 05:20:01 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 05:20:02 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 05:20:03 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 05:20:03 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 05:20:03 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 05:20:03 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 05:20:03 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 05:20:03 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 05:20:03 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 05:20:03 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 05:20:03 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 05:20:03 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 05:20:03 [INFO    ] =======================================================
+2026-06-20 05:20:03 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 05:20:03 [INFO    ] =======================================================
+2026-06-20 05:20:03 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=63
+2026-06-20 05:20:03 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 05:20:19 [DEBUG   ] [LLM] Ollama/mistral OK (2299 chars)
+2026-06-20 05:20:19 [INFO    ] [SCENARISTE] Script genere : 'Evangelion: Detective's Odyssey'
+2026-06-20 05:20:19 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 05:20:27 [DEBUG   ] [LLM] Ollama/mistral OK (1201 chars)
+2026-06-20 05:20:27 [INFO    ] [SCRIPT DOCTOR] Score=83/100 | Valide=oui
+2026-06-20 05:20:27 [ERROR   ] [MAESTRO] Erreur critique : '>' not supported between instances of 'str' and 'int'
+Traceback (most recent call last):
+  File "D:\OVERLORD\maestro.py", line 648, in run_pipeline
+    script = block_scenario(trend_report, cfg, state, logger, critic, watchdog, cp_mgr)
+  File "D:\OVERLORD\maestro.py", line 339, in block_scenario
+    script = run_scenario(
+        trend_report      = trend_report,
+    ...<4 lines>...
+        logger            = logger
+    )
+  File "D:\OVERLORD\agents\scenario.py", line 260, in run_scenario
+    if score > best_score:
+       ^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'str' and 'int'
+2026-06-20 05:20:31 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 05:20:31 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=30s
+2026-06-20 05:20:31 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260620_052001 | Blocs termines : ['sourcing']
+2026-06-20 05:20:31 [INFO    ] [CRITIQUE] Bilan : 1 verifications | score moyen=80.0 | sante=STABLE

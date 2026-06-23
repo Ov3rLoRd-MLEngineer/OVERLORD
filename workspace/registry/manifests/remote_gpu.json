@@ -1,0 +1,10 @@
+{
+  "name": "remote_gpu",
+  "version": "V?.?",
+  "checksum": "9f239d577fea1da6",
+  "lines": 419,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.397896",
+  "path": "agents\\remote_gpu.py"
+}

@@ -1,0 +1,50 @@
+2026-06-20 04:54:33 [INFO    ] [SUPERVISOR] Batch demarre : 8 jobs | run_id=maestro_20260620_045352_prod
+2026-06-20 04:54:33 [INFO    ] [SUPERVISOR] Job 1/8 | hash=d77774f7
+2026-06-20 04:54:33 [DEBUG   ] [SUPERVISOR] Queued : 9a737aaa-4a84-4efb-b0f5-77b4de7f6cfd
+2026-06-20 04:54:35 [WARNING ] [SUPERVISOR] Job 1 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:54:41 [DEBUG   ] [SUPERVISOR] Queued : 092a9abb-1803-4d55-bd7d-21032efa65f5
+2026-06-20 04:54:43 [WARNING ] [SUPERVISOR] Job 1 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:54:48 [DEBUG   ] [SUPERVISOR] Queued : 6cdff4d3-7ca5-4c57-94cd-e39bcbf18c2a
+2026-06-20 04:54:48 [INFO    ] [SUPERVISOR] Job 2/8 | hash=29e1c169
+2026-06-20 04:54:48 [DEBUG   ] [SUPERVISOR] Queued : 162b3837-12b8-43e2-8440-07cff4320cb6
+2026-06-20 04:54:50 [WARNING ] [SUPERVISOR] Job 2 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:54:55 [DEBUG   ] [SUPERVISOR] Queued : 6348692f-1fe8-4d0e-895c-71d6fc1bc7bb
+2026-06-20 04:54:55 [WARNING ] [SUPERVISOR] Job 2 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:01 [DEBUG   ] [SUPERVISOR] Queued : 2e7588a7-3e95-445b-b82f-edb236c23812
+2026-06-20 04:55:03 [INFO    ] [SUPERVISOR] Job 3/8 | hash=bf6e6529
+2026-06-20 04:55:03 [DEBUG   ] [SUPERVISOR] Queued : 4d15e0f4-ef2f-48af-8cad-b2c387de9245
+2026-06-20 04:55:05 [WARNING ] [SUPERVISOR] Job 3 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:10 [DEBUG   ] [SUPERVISOR] Queued : 24ad8176-79f8-415e-a622-c1f5f3a738a2
+2026-06-20 04:55:10 [WARNING ] [SUPERVISOR] Job 3 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:16 [DEBUG   ] [SUPERVISOR] Queued : 851f75cd-e500-49d6-b55c-f2c07e86fac7
+2026-06-20 04:55:16 [INFO    ] [SUPERVISOR] Job 4/8 | hash=6ab8c687
+2026-06-20 04:55:16 [DEBUG   ] [SUPERVISOR] Queued : b2e6c641-8e2c-4078-a254-cbef89179686
+2026-06-20 04:55:18 [WARNING ] [SUPERVISOR] Job 4 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:23 [DEBUG   ] [SUPERVISOR] Queued : 17cbe141-7785-4d8a-a3f6-31fa24ab5d1b
+2026-06-20 04:55:25 [WARNING ] [SUPERVISOR] Job 4 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:31 [DEBUG   ] [SUPERVISOR] Queued : 34d9e5c9-5520-4f5e-881b-f01ec06e9cb5
+2026-06-20 04:55:31 [INFO    ] [SUPERVISOR] Job 5/8 | hash=fc2ddaf1
+2026-06-20 04:55:31 [DEBUG   ] [SUPERVISOR] Queued : 8f683ce5-63c2-460d-9749-1e2eae2e1099
+2026-06-20 04:55:33 [WARNING ] [SUPERVISOR] Job 5 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:38 [DEBUG   ] [SUPERVISOR] Queued : c54cc6e2-267e-4ccd-8727-49c522edc2f7
+2026-06-20 04:55:38 [WARNING ] [SUPERVISOR] Job 5 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:43 [DEBUG   ] [SUPERVISOR] Queued : 0b122f5f-c09d-4402-975e-f63b44d8710f
+2026-06-20 04:55:44 [INFO    ] [SUPERVISOR] Job 6/8 | hash=011065a9
+2026-06-20 04:55:44 [DEBUG   ] [SUPERVISOR] Queued : 71e86633-852b-4e4d-95f2-7da5a53f33cd
+2026-06-20 04:55:46 [WARNING ] [SUPERVISOR] Job 6 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:51 [DEBUG   ] [SUPERVISOR] Queued : c213a541-0d65-41f0-9a3a-663339f92fd3
+2026-06-20 04:55:53 [WARNING ] [SUPERVISOR] Job 6 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:55:58 [DEBUG   ] [SUPERVISOR] Queued : 51387823-2fd6-42a3-9870-8f1b3bc2f07f
+2026-06-20 04:55:58 [INFO    ] [SUPERVISOR] Job 7/8 | hash=89c7e91b
+2026-06-20 04:55:59 [DEBUG   ] [SUPERVISOR] Queued : 197a7532-9520-417b-b3a3-284bd6ca9776
+2026-06-20 04:56:01 [WARNING ] [SUPERVISOR] Job 7 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:56:06 [DEBUG   ] [SUPERVISOR] Queued : 40c89ef3-83e2-4906-a3ed-760653e5cf22
+2026-06-20 04:56:08 [WARNING ] [SUPERVISOR] Job 7 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:56:13 [DEBUG   ] [SUPERVISOR] Queued : 18623ffc-2780-4ed5-9a16-443562ce0541
+2026-06-20 04:56:15 [INFO    ] [SUPERVISOR] Job 8/8 | hash=14591e8e
+2026-06-20 04:56:16 [DEBUG   ] [SUPERVISOR] Queued : bfe617ef-f88d-44ca-9515-e1545501c2a6
+2026-06-20 04:56:18 [WARNING ] [SUPERVISOR] Job 8 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:56:23 [DEBUG   ] [SUPERVISOR] Queued : 4bcbd388-0398-4cbe-9938-2c0b396adf33
+2026-06-20 04:56:25 [WARNING ] [SUPERVISOR] Job 8 qualite insuffisante (0 < 80.0) — relance
+2026-06-20 04:56:30 [DEBUG   ] [SUPERVISOR] Queued : 762e2ec3-1afa-49b8-b1c8-e1aaf1ac59e5
+2026-06-20 04:56:30 [INFO    ] [SUPERVISOR] Batch termine : 8/8 succes

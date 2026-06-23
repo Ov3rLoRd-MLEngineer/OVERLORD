@@ -1,0 +1,10 @@
+{
+  "name": "overlord_utils",
+  "version": "V1.49s",
+  "checksum": "8b642282c9347896",
+  "lines": 397,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.256455",
+  "path": "agents\\overlord_utils.py"
+}

@@ -1,0 +1,10 @@
+{
+  "handoff": "scenario→storyboard",
+  "verdict": "REJECT",
+  "score": 20.0,
+  "issues": [
+    "Script contient une erreur : json_parse_failed"
+  ],
+  "repairs": {},
+  "timestamp": "2026-06-17T19:23:49.234616"
+}

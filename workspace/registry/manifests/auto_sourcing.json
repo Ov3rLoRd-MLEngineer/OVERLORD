@@ -1,0 +1,14 @@
+{
+  "name": "auto_sourcing",
+  "version": "V1.50",
+  "checksum": "35f5555f10b32e3a",
+  "lines": 309,
+  "dependencies": [
+    "overlord_utils",
+    "sourcing",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.823299",
+  "path": "agents\\auto_sourcing.py"
+}

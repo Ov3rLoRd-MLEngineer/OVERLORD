@@ -1,0 +1,5750 @@
+[
+  {
+    "run_id": "learn_20260617_171607_0001",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:16:07.906712",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 150.9515281554106
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.4757640777053,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999419848125,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.6
+    },
+    "score": 92.64272835308377,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.7404556274414062e-05
+  },
+  {
+    "run_id": "learn_20260617_171708_0002",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:17:08.223745",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 200
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 100,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998664855957,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 100.0
+    },
+    "score": 99.99999799728391,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 4.00543212890625e-05
+  },
+  {
+    "run_id": "learn_20260617_171808_0003",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:18:08.248765",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 175.33820952098722
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.66910476049361,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997735023499,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.3
+    },
+    "score": 96.3007280306833,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.794929504394531e-05
+  },
+  {
+    "run_id": "learn_20260617_171908_0004",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:19:08.288014",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 164.07320874617645
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 82.03660437308822,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998132387798,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.6
+    },
+    "score": 94.61097851050815,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.602836608886719e-05
+  },
+  {
+    "run_id": "learn_20260617_172008_0005",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:20:08.314335",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 168.5640357811158
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 84.2820178905579,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999725818634,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.3
+    },
+    "score": 95.28460125444687,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 8.225440979003906e-05
+  },
+  {
+    "run_id": "learn_20260617_172108_0006",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:21:08.342158",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 172.88234948222072
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.44117474111036,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997750918071,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.9
+    },
+    "score": 95.93234904871021,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.747245788574219e-05
+  },
+  {
+    "run_id": "learn_20260617_172208_0007",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:22:08.366043",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 200
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 100,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997917811076,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 100.0
+    },
+    "score": 99.99999687671658,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.246566772460938e-05
+  },
+  {
+    "run_id": "learn_20260617_172308_0008",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 40,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "steps",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:23:08.390313",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 156.40757638830542
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 78.20378819415271,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998203913371,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.5
+    },
+    "score": 93.46113376411586,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.3882598876953125e-05
+  },
+  {
+    "run_id": "learn_20260617_172408_0009",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 29,
+      "cfg": 6.0,
+      "sampler": "dpm++_2m",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:24:08.416706",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 179.5879364686101
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 89.79396823430505,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997814496358,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.9
+    },
+    "score": 96.93818719203603,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.556510925292969e-05
+  },
+  {
+    "run_id": "learn_20260617_172508_0010",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 29,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:25:08.454822",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 168.82472997516675
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 84.41236498758337,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.999982436498,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.3
+    },
+    "score": 95.3237068617497,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.269050598144531e-05
+  },
+  {
+    "run_id": "learn_20260617_172635_0001",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 29,
+      "cfg": 6.0,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:26:35.340978",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 157.5054958063821
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 78.75274790319105,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999946753184,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.6
+    },
+    "score": 93.62582357225507,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5974044799804688e-05
+  },
+  {
+    "run_id": "learn_20260617_172735_0002",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 29,
+      "cfg": 6.5,
+      "sampler": "euler_ancestral",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "cfg",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:27:35.623243",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 163.88486735598732
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.94243367799366,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999958674113,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.6
+    },
+    "score": 94.58272948350978,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.239776611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_172835_0003",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 29,
+      "cfg": 6.050000000000001,
+      "sampler": "dpm++_2m_sde",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:28:35.860644",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 186.780206996226
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 93.390103498113,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999771118164,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.0
+    },
+    "score": 98.01702761620632,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.866455078125e-05
+  },
+  {
+    "run_id": "learn_20260617_172935_0004",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 24,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m_sde",
+      "strength": 1.0,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "steps",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:29:36.089117",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 121.46371306524821
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 60.73185653262411,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999499320984,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 88.2
+    },
+    "score": 88.21955620876868,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5020370483398438e-05
+  },
+  {
+    "run_id": "learn_20260617_173036_0005",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.96,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:30:36.315191",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 191.28353828598188
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 95.64176914299094,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999483426411,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.7
+    },
+    "score": 98.69252996803687,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5497207641601562e-05
+  },
+  {
+    "run_id": "learn_20260617_173136_0006",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:31:36.554253",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 179.96036237880293
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 89.98018118940146,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997679392497,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 97.0
+    },
+    "score": 96.99405087590915,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.961822509765625e-05
+  },
+  {
+    "run_id": "learn_20260617_173236_0007",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:32:36.813135",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 128.34534526805214
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 64.17267263402607,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997146924336,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 89.3
+    },
+    "score": 89.25179751059432,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 8.559226989746094e-05
+  },
+  {
+    "run_id": "learn_20260617_173336_0008",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:33:37.045170",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 152.84419125614787
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 76.42209562807393,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999570846558,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.9
+    },
+    "score": 92.92662804469201,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.2874603271484375e-05
+  },
+  {
+    "run_id": "learn_20260617_173437_0009",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:34:37.302095",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 170.93305817144528
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 85.46652908572264,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999950726827,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.6
+    },
+    "score": 95.63995798661918,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4781951904296875e-05
+  },
+  {
+    "run_id": "learn_20260617_173537_0010",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:35:37.549142",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 150.08081280877923
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.04040640438961,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999562899272,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.5
+    },
+    "score": 92.51212126566578,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3113021850585938e-05
+  },
+  {
+    "run_id": "learn_20260617_173637_0011",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 6.050000000000002,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:36:37.783277",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 170.2688366872681
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 85.13441834363405,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997735023499,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.5
+    },
+    "score": 95.54032210562545,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.794929504394531e-05
+  },
+  {
+    "run_id": "learn_20260617_173737_0012",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 4.1,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "cfg",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:37:38.038333",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 163.61780913846803
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.80890456923402,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999054272969,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.5
+    },
+    "score": 94.54266995217965,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.8371810913085938e-05
+  },
+  {
+    "run_id": "learn_20260617_173838_0013",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.855000000000001,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:38:38.282159",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 144.04092064480741
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.02046032240371,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999499320984,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.6
+    },
+    "score": 91.60613734570258,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5020370483398438e-05
+  },
+  {
+    "run_id": "learn_20260617_173938_0014",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 7.3,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "cfg",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:39:38.513424",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 192.1625187832259
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 96.08125939161295,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999578793843,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.8
+    },
+    "score": 98.82437718567462,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.2636184692382812e-05
+  },
+  {
+    "run_id": "learn_20260617_174038_0015",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000003,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:40:38.735107",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 196.81467606349048
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 98.40733803174524,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999070167542,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 99.5
+    },
+    "score": 99.52220001477485,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.7894973754882812e-05
+  },
+  {
+    "run_id": "learn_20260617_174138_0016",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:41:38.968405",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 173.86002628469674
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.93001314234837,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999539057414,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.1
+    },
+    "score": 96.0790032512906,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3828277587890625e-05
+  },
+  {
+    "run_id": "learn_20260617_174238_0017",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:42:39.205363",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 175.94871673955018
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.97435836977509,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999515215556,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.4
+    },
+    "score": 96.39230678375583,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4543533325195312e-05
+  },
+  {
+    "run_id": "learn_20260617_174339_0018",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "steps",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:43:39.446414",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 199.29749384188796
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 99.64874692094398,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999958674113,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 99.9
+    },
+    "score": 99.89462345639485,
+    "lessons": [
+      "Découverte : steps=28 améliore les résultats"
+    ],
+    "errors": [],
+    "duration_s": 1.239776611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_174439_0019",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:44:39.686307",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 145.7753320580355
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.88766602901775,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999332427979,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.9
+    },
+    "score": 91.86629880734728,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.002716064453125e-05
+  },
+  {
+    "run_id": "learn_20260617_174539_0020",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:45:39.939686",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 135.75335506332408
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 67.87667753166204,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998060862224,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.4
+    },
+    "score": 90.36300035079194,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.817413330078125e-05
+  },
+  {
+    "run_id": "learn_20260617_174639_0021",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:46:40.308354",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 165.14219694950845
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 82.57109847475422,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999475479126,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.8
+    },
+    "score": 94.77132875564494,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5735626220703125e-05
+  },
+  {
+    "run_id": "learn_20260617_174740_0022",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:47:40.542406",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 162.92724199091208
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.46362099545604,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997433026631,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.4
+    },
+    "score": 94.43908244817673,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 7.700920104980469e-05
+  },
+  {
+    "run_id": "learn_20260617_174840_0023",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:48:40.814322",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 144.140266113305
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.0701330566525,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999443689983,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.6
+    },
+    "score": 91.62103908253071,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.6689300537109375e-05
+  },
+  {
+    "run_id": "learn_20260617_174940_0024",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:49:41.050579",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 147.83506728853243
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 73.91753364426621,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999562899272,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.2
+    },
+    "score": 92.17525943762875,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3113021850585938e-05
+  },
+  {
+    "run_id": "learn_20260617_175041_0025",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:50:41.277872",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 138.64901625897895
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 69.32450812948947,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999435742696,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.8
+    },
+    "score": 90.79735159246087,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.6927719116210938e-05
+  },
+  {
+    "run_id": "learn_20260617_175141_0026",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:51:41.509575",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 185.57106549868183
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 92.78553274934092,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998052914937,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 97.8
+    },
+    "score": 97.83565690417466,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.841255187988281e-05
+  },
+  {
+    "run_id": "learn_20260617_175241_0027",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:52:41.739808",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 175.29882779528458
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.64941389764229,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999783039093,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.3
+    },
+    "score": 96.29482091487904,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.508827209472656e-05
+  },
+  {
+    "run_id": "learn_20260617_175341_0028",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.996,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:53:41.989548",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 134.66505848252774
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 67.33252924126387,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999499320984,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.2
+    },
+    "score": 90.19975802136061,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5020370483398438e-05
+  },
+  {
+    "run_id": "learn_20260617_175442_0029",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.77,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T15:54:42.217464",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 127.27707329019465
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 63.638536645097325,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999950726827,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 89.1
+    },
+    "score": 89.09156025443158,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4781951904296875e-05
+  },
+  {
+    "run_id": "learn_20260617_175542_0030",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:55:42.455682",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 140.67334458061674
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 70.33667229030837,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998060862224,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.1
+    },
+    "score": 91.10099877838583,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.817413330078125e-05
+  },
+  {
+    "run_id": "learn_20260617_175642_0031",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:56:42.687935",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 168.71494014716606
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 84.35747007358303,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999483426411,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.3
+    },
+    "score": 95.30724024721451,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5497207641601562e-05
+  },
+  {
+    "run_id": "learn_20260617_175742_0032",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:57:42.939463",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 153.8971261942907
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 76.94856309714535,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.999995470047,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.1
+    },
+    "score": 93.08456824965064,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3589859008789062e-05
+  },
+  {
+    "run_id": "learn_20260617_175842_0033",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:58:43.170683",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 175.6526589908525
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.82632949542625,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997289975484,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.3
+    },
+    "score": 96.34789478359107,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 8.130073547363281e-05
+  },
+  {
+    "run_id": "learn_20260617_175943_0034",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T15:59:43.423358",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 154.67453577748518
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 77.33726788874259,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999539057414,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.2
+    },
+    "score": 93.20117967520888,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3828277587890625e-05
+  },
+  {
+    "run_id": "learn_20260617_180043_0035",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:00:43.679866",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 200
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 100,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999451637268,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 100.0
+    },
+    "score": 99.99999917745588,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.6450881958007812e-05
+  },
+  {
+    "run_id": "learn_20260617_180143_0036",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:01:43.928463",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 178.9584189124401
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 89.47920945622005,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999958674113,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.8
+    },
+    "score": 96.84376221697768,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.239776611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_180243_0037",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 24,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "steps",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:02:44.151411",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 113.35380378418802
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 56.67690189209401,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999950726827,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.0
+    },
+    "score": 87.00306982853058,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4781951904296875e-05
+  },
+  {
+    "run_id": "learn_20260617_180344_0038",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9734,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:03:44.438957",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 148.57676097652538
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 74.28838048826269,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998100598653,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.3
+    },
+    "score": 92.28651129737678,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.698204040527344e-05
+  },
+  {
+    "run_id": "learn_20260617_180444_0039",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 1.19,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:04:44.700509",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 163.12870235094212
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.56435117547106,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999946753184,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.5
+    },
+    "score": 94.46930455393905,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5974044799804688e-05
+  },
+  {
+    "run_id": "learn_20260617_180544_0040",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:05:44.931371",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 126.60723317026066
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 63.30361658513033,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998164176941,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 89.0
+    },
+    "score": 88.99108222180449,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.507469177246094e-05
+  },
+  {
+    "run_id": "learn_20260617_180644_0041",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:06:45.145466",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 123.3974546827632
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 61.6987273413816,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999173482259,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 88.5
+    },
+    "score": 88.50961696263785,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.47955322265625e-05
+  },
+  {
+    "run_id": "learn_20260617_180745_0042",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:07:45.692491",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 142.98481033832934
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 71.49240516916467,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999602635701,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.4
+    },
+    "score": 91.44772095470294,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1920928955078125e-05
+  },
+  {
+    "run_id": "learn_20260617_180845_0043",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:08:46.040152",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 156.74178682600987
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 78.37089341300494,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999300638835,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.5
+    },
+    "score": 93.51126697485971,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.09808349609375e-05
+  },
+  {
+    "run_id": "learn_20260617_180946_0044",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:09:46.280184",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 189.3306872988922
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 94.6653436494461,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998037020366,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.4
+    },
+    "score": 98.39960015036435,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.888938903808594e-05
+  },
+  {
+    "run_id": "learn_20260617_181046_0045",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:10:46.527110",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 144.991183104416
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.495591552208,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999749660492,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.7
+    },
+    "score": 91.74867371056976,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 7.510185241699219e-05
+  },
+  {
+    "run_id": "learn_20260617_181146_0046",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:12:01.811099",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 151.0644031220491
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.53220156102455,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999554951985,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.7
+    },
+    "score": 92.65965980073533,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.33514404296875e-05
+  },
+  {
+    "run_id": "learn_20260617_181301_0047",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:13:02.116045",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 168.9264823092007
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 84.46324115460035,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.999977906545,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.3
+    },
+    "score": 95.33896903236185,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.628036499023438e-05
+  },
+  {
+    "run_id": "learn_20260617_181402_0048",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:14:02.373976",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 113.19673780452035
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 56.59836890226018,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998354911804,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.0
+    },
+    "score": 86.97950820304574,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 4.935264587402344e-05
+  },
+  {
+    "run_id": "learn_20260617_181502_0049",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 40,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "steps",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:15:02.609625",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 148.01301163585882
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 74.00650581792941,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997862180074,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.2
+    },
+    "score": 92.20194853864892,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.413459777832031e-05
+  },
+  {
+    "run_id": "learn_20260617_181602_0050",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:16:02.860777",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 174.96419714850842
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.48209857425421,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99996940294902,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.2
+    },
+    "score": 96.24462498271859,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 9.179115295410156e-05
+  },
+  {
+    "run_id": "learn_20260617_181702_0051",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9950600000000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:17:03.090519",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 167.12909127169905
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 83.56454563584953,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998593330383,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.1
+    },
+    "score": 95.06936158075041,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 4.220008850097656e-05
+  },
+  {
+    "run_id": "learn_20260617_181803_0052",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.76,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:18:03.354614",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 168.51287790940034
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 84.25643895470017,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999610582988,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.3
+    },
+    "score": 95.27693110228452,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1682510375976562e-05
+  },
+  {
+    "run_id": "learn_20260617_181903_0053",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:19:03.598449",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 160.9893580799392
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 80.4946790399696,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999531110127,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.1
+    },
+    "score": 94.14840300865606,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4066696166992188e-05
+  },
+  {
+    "run_id": "learn_20260617_182003_0054",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:20:03.835591",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 150.01848015998758
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.00924007999379,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999602635701,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.5
+    },
+    "score": 92.50277142795167,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1920928955078125e-05
+  },
+  {
+    "run_id": "learn_20260617_182103_0055",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:21:04.054258",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 116.43617891866305
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 58.21808945933152,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998998641968,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.5
+    },
+    "score": 87.46542533576239,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 3.0040740966796875e-05
+  },
+  {
+    "run_id": "learn_20260617_182204_0056",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:22:04.314526",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 121.38098046187176
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 60.69049023093588,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999539057414,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 88.2
+    },
+    "score": 88.20714637786686,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3828277587890625e-05
+  },
+  {
+    "run_id": "learn_20260617_182304_0057",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:23:04.542607",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 162.96237556280622
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.48118778140311,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999950726827,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.4
+    },
+    "score": 94.44435559532332,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4781951904296875e-05
+  },
+  {
+    "run_id": "learn_20260617_182404_0058",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:24:04.788770",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 150.49885053778254
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.24942526889127,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999958674113,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.6
+    },
+    "score": 92.57482696077906,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.239776611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_182504_0059",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:25:05.030638",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 127.37494042669132
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 63.68747021334566,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999443689983,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 89.1
+    },
+    "score": 89.10624022953866,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.6689300537109375e-05
+  },
+  {
+    "run_id": "learn_20260617_182605_0060",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:26:05.268705",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 158.5674965262285
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 79.28374826311425,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999578793843,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.8
+    },
+    "score": 93.78512384712504,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.2636184692382812e-05
+  },
+  {
+    "run_id": "learn_20260617_182705_0061",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:27:05.520429",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 159.99072460447962
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 79.99536230223981,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997321764629,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.0
+    },
+    "score": 93.99860467331887,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 8.034706115722656e-05
+  },
+  {
+    "run_id": "learn_20260617_182805_0062",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:28:05.810722",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 138.13471031263973
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 69.06735515631986,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999610582988,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.7
+    },
+    "score": 90.72020596277042,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1682510375976562e-05
+  },
+  {
+    "run_id": "learn_20260617_182905_0063",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:29:06.064414",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 164.52336221051232
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 82.26168110525616,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999165534973,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.7
+    },
+    "score": 94.67850307987929,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.5033950805664062e-05
+  },
+  {
+    "run_id": "learn_20260617_183006_0064",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:30:06.327622",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 171.1827735945008
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 85.5913867972504,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999618530273,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.7
+    },
+    "score": 95.67741546697052,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1444091796875e-05
+  },
+  {
+    "run_id": "learn_20260617_183106_0065",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:31:06.587108",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 160.1655176879251
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 80.08275884396255,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999790986379,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.0
+    },
+    "score": 94.02482451798444,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.270408630371094e-05
+  },
+  {
+    "run_id": "learn_20260617_183206_0066",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:32:06.832245",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 193.91504948534114
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 96.95752474267057,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998132387798,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 99.1
+    },
+    "score": 99.08725462138284,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.602836608886719e-05
+  },
+  {
+    "run_id": "learn_20260617_183306_0067",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:33:07.112724",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 163.5836920717645
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.79184603588224,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999531110127,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.5
+    },
+    "score": 94.53755310742986,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4066696166992188e-05
+  },
+  {
+    "run_id": "learn_20260617_183407_0068",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:34:07.366774",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 164.11640773505692
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 82.05820386752846,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999594688416,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.6
+    },
+    "score": 94.61746055229115,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.2159347534179688e-05
+  },
+  {
+    "run_id": "learn_20260617_183507_0069",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971554,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:35:07.606058",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 172.27528156515777
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.13764078257888,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998331069946,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.8
+    },
+    "score": 95.84128973137857,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.0067901611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_183607_0070",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.78,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T16:36:07.862276",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 184.3977814335315
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 92.19889071676575,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998172124226,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 97.7
+    },
+    "score": 97.65966447321604,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.4836273193359375e-05
+  },
+  {
+    "run_id": "learn_20260617_183707_0071",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:37:08.096816",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 161.4797746924598
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 80.7398873462299,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999491373698,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.2
+    },
+    "score": 94.22196544092951,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.52587890625e-05
+  },
+  {
+    "run_id": "learn_20260617_183808_0072",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:38:08.329673",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 192.63375350006228
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 96.31687675003114,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998211860657,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.9
+    },
+    "score": 98.89506034280029,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.364418029785156e-05
+  },
+  {
+    "run_id": "learn_20260617_183908_0073",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:39:08.572326",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 137.7298995036104
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 68.8649497518052,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997822443645,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.7
+    },
+    "score": 90.65948165920702,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.532669067382812e-05
+  },
+  {
+    "run_id": "learn_20260617_184008_0074",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:40:08.821399",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 133.9732269755173
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 66.98661348775865,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998195966084,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.1
+    },
+    "score": 90.09598134027671,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.412101745605469e-05
+  },
+  {
+    "run_id": "learn_20260617_184108_0075",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:41:09.058190",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 180.6486456996647
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 90.32432284983236,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999419848125,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 97.1
+    },
+    "score": 97.09729598472187,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.7404556274414062e-05
+  },
+  {
+    "run_id": "learn_20260617_184209_0076",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:42:09.281819",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 193.7321439413127
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 96.86607197065635,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999523162842,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 99.1
+    },
+    "score": 99.05982087594114,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.430511474609375e-05
+  },
+  {
+    "run_id": "learn_20260617_184309_0077",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:43:09.517170",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 146.98512554227767
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 73.49256277113884,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997703234355,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.0
+    },
+    "score": 92.04776538619316,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.890296936035156e-05
+  },
+  {
+    "run_id": "learn_20260617_184409_0078",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:44:09.747970",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 181.4310483174426
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 90.7155241587213,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999958674113,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 97.2
+    },
+    "score": 97.21465662772805,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.239776611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_184509_0079",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:45:10.062973",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 140.17036492402192
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 70.08518246201096,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999483426411,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.0
+    },
+    "score": 91.0255539637429,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5497207641601562e-05
+  },
+  {
+    "run_id": "learn_20260617_184610_0080",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:46:10.295581",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 153.7460158411385
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 76.87300792056925,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999499320984,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 93.1
+    },
+    "score": 93.06190162515223,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5020370483398438e-05
+  },
+  {
+    "run_id": "learn_20260617_184710_0081",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:47:10.537543",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 151.78153531411095
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.89076765705548,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997742970784,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.8
+    },
+    "score": 92.7672269115728,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.771087646484375e-05
+  },
+  {
+    "run_id": "learn_20260617_184810_0082",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:48:10.780157",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 173.2068569378654
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.6034284689327,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999798933665,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.0
+    },
+    "score": 95.98102552468478,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.031990051269531e-05
+  },
+  {
+    "run_id": "learn_20260617_184910_0083",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:49:11.042988",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 174.50587344472297
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.25293672236148,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998648961385,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.2
+    },
+    "score": 96.1758789901505,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 4.0531158447265625e-05
+  },
+  {
+    "run_id": "learn_20260617_185011_0084",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:50:11.304829",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 135.80164648780678
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 67.90082324390339,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998195966084,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.4
+    },
+    "score": 90.37024426712013,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.412101745605469e-05
+  },
+  {
+    "run_id": "learn_20260617_185111_0085",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:51:11.567730",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 163.13991342083133
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.56995671041567,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999539057414,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.5
+    },
+    "score": 94.47098632171081,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.3828277587890625e-05
+  },
+  {
+    "run_id": "learn_20260617_185211_0086",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:52:11.842997",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 192.3244217136312
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 96.1622108568156,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999634424846,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.8
+    },
+    "score": 98.84866270868191,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.0967254638671875e-05
+  },
+  {
+    "run_id": "learn_20260617_185311_0087",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:53:12.069446",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 185.51720445624417
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 92.75860222812209,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997329711914,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 97.8
+    },
+    "score": 97.82757666300446,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 8.0108642578125e-05
+  },
+  {
+    "run_id": "learn_20260617_185412_0088",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:54:12.316915",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 148.58722004801274
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 74.29361002400637,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998100598653,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.3
+    },
+    "score": 92.28808015809987,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.698204040527344e-05
+  },
+  {
+    "run_id": "learn_20260617_185512_0089",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:55:12.610300",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 162.39382388314536
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.19691194157268,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997846285503,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.4
+    },
+    "score": 94.35907035190004,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.461143493652344e-05
+  },
+  {
+    "run_id": "learn_20260617_185612_0090",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:56:12.844941",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 168.24332290482528
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 84.12166145241264,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999610582988,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.2
+    },
+    "score": 95.23649785159826,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1682510375976562e-05
+  },
+  {
+    "run_id": "learn_20260617_185712_0091",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:57:13.083850",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 200
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 100,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999459584554,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 100.0
+    },
+    "score": 99.99999918937681,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.621246337890625e-05
+  },
+  {
+    "run_id": "learn_20260617_185813_0092",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:58:13.324297",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 172.04776853628502
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.02388426814251,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998084704082,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.8
+    },
+    "score": 95.80716240749886,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.745887756347656e-05
+  },
+  {
+    "run_id": "learn_20260617_185913_0093",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T16:59:13.576854",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 172.7648857979863
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.38244289899315,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999459584554,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.9
+    },
+    "score": 95.91473205907475,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.621246337890625e-05
+  },
+  {
+    "run_id": "learn_20260617_190013_0094",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9523986,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:00:13.830594",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 190.6030353868595
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 95.30151769342974,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998148282369,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 98.6
+    },
+    "score": 98.59045253045244,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.555152893066406e-05
+  },
+  {
+    "run_id": "learn_20260617_190113_0095",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.97,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T17:01:14.083738",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 160.0145966080415
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 80.00729830402075,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997925758362,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.0
+    },
+    "score": 94.00218637984375,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.222724914550781e-05
+  },
+  {
+    "run_id": "learn_20260617_190214_0096",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.95415874,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:02:14.322476",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 179.41434947408507
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 89.70717473704254,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999046325684,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.9
+    },
+    "score": 96.91215099060126,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 2.86102294921875e-05
+  },
+  {
+    "run_id": "learn_20260617_190314_0097",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.95415874,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:03:14.587861",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 198.14287373684834
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 99.07143686842417,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999946753184,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 99.7
+    },
+    "score": 99.72143026182498,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5974044799804688e-05
+  },
+  {
+    "run_id": "learn_20260617_190414_0098",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.95415874,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:04:14.842241",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 200
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 100,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997687339783,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 100.0
+    },
+    "score": 99.99999653100964,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.937980651855469e-05
+  },
+  {
+    "run_id": "learn_20260617_190514_0099",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.95415874,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:05:15.085342",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 177.84188248593546
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 88.92094124296773,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998799959819,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.7
+    },
+    "score": 96.67628057283001,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 3.600120544433594e-05
+  },
+  {
+    "run_id": "learn_20260617_190615_0100",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 28,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 1.13,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "strength",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T17:06:15.603315",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 144.34223244029482
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.17111622014741,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998227755229,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.7
+    },
+    "score": 91.65133220767704,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.316734313964844e-05
+  },
+  {
+    "run_id": "learn_20260617_190715_0101",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 20,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.971742866,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "steps",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T17:07:16.019048",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 122.5225444963816
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 61.2612722481908,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999790986379,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 88.4
+    },
+    "score": 88.3783785392529,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.270408630371094e-05
+  },
+  {
+    "run_id": "learn_20260617_190816_0102",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:08:16.276943",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 116.17026626245206
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 58.08513313122603,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999523162842,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.4
+    },
+    "score": 87.42553922411206,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.430511474609375e-05
+  },
+  {
+    "run_id": "learn_20260617_190916_0103",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:09:16.520988",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 131.47268563448776
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 65.73634281724388,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999411900838,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 89.7
+    },
+    "score": 89.7209019630244,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.7642974853515625e-05
+  },
+  {
+    "run_id": "learn_20260617_191016_0104",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:10:16.770480",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 124.8027857467751
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 62.40139287338755,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999483426411,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 88.7
+    },
+    "score": 88.72041708715587,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.5497207641601562e-05
+  },
+  {
+    "run_id": "learn_20260617_191116_0105",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "euler",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:11:19.815822",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 144.13283873302225
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.06641936651113,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999491373698,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.6
+    },
+    "score": 91.61992504701387,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.52587890625e-05
+  },
+  {
+    "run_id": "learn_20260617_191219_0106",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "sampler",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T17:12:20.062825",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 116.8862068449616
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 58.4431034224808,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999958674113,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.5
+    },
+    "score": 87.53293040685593,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.239776611328125e-05
+  },
+  {
+    "run_id": "learn_20260617_191320_0107",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:13:20.298524",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 132.98105345617287
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 66.49052672808644,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999950726827,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 89.9
+    },
+    "score": 89.94715727932832,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4781951904296875e-05
+  },
+  {
+    "run_id": "learn_20260617_191420_0108",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:14:20.557318",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 144.58500949415946
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.29250474707973,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998664855957,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.7
+    },
+    "score": 91.68774942140784,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 4.00543212890625e-05
+  },
+  {
+    "run_id": "learn_20260617_191520_0109",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:15:20.828170",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 117.86611962393525
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 58.933059811967624,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999340375264,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.7
+    },
+    "score": 87.67991695415317,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.9788742065429688e-05
+  },
+  {
+    "run_id": "learn_20260617_191620_0110",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:16:21.065339",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 172.89470498844514
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 86.44735249422257,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998545646667,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 95.9
+    },
+    "score": 95.93420356673676,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 4.363059997558594e-05
+  },
+  {
+    "run_id": "learn_20260617_191721_0111",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.999500000000004,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:17:21.359646",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 120.45225550162475
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 60.226127750812374,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998792012532,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 88.1
+    },
+    "score": 88.06783651326249,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 3.62396240234375e-05
+  },
+  {
+    "run_id": "learn_20260617_191821_0112",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.9,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_explored_param": "cfg",
+      "_exploring": true
+    },
+    "timestamp": "2026-06-17T17:18:21.600500",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 145.46845903773513
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 72.73422951886756,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999531110127,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 91.8
+    },
+    "score": 91.82026815232545,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.4066696166992188e-05
+  },
+  {
+    "run_id": "learn_20260617_191921_0113",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:19:21.821619",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 151.66741740136794
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.83370870068397,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999396006267,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.8
+    },
+    "score": 92.75011170421458,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.811981201171875e-05
+  },
+  {
+    "run_id": "learn_20260617_192021_0114",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:20:22.110112",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 111.80152851331997
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 55.90076425665998,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999602635701,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 86.8
+    },
+    "score": 86.77022868095153,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.1920928955078125e-05
+  },
+  {
+    "run_id": "learn_20260617_192122_0115",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:21:22.368963",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 162.3083909670898
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 81.1541954835449,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.9999741713206,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 94.3
+    },
+    "score": 94.34625477076155,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 7.748603820800781e-05
+  },
+  {
+    "run_id": "learn_20260617_192222_0116",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:22:22.622557",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 175.4449106179197
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 87.72245530895985,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997997283936,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 96.3
+    },
+    "score": 96.31673358861383,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 6.008148193359375e-05
+  },
+  {
+    "run_id": "learn_20260617_192322_0117",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:23:22.870180",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 137.33612256589868
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 68.66806128294934,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998760223389,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 90.6
+    },
+    "score": 90.60041652521987,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 3.719329833984375e-05
+  },
+  {
+    "run_id": "learn_20260617_192422_0118",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:24:23.159138",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 111.79676797450199
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 55.898383987250995,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99998100598653,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 86.8
+    },
+    "score": 86.76951234707326,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 5.698204040527344e-05
+  },
+  {
+    "run_id": "learn_20260617_192523_0119",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:25:23.965834",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 150.72156642236988
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 75.36078321118494,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99999443689983,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 92.6
+    },
+    "score": 92.60823412889044,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 1.6689300537109375e-05
+  },
+  {
+    "run_id": "learn_20260617_192623_0120",
+    "params": {
+      "media_type": "anime",
+      "positive": "masterpiece, best quality, amazing quality, absurdres,",
+      "negative": "bad quality, worst quality, deformed, bad hands, watermark",
+      "width": 1024,
+      "height": 1536,
+      "steps": 27,
+      "cfg": 5.989550000000003,
+      "sampler": "dpm++_2m_sde",
+      "strength": 0.9717428660000001,
+      "seed": -1,
+      "lora": "",
+      "_exploring": false
+    },
+    "timestamp": "2026-06-17T17:26:24.190259",
+    "results": {
+      "frame_reports": [
+        {
+          "passed": true,
+          "metrics": {
+            "sharpness": 117.3276435916685
+          }
+        }
+      ],
+      "production_results": {
+        "success": 1,
+        "total": 1
+      }
+    },
+    "metrics": {
+      "sharpness": 58.66382179583425,
+      "frame_success_rate": 100.0,
+      "speed_score": 99.99997544288635,
+      "error_penalty": 100,
+      "production_rate": 100.0,
+      "global_score": 87.6
+    },
+    "score": 87.59914285518322,
+    "lessons": [],
+    "errors": [],
+    "duration_s": 7.367134094238281e-05
+  }
+]

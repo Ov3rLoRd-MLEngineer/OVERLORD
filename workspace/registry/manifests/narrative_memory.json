@@ -1,0 +1,12 @@
+{
+  "name": "narrative_memory",
+  "version": "V1.70",
+  "checksum": "6d6aa534343e9512",
+  "lines": 267,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.190304",
+  "path": "agents\\narrative_memory.py"
+}

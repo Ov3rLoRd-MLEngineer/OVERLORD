@@ -1,0 +1,67 @@
+# ── Modèles IA (trop lourds pour GitHub) ──────────────────────────────
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.gguf
+*.ggml
+*.onnx
+
+# ── Outputs pipeline ──────────────────────────────────────────────────
+workspace/outputs/
+workspace/exports/
+workspace/archive/
+workspace/inpaint/
+workspace/reports/
+workspace/sourcing_cache/
+workspace/postprod/
+workspace/storyboards/sketches/
+
+# ── Logs et audit ─────────────────────────────────────────────────────
+workspace/logs/
+workspace/audit/
+*.log
+logging.Logger
+
+# ── Cache Python ──────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# ── Environnement ─────────────────────────────────────────────────────
+.env
+*.env
+venv/
+.venv/
+
+# ── Build / dist ──────────────────────────────────────────────────────
+build/
+dist/
+*.spec
+*.egg-info/
+
+# ── Checkpoints pipeline (gros JSON) ──────────────────────────────────
+workspace/checkpoints/
+workspace/style_anchor.json
+workspace/patch_backups/
+
+# ── Images générées ───────────────────────────────────────────────────
+workspace/characters/
+workspace/style/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mp4
+*.mov
+*.avi
+
+# ── Divers ────────────────────────────────────────────────────────────
+node_modules/
+.DS_Store
+Thumbs.db
+OVERLORD_clean/
+outputs/
+VRAC/

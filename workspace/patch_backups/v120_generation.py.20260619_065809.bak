@@ -1,0 +1,1004 @@
+"""
+agents/v120_generation.py — Ov3rLoRd V1.20 — Génération Avancée
+
+1. Diffusion Scheduling   — contrôle fin du scheduler selon le contenu
+2. LoRA Auto-Composer     — compose automatiquement les LoRAs optimaux
+3. Style Consistency Engine — cohérence stylistique entre toutes les images
+4. Temporal Coherence     — cohérence entre frames pour la vidéo
+5. Prompt Archaeology     — déconstruit les meilleurs prompts pour apprendre
+6. Dynamic Resolution     — adapte la résolution au contenu automatiquement
+"""
+
+import json
+import math
+import time
+import hashlib
+import logging
+import threading
+from pathlib import Path
+from dataclasses import dataclass, field
+from typing import Any, Optional
+import requests
+
+GEN_DIR       = Path("workspace/generation")
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+
+def _get_api_key() -> str:
+    import os as _os
+    from pathlib import Path as _P
+    key = _os.environ.get("ANTHROPIC_API_KEY", "")
+    if not key:
+        env = _P(__file__).parent.parent / ".env"
+        if env.exists():
+            for line in env.read_text(encoding="utf-8").splitlines():
+                if line.startswith("ANTHROPIC_API_KEY="):
+                    key = line.split("=",1)[1].strip().strip('"').strip("'")
+    return key
+
+CLAUDE_MODEL  = "claude-sonnet-4-6"
+
+
+def _llm(prompt: str, system: str = "", max_tokens: int = 400) -> str:
+    try:
+        body = {"model": CLAUDE_MODEL, "max_tokens": max_tokens,
+                "messages": [{"role": "user", "content": prompt}]}
+        if system:
+            body["system"] = system
+        r = requests.post(ANTHROPIC_URL,
+                          headers={
+                "Content-Type": "application/json",
+                "x-api-key": _get_api_key(),
+                "anthropic-version": "2023-06-01",
+            },
+                          json=body, timeout=25)
+        if r.status_code == 200:
+            return r.json()["content"][0]["text"].strip()
+    except Exception:
+        pass
+    return ""
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 1. DIFFUSION SCHEDULING INTELLIGENT
+# ══════════════════════════════════════════════════════════════════════
+
+@dataclass
+class ScheduleConfig:
+    """Configuration d'un scheduler ComfyUI."""
+    sampler:   str
+    scheduler: str
+    steps:     int
+    cfg:       float
+    denoise:   float = 1.0
+    reason:    str   = ""
+
+
+class DiffusionScheduler:
+    """
+    Sélection intelligente du scheduler ComfyUI selon le contenu.
+
+    Chaque type de scène a un scheduler optimal :
+    - Scène d'action rapide    → euler_ancestral + karras + steps=24
+    - Portrait détaillé        → dpm++_2m_sde + karras + steps=32
+    - Paysage ambiant          → euler + normal + steps=20
+    - FaceDetailer pass        → dpm++_2m + steps=16 + denoise=0.5
+    - Upscale créatif          → lcm + steps=8 + denoise=0.35
+
+    L'agent apprend aussi depuis l'historique de succès.
+    """
+
+    # Base de connaissances : type de contenu → config optimale
+    CONTENT_SCHEDULES = {
+        "action":     ScheduleConfig("euler_ancestral","karras",   24, 7.0, 1.0, "énergie dynamique"),
+        "portrait":   ScheduleConfig("dpm++_2m_sde",  "karras",   32, 6.0, 1.0, "détails fins"),
+        "landscape":  ScheduleConfig("euler",          "normal",   20, 5.5, 1.0, "ambiance douce"),
+        "group":      ScheduleConfig("dpm++_2m",       "karras",   28, 7.0, 1.0, "cohérence multi-perso"),
+        "closeup":    ScheduleConfig("dpm++_2m_sde",   "exponential",30,6.5,1.0, "texture peau/yeux"),
+        "wide_shot":  ScheduleConfig("euler_ancestral","normal",   22, 5.0, 1.0, "composition large"),
+        "night":      ScheduleConfig("dpm++_3m_sde",   "karras",   30, 7.5, 1.0, "contraste nuit"),
+        "fantasy":    ScheduleConfig("euler_ancestral","sgm_uniform",28,8.0,1.0, "créativité max"),
+        "detail_pass":ScheduleConfig("dpm++_2m",       "karras",   16, 7.0, 0.5, "détailer pass"),
+        "upscale":    ScheduleConfig("lcm",             "lcm",      8,  2.0, 0.35,"upscale rapide"),
+        "consistency":ScheduleConfig("dpm++_2m",       "karras",   20, 6.0, 0.6, "variation cohérente"),
+    }
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("diff_scheduler")
+        self._learned_adjustments: dict[str, dict] = {}   # content_type → delta params
+        self._history: list[dict] = []
+        GEN_DIR.mkdir(parents=True, exist_ok=True)
+
+    def get_schedule(self, content_type: str,
+                      shot_description: str = "",
+                      quality_target: float = 0.8) -> ScheduleConfig:
+        """
+        Retourne le scheduler optimal pour un contenu donné.
+        Tient compte de la cible de qualité et de l'historique.
+        """
+        # Détecter automatiquement le type depuis la description
+        if not content_type or content_type == "auto":
+            content_type = self._detect_content_type(shot_description)
+
+        base = self.CONTENT_SCHEDULES.get(content_type,
+               self.CONTENT_SCHEDULES["portrait"])
+
+        # Appliquer les ajustements appris
+        adj = self._learned_adjustments.get(content_type, {})
+        cfg = ScheduleConfig(
+            sampler   = adj.get("sampler",   base.sampler),
+            scheduler = adj.get("scheduler", base.scheduler),
+            steps     = max(8, min(60,
+                         base.steps + adj.get("steps_delta", 0))),
+            cfg       = max(1.0, min(15.0,
+                         base.cfg + adj.get("cfg_delta", 0.0))),
+            denoise   = base.denoise,
+            reason    = base.reason,
+        )
+
+        # Bonus steps si qualité haute exigée
+        if quality_target > 0.9:
+            cfg.steps = min(60, cfg.steps + 4)
+        elif quality_target < 0.6:
+            cfg.steps = max(8, cfg.steps - 4)  # rapide si besoin
+
+        self.log.info(
+            f"[SCHED] {content_type} → {cfg.sampler}+{cfg.scheduler} "
+            f"steps={cfg.steps} cfg={cfg.cfg}"
+        )
+        return cfg
+
+    def _detect_content_type(self, description: str) -> str:
+        """Détecte le type de contenu depuis la description du shot."""
+        desc_l = description.lower()
+        if any(w in desc_l for w in ["bataille","combat","action","explosion","combat"]):
+            return "action"
+        if any(w in desc_l for w in ["groupe","plusieurs","équipe","foule"]):
+            return "group"
+        if any(w in desc_l for w in ["gros plan","visage","portrait","close"]):
+            return "closeup"
+        if any(w in desc_l for w in ["paysage","décor","environnement","ville"]):
+            return "landscape"
+        if any(w in desc_l for w in ["nuit","sombre","ombre","lune"]):
+            return "night"
+        if any(w in desc_l for w in ["magie","fantaisie","dragon","magie"]):
+            return "fantasy"
+        if any(w in desc_l for w in ["panorama","large","champ","loin"]):
+            return "wide_shot"
+        return "portrait"  # défaut
+
+    def learn_from_result(self, content_type: str,
+                           config_used: ScheduleConfig,
+                           quality_score: float):
+        """Apprend depuis le résultat pour affiner les futurs configs."""
+        lr = 0.1
+        if content_type not in self._learned_adjustments:
+            self._learned_adjustments[content_type] = {
+                "steps_delta": 0, "cfg_delta": 0.0,
+                "n_samples": 0, "avg_quality": quality_score,
+            }
+        adj = self._learned_adjustments[content_type]
+        n   = adj["n_samples"] + 1
+        adj["avg_quality"] = adj["avg_quality"] * (n-1)/n + quality_score/n
+        adj["n_samples"]   = n
+
+        # Si la qualité est mauvaise → plus de steps
+        if quality_score < 0.65:
+            adj["steps_delta"] = adj.get("steps_delta",0) + 2
+            adj["cfg_delta"]   = adj.get("cfg_delta",0.0) + 0.5
+        elif quality_score > 0.85:
+            # Si bonne → on peut réduire légèrement (gain de vitesse)
+            adj["steps_delta"] = max(-8, adj.get("steps_delta",0) - 1)
+
+        self._history.append({
+            "content_type": content_type,
+            "quality":      quality_score,
+            "steps_used":   config_used.steps,
+        })
+
+    def get_schedule_report(self) -> dict:
+        return {
+            "known_types":  list(self.CONTENT_SCHEDULES.keys()),
+            "learned":      len(self._learned_adjustments),
+            "history_runs": len(self._history),
+            "avg_quality":  round(
+                sum(h["quality"] for h in self._history) /
+                max(len(self._history),1), 3
+            ),
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 2. LORA AUTO-COMPOSER
+# ══════════════════════════════════════════════════════════════════════
+
+@dataclass
+class LoRAConfig:
+    """Configuration d'un ensemble de LoRAs pour un shot."""
+    loras:     list[dict]   # [{"name": str, "weight": float, "type": str}]
+    total_weight: float = 0.0
+    rationale: str = ""
+
+
+class LoRAAutoComposer:
+    """
+    Compose automatiquement l'ensemble optimal de LoRAs pour chaque shot.
+
+    Problème : choisir les bons LoRAs et leurs poids est complexe.
+    - Trop de poids → sur-saturation du style
+    - Trop peu → LoRA inefficace
+    - Mauvaise combinaison → conflits visuels
+
+    Solution : cataloguer les LoRAs disponibles, leurs rôles, leurs compatibilités,
+    et composer automatiquement selon le brief.
+
+    Types de LoRAs :
+    - Style LoRA    : influence le style artistique global
+    - Character LoRA: reproduit un personnage précis
+    - Concept LoRA  : ajoute un concept visuel (magie, mecha, effets...)
+    - Quality LoRA  : améliore la qualité générale (detail tweaker, etc.)
+    """
+
+    # Catalogue des LoRAs courants (à enrichir selon ta bibliothèque)
+    LORA_CATALOG = {
+        # Style LoRAs
+        "anime_style":       {"type":"style",     "weight":0.6, "desc":"Style anime classique"},
+        "noob_style":        {"type":"style",     "weight":0.5, "desc":"Style NoobAI optimisé"},
+        "painterly":         {"type":"style",     "weight":0.4, "desc":"Style aquarelle/peinture"},
+        "lineart":           {"type":"style",     "weight":0.5, "desc":"Style dessin au trait"},
+        # Quality LoRAs
+        "detail_tweaker":    {"type":"quality",   "weight":0.5, "desc":"Améliore les détails fins"},
+        "add_detail":        {"type":"quality",   "weight":0.4, "desc":"Ajoute de la texture"},
+        "hand_fixer":        {"type":"quality",   "weight":0.6, "desc":"Corrige les mains"},
+        "face_fixer":        {"type":"quality",   "weight":0.5, "desc":"Améliore les visages"},
+        # Concept LoRAs
+        "magic_effects":     {"type":"concept",   "weight":0.5, "desc":"Effets magiques"},
+        "action_lines":      {"type":"concept",   "weight":0.4, "desc":"Lignes de vitesse manga"},
+        "dramatic_lighting": {"type":"concept",   "weight":0.5, "desc":"Éclairage dramatique"},
+        "sakura_bg":         {"type":"concept",   "weight":0.3, "desc":"Arrière-plan fleurs cerisier"},
+        "cyberpunk_env":     {"type":"concept",   "weight":0.5, "desc":"Environnement cyberpunk"},
+    }
+
+    # Règles de composition (quels types peuvent coexister et à quel poids max)
+    COMPOSITION_RULES = {
+        "max_style_weight":   0.8,
+        "max_quality_weight": 1.0,
+        "max_concept_weight": 0.7,
+        "max_char_weight":    0.9,
+        "max_total_loras":    4,
+        "incompatible_pairs": [
+            ("painterly", "lineart"),    # styles qui se contredisent
+            ("magic_effects", "cyberpunk_env"),
+        ],
+    }
+
+    def __init__(self, available_loras: list[str] = None,
+                 logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("lora_composer")
+        self._available = available_loras or list(self.LORA_CATALOG.keys())
+        self._performance: dict[str, float] = {}  # lora → score moyen
+
+    def compose(self, shot_brief: dict,
+                 character_loras: list[str] = None) -> LoRAConfig:
+        """
+        Compose l'ensemble optimal de LoRAs pour un shot.
+
+        shot_brief: {"mood": str, "action": str, "style": str, "quality_target": float}
+        """
+        mood   = shot_brief.get("mood", "")
+        action = shot_brief.get("action", "")
+        style  = shot_brief.get("style", "anime")
+        qtarget= shot_brief.get("quality_target", 0.8)
+        selected = []
+
+        # 1. LoRA de style principal (toujours inclus)
+        style_map = {
+            "anime":     "anime_style",
+            "noob":      "noob_style",
+            "painterly": "painterly",
+            "lineart":   "lineart",
+        }
+        style_lora = style_map.get(style, "anime_style")
+        if style_lora in self._available:
+            w = self.LORA_CATALOG[style_lora]["weight"]
+            w = min(self.COMPOSITION_RULES["max_style_weight"], w)
+            selected.append({"name": style_lora, "weight": w,
+                               "type": "style"})
+
+        # 2. LoRAs de personnages (priorité haute)
+        if character_loras:
+            for char_lora in character_loras[:2]:  # max 2 personnages
+                selected.append({
+                    "name":   char_lora,
+                    "weight": self.COMPOSITION_RULES["max_char_weight"],
+                    "type":   "character"
+                })
+
+        # 3. LoRA de qualité si target haute
+        if qtarget >= 0.8:
+            for q_lora in ["detail_tweaker", "face_fixer"]:
+                if q_lora in self._available and len(selected) < self.COMPOSITION_RULES["max_total_loras"]:
+                    selected.append({"name": q_lora,
+                                      "weight": self.LORA_CATALOG[q_lora]["weight"],
+                                      "type": "quality"})
+
+        # 4. LoRAs de concept selon le mood/action
+        concept_map = {
+            "action":   ["action_lines", "dramatic_lighting"],
+            "magic":    ["magic_effects", "dramatic_lighting"],
+            "romance":  ["sakura_bg"],
+            "cyber":    ["cyberpunk_env", "dramatic_lighting"],
+            "dark":     ["dramatic_lighting"],
+        }
+        for mood_key, concept_loras in concept_map.items():
+            if mood_key in mood.lower() or mood_key in action.lower():
+                for cl in concept_loras:
+                    if (cl in self._available and
+                        len(selected) < self.COMPOSITION_RULES["max_total_loras"] and
+                        not self._is_incompatible(cl, selected)):
+                        selected.append({
+                            "name": cl,
+                            "weight": self.LORA_CATALOG.get(cl,{}).get("weight",0.4),
+                            "type": "concept"
+                        })
+                break
+
+        # 5. Vérifier la compatibilité et ajuster les poids
+        selected = self._resolve_conflicts(selected)
+        total_w  = sum(l["weight"] for l in selected)
+
+        # Générer la justification
+        names    = [l["name"] for l in selected]
+        rationale = (
+            f"Style:{style_lora} + "
+            f"Quality:{[l['name'] for l in selected if l['type']=='quality']} + "
+            f"Concept:{[l['name'] for l in selected if l['type']=='concept']}"
+        )
+
+        config = LoRAConfig(loras=selected, total_weight=round(total_w,2),
+                             rationale=rationale)
+        lora_summary = [l['name'] + f"({l['weight']})" for l in selected]
+        self.log.info(f"[LORA] Composition : {lora_summary}")
+        return config
+
+    def _is_incompatible(self, lora_name: str, selected: list[dict]) -> bool:
+        existing_names = [l["name"] for l in selected]
+        for pair in self.COMPOSITION_RULES["incompatible_pairs"]:
+            if lora_name in pair:
+                other = [p for p in pair if p != lora_name][0]
+                if other in existing_names:
+                    return True
+        return False
+
+    def _resolve_conflicts(self, selected: list[dict]) -> list[dict]:
+        """Résout les conflits et normalise les poids."""
+        # Supprimer les paires incompatibles (garder le premier)
+        clean    = []
+        seen_names = set()
+        for lora in selected:
+            if lora["name"] in seen_names:
+                continue
+            if not self._is_incompatible(lora["name"], clean):
+                clean.append(lora)
+                seen_names.add(lora["name"])
+        return clean[:self.COMPOSITION_RULES["max_total_loras"]]
+
+    def to_comfyui_nodes(self, config: LoRAConfig) -> list[dict]:
+        """
+        Convertit une LoRAConfig en noeuds ComfyUI.
+        Retourne une liste de configs pour les noeuds LoRA Loader.
+        """
+        nodes = []
+        for i, lora in enumerate(config.loras):
+            nodes.append({
+                "node_type":    "LoraLoader",
+                "lora_name":    lora["name"] + ".safetensors",
+                "strength_model":  lora["weight"],
+                "strength_clip":   lora["weight"] * 0.8,
+                "position":     i + 1,
+            })
+        return nodes
+
+    def learn_from_result(self, lora_name: str, quality_score: float):
+        """Apprend quelle LoRA donne les meilleurs résultats."""
+        n = len([h for h in self._performance if h == lora_name])
+        old = self._performance.get(lora_name, quality_score)
+        self._performance[lora_name] = old * n/(n+1) + quality_score/(n+1)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 3. STYLE CONSISTENCY ENGINE
+# ══════════════════════════════════════════════════════════════════════
+
+class StyleConsistencyEngine:
+    """
+    Garantit la cohérence stylistique entre toutes les images d'un projet.
+
+    Problème fréquent : shot 1 = style anime clair, shot 5 = style plus sombre,
+    shot 10 = palette complètement différente. Résultat : incohérence visuelle.
+
+    Solution : extraction d'une "signature de style" depuis le premier shot
+    validé, puis injection de cette signature dans tous les suivants.
+
+    La signature contient :
+    - Palette de couleurs dominantes (12 couleurs hex)
+    - Niveau de saturation moyen
+    - Température des couleurs (chaud/froid)
+    - Niveau de contraste
+    - Tags de style (anime, cinematic, etc.)
+    - LoRAs utilisés
+    - CFG et scheduler
+    """
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log           = logger or logging.getLogger("consistency")
+        self._style_signature: Optional[dict] = None
+        self._consistency_scores: list[float] = []
+        GEN_DIR.mkdir(parents=True, exist_ok=True)
+
+    def extract_signature(self, reference_params: dict,
+                           reference_prompt: str) -> dict:
+        """
+        Extrait la signature de style depuis les paramètres de référence.
+        En pratique : demander au LLM d'analyser les éléments de style clés.
+        """
+        prompt = (
+            f"Analyse ces paramètres de génération et extrait une signature de style :\n"
+            f"Paramètres : {json.dumps(reference_params, ensure_ascii=False)}\n"
+            f"Prompt : {reference_prompt[:200]}\n\n"
+            f"Extrais une signature de style pour garantir la cohérence entre shots :\n"
+            f"Réponds en JSON :\n"
+            f'{{"color_temperature": "warm|neutral|cool", '
+            f'"saturation": "low|medium|high", '
+            f'"contrast": "low|medium|high", '
+            f'"style_tags": ["tag1","tag2"], '
+            f'"lighting_type": "soft|dramatic|ambient", '
+            f'"key_visual_elements": ["element1","element2"], '
+            f'"consistency_prompt_prefix": "tags à injecter dans TOUS les shots"}}'
+        )
+        result = _llm(prompt, max_tokens=400)
+        try:
+            if result and result.startswith("```"):
+                result = "\n".join(result.split("\n")[1:-1])
+            signature = json.loads(result) if result else {}
+            signature["sampler"]   = reference_params.get("sampler","euler_ancestral")
+            signature["cfg"]       = reference_params.get("cfg", 6.0)
+            signature["scheduler"] = reference_params.get("scheduler","karras")
+            signature["loras"]     = reference_params.get("loras", [])
+            self._style_signature  = signature
+            self.log.info(
+                f"[CONSISTENCY] Signature extraite : "
+                f"{signature.get('color_temperature','?')} | "
+                f"{signature.get('lighting_type','?')}"
+            )
+            return signature
+        except Exception:
+            return {}
+
+    def inject_consistency(self, shot_prompt: str,
+                            shot_params: dict) -> dict:
+        """
+        Injecte la signature de style dans un shot pour garantir la cohérence.
+        Retourne les paramètres et prompt modifiés.
+        """
+        if not self._style_signature:
+            return {"prompt": shot_prompt, "params": shot_params}
+
+        sig    = self._style_signature
+        prefix = sig.get("consistency_prompt_prefix", "")
+
+        # Injecter le préfixe de cohérence dans le prompt
+        enhanced_prompt = (f"{prefix}, " if prefix else "") + shot_prompt
+
+        # Aligner le sampler et le CFG sur la signature
+        enhanced_params = dict(shot_params)
+        enhanced_params["sampler"]   = sig.get("sampler",   shot_params.get("sampler","euler_ancestral"))
+        enhanced_params["scheduler"] = sig.get("scheduler", shot_params.get("scheduler","karras"))
+        # CFG : garder dans un range proche de la référence (±1)
+        ref_cfg = sig.get("cfg", 6.0)
+        cur_cfg = shot_params.get("cfg", 6.0)
+        enhanced_params["cfg"] = max(ref_cfg-1, min(ref_cfg+1, cur_cfg))
+
+        return {
+            "prompt":          enhanced_prompt,
+            "params":          enhanced_params,
+            "signature_applied": True,
+            "style_tags":      sig.get("style_tags",[]),
+        }
+
+    def compute_consistency_score(self, shot_params: dict,
+                                   shot_prompt: str) -> float:
+        """
+        Estime la cohérence d'un shot avec la signature de référence.
+        Score 0-1 : 1 = parfaitement cohérent.
+        """
+        if not self._style_signature:
+            return 1.0
+        sig   = self._style_signature
+        score = 1.0
+
+        # Pénalité si sampler différent
+        if shot_params.get("sampler") != sig.get("sampler"):
+            score -= 0.2
+        # Pénalité si CFG trop différent
+        cfg_diff = abs(shot_params.get("cfg",6.0) - sig.get("cfg",6.0))
+        score    -= min(0.3, cfg_diff * 0.1)
+        # Vérifier les style_tags dans le prompt
+        tags_present = sum(
+            1 for t in sig.get("style_tags",[])
+            if t.lower() in shot_prompt.lower()
+        )
+        n_tags = max(len(sig.get("style_tags",[])), 1)
+        score  += (tags_present / n_tags) * 0.2
+
+        final = max(0.0, min(1.0, score))
+        self._consistency_scores.append(final)
+        return final
+
+    def get_report(self) -> dict:
+        if not self._consistency_scores:
+            return {"n_shots": 0, "avg_consistency": 1.0}
+        return {
+            "n_shots":         len(self._consistency_scores),
+            "avg_consistency": round(sum(self._consistency_scores)/
+                                      len(self._consistency_scores), 3),
+            "min_consistency": round(min(self._consistency_scores), 3),
+            "signature_set":   self._style_signature is not None,
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 4. TEMPORAL COHERENCE
+# ══════════════════════════════════════════════════════════════════════
+
+@dataclass
+class FrameContext:
+    """Contexte d'une frame pour la cohérence temporelle."""
+    frame_id:      int
+    prompt:        str
+    params:        dict
+    character_pos: dict    # {"char_name": {"x": 0.5, "y": 0.5}} — position approximative
+    lighting_dir:  str     # "left", "right", "top", "backlight"
+    scene_phase:   str     # "intro", "rising_action", "climax", "resolution"
+    timestamp_s:   float   = 0.0
+
+
+class TemporalCoherenceManager:
+    """
+    Maintient la cohérence entre les frames consécutives pour la vidéo.
+
+    Problèmes à résoudre :
+    1. Flash temporel : changement soudain d'éclairage entre frames
+    2. Téléportation : personnage qui change de côté entre 2 frames
+    3. Style shift : variation de style entre frames consécutives
+    4. Continuity error : objet présent puis absent
+
+    Solution : chaque frame hérite du contexte de la précédente,
+    et les paramètres sont interpolés pour éviter les sauts brusques.
+    """
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log    = logger or logging.getLogger("temporal")
+        self._frames: list[FrameContext] = []
+        self._continuity_errors: list[dict] = []
+
+    def register_frame(self, frame: FrameContext) -> dict:
+        """Enregistre une frame et vérifie la cohérence avec la précédente."""
+        issues = []
+        if self._frames:
+            prev = self._frames[-1]
+            # Vérifier la cohérence de l'éclairage
+            if prev.lighting_dir != frame.lighting_dir:
+                issues.append({
+                    "type":    "lighting_change",
+                    "frame":   frame.frame_id,
+                    "from":    prev.lighting_dir,
+                    "to":      frame.lighting_dir,
+                    "severity":"medium",
+                })
+            # Vérifier le CFG (ne doit pas varier de plus de 2)
+            prev_cfg = prev.params.get("cfg", 6.0)
+            cur_cfg  = frame.params.get("cfg", 6.0)
+            if abs(prev_cfg - cur_cfg) > 2.0:
+                issues.append({
+                    "type":    "cfg_jump",
+                    "frame":   frame.frame_id,
+                    "delta":   abs(prev_cfg - cur_cfg),
+                    "severity":"low",
+                })
+
+        self._frames.append(frame)
+        if issues:
+            self._continuity_errors.extend(issues)
+        return {"frame_id": frame.frame_id, "issues": issues}
+
+    def get_interpolated_params(self, frame_id: int,
+                                 target_params: dict) -> dict:
+        """
+        Interpole les paramètres entre la frame précédente et la cible.
+        Évite les sauts brusques de CFG, steps, etc.
+        """
+        if not self._frames:
+            return target_params
+
+        prev   = self._frames[-1]
+        alpha  = 0.3   # poids de la frame précédente (30% → smooth)
+        result = dict(target_params)
+
+        for param in ["cfg", "steps"]:
+            prev_v = prev.params.get(param)
+            curr_v = target_params.get(param)
+            if prev_v is not None and curr_v is not None:
+                if isinstance(prev_v, (int, float)) and isinstance(curr_v, (int, float)):
+                    interpolated = prev_v * alpha + curr_v * (1-alpha)
+                    result[param] = type(curr_v)(round(interpolated, 1))
+
+        return result
+
+    def inject_temporal_context(self, prompt: str,
+                                  frame_id: int) -> str:
+        """
+        Injecte des ancres de continuité dans le prompt.
+        Référence la scène précédente pour éviter les sautes visuelles.
+        """
+        if not self._frames:
+            return prompt
+
+        prev = self._frames[-1]
+        continuity_tags = []
+
+        # Tags de cohérence d'éclairage
+        lighting_tags = {
+            "left":       "left-side lighting",
+            "right":      "right-side lighting",
+            "top":        "overhead lighting",
+            "backlight":  "backlit, rim lighting",
+        }
+        if prev.lighting_dir in lighting_tags:
+            continuity_tags.append(lighting_tags[prev.lighting_dir])
+
+        # Phase de scène
+        phase_tags = {
+            "intro":         "establishing shot continuity",
+            "rising_action": "continuous action sequence",
+            "climax":        "peak intensity scene",
+            "resolution":    "calm resolution scene",
+        }
+        if prev.scene_phase in phase_tags:
+            continuity_tags.append(phase_tags[prev.scene_phase])
+
+        if continuity_tags:
+            return f"{', '.join(continuity_tags)}, {prompt}"
+        return prompt
+
+    def get_continuity_report(self) -> dict:
+        n_errors = len(self._continuity_errors)
+        by_type  = {}
+        for e in self._continuity_errors:
+            t = e["type"]
+            by_type[t] = by_type.get(t, 0) + 1
+        return {
+            "n_frames":         len(self._frames),
+            "continuity_errors":n_errors,
+            "errors_by_type":   by_type,
+            "coherence_rate":   round(
+                1 - n_errors / max(len(self._frames)-1, 1), 3
+            ),
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 5. PROMPT ARCHAEOLOGY
+# Déconstruit les meilleurs prompts pour apprendre leur structure
+# ══════════════════════════════════════════════════════════════════════
+
+class PromptArchaeologist:
+    """
+    Archéologie de prompts — déconstruit les meilleurs prompts
+    pour identifier les patterns qui font la différence.
+
+    Comme un archéologue qui analyse des artefacts pour comprendre
+    une civilisation, l'archéologue de prompts analyse les prompts
+    réussis pour en extraire la structure optimale.
+    """
+
+    COMMON_PATTERNS = {
+        "quality_header":   ["masterpiece", "best quality", "amazing quality", "absurdres"],
+        "style_markers":    ["anime style", "manga style", "illustration"],
+        "character_desc":   ["1girl", "1boy", "solo", "looking at viewer"],
+        "composition":      ["dynamic angle", "dutch angle", "low angle"],
+        "lighting":         ["soft lighting", "dramatic lighting", "rim light"],
+        "mood":             ["cheerful", "melancholic", "intense", "peaceful"],
+        "technical":        ["8k", "highly detailed", "sharp focus"],
+    }
+
+    def __init__(self):
+        self._learned_patterns: dict[str, list] = {}
+        self._best_prompts: list[dict] = []
+
+    def analyze(self, prompt: str, quality_score: float) -> dict:
+        """Analyse un prompt et extrait ses composants structurels."""
+        tags  = [t.strip() for t in prompt.split(",") if t.strip()]
+        found = {}
+        for category, patterns in self.COMMON_PATTERNS.items():
+            matches = [t for t in tags if any(p.lower() in t.lower() for p in patterns)]
+            if matches:
+                found[category] = matches
+
+        analysis = {
+            "n_tags":       len(tags),
+            "categories":   found,
+            "coverage":     len(found) / len(self.COMMON_PATTERNS),
+            "quality":      quality_score,
+        }
+        if quality_score >= 0.8:
+            self._best_prompts.append({"prompt": prompt, "analysis": analysis})
+        return analysis
+
+    def suggest_improvements(self, prompt: str) -> str:
+        """Suggère des améliorations basées sur les patterns appris."""
+        analysis = self.analyze(prompt, 0.5)
+        missing  = [cat for cat in self.COMMON_PATTERNS
+                    if cat not in analysis["categories"]]
+        if not missing:
+            return prompt
+
+        suggestions = []
+        for cat in missing[:3]:  # Max 3 suggestions
+            examples = self.COMMON_PATTERNS[cat][:2]
+            suggestions.extend(examples)
+
+        return prompt + ", " + ", ".join(suggestions) if suggestions else prompt
+
+    def build_optimal_template(self, content_type: str = "anime") -> str:
+        """Construit un template de prompt optimal depuis les meilleurs exemples."""
+        if not self._best_prompts:
+            # Template par défaut
+            return (
+                "masterpiece, best quality, amazing quality, absurdres, "
+                "anime style, 1girl, solo, looking at viewer, "
+                "dynamic pose, soft lighting, highly detailed"
+            )
+        # Récupérer les tags les plus fréquents dans les meilleurs prompts
+        tag_freq: dict[str, int] = {}
+        for bp in self._best_prompts:
+            for tag in bp["prompt"].split(","):
+                t = tag.strip().lower()
+                if t:
+                    tag_freq[t] = tag_freq.get(t, 0) + 1
+        # Trier par fréquence
+        common = sorted(tag_freq.items(), key=lambda x: -x[1])[:15]
+        return ", ".join(t for t, _ in common)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 6. DYNAMIC RESOLUTION
+# ══════════════════════════════════════════════════════════════════════
+
+class DynamicResolutionOptimizer:
+    """
+    Adapte la résolution au contenu et aux ressources disponibles.
+
+    Résolutions SDXL optimales par type de contenu :
+    - Portrait vertical  : 832×1216 ou 896×1152 (ratio 2:3)
+    - Paysage horizontal : 1216×832 ou 1152×896 (ratio 3:2)
+    - Carré Instagram    : 1024×1024
+    - Écran wide         : 1344×768 (ratio 16:9)
+    - Ultra vertical     : 768×1344 (stories)
+
+    Le système choisit la meilleure résolution selon :
+    - Le type de contenu (portrait/paysage/groupe)
+    - La VRAM disponible
+    - La plateforme cible (TikTok vertical, YouTube horizontal, etc.)
+    """
+
+    RESOLUTIONS = {
+        "portrait_v":    (832,  1216),   # standard portrait
+        "portrait_tall": (768,  1344),   # TikTok/Stories
+        "landscape":     (1216, 832),    # standard paysage
+        "landscape_wide":(1344, 768),    # YouTube/16:9
+        "square":        (1024, 1024),   # Instagram carré
+        "square_hd":     (1152, 1152),   # Instagram HD
+        "banner":        (1536, 640),    # bannière web
+        "poster":        (896,  1536),   # affiche/poster
+    }
+
+    VRAM_LIMITS = {
+        "4gb":   (512,  512),
+        "6gb":   (768,  768),
+        "8gb":   (896,  896),
+        "12gb":  (1024, 1024),
+        "16gb":  (1344, 1344),
+        "24gb+": (1536, 1536),
+    }
+
+    def __init__(self, vram_gb: float = 16.0):
+        self.vram_gb = vram_gb
+
+    def recommend(self, content_type: str = "portrait",
+                   platform: str = "general",
+                   use_detailer: bool = True) -> dict:
+        """Recommande la résolution optimale."""
+        # Choisir selon la plateforme
+        platform_res = {
+            "tiktok":    "portrait_tall",
+            "instagram": "square",
+            "youtube":   "landscape_wide",
+            "twitter":   "landscape",
+            "poster":    "poster",
+            "general":   "portrait_v",
+        }
+        # Ajuster selon le contenu
+        content_res_override = {
+            "landscape": "landscape",
+            "wide_shot": "landscape_wide",
+            "banner":    "banner",
+            "square":    "square",
+        }
+        res_key = content_res_override.get(
+            content_type,
+            platform_res.get(platform, "portrait_v")
+        )
+        w, h = self.RESOLUTIONS.get(res_key, (1024, 1024))
+
+        # Vérifier les limites VRAM
+        for limit_name, (max_w, max_h) in self.VRAM_LIMITS.items():
+            limit_gb = float(limit_name.replace("gb","").replace("+",""))
+            if self.vram_gb <= limit_gb:
+                if w > max_w or h > max_h:
+                    # Réduire proportionnellement
+                    scale = min(max_w/w, max_h/h)
+                    w     = int(w * scale)
+                    h     = int(h * scale)
+                    # Aligner sur 64px
+                    w = (w // 64) * 64
+                    h = (h // 64) * 64
+                break
+
+        # Résolution détailer (toujours inférieure à la principale)
+        detailer_scale = 0.75 if use_detailer else 1.0
+        detail_w = int(w * detailer_scale // 64) * 64
+        detail_h = int(h * detailer_scale // 64) * 64
+
+        return {
+            "width":          w,
+            "height":         h,
+            "ratio":          f"{w}:{h}",
+            "res_key":        res_key,
+            "detailer_width": detail_w,
+            "detailer_height":detail_h,
+            "vram_estimated_gb": round((w * h * 4 * 4) / 1e9, 2),
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# FAÇADE GÉNÉRATION V1.20
+# ══════════════════════════════════════════════════════════════════════
+
+class GenerationSystemV120:
+    """Système de génération avancé V1.20 — façade unifiée."""
+
+    def __init__(self, vram_gb: float = 16.0,
+                 available_loras: list[str] = None,
+                 logger: logging.Logger = None):
+        self.log         = logger or logging.getLogger("gen_v120")
+        self.scheduler   = DiffusionScheduler(logger=self.log)
+        self.lora        = LoRAAutoComposer(available_loras, logger=self.log)
+        self.consistency = StyleConsistencyEngine(logger=self.log)
+        self.temporal    = TemporalCoherenceManager(logger=self.log)
+        self.archaeology = PromptArchaeologist()
+        self.resolution  = DynamicResolutionOptimizer(vram_gb)
+
+    def prepare_shot(self, shot_brief: dict,
+                      frame_id: int = 0,
+                      is_reference: bool = False) -> dict:
+        """
+        Prépare un shot complet avec tous les systèmes V1.20.
+        Retourne un package prêt pour ComfyUI.
+        """
+        description  = shot_brief.get("description", "")
+        mood         = shot_brief.get("mood", "")
+        content_type = shot_brief.get("content_type", "auto")
+        platform     = shot_brief.get("platform", "general")
+        quality_t    = shot_brief.get("quality_target", 0.8)
+
+        # 1. Résolution optimale
+        res = self.resolution.recommend(content_type, platform)
+
+        # 2. Scheduler optimal
+        schedule = self.scheduler.get_schedule(content_type, description, quality_t)
+
+        # 3. LoRA composition
+        lora_config = self.lora.compose(shot_brief)
+
+        # 4. Amélioration du prompt par archéologie
+        base_prompt = shot_brief.get("positive", "masterpiece, best quality, " + description)
+        improved_prompt = self.archaeology.suggest_improvements(base_prompt)
+
+        # 5. Cohérence stylistique
+        if is_reference:
+            self.consistency.extract_signature(
+                {"sampler": schedule.sampler, "cfg": schedule.cfg},
+                improved_prompt
+            )
+        consistency_result = self.consistency.inject_consistency(
+            improved_prompt,
+            {"sampler": schedule.sampler, "cfg": schedule.cfg, "steps": schedule.steps}
+        )
+
+        # 6. Cohérence temporelle
+        temporal_prompt = self.temporal.inject_temporal_context(
+            consistency_result["prompt"], frame_id
+        )
+        temporal_params = self.temporal.get_interpolated_params(
+            frame_id, {"cfg": schedule.cfg, "steps": schedule.steps}
+        )
+
+        # 7. Enregistrement de la frame
+        frame = FrameContext(
+            frame_id      = frame_id,
+            prompt        = temporal_prompt,
+            params        = temporal_params,
+            character_pos = {},
+            lighting_dir  = shot_brief.get("lighting", "left"),
+            scene_phase   = shot_brief.get("phase", "rising_action"),
+        )
+        frame_check = self.temporal.register_frame(frame)
+
+        package = {
+            "frame_id":     frame_id,
+            "positive":     temporal_prompt,
+            "negative":     shot_brief.get("negative",
+                             "bad quality, worst quality, deformed, bad hands"),
+            "width":        res["width"],
+            "height":       res["height"],
+            "steps":        temporal_params.get("steps", schedule.steps),
+            "cfg":          temporal_params.get("cfg",   schedule.cfg),
+            "sampler":      schedule.sampler,
+            "scheduler":    schedule.scheduler,
+            "loras":        self.lora.to_comfyui_nodes(lora_config),
+            "resolution_key": res["res_key"],
+            "continuity_issues": frame_check.get("issues", []),
+        }
+        self.log.info(
+            f"[GEN V1.20] Shot {frame_id} préparé | "
+            f"{res['width']}x{res['height']} | "
+            f"{schedule.sampler} {schedule.steps}st"
+        )
+        return package
+
+    def get_dashboard(self) -> dict:
+        return {
+            "version":     "1.20_generation",
+            "scheduler":   self.scheduler.get_schedule_report(),
+            "consistency": self.consistency.get_report(),
+            "temporal":    self.temporal.get_continuity_report(),
+        }
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    gen = GenerationSystemV120(vram_gb=16.0)
+
+    print("=== V1.20 GENERATION SYSTEM TEST ===\n")
+
+    shots = [
+        {"description":"guerrier anime pose héroïque", "mood":"epic action",
+         "content_type":"portrait", "platform":"tiktok",
+         "quality_target":0.9, "phase":"rising_action"},
+        {"description":"paysage montagne coucher de soleil",
+         "mood":"peaceful", "content_type":"landscape",
+         "platform":"youtube", "quality_target":0.8, "phase":"intro"},
+        {"description":"scène de combat 3 personnages",
+         "mood":"intense action", "content_type":"action",
+         "platform":"general", "quality_target":0.85, "phase":"climax"},
+    ]
+
+    for i, shot in enumerate(shots):
+        pkg = gen.prepare_shot(shot, frame_id=i, is_reference=(i==0))
+        print(f"Shot {i+1}: {pkg['width']}x{pkg['height']} | "
+              f"{pkg['sampler']} {pkg['steps']}st cfg={pkg['cfg']} | "
+              f"LoRAs:{len(pkg['loras'])}")
+        if pkg["continuity_issues"]:
+            print(f"  ⚠ {len(pkg['continuity_issues'])} problème(s) de continuité")
+
+    print(f"\nDashboard : {gen.get_dashboard()}")

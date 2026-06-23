@@ -1,0 +1,136 @@
+# PIPELINE PROJECT - Carte du projet
+*Généré le 19/06/2026 12:51 par OrganizeProject.exe*
+
+## Racine
+- `agent_supervisor_v2.py`
+- `build_exe.py`
+- `build_organizer.py`
+- `comfy_synesthesia_node.py`
+- `launcher.py`
+- `learning_ui.py`
+- `licence_server.py`
+- `llama_chat.py`
+- `maestro.py`
+- `neural_orchestrator.py`
+- `organize_project.py`
+- `update_checkpoint.py`
+
+## AGENTS\ (82 agents)
+- `__init__.py`
+- `aAa_MaintenanceHub.py`
+- `agent_3d_modeler.py`
+- `api_server.py`
+- `asset_library.py`
+- `audience_analyzer.py`
+- `benchmark_arena.py`
+- `build_launcher.py`
+- `build_maintenance_hub.py`
+- `capture.py`
+- `checkpoint_manager.py`
+- `comfy_autoconfig.py`
+- `context_bus.py`
+- `cost_tracker.py`
+- `critic.py`
+- `deploy.py`
+- `director.py`
+- `episode_packager.py`
+- `error_recovery.py`
+- `gpu_scheduler.py`
+- `learning_agent.py`
+- `legacy_agent.py`
+- `marketing_pub.py`
+- `memory_agent.py`
+- `module_manager.py`
+- `narrative_memory.py`
+- `obs_agent.py`
+- `ollama_bridge.py`
+- `oracle_interface.py`
+- `overlord_launcher.py`
+- `overlord_utils.py`
+- `overlord_utils_utf8.py`
+- `patcher.py`
+- `pipeline_conscience.py`
+- `pipeline_constitution.py`
+- `postprod.py`
+- `prompt_optimizer.py`
+- `ray_cluster.py`
+- `remote_gpu.py`
+- `roles_registry.py`
+- `sav_agent.py`
+- `sav_debug.py`
+- `scenario.py`
+- `self_improve.py`
+- `session_manager.py`
+- `social_agent.py`
+- `sourcing.py`
+- `sourcing_multisensor.py`
+- `storage_manager.py`
+- `storyboard.py`
+- `style_dna.py`
+- `style_evolution.py`
+- `sys_agent.py`
+- `telegram_bot.py`
+- `test_integration.py`
+- `test_pipeline.py`
+- `transmedia_export.py`
+- `v110_core.py`
+- `v110_graph_ui.py`
+- `v110_intelligence.py`
+- `v120_alignment.py`
+- `v120_collective.py`
+- `v120_dashboard.py`
+- `v120_generation.py`
+- `v120_learning.py`
+- `v120_moe.py`
+- `v130_agent_personality.py`
+- `v130_cocreation.py`
+- `v130_dream_mode.py`
+- `v130_emotion_engine.py`
+- `v130_generative_world.py`
+- `v130_intelligence_ext.py`
+- `v130_narrative_dna.py`
+- `v130_world_model.py`
+- `v140_model_downloader.py`
+- `v140_synchronicity.py`
+- `v140_theory_of_mind.py`
+- `v140_thermal_protection.py`
+- `v140_video_pipeline.py`
+- `v140_voice_synthesis.py`
+- `watchdog.py`
+- `workflow_organizer.py`
+
+## DOCS\ (21 fichiers)
+- `ANALYSE_STRATEGIQUE_V147.md`
+- `CONTEXTE_OVERLORD.md`
+- `EVALUATION_PROMPT_ENGINEERING.md`
+- `GUIDE_OVERLORD.md`
+- `MANUAL_DOWNLOADS.md`
+- `patch_bundle_fix_utf8.txt`
+- `patch_bundle_V149n.txt`
+- `patch_bundle_V149o.txt`
+- `patch_bundle_V149p.txt`
+- `PROJECT_MAP.md`
+- `RAPPORT_V141.md`
+- `RAPPORT_V142.md`
+- `RAPPORT_V144.md`
+- `RAPPORT_V145.md`
+- `RAPPORT_V146.md`
+- `RAPPORT_V147.md`
+- `RAPPORT_V148.md`
+- `README.md`
+- `README_INSTALLATION.md`
+- `requirements.txt`
+- `TUTO_LANCEMENT.md`
+
+## workspace\ (créé au runtime)
+- `context_bus/` - Context Window partagée
+- `checkpoints/` - Sauvegardes pipeline
+- `learning/` - Mémoire agent apprenant
+- `archive/` - Images générées
+- `proposals/` - Propositions Legacy Agent
+- `feedback/` - Données RLHF
+- `3d_output/` - Modèles 3D
+- `memory/` - Agent Mémoire
+
+---
+*Ov3rLoRd Pipeline v1.10 - Architecture Neuronale*

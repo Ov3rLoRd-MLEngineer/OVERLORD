@@ -1,0 +1,8 @@
+{
+  "theme": "dark",
+  "model": "llama3",
+  "system": "Assistant général",
+  "temperature": 0.7,
+  "context_length": 8,
+  "stream": true
+}

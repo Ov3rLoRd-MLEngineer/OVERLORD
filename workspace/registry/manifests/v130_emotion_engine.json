@@ -1,0 +1,10 @@
+{
+  "name": "v130_emotion_engine",
+  "version": "V1.30",
+  "checksum": "34a8d44222891c42",
+  "lines": 197,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.923281",
+  "path": "agents\\v130_emotion_engine.py"
+}

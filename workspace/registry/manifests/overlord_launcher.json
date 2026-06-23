@@ -1,0 +1,10 @@
+{
+  "name": "overlord_launcher",
+  "version": "V?.?",
+  "checksum": "16cf36fe464280e7",
+  "lines": 516,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.241420",
+  "path": "agents\\overlord_launcher.py"
+}

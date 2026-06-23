@@ -1,0 +1,233 @@
+{
+  "universes": {
+    "evangelion battle mecha girl": {
+      "first_seen": "2026-06-21T23:50:18.974318",
+      "episodes": 9
+    },
+    "evangelion battle asuka mecha": {
+      "first_seen": "2026-06-23T03:28:25.757344",
+      "episodes": 1
+    },
+    "evangelion battle asuka": {
+      "first_seen": "2026-06-23T17:10:29.438017",
+      "episodes": 2
+    }
+  },
+  "characters": {
+    "shinji ikari": {
+      "name": "Shinji Ikari",
+      "description": "Main Protagonist, Pilot of Evangelion Unit-01: ",
+      "lora": null,
+      "universe": "evangelion battle mecha girl",
+      "appearances": 3,
+      "first_seen": "2026-06-21T23:50:18.973568"
+    },
+    "asuka langley soryu": {
+      "name": "Asuka Langley Soryu",
+      "description": "Secondary Protagonist, Pilot of Evangelion Unit-02: ",
+      "lora": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+      "universe": "evangelion battle mecha girl",
+      "appearances": 3,
+      "first_seen": "2026-06-21T23:50:18.973838"
+    },
+    "misato katsuragi": {
+      "name": "Misato Katsuragi",
+      "description": "Commander, Supporting Character: ",
+      "lora": null,
+      "universe": "evangelion battle mecha girl",
+      "appearances": 3,
+      "first_seen": "2026-06-21T23:50:18.974008"
+    },
+    "ritsuko akagi": {
+      "name": "Ritsuko Akagi",
+      "description": "Scientist, Supporting Character: ",
+      "lora": null,
+      "universe": "evangelion battle mecha girl",
+      "appearances": 1,
+      "first_seen": "2026-06-21T23:50:18.974161"
+    },
+    "protagonist": {
+      "name": "Protagonist",
+      "description": "hero: Determined, evolving throughout the story.",
+      "lora": null,
+      "universe": "evangelion battle mecha girl",
+      "appearances": 9,
+      "first_seen": "2026-06-22T05:49:18.334488"
+    },
+    "antagonist": {
+      "name": "Antagonist",
+      "description": "villain: Powerful and mysterious.",
+      "lora": null,
+      "universe": "evangelion battle mecha girl",
+      "appearances": 9,
+      "first_seen": "2026-06-22T05:49:18.334715"
+    },
+    "the mysterious detective": {
+      "name": "The Mysterious Detective",
+      "description": "Antagonist-turned-ally: A detective who knows more about Asuka's past than he should",
+      "lora": null,
+      "universe": "evangelion battle asuka mecha",
+      "appearances": 1,
+      "first_seen": "2026-06-23T03:28:25.757136"
+    },
+    "conan edogawa": {
+      "name": "Conan Edogawa",
+      "description": "Detective, Asuka's ally: ",
+      "lora": null,
+      "universe": "evangelion battle asuka",
+      "appearances": 1,
+      "first_seen": "2026-06-23T17:26:49.456315"
+    }
+  },
+  "events": [],
+  "episodes": [
+    {
+      "run_id": "maestro_20260621_234938",
+      "universe": "evangelion battle mecha girl",
+      "title": "Evangelion: Shadows Rise",
+      "logline": "In a world on the brink of destruction, a new season of battles begins as the Evangelion team faces unknown shadows.",
+      "genre": [
+        "Action",
+        "Sci-Fi",
+        "Drama"
+      ],
+      "synopsis": "As the world struggles with the aftermath of the previous battles, a new threat emerges in the form of mysterious shadows. The Evangelion team must unite once more to face these unknown enemies and protect humanity.",
+      "timestamp": "2026-06-21T23:50:18.973555"
+    },
+    {
+      "run_id": "maestro_20260622_054915",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T05:49:18.334476"
+    },
+    {
+      "run_id": "maestro_20260622_060611",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T06:06:14.543248"
+    },
+    {
+      "run_id": "maestro_20260622_061839",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T06:18:42.482305"
+    },
+    {
+      "run_id": "maestro_20260622_062120",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T06:21:23.328908"
+    },
+    {
+      "run_id": "maestro_20260622_063438",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T06:34:43.553513"
+    },
+    {
+      "run_id": "maestro_20260622_064743",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T06:47:55.328221"
+    },
+    {
+      "run_id": "maestro_20260622_065831",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T06:58:34.835304"
+    },
+    {
+      "run_id": "maestro_20260622_070255",
+      "universe": "evangelion battle mecha girl",
+      "title": "evangelion battle mecha girl: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle mecha girl.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle mecha girl. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-22T07:02:58.587172"
+    },
+    {
+      "run_id": "maestro_20260623_032748",
+      "universe": "evangelion battle asuka mecha",
+      "title": "Evangelion: Asuka's Standoff",
+      "logline": "In the midst of the Third Impact, Asuka pilots her mecha against a new menace while also dealing with a mysterious detective.",
+      "genre": [
+        "Action",
+        "Drama",
+        "Sci-fi"
+      ],
+      "synopsis": "As the Third Impact unfolds, Asuka fights against a new enemy while also dealing with a mysterious detective who seems to know more than he should about her past. The stakes have never been higher for the pilots of Evangelion.",
+      "timestamp": "2026-06-23T03:28:25.756427"
+    },
+    {
+      "run_id": "maestro_20260623_171028",
+      "universe": "evangelion battle asuka",
+      "title": "evangelion battle asuka: New Chapter",
+      "logline": "A new story unfolds in the world of evangelion battle asuka.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of evangelion battle asuka. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-06-23T17:10:29.438017"
+    },
+    {
+      "run_id": "maestro_20260623_172555",
+      "universe": "evangelion battle asuka",
+      "title": "Evangelion Battle: Asuka - The Detective's Puzzle",
+      "logline": "Asuka Langley Soryu, a troubled Evangelion pilot, teams up with a detective to unravel the mystery behind a series of bizarre events threatening Tokyo-3.",
+      "genre": [
+        "Action",
+        "Mystery",
+        "Sci-fi"
+      ],
+      "synopsis": "Asuka, struggling with her inner demons and recent trauma, finds herself in a new challenge when a string of strange occurrences begins to plague Tokyo-3. Enlisting the help of a quirky but brilliant detective named Conan, Asuka must navigate the city's dark corners and piece together the clues befo",
+      "timestamp": "2026-06-23T17:26:49.455318"
+    }
+  ],
+  "last_update": "2026-06-23T17:26:49.456833"
+}

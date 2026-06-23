@@ -1,0 +1,12 @@
+{
+  "name": "session_reporter",
+  "version": "V1.60",
+  "checksum": "358ba8988980944a",
+  "lines": 250,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.531101",
+  "path": "agents\\session_reporter.py"
+}

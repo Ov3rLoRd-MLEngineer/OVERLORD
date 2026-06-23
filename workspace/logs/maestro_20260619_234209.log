@@ -1,0 +1,83 @@
+2026-06-19 23:42:09 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.ATELIER | seuil=83 | arc=wonder
+2026-06-19 23:42:09 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-19 23:42:09 [INFO    ] [CHECKPOINT] Charge : maestro_20260619_233356 | Etat : interrupted | Blocs termines : ['sourcing']
+2026-06-19 23:42:09 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'scenario' (1/5 blocs deja termines : ['sourcing'])
+2026-06-19 23:42:09 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260619_234209
+2026-06-19 23:42:09 [INFO    ] ============================================================
+2026-06-19 23:42:09 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-19 23:42:09 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260619_234209
+2026-06-19 23:42:09 [INFO    ]   Critique : OK
+2026-06-19 23:42:09 [INFO    ]   Watchdog : OK
+2026-06-19 23:42:09 [INFO    ]   Director : OK
+2026-06-19 23:42:09 [INFO    ]   Bus      : OK
+2026-06-19 23:42:09 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-19 23:42:09 [INFO    ] ============================================================
+2026-06-19 23:42:09 [INFO    ] =======================================================
+2026-06-19 23:42:09 [INFO    ] BLOC 1 -- SOURCING
+2026-06-19 23:42:09 [INFO    ] =======================================================
+2026-06-19 23:42:09 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-19 23:42:10 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-19 23:42:10 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-19 23:42:10 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-19 23:42:10 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-19 23:42:10 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-19 23:42:10 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-19 23:42:10 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-19 23:42:11 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-19 23:42:11 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-19 23:42:11 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-19 23:42:11 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-19 23:42:11 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-19 23:42:11 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-19 23:42:12 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-19 23:42:12 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 61 mots-cles
+2026-06-19 23:42:12 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos...
+2026-06-19 23:42:12 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-19 23:42:12 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-19 23:42:12 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos
+2026-06-19 23:42:12 [INFO    ] =======================================================
+2026-06-19 23:42:12 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-19 23:42:12 [INFO    ] =======================================================
+2026-06-19 23:42:12 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=83
+2026-06-19 23:42:12 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-19 23:42:22 [DEBUG   ] [LLM] Ollama/llama3 OK (2084 chars)
+2026-06-19 23:42:22 [INFO    ] [SCENARISTE] Script genere : 'Dragon Ball: Detective Conan Crossover'
+2026-06-19 23:42:22 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-19 23:42:30 [DEBUG   ] [LLM] Ollama/llama3 OK (1199 chars)
+2026-06-19 23:42:30 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-19 23:42:30 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-19 23:42:30 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260619_214230_Dragon_Ball:_Detective_Conan_Crossover.json
+2026-06-19 23:42:30 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-19 23:42:30 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-19 23:42:30 [INFO    ] [SCENARIO] OK 'Dragon Ball: Detective Conan Crossover'
+2026-06-19 23:42:30 [INFO    ] =======================================================
+2026-06-19 23:42:30 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-19 23:42:30 [INFO    ] =======================================================
+2026-06-19 23:42:30 [INFO    ] [STORYBOARD] Pipeline demarre
+2026-06-19 23:42:30 [INFO    ] [STORYBOARD] Generation — titre='Dragon Ball: Detective Conan Crossover'
+2026-06-19 23:42:40 [DEBUG   ] [LLM] Ollama/llama3 OK (1845 chars)
+2026-06-19 23:42:40 [ERROR   ] [STORYBOARD] JSON invalide
+2026-06-19 23:42:40 [ERROR   ] [STORYBOARD] Echec generation
+2026-06-19 23:42:46 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (3 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-19 23:42:46 [INFO    ] [CRITIQUE] storyboard->production | REJECT | score=10 | Erreur dans les donnees : json_parse_failed
+2026-06-19 23:42:46 [WARNING ] [MAESTRO/CRITIQUE] storyboard->production REJECT (tentative 1/2) -- relance
+2026-06-19 23:42:49 [INFO    ] [STORYBOARD] Pipeline demarre
+2026-06-19 23:42:49 [INFO    ] [STORYBOARD] Generation — titre='Dragon Ball: Detective Conan Crossover'
+2026-06-19 23:42:59 [DEBUG   ] [LLM] Ollama/llama3 OK (2005 chars)
+2026-06-19 23:42:59 [ERROR   ] [STORYBOARD] JSON invalide
+2026-06-19 23:42:59 [ERROR   ] [STORYBOARD] Echec generation
+2026-06-19 23:43:03 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (4 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-19 23:43:05 [INFO    ] [CRITIQUE] storyboard->production | REJECT | score=10 | Erreur dans les donnees : json_parse_failed
+2026-06-19 23:43:05 [WARNING ] [MAESTRO/CRITIQUE] storyboard->production REJECT (tentative 2/2) -- relance
+2026-06-19 23:43:08 [INFO    ] [STORYBOARD] Pipeline demarre
+2026-06-19 23:43:08 [INFO    ] [STORYBOARD] Generation — titre='Dragon Ball: Detective Conan Crossover'
+2026-06-19 23:43:19 [DEBUG   ] [LLM] Ollama/llama3 OK (2191 chars)
+2026-06-19 23:43:19 [ERROR   ] [STORYBOARD] JSON invalide
+2026-06-19 23:43:19 [ERROR   ] [STORYBOARD] Echec generation
+2026-06-19 23:43:19 [INFO    ] [CRITIQUE] storyboard->production | HALT | score=10 | Degradation detectee sur storyboard->production : 3 scores c
+2026-06-19 23:43:19 [ERROR   ] [MAESTRO] Pipeline arrete par le Critique : HALT decide par le Critique sur storyboard->production
+2026-06-19 23:43:20 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (5 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-19 23:43:24 [INFO    ] [WATCHDOG] Arrete
+2026-06-19 23:43:24 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=0s
+2026-06-19 23:43:24 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260619_234209 | Blocs termines : ['sourcing', 'scenario']
+2026-06-19 23:43:24 [INFO    ] [CRITIQUE] Bilan : 5 verifications | score moyen=38.0 | sante=CRITICAL

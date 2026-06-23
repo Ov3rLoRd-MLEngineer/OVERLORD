@@ -1,0 +1,20 @@
+{
+  "asuka_langley_soryu": {
+    "name": "Asuka Langley Soryu",
+    "series": "Neon Genesis Evangelion",
+    "lora": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+    "created_at": "2026-06-23T01:29:50.009433"
+  },
+  "rei_ayanami": {
+    "name": "Rei Ayanami",
+    "series": "Neon Genesis Evangelion",
+    "lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+    "created_at": "2026-06-23T01:29:50.015596"
+  },
+  "mari_makinami_illustrious": {
+    "name": "Mari Makinami Illustrious",
+    "series": "Rebuild of Evangelion",
+    "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+    "created_at": "2026-06-23T01:29:50.021202"
+  }
+}

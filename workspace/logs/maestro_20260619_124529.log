@@ -1,0 +1,75 @@
+2026-06-19 12:45:29 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=70 | arc=wonder
+2026-06-19 12:45:29 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-19 12:45:29 [INFO    ] [CHECKPOINT] Charge : maestro_20260619_090822 | Etat : interrupted | Blocs termines : []
+2026-06-19 12:45:29 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'sourcing' (0/5 blocs deja termines : [])
+2026-06-19 12:45:29 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260619_124529
+2026-06-19 12:45:29 [INFO    ] ============================================================
+2026-06-19 12:45:29 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-19 12:45:29 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260619_124529
+2026-06-19 12:45:29 [INFO    ]   Critique : OK
+2026-06-19 12:45:29 [INFO    ]   Watchdog : OK
+2026-06-19 12:45:29 [INFO    ]   Director : OK
+2026-06-19 12:45:29 [INFO    ]   Bus      : OK
+2026-06-19 12:45:29 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-19 12:45:29 [INFO    ] ============================================================
+2026-06-19 12:45:29 [INFO    ] =======================================================
+2026-06-19 12:45:29 [INFO    ] BLOC 1 -- SOURCING
+2026-06-19 12:45:29 [INFO    ] =======================================================
+2026-06-19 12:45:29 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-19 12:45:30 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-19 12:45:30 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-19 12:45:30 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-19 12:45:30 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-19 12:45:30 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-19 12:45:30 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-19 12:45:30 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-19 12:45:31 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-19 12:45:33 [DEBUG   ] RSS crunchyroll -> 10 articles
+2026-06-19 12:45:33 [DEBUG   ] RSS animenewsnet -> 10 articles
+2026-06-19 12:45:34 [DEBUG   ] RSS kotaku -> 10 articles
+2026-06-19 12:45:34 [DEBUG   ] RSS ign -> 10 articles
+2026-06-19 12:45:34 [DEBUG   ] RSS techcrunch -> 10 articles
+2026-06-19 12:45:34 [DEBUG   ] RSS theVerge -> 10 articles
+2026-06-19 12:45:35 [DEBUG   ] Trends ['anime 2025', 'manga trending', 'dragon ball', 'webtoon', 'AI art'] -> 5 items
+2026-06-19 12:45:37 [WARNING ] Google Trends erreur : The request failed: Google returned a response with code 429
+2026-06-19 12:45:37 [INFO    ] Agregation : 0 Reddit | 60 RSS | 5 Trends | -> 61 mots-cles
+2026-06-19 12:45:37 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos...
+2026-06-19 12:45:37 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-19 12:45:37 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-19 12:45:37 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos
+2026-06-19 12:45:37 [INFO    ] =======================================================
+2026-06-19 12:45:37 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-19 12:45:37 [INFO    ] =======================================================
+2026-06-19 12:45:37 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=70
+2026-06-19 12:45:37 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-19 12:45:37 [WARNING ] [LLM] Claude HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to
+2026-06-19 12:45:37 [INFO    ] [RETRY] Attente 3s avant retry 2...
+2026-06-19 12:45:40 [WARNING ] [LLM] Claude HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to
+2026-06-19 12:45:40 [INFO    ] [RETRY] Attente 6s avant retry 3...
+2026-06-19 12:45:47 [WARNING ] [LLM] Claude HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to
+2026-06-19 12:45:47 [ERROR   ] [RETRY] Echec definitif apres 3 tentatives
+2026-06-19 12:45:57 [ERROR   ] [LLM] Tous les LLM indisponibles — retour vide
+2026-06-19 12:45:57 [ERROR   ] [SCENARISTE] JSON invalide
+2026-06-19 12:45:57 [ERROR   ] [SCENARIO] Echec generation initiale
+2026-06-19 12:46:06 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (3 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-19 12:46:17 [INFO    ] [CRITIQUE] scenario->storyboard | REJECT | score=10 | Erreur dans les donnees : json_parse_failed
+2026-06-19 12:46:17 [WARNING ] [MAESTRO/CRITIQUE] scenario->storyboard REJECT (tentative 1/2) -- relance
+2026-06-19 12:46:20 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=70
+2026-06-19 12:46:20 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-19 12:46:20 [WARNING ] [LLM] Claude HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to
+2026-06-19 12:46:20 [INFO    ] [RETRY] Attente 3s avant retry 2...
+2026-06-19 12:46:23 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (4 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))
+2026-06-19 12:46:24 [WARNING ] [LLM] Claude HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to
+2026-06-19 12:46:24 [INFO    ] [RETRY] Attente 6s avant retry 3...
+2026-06-19 12:46:30 [WARNING ] [LLM] Claude HTTP 400: {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to
+2026-06-19 12:46:30 [ERROR   ] [RETRY] Echec definitif apres 3 tentatives
+2026-06-19 12:46:40 [ERROR   ] [LLM] Tous les LLM indisponibles — retour vide
+2026-06-19 12:46:40 [ERROR   ] [SCENARISTE] JSON invalide
+2026-06-19 12:46:40 [ERROR   ] [SCENARIO] Echec generation initiale
+2026-06-19 12:46:40 [ERROR   ] [WATCHDOG] ComfyUI HORS LIGNE (5 echecs) — HTTPConnectionPool(host='127.0.0.1', port=8188): Max retries exceeded with url: /system_stats (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8188): Failed to establish a new connection: [WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée"))

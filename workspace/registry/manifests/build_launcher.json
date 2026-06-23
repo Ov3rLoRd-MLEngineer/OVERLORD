@@ -1,0 +1,10 @@
+{
+  "name": "build_launcher",
+  "version": "V?.?",
+  "checksum": "24df9a81a6711206",
+  "lines": 54,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.844880",
+  "path": "agents\\build_launcher.py"
+}

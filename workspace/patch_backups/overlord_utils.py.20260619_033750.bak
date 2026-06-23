@@ -1,0 +1,248 @@
+"""
+agents/overlord_utils.py — Utilitaires transversaux V1.42
+Nouveau module : fonctions partagées par tous les agents.
+
+Contient :
+- _get_api_key()         : lecture clé API (environ + .env)
+- retry_api()            : retry avec backoff exponentiel
+- safe_json_parse()      : parse JSON avec nettoyage auto
+- build_headers()        : headers Anthropic standardisés
+- fallback_llm()         : bascule Ollama si API indisponible
+- log_banner()           : bannière de démarrage agent
+- ensure_workspace()     : crée les dossiers workspace nécessaires
+"""
+
+import json
+import logging
+import os
+import time
+from pathlib import Path
+from typing import Any
+
+# ── Clé API ──────────────────────────────────────────────────────────
+def get_api_key() -> str:
+    """Lit la clé Anthropic depuis l'environnement ou .env."""
+    key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not key:
+        for candidate in [
+            Path(__file__).parent.parent / ".env",
+            Path(__file__).parent / ".env",
+            Path(".env"),
+        ]:
+            if candidate.exists():
+                for line in candidate.read_text(encoding="utf-8").splitlines():
+                    if line.startswith("ANTHROPIC_API_KEY="):
+                        key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                        if key:
+                            break
+            if key:
+                break
+    return key
+
+def build_headers() -> dict:
+    """Headers Anthropic standardisés pour tous les agents."""
+    return {
+        "Content-Type":    "application/json",
+        "x-api-key":       get_api_key(),
+        "anthropic-version": "2023-06-01",
+    }
+
+# ── Retry avec backoff exponentiel ───────────────────────────────────
+def retry_api(fn, max_retries: int = 3, base_delay: float = 2.0,
+              logger: logging.Logger = None):
+    """
+    Exécute fn() avec retry + backoff exponentiel.
+    fn doit retourner (success: bool, result: Any).
+    
+    Exemple :
+        def call():
+            r = requests.post(...)
+            return r.status_code == 200, r.json()
+        ok, data = retry_api(call, max_retries=3)
+    """
+    log = logger or logging.getLogger("overlord_utils.retry")
+    last_result = None
+    
+    for attempt in range(max_retries + 1):
+        try:
+            success, result = fn()
+            if success:
+                return True, result
+            last_result = result
+        except Exception as e:
+            last_result = str(e)
+            log.warning(f"[RETRY] Tentative {attempt+1}/{max_retries+1} échouée : {e}")
+        
+        if attempt < max_retries:
+            delay = base_delay * (2 ** attempt)  # 2s, 4s, 8s
+            log.info(f"[RETRY] Attente {delay:.0f}s avant retry {attempt+2}...")
+            time.sleep(delay)
+    
+    log.error(f"[RETRY] Échec définitif après {max_retries+1} tentatives")
+    return False, last_result
+
+# ── Parse JSON robuste ────────────────────────────────────────────────
+def safe_json_parse(raw: str, logger: logging.Logger = None) -> tuple:
+    """
+    Parse JSON avec nettoyage automatique des backticks et espaces.
+    Retourne (success: bool, data: dict|None, error: str|None)
+    
+    Gère :
+    - ```json ... ``` (markdown code blocks)
+    - Espaces/newlines parasites
+    - BOM UTF-8
+    - JSON tronqué (tentative de réparation)
+    """
+    log = logger or logging.getLogger("overlord_utils.json")
+    
+    if not raw or not raw.strip():
+        return False, None, "Réponse vide"
+    
+    clean = raw.strip().lstrip('\ufeff')  # BOM
+    
+    # Supprimer les blocs markdown
+    if clean.startswith("```"):
+        lines = clean.split("\n")
+        # Supprimer première ligne (```json ou ```) et dernière (```)
+        clean = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+        clean = clean.strip()
+    
+    # Tentative 1 : parse direct
+    try:
+        return True, json.loads(clean), None
+    except json.JSONDecodeError:
+        pass
+    
+    # Tentative 2 : trouver le premier { ou [ et parser depuis là
+    for start_char, end_char in [('{', '}'), ('[', ']')]:
+        start = clean.find(start_char)
+        end   = clean.rfind(end_char)
+        if start != -1 and end != -1 and end > start:
+            try:
+                return True, json.loads(clean[start:end+1]), None
+            except json.JSONDecodeError:
+                pass
+    
+    log.error(f"[JSON] Parse échoué. Début : {clean[:100]}")
+    return False, None, f"JSON invalide : {clean[:80]}"
+
+# ── Fallback LLM ─────────────────────────────────────────────────────
+def fallback_llm(prompt: str, system: str = "",
+                 model: str = "claude-sonnet-4-6",
+                 max_tokens: int = 2000,
+                 logger: logging.Logger = None) -> str:
+    """
+    Appel LLM avec fallback automatique :
+    1. Claude (Anthropic API)
+    2. Ollama local (llama3 ou mistral)
+    3. Réponse vide avec warning
+    
+    Transparent pour l'appelant — retourne toujours une string.
+    """
+    import requests
+    log = logger or logging.getLogger("overlord_utils.llm")
+    
+    # Tentative 1 : Claude
+    key = get_api_key()
+    if key:
+        try:
+            body = {
+                "model": model, "max_tokens": max_tokens,
+                "messages": [{"role": "user", "content": prompt}],
+            }
+            if system:
+                body["system"] = system
+            
+            def _call_claude():
+                r = requests.post(
+                    "https://api.anthropic.com/v1/messages",
+                    headers=build_headers(), json=body, timeout=60
+                )
+                if r.status_code == 200:
+                    content = r.json().get("content", [])
+                    return True, " ".join(b["text"] for b in content if b.get("type") == "text")
+                log.warning(f"[LLM] Claude HTTP {r.status_code}: {r.text[:100]}")
+                return False, ""
+            
+            ok, result = retry_api(_call_claude, max_retries=2, base_delay=3.0, logger=log)
+            if ok and result:
+                log.debug(f"[LLM] Claude ✓ ({len(result)} chars)")
+                return result
+        except Exception as e:
+            log.warning(f"[LLM] Claude exception : {e}")
+    
+    # Tentative 2 : Ollama local
+    ollama_models = ["llama3", "mistral", "deepseek-coder", "phi3"]
+    for ollama_model in ollama_models:
+        try:
+            r = requests.get("http://localhost:11434/api/tags", timeout=3)
+            if r.status_code != 200:
+                break
+            installed = [m["name"].split(":")[0] for m in r.json().get("models", [])]
+            if not any(ollama_model in m for m in installed):
+                continue
+            
+            full_prompt = f"{system}\n\n{prompt}" if system else prompt
+            r2 = requests.post(
+                "http://localhost:11434/api/generate",
+                json={"model": ollama_model, "prompt": full_prompt,
+                      "stream": False, "options": {"num_predict": max_tokens}},
+                timeout=120
+            )
+            if r2.status_code == 200:
+                result = r2.json().get("response", "")
+                if result:
+                    log.info(f"[LLM] Fallback Ollama/{ollama_model} ✓")
+                    return result
+        except Exception:
+            break
+    
+    log.error("[LLM] Tous les LLM indisponibles — retour vide")
+    return ""
+
+# ── Bannière agent ────────────────────────────────────────────────────
+def log_banner(agent_name: str, version: str = "V1.42",
+               logger: logging.Logger = None):
+    """Affiche une bannière de démarrage standardisée pour chaque agent."""
+    log = logger or logging.getLogger(agent_name)
+    log.info(f"{'━'*50}")
+    log.info(f"  Ov3rLoRd | {agent_name.upper()} | {version}")
+    log.info(f"{'━'*50}")
+
+# ── Workspace ─────────────────────────────────────────────────────────
+def ensure_workspace(*paths: str) -> list:
+    """Crée les dossiers workspace nécessaires et retourne leurs Path."""
+    created = []
+    for p in paths:
+        path = Path(p)
+        path.mkdir(parents=True, exist_ok=True)
+        created.append(path)
+    return created
+
+# ── Auto-création .env ────────────────────────────────────────────────
+def ensure_env_file(base_dir: Path = None) -> Path:
+    """
+    Vérifie l'existence du .env — le crée depuis .env.template si absent.
+    Retourne le chemin du .env.
+    """
+    base  = base_dir or Path(__file__).parent.parent
+    env   = base / ".env"
+    tmpl  = base / ".env.template"
+    
+    if not env.exists():
+        if tmpl.exists():
+            import shutil
+            shutil.copy(tmpl, env)
+            print(f"[OVERLORD] .env créé depuis .env.template — renseigne ANTHROPIC_API_KEY")
+        else:
+            env.write_text(
+                "# OverLord Pipeline — Configuration\n"
+                "ANTHROPIC_API_KEY=\n"
+                "TELEGRAM_TOKEN=\n"
+                "TELEGRAM_CHAT_ID=\n"
+                "COMFY_URL=http://127.0.0.1:8188\n",
+                encoding="utf-8"
+            )
+            print(f"[OVERLORD] .env créé — renseigne ANTHROPIC_API_KEY dans {env}")
+    return env
+

@@ -1,0 +1,22 @@
+2026-06-17 19:30:44 [INFO    ] ============================================================
+2026-06-17 19:30:44 [INFO    ]   ██████╗ ██╗   ██╗███████╗██████╗ ██╗      ██████╗ ██████╗ ██████╗
+2026-06-17 19:30:44 [INFO    ]   ██╔══██╗██║   ██║██╔════╝██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+2026-06-17 19:30:44 [INFO    ]   ██║  ██║██║   ██║█████╗  ██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+2026-06-17 19:30:44 [INFO    ]   PIPELINE DÉMARRÉ — run_id=maestro_20260617_193044
+2026-06-17 19:30:44 [INFO    ]   Critique : ✗ INACTIF
+2026-06-17 19:30:44 [INFO    ]   Watchdog : ✗ INACTIF
+2026-06-17 19:30:44 [INFO    ]   Blocs    : sourcing → scenario → storyboard → production → postprod → 3d
+2026-06-17 19:30:44 [INFO    ] ============================================================
+2026-06-17 19:30:44 [INFO    ] 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-06-17 19:30:44 [INFO    ] BLOC 1 — SOURCING
+2026-06-17 19:30:44 [INFO    ] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-06-17 19:30:44 [WARNING ] [SOURCING] Module indisponible — fallback config
+2026-06-17 19:30:44 [ERROR   ] [MAESTRO] Erreur critique : name 'cp_mgr' is not defined
+Traceback (most recent call last):
+  File "D:\OVERLORD\maestro.py", line 657, in run_pipeline
+    trend_report = block_sourcing(cfg, state, logger, critic, watchdog)
+  File "D:\OVERLORD\maestro.py", line 296, in block_sourcing
+    if cp_mgr: cp_mgr.save_block("sourcing", report)
+       ^^^^^^
+NameError: name 'cp_mgr' is not defined

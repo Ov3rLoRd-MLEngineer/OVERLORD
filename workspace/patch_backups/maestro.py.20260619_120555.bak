@@ -1,0 +1,860 @@
+"""
+maestro.py V1.49 — Chef d'Orchestre Ov3rLoRd
+Pipeline : SOURCING → SCÉNARIO → STORYBOARD → PRODUCTION → POST-PROD → 3D
+Intègre : Director V1.48, Critique, Watchdog, Checkpoint, Conscience V1.45
+FIXES V1.49 :
+  - UTF-8 console forcé dès le démarrage
+  - BUG 6 : _start_time indéfini dans finally → supprimé, remplacé par watchdog guard
+  - BUG : ensure_env_file(BASE) appelé avant BASE → déplacé après BASE
+  - BUG : _director indéfini dans finally → remplacé par variable de scope propre
+  - BUG : watchdog.report() dans bloc if cp_mgr → déplacé dans son propre bloc
+"""
+
+import overlord_utils_utf8  # noqa — force UTF-8 console dès le démarrage
+
+import sys
+import os
+import json
+import logging
+sys.stdout.reconfigure(line_buffering=True)
+import argparse
+import time
+from pathlib import Path
+from datetime import datetime
+
+# ── Résolution du package AGENTS ──────────────────────────────────────
+_BASE_DIR = Path(__file__).resolve().parent
+if str(_BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(_BASE_DIR))
+
+_agents_lower = _BASE_DIR / "agents"
+_agents_upper = _BASE_DIR / "AGENTS"
+if not _agents_lower.exists() and _agents_upper.exists():
+    import importlib, types
+    _pkg = types.ModuleType("agents")
+    _pkg.__path__ = [str(_agents_upper)]
+    _pkg.__package__ = "agents"
+    sys.modules["agents"] = _pkg
+
+# BASE défini ici — avant tout import qui en dépend
+BASE = Path(__file__).parent
+
+# ── Imports internes ──────────────────────────────────────────────────
+
+# Utils centraux V1.42 — en premier car d'autres en dépendent
+try:
+    from agents.overlord_utils import (
+        get_api_key, build_headers, retry_api, safe_json_parse,
+        fallback_llm, ensure_workspace, ensure_env_file
+    )
+    UTILS_OK = True
+    ensure_env_file(BASE)  # BASE est défini maintenant
+except Exception:
+    UTILS_OK = False
+
+# Context Bus V1.48
+try:
+    from agents.context_bus import get_bus
+    BUS_OK = True
+    _bus = get_bus()
+except Exception:
+    BUS_OK = False
+    _bus = None
+
+# Director V1.48
+try:
+    from agents.director import get_director, Director, ProductionMode
+    DIRECTOR_OK = True
+except Exception:
+    DIRECTOR_OK = False
+    get_director = None
+
+# Pipeline Conscience V1.45
+try:
+    from agents.pipeline_conscience import get_conscience, PipelineConscience
+    CONSCIENCE_OK = True
+    _conscience = get_conscience()
+    _adaptive_params = _conscience.get_params()
+except Exception:
+    CONSCIENCE_OK = False
+    _conscience = None
+    _adaptive_params = {}
+
+# Agents pipeline
+try:
+    from agents.sourcing   import run_sourcing;    SOURCING_OK   = True
+except Exception:
+    SOURCING_OK = False
+    def run_sourcing(media_type="anime", logger=None):
+        _log = logger or logging.getLogger("sourcing.fallback")
+        _log.warning("[SOURCING] Module indisponible — fallback minimal actif")
+        return {"media_type": media_type, "brief": "Fallback sourcing",
+                "hot_keywords": ["anime"], "top_reddit": [], "top_rss": [],
+                "top_trends": [], "raw_count": {"reddit": 0, "rss": 0, "trends": 0}}
+
+try:
+    from agents.scenario   import run_scenario;    SCENARIO_OK   = True
+except Exception:
+    SCENARIO_OK = False
+    def run_scenario(**kwargs):
+        _log = kwargs.get("logger") or logging.getLogger("scenario.fallback")
+        _log.warning("[SCENARIO] Module indisponible — fallback actif")
+        return {"title": "Fallback", "scenes": [], "media_type": kwargs.get("media_type","anime")}
+
+try:
+    from agents.storyboard import run_storyboard;  STORYBOARD_OK = True
+except Exception:
+    STORYBOARD_OK = False
+    def run_storyboard(**kwargs):
+        _log = kwargs.get("logger") or logging.getLogger("storyboard.fallback")
+        _log.warning("[STORYBOARD] Module indisponible — fallback actif")
+        return {"shots": []}, []
+
+try:
+    from agents.postprod   import run_postprod;    POSTPROD_OK   = True
+except Exception:
+    POSTPROD_OK = False
+    def run_postprod(**kwargs):
+        _log = kwargs.get("logger") or logging.getLogger("postprod.fallback")
+        _log.warning("[POSTPROD] Module indisponible — fallback actif")
+        return {"status": "fallback"}
+
+try:
+    from agents.critic  import CriticAgent, Verdict
+    CRITIC_OK = True
+except Exception as e:
+    CRITIC_OK = False
+    log_pre = logging.getLogger("maestro")
+    log_pre.warning(f"[WARN] critic.py indisponible : {e}")
+
+try:
+    from agents.obs_agent import create_obs_agent
+    OBS_OK = True
+except Exception:
+    OBS_OK = False
+
+try:
+    from agents.agent_3d_modeler import Agent3DModeler
+    AGENT_3D_OK = True
+except Exception:
+    AGENT_3D_OK = False
+
+try:
+    from agents.checkpoint_manager import CheckpointManager, get_checkpoint_manager
+    CP_OK = True
+except Exception as e:
+    CP_OK = False
+    logging.getLogger("maestro").warning(f"[WARN] checkpoint_manager.py indisponible : {e}")
+
+try:
+    from agents.comfy_memory import VRAMManager
+    VRAM_OK = True
+except Exception:
+    VRAM_OK = False
+
+try:
+    from agents.watchdog import Watchdog, analyze_frame
+    WATCHDOG_OK = True
+except Exception as e:
+    WATCHDOG_OK = False
+    logging.getLogger("maestro").warning(f"[WARN] watchdog.py indisponible : {e}")
+
+# Supervisor
+try:
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("supervisor", BASE / "agent_supervisor_v2.py")
+    _sup  = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_sup)
+    supervisor    = _sup
+    SUPERVISOR_OK = True
+except Exception as e:
+    SUPERVISOR_OK = False
+    logging.getLogger("maestro").warning(f"[WARN] agent_supervisor_v2.py indisponible : {e}")
+
+
+# ── Configuration ─────────────────────────────────────────────────────
+WORKSPACE      = Path("workspace")
+PIPELINE_STATE = WORKSPACE / "pipeline_state.json"
+LOGS_DIR       = WORKSPACE / "logs"
+ARCHIVE_DIR    = WORKSPACE / "archive"
+
+BLOCKS      = ["sourcing", "scenario", "storyboard", "production", "postprod", "3d"]
+MEDIA_TYPES = ["anime","manga","comics","3d","photoreal","art","game","short","film"]
+
+TELEGRAM_TOKEN   = ""
+TELEGRAM_CHAT_ID = ""
+MAX_CRITIC_RETRIES = 2
+
+
+# ── Logging ───────────────────────────────────────────────────────────
+def init():
+    for d in [WORKSPACE, LOGS_DIR, ARCHIVE_DIR]:
+        d.mkdir(parents=True, exist_ok=True)
+
+def get_logger(run_id: str) -> logging.Logger:
+    logger = logging.getLogger(f"maestro.{run_id}")
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.DEBUG)
+    fmt = logging.Formatter(
+        "%(asctime)s [%(levelname)-8s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(fmt)
+    logger.addHandler(ch)
+    fh = logging.FileHandler(LOGS_DIR / f"{run_id}.log", encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(fmt)
+    logger.addHandler(fh)
+    return logger
+
+
+# ── État persistant ───────────────────────────────────────────────────
+def load_state() -> dict:
+    if PIPELINE_STATE.exists():
+        try:
+            return json.loads(PIPELINE_STATE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"run_id": None, "current_block": None, "completed": [], "data": {}}
+
+def save_state(state: dict):
+    PIPELINE_STATE.write_text(
+        json.dumps(state, indent=2, ensure_ascii=False, default=str),
+        encoding="utf-8"
+    )
+
+def clear_state():
+    save_state({"run_id": None, "current_block": None, "completed": [], "data": {}})
+
+
+# ── Notifications ─────────────────────────────────────────────────────
+def notify(msg: str, logger: logging.Logger = None):
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        return
+    import requests as req
+    try:
+        req.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            json={"chat_id": TELEGRAM_CHAT_ID, "text": f"[MAESTRO] {msg}"},
+            timeout=10
+        )
+    except Exception:
+        pass
+
+
+# ── Wrapper Critique ──────────────────────────────────────────────────
+def _critic_gate(critic, handoff: str, data: dict,
+                 extra: dict, logger: logging.Logger,
+                 block_fn, block_args: dict,
+                 retries: int = MAX_CRITIC_RETRIES) -> tuple:
+    if not CRITIC_OK or critic is None:
+        return data, extra
+
+    for attempt in range(retries + 1):
+        report = critic.validate_handoff(handoff, data, extra)
+
+        if report.verdict == Verdict.PASS:
+            return report.data_out or data, extra
+
+        if report.verdict == Verdict.WARN:
+            logger.warning(f"[MAESTRO/CRITIQUE] {handoff} WARN — on continue")
+            return report.data_out or data, extra
+
+        if report.verdict == Verdict.REPAIR:
+            logger.info(f"[MAESTRO/CRITIQUE] {handoff} REPAIR appliqué")
+            return report.data_out or data, extra
+
+        if report.verdict == Verdict.REJECT:
+            if attempt < retries:
+                logger.warning(
+                    f"[MAESTRO/CRITIQUE] {handoff} REJECT "
+                    f"(tentative {attempt+1}/{retries}) — relance du bloc"
+                )
+                notify(f"Critique REJECT {handoff} — relance {attempt+1}", logger)
+                time.sleep(3)
+                try:
+                    data = block_fn(**block_args)
+                    if isinstance(data, tuple):
+                        data, extra_new = data
+                        if extra is not None:
+                            extra.update(extra_new if isinstance(extra_new, dict) else {})
+                except Exception as e:
+                    logger.error(f"[MAESTRO] Relance échouée : {e}")
+            else:
+                logger.error(
+                    f"[MAESTRO/CRITIQUE] {handoff} REJECT définitif "
+                    f"après {retries} tentatives"
+                )
+                notify(f"Critique REJECT définitif {handoff}", logger)
+                return report.data_out or data, extra
+
+        if report.verdict == Verdict.HALT:
+            logger.error(f"[MAESTRO/CRITIQUE] HALT sur {handoff} — arrêt pipeline")
+            notify(f"HALT pipeline sur {handoff}", logger)
+            raise StopIteration(f"HALT décidé par le Critique sur {handoff}")
+
+    return data, extra
+
+
+# ── Blocs ─────────────────────────────────────────────────────────────
+def block_sourcing(cfg, state, logger, critic, watchdog, cp_mgr=None):
+    logger.info("\n" + "━"*55)
+    logger.info("BLOC 1 — SOURCING")
+    logger.info("━"*55)
+
+    if watchdog and not watchdog.can_proceed("sourcing"):
+        logger.warning("[SOURCING] Circuit breaker ouvert — skip")
+        return {"media_type": cfg.get("media_type","anime"),
+                "brief": "Fallback sourcing", "hot_keywords": ["anime"]}
+
+    if not SOURCING_OK:
+        report = {"media_type": cfg.get("media_type","anime"),
+                  "brief": cfg.get("brief","Production standard"),
+                  "hot_keywords": cfg.get("keywords",["anime","action"])}
+        logger.warning("[SOURCING] Module indisponible — fallback config")
+    else:
+        report = run_sourcing(media_type=cfg.get("media_type","anime"), logger=logger)
+        if watchdog:
+            watchdog.breakers["sourcing"].record_success()
+
+    report, _ = _critic_gate(
+        critic, "sourcing->scenario", report, None, logger,
+        run_sourcing, {"media_type": cfg.get("media_type","anime"), "logger": logger}
+    )
+
+    # Publier sur le context_bus
+    if BUS_OK and _bus:
+        _bus.write("sourcing.trend_report", report, agent_id="sourcing")
+        _bus.write("sourcing.media_type",   cfg.get("media_type","anime"), agent_id="sourcing")
+
+    state["data"]["trend_report"] = report
+    state["completed"].append("sourcing")
+    save_state(state)
+    if cp_mgr: cp_mgr.save_block("sourcing", report)
+    logger.info(f"[SOURCING] OK Brief : {report.get('brief','')[:80]}")
+    return report
+
+
+def block_scenario(trend_report, cfg, state, logger, critic, watchdog, cp_mgr=None):
+    logger.info("\n" + "━"*55)
+    logger.info("BLOC 2 — SCENARIO")
+    logger.info("━"*55)
+
+    if watchdog and not watchdog.can_proceed("scenario"):
+        logger.error("[SCENARIO] Circuit breaker ouvert — arrêt")
+        return {"error": "circuit_breaker_open"}
+
+    quality_threshold = cfg.get(
+        "script_quality_threshold",
+        _adaptive_params.get("script_quality_threshold", 70)
+    )
+
+    # Lire le seuil depuis le Director si disponible
+    if BUS_OK and _bus:
+        bus_threshold = _bus.read("director.quality_threshold")
+        if bus_threshold is not None:
+            quality_threshold = bus_threshold
+
+    script = run_scenario(
+        trend_report      = trend_report,
+        media_type        = cfg.get("media_type","anime"),
+        duration          = cfg.get("duration","short"),
+        universe          = cfg.get("universe",""),
+        quality_threshold = quality_threshold,
+        logger            = logger
+    )
+    if watchdog:
+        (watchdog.breakers["scenario"].record_success()
+         if "error" not in script
+         else watchdog.breakers["scenario"].record_failure())
+
+    script, _ = _critic_gate(
+        critic, "scenario->storyboard", script, None, logger,
+        run_scenario,
+        {"trend_report": trend_report, "media_type": cfg.get("media_type","anime"),
+         "duration": cfg.get("duration","short"), "universe": cfg.get("universe",""),
+         "logger": logger}
+    )
+
+    if BUS_OK and _bus:
+        _bus.write("scenario.title",  script.get("title",""), agent_id="scenario")
+        _bus.write("scenario.scenes", len(script.get("scenes",[])), agent_id="scenario")
+
+    state["data"]["script"] = script
+    state["completed"].append("scenario")
+    save_state(state)
+    logger.info(f"[SCENARIO] OK '{script.get('title','?')}'")
+    return script
+
+
+def block_storyboard(script, cfg, state, logger, critic, watchdog, cp_mgr=None):
+    logger.info("\n" + "━"*55)
+    logger.info("BLOC 3 — STORYBOARD")
+    logger.info("━"*55)
+
+    if watchdog and not watchdog.can_proceed("storyboard"):
+        logger.error("[STORYBOARD] Circuit breaker ouvert — arrêt")
+        return {}, []
+
+    if not STORYBOARD_OK:
+        logger.error("[STORYBOARD] Module indisponible")
+        return {}, []
+
+    # Enrichir avec l'arc émotionnel du Director si disponible
+    emotion_arc = None
+    if BUS_OK and _bus:
+        emotion_arc = _bus.read("director.emotion_arc")
+
+    shotlist, jobs = run_storyboard(
+        script     = script,
+        media_type = cfg.get("media_type","anime"),
+        base_lora  = cfg.get("lora",""),
+        logger     = logger
+    )
+    if watchdog:
+        (watchdog.breakers["storyboard"].record_success()
+         if jobs else watchdog.breakers["storyboard"].record_failure())
+
+    extra = {"jobs": jobs}
+    shotlist, extra = _critic_gate(
+        critic, "storyboard->production", shotlist, extra, logger,
+        lambda **kw: run_storyboard(**kw),
+        {"script": script, "media_type": cfg.get("media_type","anime"),
+         "base_lora": cfg.get("lora",""), "logger": logger}
+    )
+    jobs = extra.get("jobs", jobs) if extra else jobs
+
+    if BUS_OK and _bus:
+        _bus.write("storyboard.shots_count", len(jobs), agent_id="storyboard")
+        if emotion_arc:
+            _bus.write("storyboard.emotion_arc", emotion_arc, agent_id="storyboard")
+
+    state["data"]["shotlist"] = shotlist
+    state["data"]["jobs"]     = jobs
+    state["completed"].append("storyboard")
+    save_state(state)
+    logger.info(f"[STORYBOARD] OK {len(jobs)} jobs")
+    return shotlist, jobs
+
+
+def block_production(jobs, cfg, state, logger, critic, watchdog, cp_mgr=None):
+    logger.info("\n" + "━"*55)
+    logger.info("BLOC 4 — PRODUCTION COMFYUI")
+    logger.info("━"*55)
+
+    if not SUPERVISOR_OK:
+        logger.error("[PRODUCTION] agent_supervisor_v2 indisponible")
+        return {"success": 0, "failed": len(jobs), "total": len(jobs)}
+
+    if not jobs:
+        logger.warning("[PRODUCTION] Aucun job")
+        return {"success": 0, "failed": 0, "total": 0}
+
+    if watchdog:
+        health = watchdog.health_check()
+        if not health.get("comfyui",{}).get("up", True):
+            logger.error("[PRODUCTION] ComfyUI hors ligne — abandon")
+            return {"success": 0, "failed": len(jobs), "total": len(jobs)}
+
+    for job in jobs:
+        job.setdefault("lora",     cfg.get("lora",""))
+        job.setdefault("strength", cfg.get("strength", 1.0))
+        job.setdefault("width",    cfg.get("width", 1024))
+        job.setdefault("height",   cfg.get("height", 1536))
+
+    run_id  = state["run_id"] + "_prod"
+    results = supervisor.run_batch_advanced(jobs, run_id=run_id, resume=True)
+
+    if watchdog and ARCHIVE_DIR.exists():
+        frames_data   = []
+        frame_reports = []
+        for png in sorted(ARCHIVE_DIR.rglob("*.png"))[-len(jobs):]:
+            try:
+                img_bytes = png.read_bytes()
+                fr = watchdog.guard_frame(
+                    img_bytes,
+                    shot_id = png.stem,
+                    palette = cfg.get("color_palette", [])
+                )
+                frames_data.append(img_bytes)
+                frame_reports.append(fr.to_dict())
+            except Exception as e:
+                logger.warning(f"[WATCHDOG/FRAME] Erreur lecture {png.name} : {e}")
+
+        if len(frames_data) >= 2:
+            coherence = watchdog.guard_sequence(frames_data)
+            results["sequence_coherence"] = coherence
+            if not coherence.get("coherent"):
+                logger.warning(
+                    f"[WATCHDOG] Ruptures de style aux frames : "
+                    f"{coherence.get('style_breaks')}"
+                )
+
+        if critic and frame_reports:
+            passed = sum(1 for r in frame_reports if r["passed"])
+            failed = len(frame_reports) - passed
+            if failed > len(frame_reports) * 0.3:
+                logger.warning(
+                    f"[CRITIQUE/FRAMES] {failed}/{len(frame_reports)} frames "
+                    f"échouent le contrôle qualité"
+                )
+                results["frame_quality_issues"] = failed
+
+    extra = {"archive_dir": str(ARCHIVE_DIR)}
+    results, _ = _critic_gate(
+        critic, "production->postprod", results, extra, logger,
+        None, {}
+    )
+
+    if BUS_OK and _bus:
+        _bus.write("production.success",  results.get("success", 0),  agent_id="production")
+        _bus.write("production.failed",   results.get("failed",  0),   agent_id="production")
+
+    state["data"]["production_results"] = results
+    state["completed"].append("production")
+    save_state(state)
+    ok   = results.get("success", 0)
+    fail = results.get("failed",  0)
+    logger.info(f"[PRODUCTION] OK {ok} succes | {fail} echecs")
+    return results
+
+
+def block_postprod(shotlist, cfg, state, logger, critic, watchdog, cp_mgr=None):
+    logger.info("\n" + "━"*55)
+    logger.info("BLOC 5 — POST-PRODUCTION")
+    logger.info("━"*55)
+
+    if not POSTPROD_OK:
+        logger.warning("[POST-PROD] Module indisponible — ignoré")
+        return {}
+
+    if not ARCHIVE_DIR.exists() or not any(ARCHIVE_DIR.rglob("*.png")):
+        logger.warning("[POST-PROD] Aucune image — ignoré")
+        return {}
+
+    result = run_postprod(
+        shotlist       = shotlist,
+        image_dir      = ARCHIVE_DIR,
+        dialogue_lines = cfg.get("dialogues", []),
+        music_path     = cfg.get("music_path"),
+        export_preset  = cfg.get("export_preset","anime_1080p"),
+        tts_lang       = cfg.get("tts_lang","fr"),
+        logger         = logger
+    )
+
+    if BUS_OK and _bus:
+        _bus.write("postprod.video", result.get("files",{}).get("video",""), agent_id="postprod")
+
+    state["data"]["postprod"] = result
+    state["completed"].append("postprod")
+    save_state(state)
+    video = result.get("files",{}).get("video","N/A")
+    logger.info(f"[POST-PROD] OK Export -> {video}")
+    return result
+
+
+def block_3d(jobs: list, cfg: dict, state: dict,
+             logger: logging.Logger, critic) -> dict:
+    logger.info("\n" + "━"*55)
+    logger.info("BLOC 3D — MODELISATION & IMPRESSION")
+    logger.info("━"*55)
+
+    if not AGENT_3D_OK:
+        logger.warning("[3D] agent_3d_modeler.py indisponible — bloc ignoré")
+        return {"skipped": True}
+
+    mode      = cfg.get("mode_3d", "render").split(" ")[0]
+    prompt_3d = cfg.get("prompt_3d", "")
+    meshy_key = cfg.get("meshy_api_key", "")
+    scale_raw = [cfg.get("stl_w"), cfg.get("stl_d"), cfg.get("stl_h")]
+    scale_mm  = None
+    try:
+        if all(scale_raw):
+            scale_mm = tuple(float(v) for v in scale_raw)
+    except Exception:
+        pass
+
+    agent = Agent3DModeler(logger=logger, meshy_api_key=meshy_key)
+    results_3d = []
+
+    if prompt_3d:
+        logger.info(f"[3D] Génération depuis prompt : '{prompt_3d[:60]}'")
+        r = agent.run_3d_pipeline(prompt=prompt_3d, mode=mode,
+                                   scale_mm=scale_mm, logger=logger)
+        results_3d.append(r)
+
+    elif mode == "print" and state.get("data", {}).get("production_results"):
+        archive = Path("workspace/archive")
+        imgs    = list(archive.rglob("*.png"))[:3]
+        for img in imgs:
+            logger.info(f"[3D] Image -> 3D : {img.name}")
+            r = agent.image_to_3d(str(img), target=mode)
+            if r.get("mesh"):
+                r2 = agent.prepare_for_slicer(r.get("stl") or r["mesh"], scale_mm=scale_mm)
+                r["slicer"] = r2
+            results_3d.append(r)
+
+    elif jobs:
+        shots_3d = [j for j in jobs if j.get("_shot_meta", {}).get("3d_needed")]
+        if not shots_3d:
+            shots_3d = jobs[:2]
+        for shot in shots_3d[:3]:
+            p = shot.get("positive", "") or shot.get("_shot_meta", {}).get("vfx", "")
+            if p:
+                logger.info(f"[3D] Shot {shot.get('shot_id','?')} -> 3D")
+                r = agent.run_3d_pipeline(prompt=p, mode=mode,
+                                           scale_mm=scale_mm, logger=logger)
+                results_3d.append(r)
+
+    state["data"]["3d_results"] = results_3d
+    state["completed"].append("3d")
+    save_state(state)
+    ok = sum(1 for r in results_3d if r.get("mesh") or r.get("stl"))
+    logger.info(f"[3D] OK {ok}/{len(results_3d)} modele(s) générés")
+    return {"results": results_3d, "success": ok}
+
+
+# ── PIPELINE PRINCIPAL ────────────────────────────────────────────────
+def run_pipeline(config: dict = None, from_block: str = None,
+                 run_id: str = None) -> dict:
+    init()
+    run_id = run_id or f"maestro_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    logger = get_logger(run_id)
+
+    cfg = config or {}
+    cfg.setdefault("media_type", "anime")
+    cfg.setdefault("duration",   "short")
+    cfg.setdefault("strength",   1.0)
+    cfg.setdefault("width",      1024)
+    cfg.setdefault("height",     1536)
+
+    # ── Director V1.48 — construit l'intention de run ──────────────
+    _director = None  # variable de scope propre — FIX BUG _director
+    if DIRECTOR_OK and get_director:
+        try:
+            _director = get_director(cfg.get("universe", "Ov3rLoRd"))
+            intent    = _director.set_intent(
+                media_type = cfg.get("media_type","anime"),
+                universe   = cfg.get("universe",""),
+                episode    = cfg.get("episode", 1),
+            )
+            logger.info(
+                f"[DIRECTOR] Intent: mode={intent.mode} | "
+                f"seuil={intent.quality_threshold} | "
+                f"arc={intent.emotion_arc}"
+            )
+        except Exception as e:
+            logger.warning(f"[DIRECTOR] Initialisation échouée : {e}")
+            _director = None
+
+    # ── Instancier les agents de contrôle ──────────────────────────
+    critic   = CriticAgent(run_id, logger, use_llm=True)   if CRITIC_OK   else None
+    watchdog = Watchdog(run_id, logger, check_interval=15)  if WATCHDOG_OK else None
+    obs      = create_obs_agent(logger=logger)              if OBS_OK      else None
+    vram     = VRAMManager(logger)                          if VRAM_OK     else None
+    cp_mgr   = get_checkpoint_manager(cfg, logger)         if CP_OK       else None
+
+    if watchdog:
+        watchdog.start()
+    if obs:
+        obs_connected = obs.connect()
+        if obs_connected:
+            logger.info("[OBS] Connecté — enregistrement de session activé")
+    if cp_mgr:
+        latest = cp_mgr.load_latest()
+        if latest and latest.state.value in ("interrupted","failed"):
+            analysis = cp_mgr.analyze_resume(latest)
+            logger.info(f"[CHECKPOINT] Reprise détectée : {analysis['message']}")
+            for block, data in analysis.get("data", {}).items():
+                state["data"][block] = data
+            state["completed"] = analysis.get("skip", [])
+        cp_mgr.new_checkpoint(cfg, run_id=run_id)
+
+    # ── Enregistrement début de run sur la conscience ───────────────
+    run_start_time = time.time()   # FIX BUG 6 : _start_time remplacé par run_start_time
+
+    # ── État ────────────────────────────────────────────────────────
+    state = load_state()
+    if state.get("run_id") != run_id:
+        state = {"run_id": run_id, "current_block": from_block or "sourcing",
+                 "completed": [], "data": {}}
+
+    start_idx = 0
+    if from_block and from_block in BLOCKS:
+        start_idx = BLOCKS.index(from_block)
+    elif state["completed"]:
+        last = state["completed"][-1]
+        if last in BLOCKS:
+            start_idx = BLOCKS.index(last) + 1
+
+    logger.info("="*60)
+    logger.info("    Ov3rLoRd Pipeline V1.49")
+    logger.info(f"  PIPELINE DEMARRE — run_id={run_id}")
+    logger.info(f"  Critique : {'OK ACTIF' if critic   else 'INACTIF'}")
+    logger.info(f"  Watchdog : {'OK ACTIF' if watchdog else 'INACTIF'}")
+    logger.info(f"  Director : {'OK ACTIF' if _director else 'INACTIF'}")
+    logger.info(f"  Bus      : {'OK ACTIF' if BUS_OK   else 'INACTIF'}")
+    logger.info(f"  Blocs    : {' -> '.join(BLOCKS[start_idx:])}")
+    logger.info("="*60)
+    notify(f"Pipeline démarré run={run_id}", logger)
+
+    trend_report = state["data"].get("trend_report", {})
+    script       = state["data"].get("script",       {})
+    shotlist     = state["data"].get("shotlist",      {})
+    jobs         = state["data"].get("jobs",          [])
+    active       = BLOCKS[start_idx:]
+
+    try:
+        if "sourcing"    in active:
+            trend_report = block_sourcing(cfg, state, logger, critic, watchdog, cp_mgr)
+
+        if "scenario"    in active:
+            if not trend_report:
+                logger.error("Pas de TrendReport — arrêt"); return state
+            script = block_scenario(trend_report, cfg, state, logger, critic, watchdog, cp_mgr)
+            if "error" in script:
+                logger.error(f"Scénario échoué : {script['error']} — arrêt")
+                return state
+
+        if "storyboard"  in active:
+            if not script:
+                logger.error("Pas de script — arrêt"); return state
+            shotlist, jobs = block_storyboard(script, cfg, state, logger, critic, watchdog, cp_mgr)
+
+        if "production"  in active:
+            block_production(jobs, cfg, state, logger, critic, watchdog, cp_mgr)
+
+        if "postprod"    in active:
+            block_postprod(shotlist, cfg, state, logger, critic, watchdog, cp_mgr)
+
+        if "3d" in active or cfg.get("mode_3d") not in (None, "", "none"):
+            block_3d(jobs, cfg, state, logger, critic)
+
+    except StopIteration as e:
+        logger.error(f"[MAESTRO] Pipeline arrêté par le Critique : {e}")
+        notify(f"Pipeline stoppé : {e}", logger)
+        return state
+    except KeyboardInterrupt:
+        logger.warning("[MAESTRO] Interruption clavier — état sauvegardé")
+        notify("Pipeline interrompu", logger)
+        return state
+    except Exception as e:
+        logger.error(f"[MAESTRO] Erreur critique : {e}", exc_info=True)
+        notify(f"Erreur : {e}", logger)
+        return state
+    finally:
+        run_duration = time.time() - run_start_time  # FIX BUG 6
+
+        # ── Clôture Director ──────────────────────────────────────
+        if _director:  # FIX BUG _director : variable définie dans ce scope
+            try:
+                dir_summary = _director.end_session()
+                logger.info(
+                    f"[DIRECTOR] Session : {dir_summary.get('blocs_directed',[])} | "
+                    f"mode={dir_summary.get('mode','')}"
+                )
+            except Exception:
+                pass
+
+        # ── Arrêt watchdog + rapport ──────────────────────────────
+        if watchdog:
+            watchdog.stop()
+            try:                                  # FIX BUG : watchdog.report() dans son propre bloc
+                wd_report = watchdog.report()
+                logger.info(
+                    f"[WATCHDOG] Bilan : {wd_report['frames_analyzed']} frames | "
+                    f"echecs={wd_report['frames_failed']} | "
+                    f"ComfyUI uptime={wd_report['comfy_uptime_s']}s"
+                )
+            except Exception as e:
+                logger.warning(f"[WATCHDOG] Rapport indisponible : {e}")
+
+        # ── OBS ───────────────────────────────────────────────────
+        if obs:
+            try:
+                if obs.is_connected():
+                    obs.disconnect()
+            except Exception:
+                pass
+
+        # ── Checkpoint ────────────────────────────────────────────
+        if cp_mgr:
+            if state.get("completed") and len(state["completed"]) >= 5:
+                cp_mgr.mark_completed()
+            else:
+                cp_mgr.save_emergency()
+
+        # ── Critique bilan ────────────────────────────────────────
+        if critic:
+            try:
+                health = critic.health_summary()
+                logger.info(
+                    f"[CRITIQUE] Bilan : {health['total_checks']} vérifications | "
+                    f"score moyen={health['avg_score']} | "
+                    f"santé pipeline={health['pipeline_health']}"
+                )
+            except Exception:
+                pass
+
+        # ── Conscience : enregistrer ce run ───────────────────────
+        if CONSCIENCE_OK and _conscience:
+            try:
+                completed_blocs = state.get("completed", [])
+                critic_health   = {}
+                if critic:
+                    try: critic_health = critic.health_summary()
+                    except Exception: pass
+                _conscience.record_run({
+                    "run_id":          run_id,
+                    "pipeline_health": critic_health.get("pipeline_health", "UNKNOWN"),
+                    "blocs_ok":        len(completed_blocs),
+                    "score_moyen":     critic_health.get("avg_score", 0),
+                    "critic_checks":   critic_health.get("total_checks", 0),
+                    "duration_s":      round(run_duration, 1),
+                    "errors":          [],
+                    "media_type":      cfg.get("media_type","anime"),
+                })
+                _conscience.analyze_and_adapt()
+            except Exception as e:
+                logger.warning(f"[CONSCIENCE] Enregistrement run échoué : {e}")
+
+    clear_state()
+    logger.info("="*60)
+    logger.info(f"PIPELINE TERMINE — run_id={run_id} | duree={run_duration:.0f}s")
+    logger.info("="*60)
+    notify(f"Pipeline terminé ! run={run_id}", logger)
+    return state
+
+
+# ── CLI ───────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Maestro V1.49 — Ov3rLoRd Pipeline")
+    parser.add_argument("--config",     type=str, default=None)
+    parser.add_argument("--from-block", type=str, default=None, choices=BLOCKS)
+    parser.add_argument("--media-type", type=str, default="anime", choices=MEDIA_TYPES)
+    parser.add_argument("--universe",   type=str, default="")
+    parser.add_argument("--episode",    type=int, default=1)
+    parser.add_argument("--lora",       type=str, default="")
+    parser.add_argument("--run-id",     type=str, default=None)
+    args = parser.parse_args()
+
+    cfg = {}
+    if args.config and Path(args.config).exists():
+        with open(args.config, encoding="utf-8") as f:
+            cfg = json.load(f)
+        if isinstance(cfg, list):
+            cfg = {"jobs": cfg, "media_type": "anime"}
+
+    cfg["media_type"] = args.media_type
+    cfg["episode"]    = args.episode
+    if args.universe: cfg["universe"] = args.universe
+    if args.lora:     cfg["lora"]     = args.lora
+    cfg.setdefault("duration", "short")
+    cfg.setdefault("strength", 1.0)
+    cfg.setdefault("width",    1024)
+    cfg.setdefault("height",   1536)
+
+    run_pipeline(config=cfg, from_block=args.from_block, run_id=args.run_id)

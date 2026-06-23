@@ -1,0 +1,13 @@
+{
+  "name": "transmedia_publisher",
+  "version": "V1.70",
+  "checksum": "5aada01aab5756a8",
+  "lines": 343,
+  "dependencies": [
+    "overlord_utils",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.748629",
+  "path": "agents\\transmedia_publisher.py"
+}

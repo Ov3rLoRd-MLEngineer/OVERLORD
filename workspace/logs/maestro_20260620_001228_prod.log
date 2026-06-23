@@ -1,0 +1,42 @@
+2026-06-20 00:13:09 [INFO    ] [SUPERVISOR] Batch demarre : 8 jobs | run_id=maestro_20260620_001228_prod
+2026-06-20 00:13:09 [INFO    ] [SUPERVISOR] Job 1/8 | hash=5fe455d8
+2026-06-20 00:13:09 [ERROR   ] [SUPERVISOR] Exception job 1 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:14 [ERROR   ] [SUPERVISOR] Exception job 1 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:19 [ERROR   ] [SUPERVISOR] Exception job 1 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:24 [ERROR   ] [SUPERVISOR] Job 1 abandonne
+2026-06-20 00:13:24 [INFO    ] [SUPERVISOR] Job 2/8 | hash=f0549e86
+2026-06-20 00:13:24 [ERROR   ] [SUPERVISOR] Exception job 2 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:29 [ERROR   ] [SUPERVISOR] Exception job 2 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:34 [ERROR   ] [SUPERVISOR] Exception job 2 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:39 [ERROR   ] [SUPERVISOR] Job 2 abandonne
+2026-06-20 00:13:39 [INFO    ] [SUPERVISOR] Job 3/8 | hash=61b014c6
+2026-06-20 00:13:39 [ERROR   ] [SUPERVISOR] Exception job 3 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:44 [ERROR   ] [SUPERVISOR] Exception job 3 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:49 [ERROR   ] [SUPERVISOR] Exception job 3 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:54 [ERROR   ] [SUPERVISOR] Job 3 abandonne
+2026-06-20 00:13:54 [INFO    ] [SUPERVISOR] Job 4/8 | hash=a0530325
+2026-06-20 00:13:54 [ERROR   ] [SUPERVISOR] Exception job 4 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:13:59 [ERROR   ] [SUPERVISOR] Exception job 4 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:05 [ERROR   ] [SUPERVISOR] Exception job 4 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:10 [ERROR   ] [SUPERVISOR] Job 4 abandonne
+2026-06-20 00:14:10 [INFO    ] [SUPERVISOR] Job 5/8 | hash=c0ac7c1b
+2026-06-20 00:14:10 [ERROR   ] [SUPERVISOR] Exception job 5 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:15 [ERROR   ] [SUPERVISOR] Exception job 5 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:20 [ERROR   ] [SUPERVISOR] Exception job 5 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:25 [ERROR   ] [SUPERVISOR] Job 5 abandonne
+2026-06-20 00:14:25 [INFO    ] [SUPERVISOR] Job 6/8 | hash=5c5024d7
+2026-06-20 00:14:25 [ERROR   ] [SUPERVISOR] Exception job 6 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:30 [ERROR   ] [SUPERVISOR] Exception job 6 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:35 [ERROR   ] [SUPERVISOR] Exception job 6 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:40 [ERROR   ] [SUPERVISOR] Job 6 abandonne
+2026-06-20 00:14:40 [INFO    ] [SUPERVISOR] Job 7/8 | hash=0f478d0e
+2026-06-20 00:14:40 [ERROR   ] [SUPERVISOR] Exception job 7 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:45 [ERROR   ] [SUPERVISOR] Exception job 7 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:50 [ERROR   ] [SUPERVISOR] Exception job 7 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:14:55 [ERROR   ] [SUPERVISOR] Job 7 abandonne
+2026-06-20 00:14:55 [INFO    ] [SUPERVISOR] Job 8/8 | hash=5acccffd
+2026-06-20 00:14:55 [ERROR   ] [SUPERVISOR] Exception job 8 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:15:00 [ERROR   ] [SUPERVISOR] Exception job 8 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:15:05 [ERROR   ] [SUPERVISOR] Exception job 8 : 400 Client Error: Bad Request for url: http://127.0.0.1:8188/prompt
+2026-06-20 00:15:10 [ERROR   ] [SUPERVISOR] Job 8 abandonne
+2026-06-20 00:15:10 [INFO    ] [SUPERVISOR] Batch termine : 0/8 succes

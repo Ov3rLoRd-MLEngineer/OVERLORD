@@ -1,0 +1,18 @@
+{
+  "style_name": "evangelion",
+  "label": "Neon Genesis Evangelion",
+  "run_id": "20260623_032618",
+  "seed": 1782177978,
+  "cfg": 7.5,
+  "steps": 35,
+  "width": 1344,
+  "height": 1984,
+  "sampler": "dpmpp_2m_sde",
+  "scheduler": "karras",
+  "checkpoint": "fabricatedXL_v70.safetensors",
+  "positive": "neon genesis evangelion art style, gainax animation, dark atmospheric, desaturated palette, heavy shadows, angular character design, expressive eyes, industrial backgrounds, dramatic lighting, film grain, 1990s anime aesthetic, masterpiece, best quality",
+  "negative": "bright colors, cheerful, moe style, chibi, 3d render, photorealistic, western cartoon, bad quality, blurry, watermark",
+  "image_path": "workspace\\style\\style_dna_20260623_032618.png",
+  "json_path": "workspace\\style\\style_dna_20260623_032618.json",
+  "success": true
+}

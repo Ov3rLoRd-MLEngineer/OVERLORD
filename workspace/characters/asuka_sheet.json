@@ -1,0 +1,73 @@
+{
+  "name": "asuka",
+  "display": "Asuka Langley Soryu",
+  "seed": 2567081819,
+  "cfg": 7.0,
+  "steps": 35,
+  "sampler": "dpmpp_2m_sde",
+  "scheduler": "karras",
+  "vae": "taesdxl",
+  "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+  "lora_weight": 0.75,
+  "width": 1344,
+  "height": 1984,
+  "checkpoint": "fabricatedXL_v70.safetensors",
+  "production_mode": false,
+  "poses": {
+    "face": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_face.png",
+      "filename": "asuka_face.png",
+      "label": "Face"
+    },
+    "profile_left": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_profile_left.png",
+      "filename": "asuka_profile_left.png",
+      "label": "Profil gauche"
+    },
+    "back": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_back.png",
+      "filename": "asuka_back.png",
+      "label": "Dos"
+    },
+    "threequarters_front": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_threequarters_front.png",
+      "filename": "asuka_threequarters_front.png",
+      "label": "Trois-quarts face"
+    },
+    "threequarters_back": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_threequarters_back.png",
+      "filename": "asuka_threequarters_back.png",
+      "label": "Trois-quarts dos"
+    },
+    "top_down": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_top_down.png",
+      "filename": "asuka_top_down.png",
+      "label": "Dessus"
+    },
+    "expression_neutral": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_expr_neutral.png",
+      "filename": "asuka_expr_neutral.png",
+      "label": "Expression neutre"
+    },
+    "expression_anger": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_expr_anger.png",
+      "filename": "asuka_expr_anger.png",
+      "label": "Expression colere"
+    },
+    "expression_sadness": {
+      "success": true,
+      "path": "workspace\\characters\\asuka_expr_sadness.png",
+      "filename": "asuka_expr_sadness.png",
+      "label": "Expression tristesse"
+    }
+  },
+  "success": true
+}

@@ -1,0 +1,14 @@
+{
+  "name": "style_evolution",
+  "version": "V1.47",
+  "checksum": "3aa0e90106579912",
+  "lines": 251,
+  "dependencies": [
+    "style_evolution",
+    "style_dna",
+    "overlord_utils"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.656484",
+  "path": "agents\\style_evolution.py"
+}

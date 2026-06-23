@@ -1,0 +1,10 @@
+{
+  "name": "pipeline_constitution",
+  "version": "V?.?",
+  "checksum": "8cf34458ce08ab1c",
+  "lines": 502,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.292194",
+  "path": "agents\\pipeline_constitution.py"
+}

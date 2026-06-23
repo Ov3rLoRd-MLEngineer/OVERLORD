@@ -1,0 +1,7 @@
+{
+  "handoff": "storyboard->production",
+  "verdict": "halt",
+  "score": 10,
+  "reason": "Degradation detectee sur storyboard->production : 3 scores consecutifs < 40 : [10, 10, 10]",
+  "ts": "2026-06-19T21:43:19.599253+00:00"
+}

@@ -1,0 +1,71 @@
+"""
+build_exe.py — Génère MaestroProduction.exe via PyInstaller
+Usage : python build_exe.py
+"""
+import subprocess
+import sys
+import shutil
+from pathlib import Path
+
+print("="*55)
+print("  Ov3rLoRd — Build EXE  (PyInstaller)")
+print("="*55)
+
+# Vérifier PyInstaller
+try:
+    import PyInstaller
+    print(f"PyInstaller {PyInstaller.__version__} détecté ✓")
+except ImportError:
+    print("PyInstaller non trouvé. Installation...")
+    subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
+
+# Fichiers à embarquer dans l'exe
+add_data = [
+    ("agents",                   "agents"),
+    ("Combined_V35_API.json",    "."),
+    ("node_catalog.json",        "."),
+    ("config.json",              "."),
+    ("settings.json",            "."),
+    ("maestro.py",               "."),
+    ("oracle_interface.py",      "."),
+    ("self_improve.py",          "."),
+    ("overlord_utils.py",        "."),
+    ("test_pipeline.py",         "."),
+    ("narrative_memory.py",      "."),
+    ("style_dna.py",             "."),
+]
+
+# Construire les arguments --add-data
+sep = ";" if sys.platform == "win32" else ":"
+data_args = []
+for src, dst in add_data:
+    if Path(src).exists():
+        data_args += ["--add-data", f"{src}{sep}{dst}"]
+    else:
+        print(f"  AVERTISSEMENT : {src} non trouvé, ignoré")
+
+cmd = [
+    sys.executable, "-m", "PyInstaller",
+    "--noconfirm",
+    "--onefile",
+    "--console",
+    "--name", "MaestroProduction_v145",
+    "--clean",
+] + data_args + ["launcher.py"]
+
+print(f"\nCommande : {' '.join(cmd)}\n")
+result = subprocess.run(cmd)
+
+if result.returncode == 0:
+    exe = Path("dist") / "MaestroProduction.exe"
+    print(f"\n{'='*55}")
+    print(f"  BUILD RÉUSSI !")
+    print(f"  Exécutable : {exe.resolve()}")
+    print(f"{'='*55}")
+    print("\nUtilisation :")
+    print("  MaestroProduction.exe                         (interface graphique)")
+    print("  MaestroProduction.exe --media-type anime      (pipeline direct)")
+    print("  MaestroProduction.exe --from-block production (reprendre)")
+else:
+    print(f"\n  BUILD ÉCHOUÉ (code={result.returncode})")
+    print("  Vérifie que tous les fichiers sont présents dans ce dossier.")

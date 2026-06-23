@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ov3rLoRd HUD V1.70</title>
+<style>
+:root {
+  /* Ov3rLoRd Design System V1.70 — synchronisé avec ov_design_system.py */
+  --bg:          #0a0a0f;
+  --panel:       #12121a;
+  --card:        #15151f;
+  --border:      #1e1e2e;
+  --border-act:  #7c3aed;
+  --text:        #c0c0d0;
+  --dim:         #505060;
+  --bright:      #e8e8f0;
+  --title:       #e2e8f0;
+  --accent:      #7c3aed;
+  --accent2:     #9d5cf0;
+  --panel:     #12121a;
+  --border:    #1e1e2e;
+  --text:      #c0c0d0;
+  --dim:       #606070;
+  --accent:    #7c3aed;
+  --accent2:   #9d5cf0;
+  --ok:        #10b981;
+  --warn:      #f59e0b;
+  --err:       #ef4444;
+  --info:      #3b82f6;
+  --title:     #e2e8f0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 13px;
+  min-height: 100vh;
+  padding: 12px;
+}
+/* ── Header ── */
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+}
+header h1 { color: var(--accent); font-size: 1.1em; letter-spacing: 2px; }
+#status-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--dim); display: inline-block; margin-right: 8px;
+  transition: background .3s;
+}
+#status-dot.running { background: var(--ok); animation: pulse 1.5s infinite; }
+#status-dot.error   { background: var(--err); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+.card h2 {
+  color: var(--accent);
+  font-size: .75em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+}
+.metric {
+  display: flex; justify-content: space-between; align-items: center;
+  margin: 5px 0; font-size: .82em;
+}
+.metric .key { color: var(--dim); }
+.metric .val { color: var(--text); font-weight: bold; }
+.metric .val.ok   { color: var(--ok); }
+.metric .val.warn { color: var(--warn); }
+.metric .val.err  { color: var(--err); }
+.metric .val.info { color: var(--info); }
+
+/* ── Progress bar ── */
+.bar-wrap { background: var(--border); border-radius: 4px; height: 6px; margin: 4px 0; overflow: hidden; }
+.bar { height: 100%; border-radius: 4px; transition: width .5s; background: var(--accent); }
+.bar.ok { background: var(--ok); }
+.bar.warn { background: var(--warn); }
+.bar.err  { background: var(--err); }
+
+/* ── Logs ── */
+#log-container {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+#log-container h2 { color: var(--accent); font-size:.75em; letter-spacing:1px;
+  text-transform:uppercase; margin-bottom:8px; }
+#log {
+  height: 180px; overflow-y: auto; font-size: .75em; line-height: 1.5;
+}
+.log-line           { color: var(--dim); }
+.log-line.INFO      { color: var(--text); }
+.log-line.WARNING   { color: var(--warn); }
+.log-line.ERROR     { color: var(--err); }
+.log-line.PASS      { color: var(--ok); }
+
+/* ── Controls ── */
+.controls {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+}
+input[type=text] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: .85em;
+  flex: 1; min-width: 200px;
+}
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: .85em;
+  transition: background .2s;
+}
+button:hover { background: var(--accent2); }
+button.ok    { background: var(--ok); }
+button.ok:hover { background: #059669; }
+button.err   { background: var(--err); }
+button.err:hover { background: #dc2626; }
+button.info  { background: var(--info); }
+
+/* ── History ── */
+#history {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+#history h2 { color:var(--accent); font-size:.75em; letter-spacing:1px;
+  text-transform:uppercase; margin-bottom:8px; }
+#history-table { width:100%; border-collapse:collapse; font-size:.78em; }
+#history-table th { color:var(--dim); text-align:left; padding:4px 8px;
+  border-bottom:1px solid var(--border); }
+#history-table td { padding:4px 8px; border-bottom:1px solid var(--border); }
+#history-table tr:hover td { background: var(--bg); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>◈ OV3RLORD HUD <span style="color:var(--dim);font-size:.8em">V1.70</span></h1>
+  <div style="display:flex;align-items:center;gap:16px">
+    <span><span id="status-dot"></span><span id="status-text" style="color:var(--dim)">Connexion...</span></span>
+    <span style="color:var(--dim);font-size:.8em" id="last-update">—</span>
+  </div>
+</header>
+
+<div class="grid">
+  <!-- Pipeline -->
+  <div class="card">
+    <h2>🎬 Pipeline</h2>
+    <div class="metric"><span class="key">État</span><span class="val" id="p-state">—</span></div>
+    <div class="metric"><span class="key">Run ID</span><span class="val info" id="p-runid" style="font-size:.75em">—</span></div>
+    <div class="metric"><span class="key">Scénario</span><span class="val" id="p-scenario">—</span></div>
+    <div class="metric"><span class="key">Univers</span><span class="val info" id="p-universe">—</span></div>
+    <div class="metric"><span class="key">Images OK</span><span class="val ok" id="p-images">—</span></div>
+    <div class="metric"><span class="key">Échecs</span><span class="val err" id="p-failed">—</span></div>
+    <div class="metric"><span class="key">Post-prod</span><span class="val" id="p-postprod">—</span></div>
+  </div>
+
+  <!-- Qualité -->
+  <div class="card">
+    <h2>🎯 Qualité</h2>
+    <div class="metric"><span class="key">Score jury</span><span class="val" id="q-score">—</span></div>
+    <div class="bar-wrap"><div class="bar" id="q-bar" style="width:0%"></div></div>
+    <div class="metric"><span class="key">Dernier PASS</span><span class="val" id="q-pass">—</span></div>
+    <div class="metric"><span class="key">Style drift</span><span class="val" id="q-drift">—</span></div>
+    <div class="metric"><span class="key">Gate valid</span><span class="val" id="q-gate">—</span></div>
+    <div class="metric"><span class="key">Prompts LIB</span><span class="val info" id="q-prompts">—</span></div>
+  </div>
+
+  <!-- GPU -->
+  <div class="card">
+    <h2>⚡ GPU</h2>
+    <div class="metric"><span class="key">Modèle</span><span class="val info" id="g-name">—</span></div>
+    <div class="metric"><span class="key">VRAM</span><span class="val" id="g-vram">—</span></div>
+    <div class="bar-wrap"><div class="bar" id="g-vram-bar" style="width:0%"></div></div>
+    <div class="metric"><span class="key">Température</span><span class="val" id="g-temp">—</span></div>
+    <div class="metric"><span class="key">Utilisation</span><span class="val" id="g-util">—</span></div>
+    <div class="bar-wrap"><div class="bar ok" id="g-util-bar" style="width:0%"></div></div>
+    <div class="metric"><span class="key">Puissance</span><span class="val" id="g-power">—</span></div>
+  </div>
+
+  <!-- Système -->
+  <div class="card">
+    <h2>💻 Système</h2>
+    <div class="metric"><span class="key">RAM</span><span class="val" id="s-ram">—</span></div>
+    <div class="bar-wrap"><div class="bar" id="s-ram-bar" style="width:0%"></div></div>
+    <div class="metric"><span class="key">CPU</span><span class="val" id="s-cpu">—</span></div>
+    <div class="bar-wrap"><div class="bar ok" id="s-cpu-bar" style="width:0%"></div></div>
+    <div class="metric"><span class="key">Dream mode</span><span class="val" id="s-dream">—</span></div>
+    <div class="metric"><span class="key">Runs dream</span><span class="val info" id="s-dream-runs">—</span></div>
+    <div class="metric"><span class="key">Profil perf</span><span class="val" id="s-profile">—</span></div>
+  </div>
+
+  <!-- Narrative -->
+  <div class="card">
+    <h2>🧠 Mémoire</h2>
+    <div class="metric"><span class="key">Personnages</span><span class="val info" id="n-chars">—</span></div>
+    <div class="metric"><span class="key">Épisodes</span><span class="val info" id="n-eps">—</span></div>
+    <div class="metric"><span class="key">LoRas dispo</span><span class="val ok" id="n-loras">—</span></div>
+    <div class="metric"><span class="key">Style seed</span><span class="val" id="n-seed">—</span></div>
+    <div class="metric"><span class="key">Arc émot.</span><span class="val" id="n-arc">—</span></div>
+    <div class="metric"><span class="key">Sourcing</span><span class="val" id="n-sourcing">—</span></div>
+  </div>
+
+  <!-- Alertes -->
+  <div class="card">
+    <h2>⚠ Alertes</h2>
+    <div id="alerts-list" style="font-size:.8em;color:var(--dim)">Aucune alerte</div>
+  </div>
+</div>
+
+<!-- Logs -->
+<div id="log-container">
+  <h2>📋 Logs Pipeline</h2>
+  <div id="log"></div>
+</div>
+
+<!-- Historique runs -->
+<div id="history">
+  <h2>📊 Historique des runs</h2>
+  <table id="history-table">
+    <thead>
+      <tr><th>Date</th><th>Scénario</th><th>Images</th><th>Score</th><th>Vidéo</th></tr>
+    </thead>
+    <tbody id="history-body"><tr><td colspan="5" style="color:var(--dim)">Chargement...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <input type="text" id="universe-input" placeholder="Universe..." value="evangelion battle mecha girl">
+  <input type="number" id="batch-input" value="1" min="1" max="10" style="width:60px;flex:none">
+  <button class="ok" onclick="startRun()">▶ Lancer</button>
+  <button class="err" onclick="stopRun()">■ Stop</button>
+  <button class="info" onclick="refresh()">⟳ Refresh</button>
+  <button onclick="openLauncher()">🖥 Launcher</button>
+  <span style="color:var(--dim);font-size:.8em;margin-left:8px">
+    Accès distant : <span id="server-url" style="color:var(--info)">http://localhost:5757</span>
+  </span>
+</div>
+
+<script>
+const API = '';  // même origine
+
+async function fetchJSON(url) {
+  try {
+    const r = await fetch(API + url);
+    if (!r.ok) throw new Error(r.status);
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+function setVal(id, val, cls='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val ?? '—';
+  if (cls) { el.className = 'val ' + cls; }
+}
+
+function setBar(id, pct, cls='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.width = Math.min(100, pct||0) + '%';
+  if (cls) el.className = 'bar ' + cls;
+}
+
+function scoreClass(s) {
+  return s >= 85 ? 'ok' : s >= 70 ? 'warn' : 'err';
+}
+
+async function refresh() {
+  const [status, gpu, bus, history] = await Promise.all([
+    fetchJSON('/api/status'),
+    fetchJSON('/api/gpu'),
+    fetchJSON('/api/bus'),
+    fetchJSON('/api/history'),
+  ]);
+
+  document.getElementById('last-update').textContent =
+    new Date().toLocaleTimeString();
+
+  if (status) {
+    const running = status.pipeline_running;
+    const dot  = document.getElementById('status-dot');
+    const stxt = document.getElementById('status-text');
+    dot.className  = running ? 'running' : '';
+    stxt.textContent = running ? 'EN COURS' : 'INACTIF';
+    stxt.style.color = running ? 'var(--ok)' : 'var(--dim)';
+
+    setVal('p-state',    running ? '▶ EN COURS' : '■ INACTIF',
+           running ? 'ok' : '');
+    setVal('p-runid',    status.pipeline_meta?.run_id || '—');
+    setVal('p-scenario', status.scenario_title || '—');
+    setVal('p-universe', status.pipeline_meta?.universe || '—');
+    setVal('p-images',   status.images_done ?? 0, 'ok');
+    setVal('p-failed',   status.images_failed ?? 0,
+           (status.images_failed||0) > 0 ? 'err' : '');
+    setVal('p-postprod', status.postprod_status || '—');
+
+    const score = status.last_score || 0;
+    setVal('q-score', score.toFixed(1) + '/100', scoreClass(score));
+    setBar('q-bar',   score, scoreClass(score));
+    setVal('q-prompts', status.prompts_library || 0);
+  }
+
+  if (gpu) {
+    setVal('g-name',  gpu.name || '?', 'info');
+    setVal('g-vram',  `${gpu.vram_used||0}/${gpu.vram_total||0}MB (${gpu.vram_pct||0}%)`,
+           (gpu.vram_pct||0) > 88 ? 'warn' : '');
+    setBar('g-vram-bar', gpu.vram_pct||0,
+           (gpu.vram_pct||0) > 88 ? 'warn' : '');
+    setVal('g-temp',  `${gpu.temp_c||0}°C`,
+           (gpu.temp_c||0) > 82 ? 'err' : (gpu.temp_c||0) > 75 ? 'warn' : 'ok');
+    setVal('g-util',  `${gpu.util_pct||0}%`);
+    setBar('g-util-bar', gpu.util_pct||0, 'ok');
+    setVal('g-power', `${(gpu.power_w||0).toFixed(0)}W`);
+  }
+
+  if (bus) {
+    setVal('q-pass',  bus['reviewer.last_pass'] ? '✓ OUI' : '✗ NON',
+           bus['reviewer.last_pass'] ? 'ok' : 'warn');
+    setVal('q-drift', (bus['style.drift_count']||0) + ' ruptures',
+           (bus['style.drift_count']||0) > 2 ? 'warn' : 'ok');
+    setVal('q-gate',  bus['quality_gate.last_valid'] ? '✓ VALIDE' : '✗ CORROMPU',
+           bus['quality_gate.last_valid'] ? 'ok' : 'err');
+
+    const ramPct = bus['hardware.ram_pct'] || 0;
+    const cpuPct = bus['hardware.cpu_pct'] || 0;
+    setVal('s-ram',  ramPct ? `${ramPct.toFixed(0)}%` : '—',
+           ramPct > 85 ? 'warn' : '');
+    setBar('s-ram-bar', ramPct, ramPct > 85 ? 'warn' : '');
+    setVal('s-cpu',  cpuPct ? `${cpuPct.toFixed(0)}%` : '—');
+    setBar('s-cpu-bar', cpuPct, 'ok');
+    setVal('s-dream', bus['dream.total_runs'] !== undefined ? '▶ ACTIF' : '—',
+           bus['dream.total_runs'] !== undefined ? 'ok' : '');
+    setVal('s-dream-runs', bus['dream.total_runs'] ?? '—');
+    setVal('s-profile', bus['hardware.power_profile'] || '—');
+
+    setVal('n-chars',   bus['narrative.characters_count'] ?? '—', 'info');
+    setVal('n-eps',     bus['narrative.episodes_count']   ?? '—', 'info');
+    setVal('n-seed',    bus['style.base_seed']            ?? '—');
+    setVal('n-arc',     bus['style.emotion_arc']          ?? '—');
+    setVal('n-sourcing', bus['auto_sourcing.prompts_total'] ?
+           `${bus['auto_sourcing.prompts_total']} prompts` : '—');
+
+    // Alertes hardware
+    const alertsEl = document.getElementById('alerts-list');
+    const alerts = [];
+    if ((bus['hardware.gpu_temp']||0) > 80) alerts.push(`🔥 GPU ${bus['hardware.gpu_temp']}°C`);
+    if ((bus['hardware.ram_pct'] ||0) > 85) alerts.push(`⚠ RAM ${bus['hardware.ram_pct']}%`);
+    if ((bus['hardware.gpu_vram']||0) > 90) alerts.push(`⚠ VRAM ${bus['hardware.gpu_vram']}%`);
+    if ((bus['quality_gate.last_errors']||0) > 0)
+      alerts.push(`✗ ${bus['quality_gate.last_errors']} erreurs workflow`);
+    alertsEl.innerHTML = alerts.length
+      ? alerts.map(a => `<div style="color:var(--warn);margin:3px 0">${a}</div>`).join('')
+      : '<span style="color:var(--ok)">✓ Aucune alerte</span>';
+  }
+
+  // Logs
+  const logs = await fetchJSON('/api/logs?n=40');
+  if (logs?.lines) {
+    const logDiv = document.getElementById('log');
+    logDiv.innerHTML = logs.lines.map(l => {
+      const cls = l.includes('[ERROR') ? 'ERROR' :
+                  l.includes('[WARNING') ? 'WARNING' :
+                  l.includes('PASS') ? 'PASS' :
+                  l.includes('[INFO') ? 'INFO' : '';
+      return `<div class="log-line ${cls}">${escHtml(l)}</div>`;
+    }).join('');
+    logDiv.scrollTop = logDiv.scrollHeight;
+  }
+
+  // Historique
+  if (history?.runs) {
+    const tbody = document.getElementById('history-body');
+    tbody.innerHTML = history.runs.slice(-10).reverse().map(r =>
+      `<tr>
+        <td style="color:var(--dim)">${(r.timestamp||'').slice(0,16).replace('T',' ')}</td>
+        <td>${escHtml(r.scenario||'?')}</td>
+        <td class="${(r.images||0)>=8?'val ok':'val warn'}">${r.images||0}</td>
+        <td class="val ${scoreClass(r.score||0)}">${(r.score||0).toFixed(0)}</td>
+        <td>${r.video ? '✓' : '—'}</td>
+      </tr>`
+    ).join('') || '<tr><td colspan="5" style="color:var(--dim)">Aucun run enregistré</td></tr>';
+  }
+
+  // URL serveur
+  document.getElementById('server-url').textContent = window.location.host;
+}
+
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function startRun() {
+  const universe = document.getElementById('universe-input').value;
+  const batch    = parseInt(document.getElementById('batch-input').value) || 1;
+  const r = await fetch(API + '/api/run', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({universe, batch, media_type: 'anime', use_prompt_library: true})
+  });
+  const data = await r.json();
+  if (data.status === 'started') {
+    document.getElementById('status-text').textContent = 'Démarrage...';
+  } else {
+    alert(data.error || 'Erreur lors du lancement');
+  }
+}
+
+async function stopRun() {
+  if (confirm('Arrêter le run en cours ?')) {
+    await fetch(API + '/api/stop', {method:'POST'});
+  }
+}
+
+function openLauncher() {
+  alert('Lancer : python overlord_launcher.py\nsur la machine Ov3rLoRd');
+}
+
+// Refresh auto toutes les 2s
+setInterval(refresh, 2000);
+refresh();
+</script>
+</body>
+</html>

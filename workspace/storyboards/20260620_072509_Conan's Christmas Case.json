@@ -1,0 +1,93 @@
+{
+  "title": "Conan's Christmas Case",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene": 1,
+      "description": "Opening scene with Conan and friends in the detective office",
+      "positive": "cheerful atmosphere, warm colors, good compositions",
+      "negative": "lack of detail, flat colors",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S02",
+      "scene": 1,
+      "description": "Close-up of Conan receiving a mysterious letter",
+      "positive": "dramatic lighting, clear focus on Conan's face",
+      "negative": "too dark, lack of detail in background",
+      "cfg_scale": 7.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S03",
+      "scene": 1,
+      "description": "Conan and friends discussing the contents of the letter",
+      "positive": "dynamic framing, expressive facial expressions",
+      "negative": "some characters slightly overlapping",
+      "cfg_scale": 6.5,
+      "steps": 24,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S04",
+      "scene": 2,
+      "description": "Conan and friends investigating a Christmas market",
+      "positive": "vibrant colors, busy background, festive atmosphere",
+      "negative": "possible clipping of characters with the environment",
+      "cfg_scale": 7.0,
+      "steps": 30,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S05",
+      "scene": 2,
+      "description": "Conan and friends questioning a suspect at the market",
+      "positive": "tense atmosphere, dramatic framing, good use of shadows",
+      "negative": "some facial features may be exaggerated",
+      "cfg_scale": 7.5,
+      "steps": 32,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S06",
+      "scene": 3,
+      "description": "Conan and friends uncovering a key clue",
+      "positive": "dramatic lighting, emotional reveal, well-composed shot",
+      "negative": "possible lack of detail in background",
+      "cfg_scale": 8.0,
+      "steps": 34,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S07",
+      "scene": 3,
+      "description": "Conan and friends confronting the culprit",
+      "positive": "high tension, dynamic framing, clear character actions",
+      "negative": "potential overuse of shadows",
+      "cfg_scale": 7.0,
+      "steps": 28,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "shot_id": "S08",
+      "scene": 3,
+      "description": "Resolution of the case and Conan's reward",
+      "positive": "warm and happy ending, good use of compositions",
+      "negative": "potential for a cluttered background",
+      "cfg_scale": 6.5,
+      "steps": 24,
+      "width": 1024,
+      "height": 1536
+    }
+  ]
+}

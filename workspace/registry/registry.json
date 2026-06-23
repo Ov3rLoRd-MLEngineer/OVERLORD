@@ -1,0 +1,1096 @@
+{
+  "last_scan": {
+    "timestamp": "2026-06-23T01:30:01.688814",
+    "total": 117,
+    "updated": 116,
+    "syntax_errors": [],
+    "agents": {
+      "agent_3d_modeler": {
+        "version": "V?.?",
+        "checksum": "5e87b1cbb23f97c8",
+        "lines": 1007,
+        "ok": true,
+        "deps": []
+      },
+      "agent_overclock": {
+        "version": "V1.70",
+        "checksum": "37c4f6bc3f759a51",
+        "lines": 413,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "agent_registry": {
+        "version": "V1.70",
+        "checksum": "f368060442e0fb1a",
+        "lines": 356,
+        "ok": true,
+        "deps": [
+          "agent_registry"
+        ]
+      },
+      "agent_translator": {
+        "version": "V1.70",
+        "checksum": "e8ec263a48f52190",
+        "lines": 300,
+        "ok": true,
+        "deps": [
+          "agent_translator",
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "anime_palette_generator": {
+        "version": "V1.70",
+        "checksum": "224d8c74506f0826",
+        "lines": 631,
+        "ok": true,
+        "deps": []
+      },
+      "api_server": {
+        "version": "V1.49",
+        "checksum": "2aead2fc0f87d7c1",
+        "lines": 187,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "asset_library": {
+        "version": "V1.46",
+        "checksum": "d2a8e92acc891916",
+        "lines": 263,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "audience_analyzer": {
+        "version": "V1.47",
+        "checksum": "a59888d0af5e70a9",
+        "lines": 243,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "audience_analyzer"
+        ]
+      },
+      "audio_compositor": {
+        "version": "V1.70",
+        "checksum": "ea21a03f3206ab66",
+        "lines": 309,
+        "ok": true,
+        "deps": []
+      },
+      "auto_sourcing": {
+        "version": "V1.50",
+        "checksum": "35f5555f10b32e3a",
+        "lines": 309,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "sourcing",
+          "context_bus"
+        ]
+      },
+      "benchmark_arena": {
+        "version": "V1.47",
+        "checksum": "db89ef2d942bc12f",
+        "lines": 290,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "cost_tracker",
+          "benchmark_arena"
+        ]
+      },
+      "build_launcher": {
+        "version": "V?.?",
+        "checksum": "24df9a81a6711206",
+        "lines": 54,
+        "ok": true,
+        "deps": []
+      },
+      "build_maintenance_hub": {
+        "version": "V1.49",
+        "checksum": "725fa3949a5d8111",
+        "lines": 65,
+        "ok": true,
+        "deps": []
+      },
+      "capture": {
+        "version": "V?.?",
+        "checksum": "803745a0ca6a15b7",
+        "lines": 224,
+        "ok": true,
+        "deps": []
+      },
+      "character_designer": {
+        "version": "V1.70",
+        "checksum": "403f39dfd03bb268",
+        "lines": 450,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "narrative_memory",
+          "context_bus"
+        ]
+      },
+      "checkpoint_manager": {
+        "version": "V1.49",
+        "checksum": "e55f207ed0085dab",
+        "lines": 383,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "comfy_autoconfig": {
+        "version": "V1.49",
+        "checksum": "4335748a30c6bb32",
+        "lines": 156,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "config_manager": {
+        "version": "V1.70",
+        "checksum": "8a28bd4fba23fd7d",
+        "lines": 340,
+        "ok": true,
+        "deps": [
+          "config_manager"
+        ]
+      },
+      "context_bus": {
+        "version": "V1.49o",
+        "checksum": "503440ef34811552",
+        "lines": 174,
+        "ok": true,
+        "deps": []
+      },
+      "cost_tracker": {
+        "version": "V1.46",
+        "checksum": "856888cca227f5c8",
+        "lines": 202,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "critic": {
+        "version": "V1.49p",
+        "checksum": "3ed8792db71cd48a",
+        "lines": 282,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "deploy": {
+        "version": "V1.49",
+        "checksum": "ca260157057d68db",
+        "lines": 118,
+        "ok": true,
+        "deps": []
+      },
+      "director": {
+        "version": "V1.48",
+        "checksum": "086c7441aa381f4a",
+        "lines": 511,
+        "ok": true,
+        "deps": [
+          "v130_emotion_engine",
+          "pipeline_conscience",
+          "context_bus",
+          "director",
+          "overlord_utils",
+          "v130_world_model",
+          "v130_generative_world",
+          "v130_intelligence_ext",
+          "v130_agent_personality"
+        ]
+      },
+      "dream_mode": {
+        "version": "V1.70",
+        "checksum": "9bd9b45853416bc7",
+        "lines": 301,
+        "ok": true,
+        "deps": [
+          "config_manager",
+          "context_bus"
+        ]
+      },
+      "episode_packager": {
+        "version": "V1.49",
+        "checksum": "090d5440f33dcb65",
+        "lines": 350,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "style_dna",
+          "context_bus"
+        ]
+      },
+      "episode_planner": {
+        "version": "V1.70",
+        "checksum": "e806777ae11bb353",
+        "lines": 379,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "character_designer",
+          "narrative_memory",
+          "context_bus"
+        ]
+      },
+      "error_recovery": {
+        "version": "V1.47",
+        "checksum": "8bb9b58173ab910c",
+        "lines": 295,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "error_recovery",
+          "comfy_autoconfig"
+        ]
+      },
+      "gpu_optimizer": {
+        "version": "V1.70",
+        "checksum": "de83a65327a70ab2",
+        "lines": 303,
+        "ok": true,
+        "deps": [
+          "config_manager",
+          "gpu_optimizer"
+        ]
+      },
+      "gpu_scheduler": {
+        "version": "V?.?",
+        "checksum": "2953c45ea5044f80",
+        "lines": 484,
+        "ok": true,
+        "deps": []
+      },
+      "grok_client": {
+        "version": "V1.50",
+        "checksum": "58e0dbfa2ec779e0",
+        "lines": 101,
+        "ok": true,
+        "deps": []
+      },
+      "intent_parser": {
+        "version": "V1.70",
+        "checksum": "0a997eeff95181c0",
+        "lines": 370,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "intent_parser",
+          "context_bus"
+        ]
+      },
+      "kaizen_analyzer": {
+        "version": "V1.70",
+        "checksum": "2942be59a44c766e",
+        "lines": 395,
+        "ok": true,
+        "deps": [
+          "config_manager",
+          "context_bus"
+        ]
+      },
+      "learning_agent": {
+        "version": "V?.?",
+        "checksum": "7327ecc3de03ddae",
+        "lines": 943,
+        "ok": true,
+        "deps": []
+      },
+      "legacy_agent": {
+        "version": "V?.?",
+        "checksum": "3ca778ab1e09ac9a",
+        "lines": 703,
+        "ok": true,
+        "deps": []
+      },
+      "lora_trainer": {
+        "version": "V1.70",
+        "checksum": "fcff7b51789f4c0d",
+        "lines": 368,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "config_manager",
+          "context_bus"
+        ]
+      },
+      "manga_ocr_translator": {
+        "version": "V1.70",
+        "checksum": "1e856ec5f6d76fb6",
+        "lines": 557,
+        "ok": true,
+        "deps": [
+          "overlord_utils"
+        ]
+      },
+      "market_analyzer": {
+        "version": "V1.70",
+        "checksum": "5265861f384779a3",
+        "lines": 291,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "marketing_pub": {
+        "version": "V?.?",
+        "checksum": "e8bfdd716df8d466",
+        "lines": 577,
+        "ok": true,
+        "deps": []
+      },
+      "memory_agent": {
+        "version": "V?.?",
+        "checksum": "ad3a820944571045",
+        "lines": 546,
+        "ok": true,
+        "deps": []
+      },
+      "module_manager": {
+        "version": "V1.46",
+        "checksum": "facdb3cce5faecf1",
+        "lines": 221,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "module_manager"
+        ]
+      },
+      "motion_interpolator": {
+        "version": "V1.70",
+        "checksum": "38b1a22efd594635",
+        "lines": 451,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "narrative_memory": {
+        "version": "V1.70",
+        "checksum": "6d6aa534343e9512",
+        "lines": 267,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "obs_agent": {
+        "version": "V?.?",
+        "checksum": "1da78da3ad3b5306",
+        "lines": 655,
+        "ok": true,
+        "deps": []
+      },
+      "ollama_bridge": {
+        "version": "V?.?",
+        "checksum": "449c9c1264fa2315",
+        "lines": 189,
+        "ok": true,
+        "deps": []
+      },
+      "oracle_interface": {
+        "version": "V1.49",
+        "checksum": "00eb2eee08c3c7cc",
+        "lines": 198,
+        "ok": true,
+        "deps": []
+      },
+      "overlord_launcher": {
+        "version": "V?.?",
+        "checksum": "16cf36fe464280e7",
+        "lines": 516,
+        "ok": true,
+        "deps": []
+      },
+      "overlord_utils": {
+        "version": "V1.49s",
+        "checksum": "8b642282c9347896",
+        "lines": 397,
+        "ok": true,
+        "deps": []
+      },
+      "patcher": {
+        "version": "V1.0",
+        "checksum": "596797e33299b86e",
+        "lines": 233,
+        "ok": true,
+        "deps": []
+      },
+      "pipeline_conscience": {
+        "version": "V1.45",
+        "checksum": "c81834e9240d144d",
+        "lines": 214,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "pipeline_constitution": {
+        "version": "V?.?",
+        "checksum": "8cf34458ce08ab1c",
+        "lines": 502,
+        "ok": true,
+        "deps": []
+      },
+      "postprod": {
+        "version": "V1.49",
+        "checksum": "3581ace44c0e567e",
+        "lines": 318,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "prompt_engineer": {
+        "version": "V1.60",
+        "checksum": "5c8cd1d2a7a5c8ac",
+        "lines": 194,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "prompt_library": {
+        "version": "V1.50",
+        "checksum": "8433fbcdf557ca4f",
+        "lines": 286,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "prompt_optimizer": {
+        "version": "V1.47",
+        "checksum": "9424e318df4342ae",
+        "lines": 288,
+        "ok": true,
+        "deps": [
+          "prompt_optimizer",
+          "overlord_utils",
+          "cost_tracker"
+        ]
+      },
+      "quality_gate": {
+        "version": "V1.60",
+        "checksum": "55e87db2bd50ff35",
+        "lines": 198,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "quality_reviewer": {
+        "version": "V1.70",
+        "checksum": "5e1507df8f4780fc",
+        "lines": 434,
+        "ok": true,
+        "deps": [
+          "style_continuity",
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "quality_reviewer_visual": {
+        "version": "V1.70",
+        "checksum": "4cd170740e1837ff",
+        "lines": 382,
+        "ok": true,
+        "deps": [
+          "quality_reviewer_visual",
+          "quality_reviewer",
+          "context_bus"
+        ]
+      },
+      "ray_cluster": {
+        "version": "V?.?",
+        "checksum": "3e76e7a81e6e2b5b",
+        "lines": 442,
+        "ok": true,
+        "deps": [
+          "ray_cluster"
+        ]
+      },
+      "region_mask_generator": {
+        "version": "V1.70",
+        "checksum": "a25ee5a17b401623",
+        "lines": 408,
+        "ok": true,
+        "deps": [
+          "context_bus",
+          "region_mask_generator"
+        ]
+      },
+      "remote_gpu": {
+        "version": "V?.?",
+        "checksum": "9f239d577fea1da6",
+        "lines": 419,
+        "ok": true,
+        "deps": []
+      },
+      "resource_scheduler": {
+        "version": "V1.70",
+        "checksum": "ca74a97794bb23db",
+        "lines": 307,
+        "ok": true,
+        "deps": [
+          "resource_scheduler",
+          "config_manager",
+          "context_bus"
+        ]
+      },
+      "roles_registry": {
+        "version": "V1.49p",
+        "checksum": "497aa13b47b5731d",
+        "lines": 208,
+        "ok": true,
+        "deps": []
+      },
+      "sakuga_compositor": {
+        "version": "V1.70",
+        "checksum": "76d7ad588816859a",
+        "lines": 513,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "sav_agent": {
+        "version": "V?.?",
+        "checksum": "b522d999b01b3287",
+        "lines": 264,
+        "ok": true,
+        "deps": []
+      },
+      "sav_debug": {
+        "version": "V?.?",
+        "checksum": "dbf83a689aacca94",
+        "lines": 601,
+        "ok": true,
+        "deps": []
+      },
+      "scenario": {
+        "version": "V1.49t",
+        "checksum": "659d14d8d975b4db",
+        "lines": 318,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "schema_validator": {
+        "version": "V1.60",
+        "checksum": "b21f08cffd8b322e",
+        "lines": 303,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "self_improve": {
+        "version": "V1.43",
+        "checksum": "bd7d755f6c2bc839",
+        "lines": 655,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "v130_intelligence_ext"
+        ]
+      },
+      "self_optimizer": {
+        "version": "V1.70",
+        "checksum": "2c684423cbd3bcda",
+        "lines": 405,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "session_manager": {
+        "version": "V1.47",
+        "checksum": "a87dfb8ab084121f",
+        "lines": 268,
+        "ok": true,
+        "deps": [
+          "session_manager"
+        ]
+      },
+      "session_reporter": {
+        "version": "V1.60",
+        "checksum": "358ba8988980944a",
+        "lines": 250,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "slack_monitor": {
+        "version": "V1.70",
+        "checksum": "541e495595b7609d",
+        "lines": 307,
+        "ok": true,
+        "deps": [
+          "context_bus",
+          "slack_monitor"
+        ]
+      },
+      "social_agent": {
+        "version": "V?.?",
+        "checksum": "993ce1be3096c57a",
+        "lines": 652,
+        "ok": true,
+        "deps": []
+      },
+      "source_cleaner": {
+        "version": "V1.70",
+        "checksum": "d366abe82a3f17f9",
+        "lines": 608,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "sourcing": {
+        "version": "V1.49",
+        "checksum": "b77c1c8341f9d965",
+        "lines": 300,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "sourcing_multisensor": {
+        "version": "V?.?",
+        "checksum": "2c2ff841f7ea3bd5",
+        "lines": 579,
+        "ok": true,
+        "deps": []
+      },
+      "storage_manager": {
+        "version": "V?.?",
+        "checksum": "4a1603c6aada5aa3",
+        "lines": 610,
+        "ok": true,
+        "deps": []
+      },
+      "storyboard": {
+        "version": "V1.49s",
+        "checksum": "1b7481e947acf75c",
+        "lines": 336,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "style_continuity": {
+        "version": "V1.70",
+        "checksum": "d53508055e19f85a",
+        "lines": 263,
+        "ok": true,
+        "deps": [
+          "config_manager",
+          "context_bus"
+        ]
+      },
+      "style_dna": {
+        "version": "V1.44",
+        "checksum": "202e8c8409280e85",
+        "lines": 206,
+        "ok": true,
+        "deps": [
+          "style_dna"
+        ]
+      },
+      "style_evolution": {
+        "version": "V1.47",
+        "checksum": "3aa0e90106579912",
+        "lines": 251,
+        "ok": true,
+        "deps": [
+          "style_evolution",
+          "style_dna",
+          "overlord_utils"
+        ]
+      },
+      "sys_agent": {
+        "version": "V?.?",
+        "checksum": "97d1a353ae55a2c8",
+        "lines": 349,
+        "ok": true,
+        "deps": []
+      },
+      "telegram_bot": {
+        "version": "V1.49",
+        "checksum": "03bfe6d234b917f9",
+        "lines": 172,
+        "ok": true,
+        "deps": []
+      },
+      "test_integration": {
+        "version": "V1.49",
+        "checksum": "2c04ca2cfcd041d2",
+        "lines": 218,
+        "ok": true,
+        "deps": [
+          "v130_emotion_engine",
+          "context_bus",
+          "director",
+          "api_server",
+          "v130_world_model"
+        ]
+      },
+      "test_pipeline": {
+        "version": "V1.42",
+        "checksum": "97edecc58ff5e322",
+        "lines": 298,
+        "ok": true,
+        "deps": [
+          "watchdog",
+          "critic",
+          "sourcing",
+          "scenario"
+        ]
+      },
+      "transition_builder": {
+        "version": "V1.70",
+        "checksum": "52d7ff4ed1cc4096",
+        "lines": 320,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "transmedia_export": {
+        "version": "V1.47",
+        "checksum": "20cdd034aa489128",
+        "lines": 296,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "telegram_bot",
+          "context_bus"
+        ]
+      },
+      "transmedia_publisher": {
+        "version": "V1.70",
+        "checksum": "5aada01aab5756a8",
+        "lines": 343,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v110_core": {
+        "version": "V1.10",
+        "checksum": "9feb7deaf8357f3c",
+        "lines": 597,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "v110_graph_ui": {
+        "version": "V1.10",
+        "checksum": "03f0ee154fb0ad27",
+        "lines": 390,
+        "ok": true,
+        "deps": [
+          "v110_core",
+          "context_bus"
+        ]
+      },
+      "v110_intelligence": {
+        "version": "V1.10",
+        "checksum": "8c85da3d1561e0d4",
+        "lines": 434,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v120_alignment": {
+        "version": "V1.20",
+        "checksum": "bf1a8a5f976e399f",
+        "lines": 300,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v120_collective": {
+        "version": "V1.20",
+        "checksum": "8d8a9d9df25bb1f6",
+        "lines": 311,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v120_dashboard": {
+        "version": "V1.20",
+        "checksum": "57a8731d1832f1c0",
+        "lines": 330,
+        "ok": true,
+        "deps": [
+          "v120_generation",
+          "context_bus",
+          "roles_registry",
+          "overlord_utils",
+          "v120_collective"
+        ]
+      },
+      "v120_generation": {
+        "version": "V1.20",
+        "checksum": "472741c7e5b0fbdb",
+        "lines": 389,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v120_learning": {
+        "version": "V1.20",
+        "checksum": "42541ba78ea89ac3",
+        "lines": 316,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v120_moe": {
+        "version": "V1.20",
+        "checksum": "8f16a349496e848d",
+        "lines": 286,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v130_agent_personality": {
+        "version": "V1.30",
+        "checksum": "8de078491258ddac",
+        "lines": 481,
+        "ok": true,
+        "deps": [
+          "roles_registry"
+        ]
+      },
+      "v130_cocreation": {
+        "version": "V1.30",
+        "checksum": "260061c3e3706ad0",
+        "lines": 603,
+        "ok": true,
+        "deps": []
+      },
+      "v130_dream_mode": {
+        "version": "V1.30",
+        "checksum": "41a9aa06b98fa8a9",
+        "lines": 490,
+        "ok": true,
+        "deps": []
+      },
+      "v130_emotion_engine": {
+        "version": "V1.30",
+        "checksum": "34a8d44222891c42",
+        "lines": 197,
+        "ok": true,
+        "deps": []
+      },
+      "v130_generative_world": {
+        "version": "V1.30",
+        "checksum": "622959918d84732e",
+        "lines": 326,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v130_intelligence_ext": {
+        "version": "V1.30",
+        "checksum": "d931ec744961cef5",
+        "lines": 779,
+        "ok": true,
+        "deps": []
+      },
+      "v130_narrative_dna": {
+        "version": "V1.30",
+        "checksum": "1f3b8b276b66af28",
+        "lines": 675,
+        "ok": true,
+        "deps": []
+      },
+      "v130_world_model": {
+        "version": "V1.30",
+        "checksum": "07f63f717cdf0267",
+        "lines": 195,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "v140_model_downloader": {
+        "version": "V1.40",
+        "checksum": "7ee58f90643190aa",
+        "lines": 263,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v140_synchronicity": {
+        "version": "V1.40",
+        "checksum": "d70343574942f96d",
+        "lines": 253,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v140_theory_of_mind": {
+        "version": "V1.40",
+        "checksum": "7f5c2d1a574f555a",
+        "lines": 265,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v140_thermal_protection": {
+        "version": "V1.40",
+        "checksum": "704f46a6e47a6778",
+        "lines": 219,
+        "ok": true,
+        "deps": [
+          "context_bus"
+        ]
+      },
+      "v140_video_pipeline": {
+        "version": "V1.40",
+        "checksum": "60ba225906e7de0a",
+        "lines": 292,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "v140_voice_synthesis": {
+        "version": "V1.40",
+        "checksum": "15e518cae7f9744b",
+        "lines": 211,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "video_analyzer": {
+        "version": "V1.70",
+        "checksum": "549d23a983d0c498",
+        "lines": 450,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "visual_validator": {
+        "version": "V1.70",
+        "checksum": "8a82a417b4d39b30",
+        "lines": 401,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "visual_validator",
+          "context_bus"
+        ]
+      },
+      "watchdog": {
+        "version": "V1.49",
+        "checksum": "79ae7ce1e80a6185",
+        "lines": 515,
+        "ok": true,
+        "deps": [
+          "overlord_utils",
+          "context_bus"
+        ]
+      },
+      "workflow_controller": {
+        "version": "V1.70",
+        "checksum": "e49d83af2b568901",
+        "lines": 661,
+        "ok": true,
+        "deps": [
+          "region_mask_generator",
+          "config_manager",
+          "context_bus",
+          "workflow_controller"
+        ]
+      },
+      "workflow_organizer": {
+        "version": "V?.?",
+        "checksum": "6b671f540c85fdb1",
+        "lines": 602,
+        "ok": true,
+        "deps": []
+      }
+    },
+    "circular_deps": [
+      "agent_registry → agent_registry",
+      "agent_translator → agent_translator",
+      "audience_analyzer → audience_analyzer",
+      "benchmark_arena → benchmark_arena",
+      "config_manager → config_manager",
+      "director → director",
+      "episode_packager → style_dna → style_dna",
+      "error_recovery → error_recovery",
+      "gpu_optimizer → gpu_optimizer",
+      "intent_parser → intent_parser",
+      "module_manager → module_manager",
+      "prompt_optimizer → prompt_optimizer",
+      "quality_reviewer_visual → quality_reviewer_visual",
+      "ray_cluster → ray_cluster",
+      "region_mask_generator → region_mask_generator",
+      "resource_scheduler → resource_scheduler",
+      "session_manager → session_manager",
+      "slack_monitor → slack_monitor",
+      "style_evolution → style_evolution",
+      "visual_validator → visual_validator",
+      "workflow_controller → workflow_controller"
+    ]
+  }
+}

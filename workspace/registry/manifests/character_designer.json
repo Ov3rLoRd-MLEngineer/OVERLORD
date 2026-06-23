@@ -1,0 +1,14 @@
+{
+  "name": "character_designer",
+  "version": "V1.70",
+  "checksum": "403f39dfd03bb268",
+  "lines": 450,
+  "dependencies": [
+    "overlord_utils",
+    "narrative_memory",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.867132",
+  "path": "agents\\character_designer.py"
+}

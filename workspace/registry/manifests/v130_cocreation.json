@@ -1,0 +1,10 @@
+{
+  "name": "v130_cocreation",
+  "version": "V1.30",
+  "checksum": "260061c3e3706ad0",
+  "lines": 603,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.898668",
+  "path": "agents\\v130_cocreation.py"
+}

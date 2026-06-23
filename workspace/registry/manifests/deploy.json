@@ -1,0 +1,10 @@
+{
+  "name": "deploy",
+  "version": "V1.49",
+  "checksum": "ca260157057d68db",
+  "lines": 118,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.933430",
+  "path": "agents\\deploy.py"
+}

@@ -1,0 +1,177 @@
+{
+  "run_id": "maestro_20260621_233637",
+  "current_block": "sourcing",
+  "completed": [
+    "sourcing",
+    "scenario"
+  ],
+  "data": {
+    "trend_report": {
+      "generated_at": "2026-06-21T21:36:46.824592+00:00",
+      "media_type": "anime",
+      "top_reddit": [],
+      "top_rss": [
+        {
+          "source": "rss/crunchyroll",
+          "title": "Detective Conan - Episode 1204 - Who Kidnapped Conan and Azusa? (Part One)",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire3-tmb/51920b05b811656f1204b6f47f66607c1781546286_thumb.jpg\" /><br />Conan and Azusa vanish while being followed by some suspicious people.",
+          "link": "http://www.crunchyroll.com/fr/watch/G2XUN0DPZ/who-kidnapped-conan-and-azusa-part-one",
+          "date": "Sat, 20 Jun 2026 11:30:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Crunchyroll Presents: The Anime Effect Season 2 - Episode 65 - Black Clover Bombshells, Marvel Manga Returns and Dr. STONE in Fortnite?!",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire3-tmb/ea762f1b323d25df69a47154b73aed341781841998_thumb.jpg\" /><br />It's another big week for anime news, y'all! We're breaking down the headlines this week including news on Marvel’s Mangaverse returning, Dr. STONE coming to Fortnite and a Code Lyoko",
+          "link": "http://www.crunchyroll.com/fr/watch/G31UVXZ7W/black-clover-bombshells-marvel-manga-returns-and-dr-stone-in-fortnite",
+          "date": "Fri, 19 Jun 2026 23:00:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Detective Conan - Episode 1203 - Sonoko and Conan's Spooky Story Night",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire1-tmb/e69af475fd5dc5330cab92d75f6dee501780614578_thumb.jpg\" /><br />Conan and Sonoko are attacked by a Hannya and get lost in the woods.",
+          "link": "http://www.crunchyroll.com/fr/watch/GPWU8KD23/sonoko-and-conans-spooky-story-night",
+          "date": "Sat, 13 Jun 2026 11:30:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Crunchyroll Presents: The Anime Effect Season 2 - Episode 64 - Anime Expo, Persona 6, and the Anime Moments We’ll NEVER Forget",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire2-tmb/ac860fc3c155900f1ee0ab2317a4114a1781224933_thumb.jpg\" /><br />Anime is bigger than EVER, so The Anime Effect is breaking down why 1 in 5 Americans now watch it. PLUS, the hosts unpack huge Anime Expo updates, recent gaming reveals like Persona 6",
+          "link": "http://www.crunchyroll.com/fr/watch/GVWU804P4/anime-expo-persona-6-and-the-anime-moments-well-never-forget",
+          "date": "Fri, 12 Jun 2026 23:00:00 GMT"
+        },
+        {
+          "source": "rss/crunchyroll",
+          "title": "Mr. Osomatsu 4th season - Episode 13 - The Matsuno Ten",
+          "summary": "<img src=\"https://img1.ak.crunchyroll.com/i/spire2-tmb/286cd57beab31d4bc7bb02beab0ed4221781031008_thumb.jpg\" /><br />The sextuplets and their friends take part in a music program.",
+          "link": "http://www.crunchyroll.com/fr/watch/G0DUMNJ5V/the-matsuno-ten",
+          "date": "Thu, 11 Jun 2026 15:00:00 GMT"
+        }
+      ],
+      "top_trends": [
+        {
+          "keyword": "dragon ball",
+          "avg_interest": 51,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "webtoon",
+          "avg_interest": 30,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "anime 2025",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "manga trending",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        },
+        {
+          "keyword": "AI art",
+          "avg_interest": 0,
+          "geo": "FR",
+          "source": "google_trends"
+        }
+      ],
+      "hot_keywords": [
+        "episode",
+        "anime",
+        "season",
+        "conan",
+        "crunchyroll",
+        "presents",
+        "effect",
+        "detective",
+        "news",
+        "1204",
+        "kidnapped",
+        "azusa",
+        "part",
+        "black",
+        "clover"
+      ],
+      "brief": "Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts viraux : N/A.",
+      "raw_count": {
+        "reddit": 0,
+        "rss": 60,
+        "trends": 7
+      }
+    },
+    "script": {
+      "title": "Evangelion: Reborn Episodes",
+      "logline": "A new season of Evangelion revives the battle against invading monsters with the iconic mecha girls.",
+      "genre": [
+        "Action",
+        "Sci-fi",
+        "Drama"
+      ],
+      "media_type": "Anime",
+      "duration_estimate": "Short (12 episodes)",
+      "target_audience": "Teen & Young Adult",
+      "synopsis": "In a world threatened by alien invaders, the Evangelion units and their pilots stand as humanity's last hope. As a new season unfolds, the girls face unprecedented challenges, forging bonds that will shape their destinies.",
+      "acts": {
+        "Act 1": [
+          "Scene 1: Opening sequence",
+          "Scene 2: Introduction of new characters and Evangelion units",
+          "Scene 3: First encounter with an intimidating enemy",
+          "Scene 4: Battle preparations",
+          "Scene 5: Initial engagement, showcasing the unique abilities of each Evangelion"
+        ],
+        "Act 2": [
+          "Scene 1: A mysterious event shakes the organization",
+          "Scene 2: Discovery of a powerful new enemy",
+          "Scene 3: Character development through shared struggles and camaraderie",
+          "Scene 4: Intensified battles as the stakes rise",
+          "Scene 5: Cliffhanger ending leading into Act 3"
+        ],
+        "Act 3": [
+          "Scene 1: Revelation of a deeper, darker conspiracy",
+          "Scene 2: The team unites to face the ultimate threat",
+          "Scene 3: Epic final battle",
+          "Scene 4: Resolution and character growth",
+          "Scene 5: Closing sequence with hints towards potential sequel"
+        ]
+      },
+      "characters": [
+        {
+          "name": "Asuka Langley Sohryu",
+          "role": "Pilot of Evangelion Unit-02, hot-headed and competitive"
+        },
+        {
+          "name": "Misato Katsuragi",
+          "role": "Commander of the Evangelion pilots, pragmatic and resourceful"
+        },
+        {
+          "name": "Shinji Ikari",
+          "role": "Pilot of Evangelion Unit-01, emotional and introspective"
+        },
+        {
+          "name": "Rei Ayanami",
+          "role": "Pilot of Evangelion Unit-00, enigmatic and seemingly emotionless"
+        }
+      ],
+      "visual_style": "Stylized character designs with intricate mecha detailing, dynamic action sequences, and atmospheric backgrounds",
+      "color_palette": [
+        "Deep blues and purples, contrasted by fiery reds and oranges during battles"
+      ],
+      "music_mood": [
+        "Emotional ballads for character development scenes, intense electronic music for battle sequences"
+      ],
+      "transmedia_notes": [
+        "Possible collaborations with Crunchyroll for streaming, merchandise tie-ins, and promotional events featuring Conan O'Brien"
+      ],
+      "_meta": {
+        "final_score": 83,
+        "iterations": 1,
+        "saved_to": "workspace\\scripts\\20260621_213710_Evangelion:_Reborn_Episodes.json",
+        "fallback": false
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "v120_collective",
+  "version": "V1.20",
+  "checksum": "8d8a9d9df25bb1f6",
+  "lines": 311,
+  "dependencies": [
+    "overlord_utils",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.819671",
+  "path": "agents\\v120_collective.py"
+}

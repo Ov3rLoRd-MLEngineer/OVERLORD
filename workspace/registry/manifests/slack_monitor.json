@@ -1,0 +1,13 @@
+{
+  "name": "slack_monitor",
+  "version": "V1.70",
+  "checksum": "541e495595b7609d",
+  "lines": 307,
+  "dependencies": [
+    "context_bus",
+    "slack_monitor"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.541702",
+  "path": "agents\\slack_monitor.py"
+}

@@ -1,0 +1,727 @@
+"""
+agents/v120_moe.py — OverLord V1.20 — Architecture Transformer Avancée
+
+1. Mixture of Experts (MoE)
+   Inspiré de GPT-4 / Mixtral : N agents spécialisés, un routeur choisit
+   les K meilleurs pour chaque tâche. Résultat : N fois plus de capacité
+   pour le même coût computationnel.
+
+2. Sparse Attention
+   Chaque agent ne voit que les infos du context bus qui lui sont pertinentes
+   (fenêtre glissante + sélection par similarité). O(N×log N) au lieu de O(N²).
+
+3. Rotary Position Embedding (RoPE)
+   Les agents savent où ils sont dans le temps et dans le pipeline.
+   Un agent en début de session se comporte différemment qu'en fin.
+
+4. Flash Attention optimisation
+   Le context bus utilise une structure de données qui minimise les accès mémoire
+   lors des lectures massives par plusieurs agents simultanément.
+"""
+
+import json
+import math
+import time
+import logging
+import threading
+import hashlib
+import random
+from pathlib import Path
+from dataclasses import dataclass, field
+from typing import Any, Callable, Optional
+from enum import Enum
+import requests
+
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+CLAUDE_MODEL  = "claude-sonnet-4-6"
+MOE_DIR       = Path("workspace/moe")
+
+
+def _llm(prompt: str, system: str = "", max_tokens: int = 400) -> str:
+    try:
+        body = {"model": CLAUDE_MODEL, "max_tokens": max_tokens,
+                "messages": [{"role": "user", "content": prompt}]}
+        if system:
+            body["system"] = system
+        r = requests.post(ANTHROPIC_URL,
+                          headers={"Content-Type": "application/json"},
+                          json=body, timeout=25)
+        if r.status_code == 200:
+            return r.json()["content"][0]["text"].strip()
+    except Exception:
+        pass
+    return ""
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 1. MIXTURE OF EXPERTS (MoE)
+# ══════════════════════════════════════════════════════════════════════
+
+class ExpertDomain(Enum):
+    """Domaines de spécialisation des experts."""
+    NARRATIVE   = "narrative"     # scénario, dialogues, arcs
+    VISUAL      = "visual"        # composition, couleurs, style
+    TECHNICAL   = "technical"     # paramètres SDXL, optimisation
+    CULTURAL    = "cultural"      # tendances, références culturelles
+    AUDIO       = "audio"         # analyse sonore, synesthésie
+    QUALITY     = "quality"       # critique, validation, scores
+    CREATIVE    = "creative"      # brainstorming, innovation
+    ANALYTICAL  = "analytical"    # données, métriques, patterns
+
+
+@dataclass
+class Expert:
+    """Un expert dans le MoE — agent hyper-spécialisé."""
+    id:          str
+    domain:      ExpertDomain
+    description: str
+    system_prompt: str
+    weight:      float = 1.0       # poids appris
+    success_rate: float = 0.5      # historique de succès
+    n_calls:     int   = 0
+    specializations: list = field(default_factory=list)
+
+    def score_for_task(self, task_description: str) -> float:
+        """Score de pertinence pour une tâche donnée."""
+        domain_keywords = {
+            ExpertDomain.NARRATIVE:  ["scénario","dialogue","histoire","personnage","arc","narration"],
+            ExpertDomain.VISUAL:     ["visuel","couleur","composition","style","lumière","angle"],
+            ExpertDomain.TECHNICAL:  ["cfg","sampler","steps","lora","vram","comfyui","paramètre"],
+            ExpertDomain.CULTURAL:   ["tendance","culture","anime","manga","japon","genre"],
+            ExpertDomain.AUDIO:      ["son","musique","bpm","ambiance","audio","synesthésie"],
+            ExpertDomain.QUALITY:    ["qualité","score","critique","valide","évalue","améliore"],
+            ExpertDomain.CREATIVE:   ["créatif","idée","concept","innovant","original","brainstorm"],
+            ExpertDomain.ANALYTICAL: ["analyse","données","métrique","pattern","statistique"],
+        }
+        keywords = domain_keywords.get(self.domain, [])
+        task_l   = task_description.lower()
+        matches  = sum(1 for kw in keywords if kw in task_l)
+        base     = matches / max(len(keywords), 1)
+        # Pondéré par le succès historique
+        return base * 0.6 + self.success_rate * 0.4
+
+
+class MixtureOfExperts:
+    """
+    Routeur MoE — choisit les K meilleurs experts pour chaque tâche.
+
+    Analogie Claude : je suis moi-même un système de type MoE —
+    différentes "têtes" d'attention se spécialisent sur différents
+    aspects (logique, créativité, code, sécurité...) et leurs
+    contributions sont pondérées selon la tâche.
+
+    OverLord V1.20 : N agents experts, le routeur envoie chaque tâche
+    aux K plus pertinents. L'output est la moyenne pondérée de leurs réponses.
+    """
+
+    def __init__(self, top_k: int = 2, logger: logging.Logger = None):
+        self.log    = logger or logging.getLogger("moe")
+        self.top_k  = top_k
+        self._experts: dict[str, Expert] = {}
+        self._routing_history: list[dict] = []
+        MOE_DIR.mkdir(parents=True, exist_ok=True)
+        self._init_default_experts()
+
+    def _init_default_experts(self):
+        """Initialise les experts par défaut."""
+        experts_def = [
+            Expert(
+                id="narrative_master",
+                domain=ExpertDomain.NARRATIVE,
+                description="Maître de la narration anime/manga",
+                system_prompt=(
+                    "Tu es un expert en narration japonaise avec 20 ans d'expérience "
+                    "en anime et manga. Tu maîtrises les structures narratives complexes, "
+                    "les retournements de situation, la construction des personnages et "
+                    "la cohérence des univers fictifs. Tu cites toujours des exemples "
+                    "précis d'oeuvres existantes pour justifier tes choix."
+                ),
+                specializations=["shonen", "seinen", "isekai", "mecha", "slice of life"],
+            ),
+            Expert(
+                id="visual_director",
+                domain=ExpertDomain.VISUAL,
+                description="Directeur artistique ComfyUI SDXL",
+                system_prompt=(
+                    "Tu es un directeur artistique expert en génération d'images avec "
+                    "Stable Diffusion XL. Tu maîtrises la syntaxe Booru, les LoRAs, "
+                    "les ControlNets, la composition cinématographique et la cohérence "
+                    "de style. Tu traduis toute description narrative en paramètres "
+                    "visuels précis et actionnables pour ComfyUI."
+                ),
+                specializations=["portrait", "action", "landscape", "character design"],
+            ),
+            Expert(
+                id="tech_optimizer",
+                domain=ExpertDomain.TECHNICAL,
+                description="Optimiseur SDXL et pipeline",
+                system_prompt=(
+                    "Tu es un expert en optimisation de pipelines IA génératifs. "
+                    "Tu maîtrises les hyperparamètres SDXL (CFG, sampler, scheduler, "
+                    "steps), la gestion VRAM, le batching, et l'optimisation GPU. "
+                    "Tu fournis des recommandations précises avec des valeurs numériques "
+                    "justifiées par la théorie et l'expérience pratique."
+                ),
+                specializations=["RTX 5080", "NoobAI-XL", "FaceDetailer", "batch"],
+            ),
+            Expert(
+                id="trend_analyst",
+                domain=ExpertDomain.CULTURAL,
+                description="Analyste culturel et tendances",
+                system_prompt=(
+                    "Tu es un analyste culturel spécialisé dans la pop culture asiatique "
+                    "et le divertissement numérique. Tu identifies les tendances émergentes, "
+                    "les codes culturels implicites et les opportunités de contenu. "
+                    "Tu croises les données de streaming, réseaux sociaux et communautés "
+                    "pour prédire ce qui va fonctionner."
+                ),
+                specializations=["reddit", "twitter", "crunchyroll", "mal"],
+            ),
+            Expert(
+                id="quality_critic",
+                domain=ExpertDomain.QUALITY,
+                description="Critique de qualité production",
+                system_prompt=(
+                    "Tu es un critique exigeant de production anime/manga IA. "
+                    "Tu évalues la cohérence narrative, la qualité visuelle, "
+                    "l'originalité et l'impact émotionnel. Tu donnes des scores "
+                    "précis sur 100 avec des justifications détaillées et des "
+                    "suggestions d'amélioration concrètes et prioritisées."
+                ),
+                specializations=["consistency", "quality", "narrative", "visual"],
+            ),
+            Expert(
+                id="creative_innovator",
+                domain=ExpertDomain.CREATIVE,
+                description="Innovateur créatif et brainstorming",
+                system_prompt=(
+                    "Tu es un créatif iconoclaste qui pousse les limites du possible. "
+                    "Tu génères des idées inattendues, des connexions surprenantes entre "
+                    "genres, des concepts visuels innovants. Tu n'as pas peur d'être "
+                    "expérimental et tu proposes toujours 3 niveaux d'idées : "
+                    "sûre, ambitieuse, et radicale."
+                ),
+                specializations=["concept", "innovation", "crossover", "experimental"],
+            ),
+        ]
+        for e in experts_def:
+            self._experts[e.id] = e
+        self.log.info(f"[MOE] {len(self._experts)} experts initialisés")
+
+    def add_expert(self, expert: Expert):
+        self._experts[expert.id] = expert
+        self.log.info(f"[MOE] Expert ajouté : {expert.id} ({expert.domain.value})")
+
+    def route(self, task: str, context: dict = None,
+              top_k: int = None) -> list[Expert]:
+        """
+        Routeur MoE : sélectionne les K meilleurs experts pour une tâche.
+        Combine scoring par domaine + historique de succès + diversité.
+        """
+        k = top_k or self.top_k
+        scores = []
+        for eid, expert in self._experts.items():
+            score = expert.score_for_task(task)
+            scores.append((score, expert))
+
+        # Trier par score décroissant
+        scores.sort(key=lambda x: -x[0])
+
+        # Garantir la diversité (pas 2 experts du même domaine)
+        selected   = []
+        used_domains = set()
+        for score, expert in scores:
+            if expert.domain not in used_domains or len(selected) == 0:
+                selected.append(expert)
+                used_domains.add(expert.domain)
+            if len(selected) >= k:
+                break
+
+        # Compléter si nécessaire
+        for score, expert in scores:
+            if expert not in selected and len(selected) < k:
+                selected.append(expert)
+
+        self.log.info(
+            f"[MOE] Route '{task[:40]}...' → "
+            f"{[e.id for e in selected]}"
+        )
+        return selected
+
+    def consult(self, task: str, context: dict = None,
+                top_k: int = None) -> dict:
+        """
+        Consulte les K meilleurs experts en parallèle et fusionne leurs réponses.
+        """
+        context   = context or {}
+        experts   = self.route(task, context, top_k)
+        results   = {}
+        threads   = []
+        result_lock = threading.Lock()
+
+        def _ask_expert(expert: Expert):
+            ctx_str = json.dumps(context, ensure_ascii=False)[:500] if context else ""
+            prompt  = (
+                f"Tâche : {task}\n"
+                + (f"Contexte : {ctx_str}\n" if ctx_str else "") +
+                "\nRéponds de façon précise et actionnable."
+            )
+            response = _llm(prompt, system=expert.system_prompt, max_tokens=400)
+            with result_lock:
+                results[expert.id] = {
+                    "expert":   expert.id,
+                    "domain":   expert.domain.value,
+                    "response": response,
+                    "weight":   expert.weight * expert.success_rate,
+                }
+            expert.n_calls += 1
+
+        for expert in experts:
+            t = threading.Thread(target=_ask_expert, args=(expert,), daemon=True)
+            t.start(); threads.append(t)
+        for t in threads:
+            t.join(timeout=30)
+
+        # Synthèse pondérée
+        synthesis = self._synthesize(task, results)
+
+        # Enregistrer le routing
+        self._routing_history.append({
+            "task":    task[:80],
+            "experts": [e.id for e in experts],
+            "ts":      time.time(),
+        })
+
+        return {
+            "task":      task,
+            "experts":   list(results.values()),
+            "synthesis": synthesis,
+            "top_k":     len(experts),
+        }
+
+    def _synthesize(self, task: str, results: dict) -> str:
+        """Synthèse des réponses des experts via un méta-prompt."""
+        if not results:
+            return ""
+        if len(results) == 1:
+            return list(results.values())[0]["response"]
+
+        experts_text = "\n\n".join([
+            f"EXPERT {r['domain'].upper()} ({r['expert']}) :\n{r['response']}"
+            for r in results.values() if r.get("response")
+        ])
+        prompt = (
+            f"Tu es un synthétiseur. Voici les réponses de {len(results)} experts "
+            f"à la tâche : '{task}'\n\n{experts_text}\n\n"
+            f"Synthétise ces perspectives en une réponse unifiée, cohérente et actionnable. "
+            f"Garde le meilleur de chaque expert. Max 300 mots."
+        )
+        return _llm(prompt, max_tokens=400) or list(results.values())[0]["response"]
+
+    def update_expert_weight(self, expert_id: str, success: bool, score: float = 0.5):
+        """Met à jour le poids d'un expert après feedback."""
+        if expert_id not in self._experts:
+            return
+        e  = self._experts[expert_id]
+        lr = 0.1
+        e.success_rate = e.success_rate * (1-lr) + float(success) * score * lr
+        e.weight       = max(0.1, min(2.0, e.success_rate * 2))
+
+    def get_expert_rankings(self) -> list[dict]:
+        return sorted([
+            {
+                "id":           e.id,
+                "domain":       e.domain.value,
+                "weight":       round(e.weight, 3),
+                "success_rate": round(e.success_rate, 3),
+                "n_calls":      e.n_calls,
+            }
+            for e in self._experts.values()
+        ], key=lambda x: -x["weight"])
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 2. SPARSE ATTENTION
+# ══════════════════════════════════════════════════════════════════════
+
+class SparseAttentionBus:
+    """
+    Context bus avec attention sparse.
+    Au lieu de lire TOUTES les entrées (O(N²)), chaque agent lit
+    seulement les K entrées les plus pertinentes (O(N×log N)).
+
+    Implémenté avec : fenêtre locale + sélection par hash de similarité.
+    Analogue au Longformer / BigBird attention pattern.
+    """
+
+    def __init__(self, window_size: int = 20, global_tokens: int = 5):
+        self.window_size   = window_size   # entrées locales récentes
+        self.global_tokens = global_tokens  # entrées globales toujours visibles
+        self._entries: list[dict] = []
+        self._global_ids: set  = set()     # IDs des entrées globalement importantes
+        self._lock = threading.Lock()
+
+    def write(self, key: str, value: Any, agent: str,
+              is_global: bool = False, importance: float = 0.5) -> str:
+        entry_id = hashlib.md5(f"{key}{agent}{time.time()}".encode()).hexdigest()[:8]
+        entry = {
+            "id":         entry_id,
+            "key":        key,
+            "value":      value,
+            "agent":      agent,
+            "ts":         time.time(),
+            "importance": importance,
+            "reads":      0,
+        }
+        with self._lock:
+            self._entries.append(entry)
+            # Entrées globales : toujours accessibles à tous
+            if is_global or importance >= 0.9:
+                self._global_ids.add(entry_id)
+                # Garder seulement les N plus importantes comme globales
+                if len(self._global_ids) > self.global_tokens:
+                    oldest_global = min(
+                        (e for e in self._entries if e["id"] in self._global_ids),
+                        key=lambda e: e["importance"]
+                    )
+                    self._global_ids.discard(oldest_global["id"])
+        return entry_id
+
+    def read_sparse(self, agent: str, query_keys: list[str] = None) -> list[dict]:
+        """
+        Lecture sparse : fenêtre locale + tokens globaux + similarité de clé.
+        O(window_size + global_tokens) au lieu de O(total_entries).
+        """
+        with self._lock:
+            all_entries = list(self._entries)
+
+        # 1. Tokens globaux (toujours inclus)
+        globals_entries = [e for e in all_entries if e["id"] in self._global_ids]
+
+        # 2. Fenêtre locale (N entrées récentes)
+        local_window = sorted(all_entries, key=lambda e: e["ts"], reverse=True)
+        local_window = local_window[:self.window_size]
+
+        # 3. Sélection par similarité de clé (si query_keys fournis)
+        key_matches = []
+        if query_keys:
+            for e in all_entries:
+                if any(qk.lower() in e["key"].lower() for qk in query_keys):
+                    key_matches.append(e)
+
+        # Fusionner sans doublons
+        seen = set()
+        result = []
+        for e in globals_entries + local_window + key_matches:
+            if e["id"] not in seen:
+                seen.add(e["id"])
+                result.append(e)
+                e["reads"] += 1
+
+        return result[:self.window_size + self.global_tokens]
+
+    def stats(self) -> dict:
+        with self._lock:
+            n = len(self._entries)
+        return {
+            "total_entries":   n,
+            "global_tokens":   len(self._global_ids),
+            "attention_type":  "sparse",
+            "complexity":      f"O({self.window_size}+{self.global_tokens}) vs O({n})",
+            "memory_saving":   f"{max(0, 1 - (self.window_size+self.global_tokens)/max(n,1)):.1%}",
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 3. ROTARY POSITION EMBEDDING (RoPE)
+# ══════════════════════════════════════════════════════════════════════
+
+class RotaryPositionEncoder:
+    """
+    RoPE — les agents savent où ils sont dans le temps.
+
+    Dans les LLMs modernes (Llama, GPT-NeoX), RoPE encode la position
+    de chaque token de façon à ce que l'attention soit sensible
+    à la distance relative entre les tokens.
+
+    Ici : chaque événement du pipeline reçoit un embedding de position
+    qui encode 3 dimensions :
+    1. Position dans la session (début/milieu/fin)
+    2. Position dans le pipeline (quel bloc)
+    3. Position temporelle (heure du jour / fatigue système)
+
+    Les agents utilisent ces embeddings pour adapter leur comportement :
+    - En début de session : plus exploratoire
+    - En fin de session : plus conservateur, économise les ressources
+    - En plein milieu du pipeline : optimise le flux
+    """
+
+    def __init__(self, dim: int = 16, max_seq_len: int = 1000):
+        self.dim         = dim
+        self.max_seq_len = max_seq_len
+        self._session_start  = time.time()
+        self._session_events = 0
+        self._pipeline_pos   = 0   # 0=sourcing ... 5=postprod
+
+        # Précalculer les fréquences RoPE
+        self._freqs = [1.0 / (10000 ** (2*i / dim)) for i in range(dim//2)]
+
+    def _rope_encoding(self, pos: int) -> list[float]:
+        """Calcule l'embedding RoPE pour une position donnée."""
+        encoding = []
+        for freq in self._freqs:
+            encoding.append(math.sin(pos * freq))
+            encoding.append(math.cos(pos * freq))
+        return encoding
+
+    def get_position_context(self, agent_name: str = "") -> dict:
+        """
+        Retourne le contexte de position pour un agent.
+        Les agents l'utilisent pour adapter leur comportement.
+        """
+        now          = time.time()
+        session_age  = now - self._session_start
+        hour         = __import__("datetime").datetime.now().hour
+
+        # Position dans la session (normalisée 0-1)
+        session_progress = min(1.0, session_age / 14400)  # 4h = session complète
+
+        # Fatigue système (plus la session est longue, plus on est conservateur)
+        fatigue = min(1.0, session_age / 7200)   # sature à 2h
+
+        # Phase de la journée
+        if 6 <= hour < 12:    day_phase = "morning"   # matinal = créatif
+        elif 12 <= hour < 18: day_phase = "afternoon" # après-midi = productif
+        elif 18 <= hour < 22: day_phase = "evening"   # soir = critique
+        else:                  day_phase = "night"     # nuit = exploratoire
+
+        # Embedding RoPE de la position temporelle
+        rope_pos = int(session_age / 60)   # position en minutes
+        embedding = self._rope_encoding(min(rope_pos, self.max_seq_len-1))
+
+        # Recommandations comportementales
+        if session_progress < 0.2:
+            behavior = "explore"       # début : explorer
+            temp_mult = 1.2
+        elif session_progress > 0.8:
+            behavior = "consolidate"   # fin : consolider
+            temp_mult = 0.8
+        else:
+            behavior = "optimize"      # milieu : optimiser
+            temp_mult = 1.0
+
+        self._session_events += 1
+        return {
+            "agent":            agent_name,
+            "session_progress": round(session_progress, 3),
+            "fatigue":          round(fatigue, 3),
+            "day_phase":        day_phase,
+            "pipeline_pos":     self._pipeline_pos,
+            "recommended_behavior": behavior,
+            "temperature_multiplier": temp_mult,
+            "n_events":         self._session_events,
+            "rope_embedding":   embedding[:4],  # résumé des 4 premières dims
+            "session_age_min":  round(session_age / 60, 1),
+        }
+
+    def advance_pipeline(self):
+        """Avance d'un bloc dans le pipeline."""
+        self._pipeline_pos = min(5, self._pipeline_pos + 1)
+
+    def get_system_prompt_injection(self, agent_name: str) -> str:
+        """Texte à injecter dans le system prompt selon la position."""
+        ctx = self.get_position_context(agent_name)
+        behavior_guidance = {
+            "explore":     "Sois exploratoire et créatif. C'est le début de la session, prends des risques calculés.",
+            "optimize":    "Optimise et perfectionne. Le pipeline est en plein rendement.",
+            "consolidate": "Sois conservateur et rigoureux. Finalise et consolide les résultats.",
+        }
+        return (
+            f"\n[POSITION TEMPORELLE] "
+            f"Session : {ctx['session_progress']*100:.0f}% | "
+            f"Phase : {ctx['day_phase']} | "
+            f"Directive : {behavior_guidance.get(ctx['recommended_behavior'],'')}"
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 4. FLASH ATTENTION (Context Bus optimisé)
+# ══════════════════════════════════════════════════════════════════════
+
+class FlashAttentionCache:
+    """
+    Implémentation inspirée de Flash Attention pour le context bus.
+
+    Flash Attention (Dao et al., 2022) réduit la complexité mémoire
+    de O(N²) à O(N) en tuilant les calculs d'attention.
+
+    Ici : le context bus est organisé en "blocs" (tiles) par domaine,
+    et les lectures se font bloc par bloc, évitant de charger tout en mémoire.
+    """
+
+    TILE_SIZE = 16   # entrées par bloc
+
+    def __init__(self):
+        self._tiles:   dict[str, list] = {}   # domain → [entries]
+        self._index:   dict[str, str]  = {}   # key → domain (index rapide)
+        self._lock     = threading.Lock()
+        self._stats    = {"tile_hits": 0, "full_scans": 0, "cache_saves": 0}
+
+    def write(self, domain: str, key: str, value: Any):
+        with self._lock:
+            if domain not in self._tiles:
+                self._tiles[domain] = []
+            tile = self._tiles[domain]
+            tile.append({"key": key, "value": value, "ts": time.time()})
+            # Garder seulement les TILE_SIZE dernières par domaine
+            if len(tile) > self.TILE_SIZE:
+                self._tiles[domain] = tile[-self.TILE_SIZE:]
+            self._index[key] = domain
+
+    def read(self, key: str) -> Optional[Any]:
+        """Lecture O(1) via l'index."""
+        with self._lock:
+            domain = self._index.get(key)
+            if not domain:
+                return None
+            tile = self._tiles.get(domain, [])
+            for entry in reversed(tile):  # du plus récent au plus ancien
+                if entry["key"] == key:
+                    self._stats["tile_hits"] += 1
+                    return entry["value"]
+        return None
+
+    def read_domain(self, domain: str) -> list[dict]:
+        """Lit toutes les entrées d'un domaine (1 bloc, O(TILE_SIZE))."""
+        with self._lock:
+            self._stats["tile_hits"] += 1
+            return list(self._tiles.get(domain, []))
+
+    def attention_over_domains(self, query_domain: str,
+                                top_n: int = 3) -> list[dict]:
+        """
+        Calcule l'attention du query_domain sur tous les autres domaines.
+        O(N×TILE_SIZE) au lieu de O(N²).
+        """
+        with self._lock:
+            domains = list(self._tiles.keys())
+
+        # Score de pertinence par domaine (heuristique rapide)
+        domain_affinity = {
+            "sourcing":   ["cultural", "analytical"],
+            "scenario":   ["narrative", "creative", "cultural"],
+            "storyboard": ["visual", "narrative"],
+            "production": ["technical", "visual"],
+            "postprod":   ["technical", "quality"],
+            "marketing":  ["cultural", "creative", "analytical"],
+        }
+        affinities = domain_affinity.get(query_domain, domains[:3])
+
+        results = []
+        for d in affinities[:top_n]:
+            if d in self._tiles:
+                entries = self.read_domain(d)
+                if entries:
+                    # Prendre l'entrée la plus récente du domaine
+                    results.append({
+                        "domain": d,
+                        "entry":  entries[-1],
+                        "score":  1.0 if d in affinities else 0.5,
+                    })
+        self._stats["cache_saves"] += max(0, len(domains) - top_n)
+        return results
+
+    def stats(self) -> dict:
+        with self._lock:
+            n_entries = sum(len(t) for t in self._tiles.values())
+        return {
+            "total_entries": n_entries,
+            "n_domains":     len(self._tiles),
+            "tile_size":     self.TILE_SIZE,
+            "tile_hits":     self._stats["tile_hits"],
+            "cache_saves":   self._stats["cache_saves"],
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# FAÇADE V1.20 ARCHITECTURE
+# ══════════════════════════════════════════════════════════════════════
+
+class ArchitectureV120:
+    """Intègre tous les composants d'architecture avancée V1.20."""
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log      = logger or logging.getLogger("arch_v120")
+        self.moe      = MixtureOfExperts(top_k=2, logger=self.log)
+        self.sparse   = SparseAttentionBus(window_size=20, global_tokens=5)
+        self.rope     = RotaryPositionEncoder(dim=16)
+        self.flash    = FlashAttentionCache()
+
+    def process_task(self, task: str, agent: str,
+                      context: dict = None) -> dict:
+        """
+        Pipeline d'architecture complet :
+        1. RoPE → contexte temporel
+        2. Sparse Attention → lecture du context bus
+        3. MoE → consultation des experts pertinents
+        4. Flash Attention → accès optimisé aux domaines
+        """
+        # 1. Position temporelle
+        pos_ctx = self.rope.get_position_context(agent)
+
+        # 2. Lecture sparse du bus
+        sparse_entries = self.sparse.read_sparse(
+            agent,
+            query_keys=[task.split()[0]] if task else None
+        )
+
+        # 3. Consultation MoE
+        enriched_context = {
+            **(context or {}),
+            "position":      pos_ctx,
+            "sparse_context": [e["key"] + ": " + str(e["value"])[:50]
+                                for e in sparse_entries[:5]],
+        }
+        moe_result = self.moe.consult(task, enriched_context)
+
+        # 4. Écrire le résultat dans le flash cache
+        self.flash.write(agent, f"result_{int(time.time())}", moe_result["synthesis"])
+
+        return {
+            "task":       task,
+            "agent":      agent,
+            "position":   pos_ctx,
+            "experts_used": [e["expert"] for e in moe_result["experts"]],
+            "synthesis":  moe_result["synthesis"],
+            "behavior":   pos_ctx["recommended_behavior"],
+            "temp_mult":  pos_ctx["temperature_multiplier"],
+        }
+
+    def get_dashboard(self) -> dict:
+        return {
+            "moe":     {"experts": self.moe.get_expert_rankings()[:3]},
+            "sparse":  self.sparse.stats(),
+            "flash":   self.flash.stats(),
+            "rope":    self.rope.get_position_context("dashboard"),
+        }
+
+
+if __name__ == "__main__":
+    import logging as _log
+    _log.basicConfig(level=_log.INFO)
+    arch = ArchitectureV120()
+
+    print("=== V1.20 ARCHITECTURE TEST ===\n")
+
+    result = arch.process_task(
+        "Crée un prompt visuel pour une scène de bataille anime épique",
+        agent="storyboard",
+        context={"media_type": "anime", "universe": "Dragon Ball"}
+    )
+    print(f"Experts consultés : {result['experts_used']}")
+    print(f"Comportement RoPE : {result['behavior']} (temp×{result['temp_mult']})")
+    print(f"Synthèse : {result['synthesis'][:150]}...")
+    print(f"\nDashboard :")
+    print(f"  Sparse : {arch.sparse.stats()}")
+    print(f"  Flash  : {arch.flash.stats()}")
+    print(f"  MoE rankings : {[e['id'] for e in arch.moe.get_expert_rankings()[:3]]}")

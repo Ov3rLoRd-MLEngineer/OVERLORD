@@ -1,0 +1,12 @@
+{
+  "name": "manga_ocr_translator",
+  "version": "V1.70",
+  "checksum": "1e856ec5f6d76fb6",
+  "lines": 557,
+  "dependencies": [
+    "overlord_utils"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.109028",
+  "path": "agents\\manga_ocr_translator.py"
+}

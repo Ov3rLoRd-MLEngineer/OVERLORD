@@ -1,0 +1,7 @@
+{
+  "handoff": "storyboard->production",
+  "verdict": "reject",
+  "score": 10,
+  "reason": "Erreur dans les donnees : json_parse_failed",
+  "ts": "2026-06-19T21:42:40.609858+00:00"
+}

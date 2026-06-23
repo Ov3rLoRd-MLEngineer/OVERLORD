@@ -1,0 +1,14 @@
+{
+  "name": "episode_packager",
+  "version": "V1.49",
+  "checksum": "090d5440f33dcb65",
+  "lines": 350,
+  "dependencies": [
+    "overlord_utils",
+    "style_dna",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.971909",
+  "path": "agents\\episode_packager.py"
+}

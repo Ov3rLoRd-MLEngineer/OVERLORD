@@ -1,0 +1,10 @@
+{
+  "name": "oracle_interface",
+  "version": "V1.49",
+  "checksum": "00eb2eee08c3c7cc",
+  "lines": 198,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.227350",
+  "path": "agents\\oracle_interface.py"
+}

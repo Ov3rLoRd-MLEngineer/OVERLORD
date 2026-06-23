@@ -1,0 +1,13 @@
+{
+  "name": "v120_generation",
+  "version": "V1.20",
+  "checksum": "472741c7e5b0fbdb",
+  "lines": 389,
+  "dependencies": [
+    "overlord_utils",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.845010",
+  "path": "agents\\v120_generation.py"
+}

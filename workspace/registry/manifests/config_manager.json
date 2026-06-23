@@ -1,0 +1,12 @@
+{
+  "name": "config_manager",
+  "version": "V1.70",
+  "checksum": "8a28bd4fba23fd7d",
+  "lines": 340,
+  "dependencies": [
+    "config_manager"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.893187",
+  "path": "agents\\config_manager.py"
+}

@@ -1,0 +1,140 @@
+2026-06-22 00:21:02 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-22 00:21:02 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-22 00:21:02 [INFO    ] [CHECKPOINT] Charge : maestro_20260621_234938 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-22 00:21:02 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260622_002102
+2026-06-22 00:21:02 [INFO    ] [GPU] Optimisation pour : rtx2070 — RTX 2070 8GB — config stable certifiée
+2026-06-22 00:21:02 [INFO    ] [GPU] Workflow déjà à jour
+2026-06-22 00:21:02 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-22 00:21:02 [INFO    ] [GPU] Optimisation auto : rtx2070
+2026-06-22 00:21:02 [INFO    ] ============================================================
+2026-06-22 00:21:02 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-22 00:21:02 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260622_002102
+2026-06-22 00:21:02 [INFO    ]   Critique : OK
+2026-06-22 00:21:02 [INFO    ]   Watchdog : OK
+2026-06-22 00:21:02 [INFO    ]   Director : OK
+2026-06-22 00:21:02 [INFO    ]   Bus      : OK
+2026-06-22 00:21:02 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-22 00:21:02 [INFO    ] ============================================================
+2026-06-22 00:21:02 [INFO    ] =======================================================
+2026-06-22 00:21:02 [INFO    ] BLOC 1 -- SOURCING
+2026-06-22 00:21:02 [INFO    ] =======================================================
+2026-06-22 00:21:02 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-22 00:21:02 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-22 00:21:02 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-22 00:21:02 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-22 00:21:03 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-22 00:21:03 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-22 00:21:03 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-22 00:21:03 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-22 00:21:03 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-22 00:21:03 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-22 00:21:04 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-22 00:21:04 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-22 00:21:04 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-22 00:21:04 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-22 00:21:04 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-22 00:21:04 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 66 mots-cles
+2026-06-22 00:21:04 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts ...
+2026-06-22 00:21:04 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-22 00:21:04 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-22 00:21:04 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts 
+2026-06-22 00:21:04 [INFO    ] [NARRATIVE] Contexte inter-épisodes injecté
+2026-06-22 00:21:04 [INFO    ] =======================================================
+2026-06-22 00:21:04 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-22 00:21:05 [INFO    ] =======================================================
+2026-06-22 00:21:05 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-22 00:21:05 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-22 00:21:19 [DEBUG   ] [LLM] Ollama/mistral OK (2231 chars)
+2026-06-22 00:21:19 [INFO    ] [SCENARISTE] Script genere : 'Evangelion: The Crimson Detective'
+2026-06-22 00:21:19 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-22 00:21:26 [DEBUG   ] [LLM] Ollama/mistral OK (1128 chars)
+2026-06-22 00:21:26 [INFO    ] [SCRIPT DOCTOR] Score=82/100 | Valide=oui
+2026-06-22 00:21:26 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=82
+2026-06-22 00:21:26 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260621_222126_Evangelion:_The_Crimson_Detective.json
+2026-06-22 00:21:26 [WARNING ] [SCENARIO] Publication bus echouee : 'str' object has no attribute 'get'
+2026-06-22 00:21:26 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-22 00:21:26 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-22 00:21:26 [INFO    ] [SCENARIO] OK 'Evangelion: The Crimson Detective'
+2026-06-22 00:21:26 [INFO    ] =======================================================
+2026-06-22 00:21:26 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-22 00:21:26 [INFO    ] =======================================================
+2026-06-22 00:21:26 [INFO    ] [STORYBOARD] Generation -- titre='Evangelion: The Crimson Detective'
+2026-06-22 00:21:44 [INFO    ] [STORYBOARD] OK -- 8 shots generes
+2026-06-22 00:21:44 [INFO    ] [STORYBOARD] Sauvegarde -> 20260622_002144_Evangelion: The Crimson Detective.json
+2026-06-22 00:21:44 [INFO    ] [STORYBOARD] 8 jobs ComfyUI prepares
+2026-06-22 00:21:44 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-22 00:21:44 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-22 00:21:44 [INFO    ] [STORYBOARD] OK 8 jobs
+2026-06-22 00:21:44 [DEBUG   ] [CHARS] Aucun personnage preset détecté
+2026-06-22 00:21:44 [INFO    ] [STYLE] Ancre créée — seed=86110 | lora=mari-makinami-rebuild-ponyxl-lora-n... | arc=wonder
+2026-06-22 00:21:44 [INFO    ] [STYLE] Application continuité à 8 jobs
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 1 seed=86110 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 2 seed=86247 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 3 seed=86384 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 4 seed=86521 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 5 seed=86658 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 6 seed=86795 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 7 seed=86932 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [DEBUG   ] [STYLE] Job 8 seed=87069 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 00:21:44 [INFO    ] [STYLE] Continuité appliquée — seed_range=[86110, 87069]
+2026-06-22 00:21:44 [INFO    ] [STYLE] Continuité appliquée à 8 jobs
+2026-06-22 00:21:44 [WARNING ] [NARRATIVE] Mémoire échouée : 'str' object has no attribute 'get'
+2026-06-22 00:21:44 [INFO    ] =======================================================
+2026-06-22 00:21:44 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-22 00:21:44 [INFO    ] =======================================================
+2026-06-22 00:21:44 [INFO    ] [QUALITY_GATE] PASS — 19 nœuds | 0 avertissement(s)
+2026-06-22 00:21:44 [INFO    ] [PROMPT_ENG] Upsampling 8 jobs...
+2026-06-22 00:21:52 [DEBUG   ] [LLM] Ollama/mistral OK (1330 chars)
+2026-06-22 00:21:52 [INFO    ] [PROMPT_ENG] Job 1/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:21:55 [DEBUG   ] [LLM] Ollama/mistral OK (320 chars)
+2026-06-22 00:21:55 [INFO    ] [PROMPT_ENG] Job 2/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:21:59 [DEBUG   ] [LLM] Ollama/mistral OK (432 chars)
+2026-06-22 00:21:59 [INFO    ] [PROMPT_ENG] Job 3/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:22:05 [DEBUG   ] [LLM] Ollama/mistral OK (680 chars)
+2026-06-22 00:22:05 [INFO    ] [PROMPT_ENG] Job 4/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:22:09 [DEBUG   ] [LLM] Ollama/mistral OK (532 chars)
+2026-06-22 00:22:09 [INFO    ] [PROMPT_ENG] Job 5/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:22:13 [DEBUG   ] [LLM] Ollama/mistral OK (413 chars)
+2026-06-22 00:22:13 [INFO    ] [PROMPT_ENG] Job 6/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:22:17 [DEBUG   ] [LLM] Ollama/mistral OK (410 chars)
+2026-06-22 00:22:17 [INFO    ] [PROMPT_ENG] Job 7/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:22:21 [DEBUG   ] [LLM] Ollama/mistral OK (509 chars)
+2026-06-22 00:22:21 [INFO    ] [PROMPT_ENG] Job 8/8 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 00:22:21 [INFO    ] [PROMPT_ENG] OK — 8 jobs enrichis
+2026-06-22 00:22:21 [INFO    ] [PROMPT_ENG] Jobs enrichis : 8
+2026-06-22 00:31:14 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00009_ -> PASS | nettete=2872.1 | luminosite=87.6 | OK
+2026-06-22 00:31:14 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00010_ -> PASS | nettete=1542.9 | luminosite=55.9 | OK
+2026-06-22 00:31:15 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00011_ -> PASS | nettete=996.9 | luminosite=42.1 | OK
+2026-06-22 00:31:15 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00012_ -> PASS | nettete=1956.0 | luminosite=56.3 | OK
+2026-06-22 00:31:15 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00013_ -> PASS | nettete=1652.6 | luminosite=72.0 | OK
+2026-06-22 00:31:16 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00014_ -> PASS | nettete=1403.0 | luminosite=81.3 | OK
+2026-06-22 00:31:16 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00015_ -> PASS | nettete=1695.1 | luminosite=50.3 | OK
+2026-06-22 00:31:16 [INFO    ] [WATCHDOG/FRAME] job0007_20260622_003112_overlord__00016_ -> PASS | nettete=1804.3 | luminosite=62.0 | OK
+2026-06-22 00:31:17 [INFO    ] [WATCHDOG] Sequence coherente — drift moyen=0.146
+2026-06-22 00:31:17 [INFO    ] [CRITIQUE] production->postprod | PASS | score=80 | OK
+2026-06-22 00:31:17 [INFO    ] [PRODUCTION] OK 8 succes | 0 echecs
+2026-06-22 00:31:17 [INFO    ] =======================================================
+2026-06-22 00:31:17 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-22 00:31:17 [INFO    ] =======================================================
+2026-06-22 00:31:17 [INFO    ] [POST-PROD] Archive run depuis bus : workspace\archive\maestro_20260622_002102_prod
+2026-06-22 00:31:17 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-22 00:31:17 [WARNING ] [POST-PROD] Fallback : 100 images alpha
+2026-06-22 00:31:17 [INFO    ] [VIDEO] Assemblage 100 images -> workspace\exports\20260622_003117_untitled.mp4
+2026-06-22 00:31:22 [INFO    ] [VIDEO] OK Video creee : workspace\exports\20260622_003117_untitled.mp4
+2026-06-22 00:31:22 [INFO    ] [POST-PROD] OK Export final -> workspace\exports\20260622_003117_untitled.mp4
+2026-06-22 00:31:22 [INFO    ] [POST-PROD] OK Export -> workspace\exports\20260622_003117_untitled.mp4
+2026-06-22 00:31:22 [INFO    ] =======================================================
+2026-06-22 00:31:22 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-22 00:31:22 [INFO    ] =======================================================
+2026-06-22 00:31:23 [INFO    ] [3D] Moteurs disponibles : ['trimesh']
+2026-06-22 00:31:23 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-22 00:31:23 [INFO    ] [REPORTER] Génération rapport run=maestro_20260622_002102
+2026-06-22 00:31:23 [INFO    ] [REPORTER] OK — JSON: 20260622_003123_maestro_20260622_002102.json | MD: 20260622_003123_maestro_20260622_002102.md
+2026-06-22 00:31:23 [INFO    ] [REPORTER] Résumé : 100 images | vidéo: True
+2026-06-22 00:31:24 [INFO    ] [WATCHDOG] Arrete
+2026-06-22 00:31:24 [INFO    ] [WATCHDOG] Bilan : 8 frames | echecs=0 | ComfyUI uptime=615s
+2026-06-22 00:31:24 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260622_002102
+2026-06-22 00:31:24 [INFO    ] [CRITIQUE] Bilan : 4 verifications | score moyen=80.0 | sante=STABLE
+2026-06-22 00:31:24 [INFO    ] ============================================================
+2026-06-22 00:31:24 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260622_002102 | duree=621s
+2026-06-22 00:31:24 [INFO    ] ============================================================

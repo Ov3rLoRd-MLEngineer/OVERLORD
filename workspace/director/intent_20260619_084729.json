@@ -1,0 +1,14 @@
+{
+  "mode": "balance",
+  "emotion_arc": "wonder",
+  "emotion_params": {},
+  "world_context": {},
+  "personality_lead": "viktor",
+  "quality_threshold": 70,
+  "critic_strictness": 1.0,
+  "creative_risk": 0.5,
+  "fatigue_level": 0.0,
+  "inspiration_boost": [],
+  "world_run_id": null,
+  "created_at": "2026-06-19T08:47:28.883235"
+}

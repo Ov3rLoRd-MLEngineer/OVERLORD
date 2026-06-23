@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Asuka Langley",
+    "series": "Evangelion",
+    "tags": "asuka langley, red hair, blue eyes, evangelion, plug suit, tsundere",
+    "lora": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+    "lora_strength": 0.9
+  },
+  {
+    "name": "Rei Ayanami",
+    "series": "Evangelion",
+    "tags": "rei ayanami, blue hair, red eyes, evangelion, white plug suit, quiet",
+    "lora": "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+    "lora_strength": 0.85
+  }
+]

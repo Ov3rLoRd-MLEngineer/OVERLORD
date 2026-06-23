@@ -1,0 +1,98 @@
+2026-06-20 01:18:50 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.FACTORY | seuil=63 | arc=wonder
+2026-06-20 01:18:50 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 01:18:50 [INFO    ] [CHECKPOINT] Charge : maestro_20260620_003025 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-20 01:18:50 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_011849
+2026-06-20 01:18:50 [INFO    ] ============================================================
+2026-06-20 01:18:50 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 01:18:50 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_011849
+2026-06-20 01:18:50 [INFO    ]   Critique : OK
+2026-06-20 01:18:50 [INFO    ]   Watchdog : OK
+2026-06-20 01:18:50 [INFO    ]   Director : OK
+2026-06-20 01:18:50 [INFO    ]   Bus      : OK
+2026-06-20 01:18:50 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 01:18:50 [INFO    ] ============================================================
+2026-06-20 01:18:50 [INFO    ] =======================================================
+2026-06-20 01:18:50 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 01:18:50 [INFO    ] =======================================================
+2026-06-20 01:18:50 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-20 01:18:50 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 01:18:50 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 01:18:50 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 01:18:50 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 01:18:50 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 01:18:50 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 01:18:51 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 01:18:51 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 01:18:51 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 01:18:51 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 01:18:51 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 01:18:51 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 01:18:52 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 01:18:52 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 01:18:53 [DEBUG   ] RSS crunchyroll -> 10 articles
+2026-06-20 01:18:53 [DEBUG   ] RSS animenewsnet -> 10 articles
+2026-06-20 01:18:54 [DEBUG   ] RSS kotaku -> 10 articles
+2026-06-20 01:18:54 [DEBUG   ] RSS ign -> 10 articles
+2026-06-20 01:18:54 [DEBUG   ] RSS techcrunch -> 10 articles
+2026-06-20 01:18:54 [DEBUG   ] RSS theVerge -> 10 articles
+2026-06-20 01:18:55 [DEBUG   ] Trends ['anime 2025', 'manga trending', 'dragon ball', 'webtoon', 'AI art'] -> 5 items
+2026-06-20 01:18:57 [DEBUG   ] Trends ['animated short film', 'comic book'] -> 2 items
+2026-06-20 01:18:59 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 01:18:59 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 01:18:59 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 01:18:59 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 01:18:59 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 01:18:59 [INFO    ] =======================================================
+2026-06-20 01:18:59 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 01:18:59 [INFO    ] =======================================================
+2026-06-20 01:18:59 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=63
+2026-06-20 01:18:59 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 01:19:14 [DEBUG   ] [LLM] Ollama/mistral OK (2184 chars)
+2026-06-20 01:19:14 [ERROR   ] [SCENARISTE] JSON invalide
+2026-06-20 01:19:14 [ERROR   ] [SCENARIO] Echec generation initiale
+2026-06-20 01:19:19 [INFO    ] [CRITIQUE] scenario->storyboard | REJECT | score=10 | Erreur dans les donnees : json_parse_failed
+2026-06-20 01:19:19 [WARNING ] [MAESTRO/CRITIQUE] scenario->storyboard REJECT (tentative 1/2) -- relance
+2026-06-20 01:19:22 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=70
+2026-06-20 01:19:22 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 01:19:34 [DEBUG   ] [LLM] Ollama/mistral OK (2461 chars)
+2026-06-20 01:19:34 [INFO    ] [SCENARISTE] Script genere : 'Dragon Ball: Detective Conan Crossover'
+2026-06-20 01:19:34 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 01:19:41 [DEBUG   ] [LLM] Ollama/mistral OK (1044 chars)
+2026-06-20 01:19:41 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-20 01:19:41 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-20 01:19:41 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260619_231941_Dragon_Ball:_Detective_Conan_Crossover.json
+2026-06-20 01:19:41 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-20 01:19:41 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 01:19:41 [INFO    ] [SCENARIO] OK 'Dragon Ball: Detective Conan Crossover'
+2026-06-20 01:19:41 [INFO    ] =======================================================
+2026-06-20 01:19:41 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-20 01:19:41 [INFO    ] =======================================================
+2026-06-20 01:19:41 [INFO    ] [STORYBOARD] Generation -- titre='Dragon Ball: Detective Conan Crossover'
+2026-06-20 01:19:57 [INFO    ] [STORYBOARD] OK -- 8 shots generes
+2026-06-20 01:19:57 [INFO    ] [STORYBOARD] Sauvegarde -> 20260620_011957_Dragon Ball: Detective Conan Crossover.json
+2026-06-20 01:19:57 [INFO    ] [STORYBOARD] 8 jobs ComfyUI prepares
+2026-06-20 01:19:57 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-20 01:19:57 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-20 01:19:57 [INFO    ] [STORYBOARD] OK 8 jobs
+2026-06-20 01:19:57 [INFO    ] =======================================================
+2026-06-20 01:19:57 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-20 01:19:57 [INFO    ] =======================================================
+2026-06-20 01:22:03 [INFO    ] [CRITIQUE] production->postprod | WARN | score=40 | Taux succes faible : 0/8
+2026-06-20 01:22:03 [WARNING ] [MAESTRO/CRITIQUE] production->postprod warn
+2026-06-20 01:22:03 [INFO    ] [PRODUCTION] OK 0 succes | 8 echecs
+2026-06-20 01:22:03 [INFO    ] =======================================================
+2026-06-20 01:22:03 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-20 01:22:03 [INFO    ] =======================================================
+2026-06-20 01:22:03 [WARNING ] [POST-PROD] Aucune image -- ignore
+2026-06-20 01:22:03 [INFO    ] =======================================================
+2026-06-20 01:22:03 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-20 01:22:03 [INFO    ] =======================================================
+2026-06-20 01:22:04 [INFO    ] [3D] Moteurs disponibles : ['trimesh']
+2026-06-20 01:22:04 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-20 01:22:07 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 01:22:07 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=195s
+2026-06-20 01:22:07 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260620_011849
+2026-06-20 01:22:07 [INFO    ] [CRITIQUE] Bilan : 5 verifications | score moyen=58.0 | sante=DEGRADED
+2026-06-20 01:22:07 [INFO    ] ============================================================
+2026-06-20 01:22:07 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260620_011849 | duree=195s
+2026-06-20 01:22:07 [INFO    ] ============================================================

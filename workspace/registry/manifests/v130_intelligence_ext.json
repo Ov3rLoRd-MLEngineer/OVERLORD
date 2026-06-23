@@ -1,0 +1,10 @@
+{
+  "name": "v130_intelligence_ext",
+  "version": "V1.30",
+  "checksum": "d931ec744961cef5",
+  "lines": 779,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.955430",
+  "path": "agents\\v130_intelligence_ext.py"
+}

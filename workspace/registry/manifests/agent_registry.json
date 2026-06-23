@@ -1,0 +1,12 @@
+{
+  "name": "agent_registry",
+  "version": "V1.70",
+  "checksum": "f368060442e0fb1a",
+  "lines": 356,
+  "dependencies": [
+    "agent_registry"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.726588",
+  "path": "agents\\agent_registry.py"
+}

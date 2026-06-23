@@ -1,0 +1,14 @@
+{
+  "name": "benchmark_arena",
+  "version": "V1.47",
+  "checksum": "db89ef2d942bc12f",
+  "lines": 290,
+  "dependencies": [
+    "overlord_utils",
+    "cost_tracker",
+    "benchmark_arena"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.836876",
+  "path": "agents\\benchmark_arena.py"
+}

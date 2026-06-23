@@ -1,0 +1,28 @@
+2026-06-20 05:41:47 [INFO    ] [SUPERVISOR] Batch started : 8 jobs | run_id=maestro_20260620_054107_prod
+2026-06-20 05:41:47 [INFO    ] [SUPERVISOR] Job 1/8 | hash=c127ffd0
+2026-06-20 05:41:47 [DEBUG   ] [SUPERVISOR] Queued : c4678d8e-13f7-4ca7-9e5e-e8b7388d28ba
+2026-06-20 05:41:49 [ERROR   ] [SUPERVISOR] ComfyUI erreur sur c4678d8e-13f7-4ca7-9e5e-e8b7388d28ba
+2026-06-20 05:41:49 [WARNING ] [SUPERVISOR] Job 1 ComfyUI failure — attempt 1
+2026-06-20 05:41:54 [DEBUG   ] [SUPERVISOR] Queued : 0e730e57-3d90-4524-929b-8b1565bdec80
+2026-06-20 05:41:54 [WARNING ] [SUPERVISOR] Job 1 low quality score (0 < 80.0) — retrying
+2026-06-20 05:41:59 [DEBUG   ] [SUPERVISOR] Queued : d36fd7af-3e76-478f-b94c-0804e6dc3aca
+2026-06-20 05:41:59 [INFO    ] [SUPERVISOR] Job 2/8 | hash=ed7d5456
+2026-06-20 05:41:59 [DEBUG   ] [SUPERVISOR] Queued : d32bb584-4f0a-4470-a0a5-cd7029ebcd38
+2026-06-20 05:41:59 [ERROR   ] [SUPERVISOR] ComfyUI erreur sur d32bb584-4f0a-4470-a0a5-cd7029ebcd38
+2026-06-20 05:41:59 [WARNING ] [SUPERVISOR] Job 2 ComfyUI failure — attempt 1
+2026-06-20 05:42:08 [DEBUG   ] [SUPERVISOR] Queued : ff802cda-0224-40cc-87a5-d47cf93fcf1d
+2026-06-20 05:42:08 [WARNING ] [SUPERVISOR] Job 2 low quality score (0 < 80.0) — retrying
+2026-06-20 05:42:13 [DEBUG   ] [SUPERVISOR] Queued : 1f1828e4-af67-48a0-8242-0a8817acb6f0
+2026-06-20 05:42:13 [ERROR   ] [SUPERVISOR] ComfyUI erreur sur 1f1828e4-af67-48a0-8242-0a8817acb6f0
+2026-06-20 05:42:13 [WARNING ] [SUPERVISOR] Job 2 ComfyUI failure — attempt 3
+2026-06-20 05:42:18 [ERROR   ] [SUPERVISOR] Job 2 abandoned
+2026-06-20 05:42:18 [INFO    ] [SUPERVISOR] Job 3/8 | hash=5754228c
+2026-06-20 05:42:18 [DEBUG   ] [SUPERVISOR] Queued : 52f8c8fe-54dc-4bdc-bab1-276eae28bdd5
+2026-06-20 05:42:18 [ERROR   ] [SUPERVISOR] ComfyUI erreur sur 52f8c8fe-54dc-4bdc-bab1-276eae28bdd5
+2026-06-20 05:42:18 [WARNING ] [SUPERVISOR] Job 3 ComfyUI failure — attempt 1
+2026-06-20 05:42:23 [DEBUG   ] [SUPERVISOR] Queued : de23fc0f-e2dc-46a5-bac9-76868ee42bd5
+2026-06-20 05:42:23 [ERROR   ] [SUPERVISOR] ComfyUI erreur sur de23fc0f-e2dc-46a5-bac9-76868ee42bd5
+2026-06-20 05:42:28 [WARNING ] [SUPERVISOR] Job 3 ComfyUI failure — attempt 2
+2026-06-20 05:42:33 [DEBUG   ] [SUPERVISOR] Queued : fe3c854a-573d-417e-a635-2dc5a300ef43
+2026-06-20 05:42:33 [ERROR   ] [SUPERVISOR] ComfyUI erreur sur fe3c854a-573d-417e-a635-2dc5a300ef43
+2026-06-20 05:42:33 [WARNING ] [SUPERVISOR] Job 3 ComfyUI failure — attempt 3

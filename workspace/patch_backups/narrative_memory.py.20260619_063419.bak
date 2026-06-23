@@ -1,0 +1,391 @@
+"""
+agents/narrative_memory.py — Mémoire Narrative Persistante V1.44
+Graphe de continuité entre épisodes : personnages, lieux, événements, relations.
+Utilise NetworkX + ChromaDB. Le Scénariste consulte ce graphe avant chaque génération.
+
+Usage :
+    from agents.narrative_memory import NarrativeMemory
+    mem = NarrativeMemory("Dragon Ball OverLord")
+    mem.add_character("Goku", {"status":"vivant","derniere_apparition":"ep1","pouvoir":"Super Saiyan"})
+    mem.add_event("ep1", "Goku vainc Broly", characters=["Goku","Broly"], location="Plaine Désertique")
+    context = mem.get_scene_context("ep2", characters=["Goku"])
+"""
+
+import json
+import logging
+import hashlib
+from pathlib import Path
+from datetime import datetime
+from typing import Optional
+
+# ── Charte graphique Ov3rLoRd ─────────────────────────────────────────
+try:
+    import colorama; colorama.init()
+    C_GREEN  = "\033[92m"
+    C_YELLOW = "\033[93m"
+    C_RED    = "\033[91m"
+    C_CYAN   = "\033[96m"
+    C_BLUE   = "\033[94m"
+    C_MAGENTA= "\033[95m"
+    C_BOLD   = "\033[1m"
+    C_DIM    = "\033[2m"
+    C_RESET  = "\033[0m"
+except ImportError:
+    C_GREEN=C_YELLOW=C_RED=C_CYAN=C_BLUE=C_MAGENTA=C_BOLD=C_DIM=C_RESET=""
+
+
+try:
+    import networkx as nx
+    NX_OK = True
+except ImportError:
+    NX_OK = False
+
+try:
+    import chromadb
+    CHROMA_OK = True
+except ImportError:
+    CHROMA_OK = False
+
+log = logging.getLogger("narrative_memory")
+MEMORY_DIR = Path("workspace/narrative")
+
+
+class NarrativeMemory:
+    """
+    Graphe de mémoire narrative persistant.
+    Noeuds : Personnage, Lieu, Événement, Concept
+    Arêtes : relation, apparait_dans, se_passe_à, précède, cause
+    """
+
+    def __init__(self, series_name: str, logger: logging.Logger = None):
+        self.log         = logger or log
+        self.series      = series_name
+        # Pont vers WorldModel V1.30 si disponible
+        self._world_model = None
+        try:
+            from agents.v130_world_model import get_world
+            self._world_model = get_world(series_name)
+            self.log.info("[NARRATIVE] WorldModel V1.30 connecté")
+        except Exception:
+            pass
+        self.series_id   = hashlib.md5(series_name.encode()).hexdigest()[:8]
+        self.memory_path = MEMORY_DIR / self.series_id
+        self.memory_path.mkdir(parents=True, exist_ok=True)
+        self.graph_file  = self.memory_path / "graph.json"
+
+        # Graphe NetworkX en mémoire
+        if NX_OK:
+            self.G = nx.DiGraph()
+            self._load_graph()
+        else:
+            self.G = None
+            self.log.warning("[NARRATIVE] networkx non installé — pip install networkx")
+
+        # Fallback JSON si pas de NetworkX
+        self._json_store = self._load_json_store()
+
+        # ChromaDB pour recherche sémantique
+        self._chroma = None
+        if CHROMA_OK:
+            try:
+                client = chromadb.PersistentClient(path=str(self.memory_path / "chroma"))
+                self._chroma = client.get_or_create_collection(f"narrative_{self.series_id}")
+            except Exception as e:
+                self.log.warning(f"[NARRATIVE] ChromaDB indisponible : {e}")
+
+        self.log.info(f"[NARRATIVE] Série '{series_name}' — {self._node_count()} noeuds chargés")
+
+    # ── Chargement/Sauvegarde ─────────────────────────────────────────
+    def _load_graph(self):
+        if not self.graph_file.exists():
+            return
+        try:
+            data = json.loads(self.graph_file.read_text(encoding="utf-8"))
+            if NX_OK:
+                self.G = nx.node_link_graph(data)
+        except Exception as e:
+            self.log.warning(f"[NARRATIVE] Erreur chargement graphe : {e}")
+
+    def _save_graph(self):
+        try:
+            if NX_OK and self.G:
+                data = nx.node_link_data(self.G)
+                self.graph_file.write_text(json.dumps(data, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+        except Exception as e:
+            self.log.warning(f"[NARRATIVE] Erreur sauvegarde graphe : {e}")
+        self._save_json_store()
+
+    def _load_json_store(self) -> dict:
+        path = self.memory_path / "store.json"
+        if path.exists():
+            try:
+                return json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        return {"characters": {}, "locations": {}, "events": {}, "relations": []}
+
+    def _save_json_store(self):
+        path = self.memory_path / "store.json"
+        path.write_text(json.dumps(self._json_store, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+
+    def _node_count(self) -> int:
+        if NX_OK and self.G:
+            return self.G.number_of_nodes()
+        return sum(len(v) for v in self._json_store.values() if isinstance(v, dict))
+
+    # ── Ajout de noeuds ──────────────────────────────────────────────
+    def add_character(self, name: str, attrs: dict = None):
+        """Ajoute ou met à jour un personnage."""
+        attrs = attrs or {}
+        attrs.update({"type": "character", "name": name, "updated_at": datetime.now().isoformat()})
+        if NX_OK and self.G is not None:
+            self.G.add_node(f"char_{name}", **attrs)
+        self._json_store["characters"][name] = attrs
+        self._save_graph()
+        self.log.debug(f"[NARRATIVE] Personnage : {name} | status={attrs.get('status','?')}")
+
+    def add_location(self, name: str, attrs: dict = None):
+        """Ajoute ou met à jour un lieu."""
+        attrs = attrs or {}
+        attrs.update({"type": "location", "name": name})
+        if NX_OK and self.G is not None:
+            self.G.add_node(f"loc_{name}", **attrs)
+        self._json_store["locations"][name] = attrs
+        self._save_graph()
+
+    def add_event(self, episode: str, description: str,
+                  characters: list = None, location: str = None,
+                  consequences: list = None, attrs: dict = None):
+        """
+        Enregistre un événement et ses relations.
+        Lie automatiquement les personnages et lieux concernés.
+        """
+        event_id = f"ev_{episode}_{hashlib.md5(description.encode()).hexdigest()[:6]}"
+        ev_attrs = {
+            "type":          "event",
+            "episode":       episode,
+            "description":   description,
+            "characters":    characters or [],
+            "location":      location or "",
+            "consequences":  consequences or [],
+            "timestamp":     datetime.now().isoformat(),
+            **(attrs or {}),
+        }
+
+        if NX_OK and self.G is not None:
+            self.G.add_node(event_id, **ev_attrs)
+            for char in (characters or []):
+                char_node = f"char_{char}"
+                if char_node not in self.G:
+                    self.G.add_node(char_node, type="character", name=char)
+                self.G.add_edge(char_node, event_id, relation="apparait_dans")
+            if location:
+                loc_node = f"loc_{location}"
+                if loc_node not in self.G:
+                    self.G.add_node(loc_node, type="location", name=location)
+                self.G.add_edge(event_id, loc_node, relation="se_passe_à")
+
+        self._json_store["events"][event_id] = ev_attrs
+        self._save_graph()
+
+        # Indexer dans ChromaDB pour recherche sémantique
+        if self._chroma:
+            try:
+                self._chroma.add(
+                    documents=[description],
+                    metadatas=[{"episode": episode, "characters": str(characters)}],
+                    ids=[event_id],
+                )
+            except Exception:
+                pass
+
+        self.log.info(f"[NARRATIVE] Événement ep{episode} : {description[:60]}")
+        return event_id
+
+    def add_relation(self, char1: str, char2: str, relation_type: str, episode: str = ""):
+        """Lie deux personnages (allié, ennemi, famille, rival...)."""
+        if NX_OK and self.G is not None:
+            self.G.add_edge(f"char_{char1}", f"char_{char2}",
+                            relation=relation_type, since_episode=episode)
+        self._json_store["relations"].append({
+            "from": char1, "to": char2, "type": relation_type, "episode": episode
+        })
+        self._save_graph()
+
+    def kill_character(self, name: str, episode: str, killer: str = ""):
+        """Marque un personnage comme mort — ne réapparaîtra plus."""
+        if name in self._json_store["characters"]:
+            self._json_store["characters"][name]["status"]     = "mort"
+            self._json_store["characters"][name]["died_in"]    = episode
+            self._json_store["characters"][name]["killed_by"]  = killer
+        if NX_OK and self.G is not None:
+            node = f"char_{name}"
+            if node in self.G:
+                self.G.nodes[node]["status"] = "mort"
+                self.G.nodes[node]["died_in"] = episode
+        self._save_graph()
+        self.log.info(f"[NARRATIVE] ☠ {name} mort en ep{episode}" + (f" (par {killer})" if killer else ""))
+
+    # ── Requêtes ─────────────────────────────────────────────────────
+    def get_scene_context(self, episode: str, characters: list = None,
+                          location: str = None) -> dict:
+        """
+        Retourne le contexte narratif complet pour une scène.
+        Utilisé par scenario.py avant la génération.
+        """
+        context = {
+            "series":    self.series,
+            "episode":   episode,
+            "warnings":  [],
+            "characters_context": {},
+            "location_context":   {},
+            "recent_events":      [],
+            "active_relations":   [],
+        }
+
+        # Vérifier les personnages
+        for char in (characters or []):
+            char_data = self._json_store["characters"].get(char, {})
+            if char_data.get("status") == "mort":
+                context["warnings"].append(
+                    f"⚠ CONTINUITÉ : {char} est mort en ep{char_data.get('died_in','?')} — ne peut pas apparaître !"
+                )
+            context["characters_context"][char] = char_data
+
+        # Contexte du lieu
+        if location:
+            context["location_context"] = self._json_store["locations"].get(location, {})
+
+        # Événements récents (5 derniers)
+        events = list(self._json_store["events"].values())
+        events.sort(key=lambda e: e.get("timestamp", ""), reverse=True)
+        context["recent_events"] = events[:5]
+
+        # Relations actives entre les personnages de la scène
+        for rel in self._json_store["relations"]:
+            if rel["from"] in (characters or []) or rel["to"] in (characters or []):
+                context["active_relations"].append(rel)
+
+        # Recherche sémantique si ChromaDB
+        if self._chroma and characters:
+            try:
+                query = f"episode {episode} {' '.join(characters or [])}"
+                results = self._chroma.query(query_texts=[query], n_results=3)
+                if results["documents"]:
+                    context["semantic_context"] = results["documents"][0]
+            except Exception:
+                pass
+
+        if context["warnings"]:
+            for w in context["warnings"]:
+                self.log.warning(f"[NARRATIVE] {w}")
+
+        # Enrichir avec WorldModel V1.30
+        if self._world_model:
+            try:
+                world_ctx = self._world_model.get_context_for_run()
+                context["world_model"] = world_ctx
+                # Valider les prompts via ContinuityGuard
+                for char in (characters or []):
+                    test_prompt = f"{char} appears in scene"
+                    validated = self._world_model.validate_and_fix_prompt(test_prompt)
+                    if validated.get("fixed"):
+                        context["warnings"].append(
+                            f"[WORLD] Continuité : {validated.get('fixes_applied','')}"
+                        )
+            except Exception:
+                pass
+
+        return context
+
+    def get_character_arc(self, name: str) -> dict:
+        """Retourne l'arc complet d'un personnage à travers les épisodes."""
+        char_data  = self._json_store["characters"].get(name, {})
+        appearances = [
+            ev for ev in self._json_store["events"].values()
+            if name in ev.get("characters", [])
+        ]
+        appearances.sort(key=lambda e: e.get("episode", ""))
+        return {
+            "character": name,
+            "data":      char_data,
+            "appearances": appearances,
+            "relations": [r for r in self._json_store["relations"]
+                          if r["from"] == name or r["to"] == name],
+        }
+
+    def export_for_llm(self) -> str:
+        """
+        Génère un résumé compact pour injecter dans le prompt du Scénariste.
+        Format optimisé tokens — moins de 500 tokens.
+        """
+        lines = [f"=== MÉMOIRE NARRATIVE : {self.series} ==="]
+
+        # Personnages vivants
+        alive = {k: v for k, v in self._json_store["characters"].items()
+                 if v.get("status") != "mort"}
+        dead  = {k: v for k, v in self._json_store["characters"].items()
+                 if v.get("status") == "mort"}
+
+        if alive:
+            lines.append(f"Personnages actifs ({len(alive)}) : {', '.join(alive.keys())}")
+        if dead:
+            lines.append(f"Morts (NE PAS FAIRE RÉAPPARAÎTRE) : {', '.join(dead.keys())}")
+
+        # Relations clés
+        rels = self._json_store["relations"][:5]
+        if rels:
+            lines.append("Relations : " + " | ".join(f"{r['from']} {r['type']} {r['to']}" for r in rels))
+
+        # Derniers événements
+        events = sorted(self._json_store["events"].values(),
+                        key=lambda e: e.get("timestamp",""), reverse=True)[:3]
+        if events:
+            lines.append("Événements récents :")
+            for ev in events:
+                lines.append(f"  ep{ev.get('episode','?')} : {ev.get('description','')[:80]}")
+
+        return "\n".join(lines)
+
+    def summary(self) -> dict:
+        return {
+            "series":     self.series,
+            "characters": len(self._json_store["characters"]),
+            "locations":  len(self._json_store["locations"]),
+            "events":     len(self._json_store["events"]),
+            "relations":  len(self._json_store["relations"]),
+            "nx_nodes":   self.G.number_of_nodes() if NX_OK and self.G else 0,
+            "nx_edges":   self.G.number_of_edges() if NX_OK and self.G else 0,
+        }
+
+
+# ── Intégration dans scenario.py ─────────────────────────────────────
+def enrich_prompt_with_memory(prompt: str, series_name: str,
+                               episode: str, characters: list = None) -> str:
+    """
+    Injecte le contexte narratif dans le prompt du Scénariste.
+    Appeler avant _call_claude() dans scenario.py.
+    """
+    try:
+        mem     = NarrativeMemory(series_name)
+        context = mem.export_for_llm()
+        if context.strip():
+            return f"{context}\n\nRESPECTE ABSOLUMENT la continuité ci-dessus.\n\n{prompt}"
+    except Exception as e:
+        log.warning(f"[NARRATIVE] Enrichissement prompt échoué : {e}")
+    return prompt
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    mem = NarrativeMemory("Dragon Ball OverLord")
+    mem.add_character("Goku",  {"status":"vivant","pouvoir":"Ultra Instinct","rang":"Guerrier Z"})
+    mem.add_character("Broly", {"status":"vivant","pouvoir":"Super Saiyan Légendaire"})
+    mem.add_character("Raditz",{"status":"mort"})
+    mem.add_location("Plaine Désertique", {"ambiance":"post-apocalyptique","météo":"orage"})
+    mem.add_event("1", "Goku affronte Broly dans la plaine désertique",
+                  characters=["Goku","Broly"], location="Plaine Désertique",
+                  consequences=["Broly découvre sa vraie puissance"])
+    mem.add_relation("Goku", "Broly", "rival", episode="1")
+    print(mem.export_for_llm())
+    print("\nSummary :", json.dumps(mem.summary(), indent=2))

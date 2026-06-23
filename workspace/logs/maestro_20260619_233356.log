@@ -1,0 +1,73 @@
+2026-06-19 23:33:56 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=70 | arc=wonder
+2026-06-19 23:33:56 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-19 23:33:56 [INFO    ] [CHECKPOINT] Aucun checkpoint pour 'anime_Dragon_Ball'
+2026-06-19 23:33:56 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260619_233356
+2026-06-19 23:33:56 [INFO    ] ============================================================
+2026-06-19 23:33:56 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-19 23:33:56 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260619_233356
+2026-06-19 23:33:56 [INFO    ]   Critique : OK
+2026-06-19 23:33:56 [INFO    ]   Watchdog : OK
+2026-06-19 23:33:56 [INFO    ]   Director : OK
+2026-06-19 23:33:56 [INFO    ]   Bus      : OK
+2026-06-19 23:33:56 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-19 23:33:56 [INFO    ] ============================================================
+2026-06-19 23:33:56 [INFO    ] =======================================================
+2026-06-19 23:33:56 [INFO    ] BLOC 1 -- SOURCING
+2026-06-19 23:33:56 [INFO    ] =======================================================
+2026-06-19 23:33:56 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-19 23:33:57 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-19 23:33:57 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-19 23:33:57 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-19 23:33:57 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-19 23:33:57 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-19 23:33:57 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-19 23:33:58 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-19 23:33:59 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-19 23:34:00 [DEBUG   ] RSS crunchyroll -> 10 articles
+2026-06-19 23:34:00 [DEBUG   ] RSS animenewsnet -> 10 articles
+2026-06-19 23:34:01 [DEBUG   ] RSS kotaku -> 10 articles
+2026-06-19 23:34:01 [DEBUG   ] RSS ign -> 10 articles
+2026-06-19 23:34:01 [DEBUG   ] RSS techcrunch -> 10 articles
+2026-06-19 23:34:01 [DEBUG   ] RSS theVerge -> 10 articles
+2026-06-19 23:34:01 [DEBUG   ] Trends ['anime 2025', 'manga trending', 'dragon ball', 'webtoon', 'AI art'] -> 5 items
+2026-06-19 23:34:04 [DEBUG   ] Trends ['animated short film', 'comic book'] -> 2 items
+2026-06-19 23:34:06 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 61 mots-cles
+2026-06-19 23:34:06 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos...
+2026-06-19 23:34:06 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-19 23:34:06 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-19 23:34:06 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos
+2026-06-19 23:34:06 [INFO    ] =======================================================
+2026-06-19 23:34:06 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-19 23:34:06 [INFO    ] =======================================================
+2026-06-19 23:34:06 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=70
+2026-06-19 23:34:06 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-19 23:34:06 [WARNING ] [LLM] Claude echoue : Claude HTTP 400 : {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_i -- tentative Ollama
+2026-06-19 23:34:06 [ERROR   ] [LLM] Claude indisponible et mode=online -- aucun fallback
+2026-06-19 23:34:06 [ERROR   ] [MAESTRO] Erreur critique : safe_json_parse() got an unexpected keyword argument 'logger'
+Traceback (most recent call last):
+  File "D:\OVERLORD\maestro.py", line 648, in run_pipeline
+    script = block_scenario(trend_report, cfg, state, logger, critic, watchdog, cp_mgr)
+  File "D:\OVERLORD\maestro.py", line 339, in block_scenario
+    script = run_scenario(
+        trend_report      = trend_report,
+    ...<4 lines>...
+        logger            = logger
+    )
+  File "D:\OVERLORD\agents\scenario.py", line 172, in run_scenario
+    script = generate_script(trend_report, media_type, duration, universe, logger=log)
+  File "D:\OVERLORD\agents\scenario.py", line 102, in generate_script
+    result = _parse(raw, logger=log)
+  File "D:\OVERLORD\agents\scenario.py", line 66, in _parse
+    ok, data, _ = safe_json_parse(raw, logger=logger)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+TypeError: safe_json_parse() got an unexpected keyword argument 'logger'
+2026-06-19 23:34:11 [INFO    ] [WATCHDOG] Arrete
+2026-06-19 23:34:11 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=0s
+2026-06-19 23:34:11 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260619_233356 | Blocs termines : ['sourcing']
+2026-06-19 23:34:11 [INFO    ] [CRITIQUE] Bilan : 1 verifications | score moyen=80.0 | sante=STABLE

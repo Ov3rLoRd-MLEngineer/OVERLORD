@@ -1,0 +1,10 @@
+{
+  "name": "sourcing_multisensor",
+  "version": "V?.?",
+  "checksum": "2c2ff841f7ea3bd5",
+  "lines": 579,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.597682",
+  "path": "agents\\sourcing_multisensor.py"
+}

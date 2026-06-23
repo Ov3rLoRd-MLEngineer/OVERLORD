@@ -1,0 +1,25 @@
+{
+  "name": "Mari Makinami Illustrious",
+  "series": "Rebuild of Evangelion",
+  "role": "protagonist",
+  "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+  "lora_strength": 0.88,
+  "base_tags": "mari makinami, mari illustrious makinami, brown hair, pigtails, green eyes, glasses, evangelion, pink plug suit, unit-08 pilot, cheerful expression, energetic",
+  "action_tags": "enthusiastic battle pose, happy battle face, energetic",
+  "portrait_tags": "smile, cheerful, glasses, looking at viewer",
+  "casual_tags": "school uniform, glasses, ponytails",
+  "physical": {
+    "hair": "dark brown hair in pigtails",
+    "eyes": "green eyes behind round glasses",
+    "height": "average, athletic",
+    "distinctive": "round glasses, cheerful demeanor, British accent"
+  },
+  "personality": "cheerful, combat-loving, mysterious past, always smiling",
+  "color_palette": [
+    "pink",
+    "white",
+    "brown",
+    "green"
+  ],
+  "created_at": "2026-06-23T01:29:50.021202"
+}

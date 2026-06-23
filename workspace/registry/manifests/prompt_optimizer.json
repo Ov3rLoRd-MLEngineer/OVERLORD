@@ -1,0 +1,14 @@
+{
+  "name": "prompt_optimizer",
+  "version": "V1.47",
+  "checksum": "9424e318df4342ae",
+  "lines": 288,
+  "dependencies": [
+    "prompt_optimizer",
+    "overlord_utils",
+    "cost_tracker"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.327081",
+  "path": "agents\\prompt_optimizer.py"
+}

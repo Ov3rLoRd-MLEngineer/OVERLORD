@@ -1,0 +1,759 @@
+[2026-06-19 02:24:06] [ERR ] Bundle introuvable : patch_bundle.txt
+[2026-06-19 02:24:31] [INFO] 9 patch(es) détecté(s)
+[2026-06-19 02:24:31] [INFO] ── [UPDATE] START_OVERLORD.bat
+[2026-06-19 02:24:31] [INFO]    Raison : Ajoute chcp 65001 + PYTHONIOENCODING=utf-8 + PYTHONUTF8=1 en tête.
+Règle 100% des UnicodeEncodeError sur terminal Window...
+[2026-06-19 02:24:31] [INFO]   Backup → workspace\patch_backups\START_OVERLORD.bat.20260619_022431.bak
+[2026-06-19 02:24:31] [OK  ]   ✓ UPDATE → START_OVERLORD.bat (1197 chars)
+[2026-06-19 02:24:31] [INFO] ── [UPDATE] aAa_Auditeur.py
+[2026-06-19 02:24:31] [INFO]    Raison : - Injecte PYTHONIOENCODING=utf-8 dans l'env de chaque subprocess -> plus d'UnicodeEncodeError dans les rapports.
+- subpr...
+[2026-06-19 02:24:31] [WARN]   Fichier introuvable pour UPDATE, création forcée.
+[2026-06-19 02:24:31] [OK  ]   ✓ CREATE → aAa_Auditeur.py (2208 chars)
+[2026-06-19 02:24:31] [INFO] ── [UPDATE] agents/v130_emotion_engine.py
+[2026-06-19 02:24:31] [INFO]    Raison : FIX CRITIQUE : la fonction _get_api_key() avait un 'break' hors boucle (SyntaxError ligne 55).
+Réécriture propre avec de...
+[2026-06-19 02:24:31] [INFO]   Backup → workspace\patch_backups\v130_emotion_engine.py.20260619_022431.bak
+[2026-06-19 02:24:31] [OK  ]   ✓ UPDATE → agents/v130_emotion_engine.py (4264 chars)
+[2026-06-19 02:24:31] [INFO] ── [UPDATE] agents/v130_world_model.py
+[2026-06-19 02:24:31] [INFO]    Raison : FIX CRITIQUE : meme bug que v130_emotion_engine.py — break outside loop ligne 64.
+Meme correction : deux boucles for imb...
+[2026-06-19 02:24:31] [INFO]   Backup → workspace\patch_backups\v130_world_model.py.20260619_022431.bak
+[2026-06-19 02:24:31] [OK  ]   ✓ UPDATE → agents/v130_world_model.py (4124 chars)
+[2026-06-19 02:24:31] [INFO] ── [CREATE] overlord_utils_utf8.py
+[2026-06-19 02:24:31] [INFO]    Raison : Module autonome a importer en tete de maestro.py, oracle_interface.py, et tout entry-point.
+Remplace les 30+ sys.stdout ...
+[2026-06-19 02:24:31] [OK  ]   ✓ CREATE → overlord_utils_utf8.py (1014 chars)
+[2026-06-19 02:24:31] [INFO] ── [CREATE] agents/api_server.py
+[2026-06-19 02:24:31] [INFO]    Raison : Pont Flask HTML<->Python V1.49.
+Port 5757 (evite conflit avec ComfyUI:8188 et Flask debug:5000).
+Tous les runs sont non-...
+[2026-06-19 02:24:31] [OK  ]   ✓ CREATE → agents/api_server.py (7154 chars)
+[2026-06-19 02:24:31] [INFO] ── [CREATE] deploy.py
+[2026-06-19 02:24:31] [INFO]    Raison : Deploiement depuis ZIP avec backup automatique + skip si hash identique + protection fichiers sensibles.
+Hash SHA256 par...
+[2026-06-19 02:24:31] [OK  ]   ✓ CREATE → deploy.py (3964 chars)
+[2026-06-19 02:24:31] [INFO] ── [CREATE] test_integration.py
+[2026-06-19 02:24:31] [INFO]    Raison : Tests flux de donnees end-to-end V1.49.
+Couvre : ContextBus (singleton + rw + filtre), Director (init + intent + publica...
+[2026-06-19 02:24:31] [OK  ]   ✓ CREATE → test_integration.py (8458 chars)
+[2026-06-19 02:24:31] [INFO] ── [UPDATE] agents/oracle_interface.py
+[2026-06-19 02:24:31] [INFO]    Raison : V1.49 : Directive co-fondateur injectee dans SYSTEM_PROMPT.
+L'Oracle sait maintenant qu'il est le partenaire technique f...
+[2026-06-19 02:24:31] [INFO]   Backup → workspace\patch_backups\oracle_interface.py.20260619_022431.bak
+[2026-06-19 02:24:31] [OK  ]   ✓ UPDATE → agents/oracle_interface.py (7460 chars)
+[2026-06-19 02:38:02] [INFO] 4 patch(es) détecté(s)
+[2026-06-19 02:38:02] [INFO] ── [UPDATE] maestro.py
+[2026-06-19 02:38:02] [INFO]    Raison : FIXES V1.49 appliqués sur maestro.py :
+1. import overlord_utils_utf8 en premiere ligne -> UTF-8 force sur tout le proces...
+[2026-06-19 02:38:02] [INFO]   Backup → workspace\patch_backups\maestro.py.20260619_023802.bak
+[2026-06-19 02:38:02] [OK  ]   ✓ UPDATE → maestro.py (32674 chars)
+[2026-06-19 02:38:02] [INFO] ── [UPDATE] overlord_launcher.py
+[2026-06-19 02:38:02] [INFO]    Raison : FIX CRITIQUE : toutes les couleurs avec canal alpha (#RRGGBBAA) remplacées par #RRGGBB.
+tkinter ne supporte pas la trans...
+[2026-06-19 02:38:02] [WARN]   Fichier introuvable pour UPDATE, création forcée.
+[2026-06-19 02:38:02] [OK  ]   ✓ CREATE → overlord_launcher.py (12750 chars)
+[2026-06-19 02:38:02] [INFO] ── [UPDATE] agents/pipeline_conscience.py
+[2026-06-19 02:38:02] [INFO]    Raison : Intégration context_bus V1.49 : _publish_to_bus() publie les 4 paramètres clés après chaque
+analyze_and_adapt() avec mod...
+[2026-06-19 02:38:02] [INFO]   Backup → workspace\patch_backups\pipeline_conscience.py.20260619_023802.bak
+[2026-06-19 02:38:02] [OK  ]   ✓ UPDATE → agents/pipeline_conscience.py (8846 chars)
+[2026-06-19 02:38:02] [INFO] ── [UPDATE] agents/cost_tracker.py
+[2026-06-19 02:38:02] [ERR ]   Syntaxe invalide dans agents/cost_tracker.py : '(' was never closed (<unknown>, line 159)
+[2026-06-19 02:41:53] [INFO] 1 patch(es) détecté(s)
+[2026-06-19 02:41:53] [INFO] ── [UPDATE] agents/transmedia_export.py
+[2026-06-19 02:41:53] [INFO]    Raison : Complement V1.49b : transmedia_export.py avec integration context_bus complete.
+ContentGenerator lit scenario.title, dir...
+[2026-06-19 02:41:53] [INFO]   Backup → workspace\patch_backups\transmedia_export.py.20260619_024153.bak
+[2026-06-19 02:41:53] [OK  ]   ✓ UPDATE → agents/transmedia_export.py (11641 chars)
+[2026-06-19 02:48:52] [INFO] 3 patch(es) détecté(s)
+[2026-06-19 02:48:52] [INFO] ── [UPDATE] agents/cost_tracker.py
+[2026-06-19 02:48:52] [INFO]    Raison : FIX : parenthese non fermee ligne 159 dans print_dashboard() — f-string avec expression
+multiligne mal formatee dans le ...
+[2026-06-19 02:48:52] [INFO]   Backup → workspace\patch_backups\cost_tracker.py.20260619_024852.bak
+[2026-06-19 02:48:52] [OK  ]   ✓ UPDATE → agents/cost_tracker.py (8335 chars)
+[2026-06-19 02:48:52] [INFO] ── [CREATE] aAa_MaintenanceHub.py
+[2026-06-19 02:48:52] [INFO]    Raison : Hub de maintenance graphique en tkinter pour gerer les 3 outils depuis une seule fenetre.
+3 onglets : Patcher (bundle + ...
+[2026-06-19 02:48:52] [OK  ]   ✓ CREATE → aAa_MaintenanceHub.py (19911 chars)
+[2026-06-19 02:48:52] [INFO] ── [CREATE] build_maintenance_hub.py
+[2026-06-19 02:48:52] [INFO]    Raison : Script de build PyInstaller pour produire dist/aAa_MaintenanceHub.exe.
+--onefile -> EXE standalone sans dossier de depen...
+[2026-06-19 02:48:52] [OK  ]   ✓ CREATE → build_maintenance_hub.py (1919 chars)
+[2026-06-19 03:37:50] [INFO] 1 patch(es) détecté(s)
+[2026-06-19 03:37:50] [INFO] ── [UPDATE] agents/overlord_utils.py
+[2026-06-19 03:37:50] [INFO]    Raison : V1.49 : ajouts sur overlord_utils.py existant.
+_get_reddit_headers() : manquait, importe par audience_analyzer.py et tra...
+[2026-06-19 03:37:50] [INFO]   Backup → workspace\patch_backups\overlord_utils.py.20260619_033750.bak
+[2026-06-19 03:37:50] [OK  ]   ✓ UPDATE → agents/overlord_utils.py (11926 chars)
+[2026-06-19 03:56:56] [INFO] 2 patch(es) détecté(s)
+[2026-06-19 03:56:56] [INFO] ── [CREATE] overlord_utils_utf8.py
+[2026-06-19 03:56:56] [INFO]    Raison : Recreation de overlord_utils_utf8.py perdu accidentellement.
+Ce fichier doit rester a la RACINE D:\OVERLORD\ (pas dans a...
+[2026-06-19 03:56:56] [OK  ]   ✓ CREATE → overlord_utils_utf8.py (1053 chars)
+[2026-06-19 03:56:56] [INFO] ── [UPDATE] self_improve.py
+[2026-06-19 03:56:56] [INFO]    Raison : FIX V1.49h : _basic_fix() avait un 'break' hors boucle dans le template GET_API_KEY
+insere dans le code cible (pattern c...
+[2026-06-19 03:56:56] [ERR ]   BLOQUÉ — fichier protégé : self_improve.py
+[2026-06-19 06:21:56] [INFO] 5 patch(es) détecté(s)
+[2026-06-19 06:21:56] [INFO] ── [UPDATE] build_exe.py
+[2026-06-19 06:21:56] [INFO]    Raison : FIX : narrative_memory.py et style_dna.py retires de add_data (ils sont dans agents/
+qui est deja embarque entier). over...
+[2026-06-19 06:21:56] [INFO]   Backup → workspace\patch_backups\build_exe.py.20260619_062156.bak
+[2026-06-19 06:21:56] [OK  ]   ✓ UPDATE → build_exe.py (2255 chars)
+[2026-06-19 06:21:56] [INFO] ── [UPDATE] agents/sourcing.py
+[2026-06-19 06:21:56] [INFO]    Raison : Context_bus V1.49 : run_sourcing() publie sourcing.brief, hot_keywords, media_type, top_reddit.
+_get_reddit_headers() de...
+[2026-06-19 06:21:56] [INFO]   Backup → workspace\patch_backups\sourcing.py.20260619_062156.bak
+[2026-06-19 06:21:56] [OK  ]   ✓ UPDATE → agents/sourcing.py (10744 chars)
+[2026-06-19 06:21:56] [INFO] ── [UPDATE] agents/scenario.py
+[2026-06-19 06:21:56] [INFO]    Raison : overlord_utils centralise : _call_claude() remplace par fallback_llm() (Claude + Ollama fallback auto).
+_get_api_key() l...
+[2026-06-19 06:21:56] [INFO]   Backup → workspace\patch_backups\scenario.py.20260619_062156.bak
+[2026-06-19 06:21:56] [OK  ]   ✓ UPDATE → agents/scenario.py (9623 chars)
+[2026-06-19 06:21:56] [INFO] ── [UPDATE] agents/storyboard.py
+[2026-06-19 06:21:56] [INFO]    Raison : overlord_utils centralise : _call_claude() supprime, remplace par fallback_llm().
+_get_api_key() local supprime (doublon...
+[2026-06-19 06:21:56] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260619_062156.bak
+[2026-06-19 06:21:56] [OK  ]   ✓ UPDATE → agents/storyboard.py (10570 chars)
+[2026-06-19 06:21:56] [INFO] ── [UPDATE] agents/postprod.py
+[2026-06-19 06:21:56] [INFO]   Backup → workspace\patch_backups\postprod.py.20260619_062156.bak
+[2026-06-19 06:21:56] [OK  ]   ✓ UPDATE → agents/postprod.py (11065 chars)
+[2026-06-19 06:34:19] [INFO] 5 patch(es) détecté(s)
+[2026-06-19 06:34:19] [INFO] ── [UPDATE] agents/watchdog.py
+[2026-06-19 06:34:19] [INFO]    Raison : _get_api_key() local supprime -> overlord_utils.get_api_key.
+datetime.utcnow() -> datetime.now(tz=timezone.utc) (Python ...
+[2026-06-19 06:34:19] [INFO]   Backup → workspace\patch_backups\watchdog.py.20260619_063419.bak
+[2026-06-19 06:34:19] [OK  ]   ✓ UPDATE → agents/watchdog.py (18254 chars)
+[2026-06-19 06:34:19] [INFO] ── [UPDATE] agents/checkpoint_manager.py
+[2026-06-19 06:34:19] [INFO]    Raison : datetime.utcnow() x3 -> datetime.now(tz=timezone.utc) (Python 3.14).
+Context_bus V1.49 : save_block() publie checkpoint....
+[2026-06-19 06:34:19] [INFO]   Backup → workspace\patch_backups\checkpoint_manager.py.20260619_063419.bak
+[2026-06-19 06:34:19] [OK  ]   ✓ UPDATE → agents/checkpoint_manager.py (13815 chars)
+[2026-06-19 06:34:19] [INFO] ── [UPDATE] agents/narrative_memory.py
+[2026-06-19 06:34:19] [INFO]    Raison : Context_bus V1.49 : get_scene_context() publie narrative.episode/warnings/characters.
+_publish_summary() appelee apres a...
+[2026-06-19 06:34:19] [INFO]   Backup → workspace\patch_backups\narrative_memory.py.20260619_063419.bak
+[2026-06-19 06:34:19] [OK  ]   ✓ UPDATE → agents/narrative_memory.py (14806 chars)
+[2026-06-19 06:34:19] [INFO] ── [UPDATE] agents/episode_packager.py
+[2026-06-19 06:34:19] [INFO]    Raison : Context_bus V1.49 : package() publie packager.ep_dir/video/metadata/success/episode.
+Version bump V1.46 -> V1.49 dans le...
+[2026-06-19 06:34:19] [INFO]   Backup → workspace\patch_backups\episode_packager.py.20260619_063419.bak
+[2026-06-19 06:34:19] [OK  ]   ✓ UPDATE → agents/episode_packager.py (13835 chars)
+[2026-06-19 06:34:19] [INFO] ── [UPDATE] agents/asset_library.py
+[2026-06-19 06:34:19] [INFO]    Raison : Context_bus V1.49 : _publish() appelee apres add_character() et add_location().
+Publie asset_library.total, characters (...
+[2026-06-19 06:34:19] [INFO]   Backup → workspace\patch_backups\asset_library.py.20260619_063419.bak
+[2026-06-19 06:34:19] [OK  ]   ✓ UPDATE → agents/asset_library.py (10866 chars)
+[2026-06-19 06:45:47] [INFO] 5 patch(es) détecté(s)
+[2026-06-19 06:45:47] [INFO] ── [UPDATE] agents/v110_intelligence.py
+[2026-06-19 06:45:47] [INFO]    Raison : FIX CRITIQUE : llm() appelait l'API Anthropic sans x-api-key -> 401 sur toutes les requetes.
+Remplace par fallback_llm()...
+[2026-06-19 06:45:47] [INFO]   Backup → workspace\patch_backups\v110_intelligence.py.20260619_064547.bak
+[2026-06-19 06:45:47] [OK  ]   ✓ UPDATE → agents/v110_intelligence.py (16942 chars)
+[2026-06-19 06:45:47] [INFO] ── [UPDATE] agents/v110_graph_ui.py
+[2026-06-19 06:45:47] [INFO]    Raison : FIX CRITIQUE : from context_bus import -> from agents.context_bus import.
+L'import precedent cherchait context_bus a la ...
+[2026-06-19 06:45:47] [INFO]   Backup → workspace\patch_backups\v110_graph_ui.py.20260619_064547.bak
+[2026-06-19 06:45:47] [OK  ]   ✓ UPDATE → agents/v110_graph_ui.py (16927 chars)
+[2026-06-19 06:45:47] [INFO] ── [UPDATE] agents/v110_core.py
+[2026-06-19 06:45:47] [INFO]    Raison : Context_bus V1.49k : ResidualPipeline.run_with_residual() publie v110.blocks_run et
+v110.residual_keys. get_dashboard() ...
+[2026-06-19 06:45:47] [INFO]   Backup → workspace\patch_backups\v110_core.py.20260619_064547.bak
+[2026-06-19 06:45:47] [OK  ]   ✓ UPDATE → agents/v110_core.py (21887 chars)
+[2026-06-19 06:45:47] [INFO] ── [UPDATE] agents/comfy_autoconfig.py
+[2026-06-19 06:45:47] [INFO]    Raison : Context_bus V1.49k : run_autoconfig() publie autoconfig.checkpoints, updated, status.
+ASCII : emoji check et OK dans les...
+[2026-06-19 06:45:47] [INFO]   Backup → workspace\patch_backups\comfy_autoconfig.py.20260619_064547.bak
+[2026-06-19 06:45:47] [OK  ]   ✓ UPDATE → agents/comfy_autoconfig.py (5575 chars)
+[2026-06-19 06:45:47] [INFO] ── [UPDATE] agents/telegram_bot.py
+[2026-06-19 06:45:47] [ERR ]   Syntaxe invalide dans agents/telegram_bot.py : expected 'except' or 'finally' block (<unknown>, line 18)
+[2026-06-19 06:47:05] [INFO] 1 patch(es) détecté(s)
+[2026-06-19 06:47:05] [INFO] ── [UPDATE] test_pipeline.py
+[2026-06-19 06:47:05] [INFO]    Raison : Version bump V1.42 -> V1.49.
+UTF-8 force en tete (symboles PASS/FAIL/WARN/SKIP en unicode escape).
+2 nouveaux tests crit...
+[2026-06-19 06:47:05] [WARN]   Fichier introuvable pour UPDATE, création forcée.
+[2026-06-19 06:47:05] [OK  ]   ✓ CREATE → test_pipeline.py (10268 chars)
+[2026-06-19 06:58:09] [INFO] 7 patch(es) détecté(s)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/telegram_bot.py
+[2026-06-19 06:58:09] [INFO]    Raison : FIX CRITIQUE : bloc try sans except/finally a la ligne 18 du bundle precedent -> SyntaxError.
+Cause : concatenation de s...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\telegram_bot.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/telegram_bot.py (6712 chars)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/v120_collective.py
+[2026-06-19 06:58:09] [INFO]    Raison : _llm() centralise via overlord_utils.fallback_llm (Claude + Ollama fallback auto).
+_get_api_key() local supprime.
+Contex...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\v120_collective.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/v120_collective.py (11794 chars)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/v120_learning.py
+[2026-06-19 06:58:09] [INFO]    Raison : overlord_utils centralise : _llm() via fallback_llm, _get_api_key() supprime.
+Context_bus : RewardShaper publie learning...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\v120_learning.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/v120_learning.py (11321 chars)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/v120_moe.py
+[2026-06-19 06:58:09] [INFO]    Raison : overlord_utils centralise. Context_bus : router.route() publie moe.selected_experts,
+router.call() publie moe.last_task ...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\v120_moe.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/v120_moe.py (10838 chars)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/v120_alignment.py
+[2026-06-19 06:58:09] [INFO]    Raison : overlord_utils centralise. datetime.utcnow() -> datetime.now(tz=timezone.utc).
+Context_bus : ConstitutionalChecker publi...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\v120_alignment.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/v120_alignment.py (11077 chars)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/v120_generation.py
+[2026-06-19 06:58:09] [INFO]    Raison : overlord_utils centralise : _llm() via fallback_llm, _get_api_key() supprime.
+Context_bus : DiffusionScheduler publie sc...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\v120_generation.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/v120_generation.py (14229 chars)
+[2026-06-19 06:58:09] [INFO] ── [UPDATE] agents/v120_dashboard.py
+[2026-06-19 06:58:09] [INFO]    Raison : overlord_utils centralise : _get_api_key() supprime, _llm_chat() via fallback_llm.
+Context_bus : _get_bus_snapshot() rec...
+[2026-06-19 06:58:09] [INFO]   Backup → workspace\patch_backups\v120_dashboard.py.20260619_065809.bak
+[2026-06-19 06:58:09] [OK  ]   ✓ UPDATE → agents/v120_dashboard.py (13042 chars)
+[2026-06-19 08:24:06] [INFO] 2 patch(es) détecté(s)
+[2026-06-19 08:24:06] [INFO] ── [CREATE] overlord_utils_utf8.py
+[2026-06-19 08:24:06] [INFO]    Raison : Recreation de overlord_utils_utf8.py perdu accidentellement.
+Ce fichier doit rester a la RACINE D:\OVERLORD\ (pas dans a...
+[2026-06-19 08:24:06] [OK  ]   ✓ CREATE → overlord_utils_utf8.py (1053 chars)
+[2026-06-19 08:24:06] [INFO] ── [UPDATE] self_improve.py
+[2026-06-19 08:24:06] [INFO]    Raison : FIX V1.49h : _basic_fix() avait un 'break' hors boucle dans le template GET_API_KEY
+insere dans le code cible (pattern c...
+[2026-06-19 08:24:06] [ERR ]   BLOQUÉ — fichier protégé : self_improve.py
+[2026-06-19 08:32:26] [INFO] 7 patch(es) détecté(s)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_world_model.py
+[2026-06-19 08:32:26] [INFO]    Raison : FIX CRITIQUE : datetime.UTC (Python 3.11+) remplace par datetime.now(tz=timezone.utc)
+pour compatibilite Python 3.10+.
+C...
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_world_model.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_world_model.py (6296 chars)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_generative_world.py
+[2026-06-19 08:32:26] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+datetime.utcnow() -> datetime.now(tz=timezone.utc).
+Context_bus : Agi...
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_generative_world.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_generative_world.py (11587 chars)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_intelligence_ext.py
+[2026-06-19 08:32:26] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : CreativeFatigueDetector publie fatigue_level/score, Aud...
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_intelligence_ext.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_intelligence_ext.py (12116 chars)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_narrative_dna.py
+[2026-06-19 08:32:26] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : DNATranslator publie dna.mood/title/cfg, NarrativeDNAV1...
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_narrative_dna.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_narrative_dna.py (10194 chars)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_agent_personality.py
+[2026-06-19 08:32:26] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : update_mood() publie personality.<agent>.mood,
+get_all_...
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_agent_personality.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_agent_personality.py (8336 chars)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_cocreation.py
+[2026-06-19 08:32:26] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : contribute() publie cocreation.session_id/mode/n_decisi...
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_cocreation.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_cocreation.py (8628 chars)
+[2026-06-19 08:32:26] [INFO] ── [UPDATE] agents/v130_dream_mode.py
+[2026-06-19 08:32:26] [INFO]   Backup → workspace\patch_backups\v130_dream_mode.py.20260619_083226.bak
+[2026-06-19 08:32:26] [OK  ]   ✓ UPDATE → agents/v130_dream_mode.py (12033 chars)
+[2026-06-19 08:48:50] [ERR ] Bundle introuvable : patch_bundle.txt
+[2026-06-19 08:49:47] [INFO] 7 patch(es) détecté(s)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_world_model.py
+[2026-06-19 08:49:47] [INFO]    Raison : FIX CRITIQUE : datetime.UTC (Python 3.11+) remplace par datetime.now(tz=timezone.utc)
+pour compatibilite Python 3.10+.
+C...
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_world_model.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_world_model.py (6296 chars)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_generative_world.py
+[2026-06-19 08:49:47] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+datetime.utcnow() -> datetime.now(tz=timezone.utc).
+Context_bus : Agi...
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_generative_world.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_generative_world.py (11587 chars)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_intelligence_ext.py
+[2026-06-19 08:49:47] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : CreativeFatigueDetector publie fatigue_level/score, Aud...
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_intelligence_ext.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_intelligence_ext.py (12116 chars)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_narrative_dna.py
+[2026-06-19 08:49:47] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : DNATranslator publie dna.mood/title/cfg, NarrativeDNAV1...
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_narrative_dna.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_narrative_dna.py (10194 chars)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_agent_personality.py
+[2026-06-19 08:49:47] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : update_mood() publie personality.<agent>.mood,
+get_all_...
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_agent_personality.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_agent_personality.py (8336 chars)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_cocreation.py
+[2026-06-19 08:49:47] [INFO]    Raison : _llm() -> fallback_llm(), _get_api_key() supprime.
+Context_bus : contribute() publie cocreation.session_id/mode/n_decisi...
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_cocreation.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_cocreation.py (8628 chars)
+[2026-06-19 08:49:47] [INFO] ── [UPDATE] agents/v130_dream_mode.py
+[2026-06-19 08:49:47] [INFO]   Backup → workspace\patch_backups\v130_dream_mode.py.20260619_084947.bak
+[2026-06-19 08:49:47] [OK  ]   ✓ UPDATE → agents/v130_dream_mode.py (12033 chars)
+[2026-06-19 09:03:32] [INFO] 7 patch(es) détecté(s)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/telegram_bot.py
+[2026-06-19 09:03:32] [INFO]    Raison : FIX CRITIQUE : bloc try sans except/finally a la ligne 18 du bundle precedent -> SyntaxError.
+Cause : concatenation de s...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\telegram_bot.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/telegram_bot.py (6712 chars)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/v120_collective.py
+[2026-06-19 09:03:32] [INFO]    Raison : _llm() centralise via overlord_utils.fallback_llm (Claude + Ollama fallback auto).
+_get_api_key() local supprime.
+Contex...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\v120_collective.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/v120_collective.py (11794 chars)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/v120_learning.py
+[2026-06-19 09:03:32] [INFO]    Raison : overlord_utils centralise : _llm() via fallback_llm, _get_api_key() supprime.
+Context_bus : RewardShaper publie learning...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\v120_learning.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/v120_learning.py (11321 chars)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/v120_moe.py
+[2026-06-19 09:03:32] [INFO]    Raison : overlord_utils centralise. Context_bus : router.route() publie moe.selected_experts,
+router.call() publie moe.last_task ...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\v120_moe.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/v120_moe.py (10838 chars)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/v120_alignment.py
+[2026-06-19 09:03:32] [INFO]    Raison : overlord_utils centralise. datetime.utcnow() -> datetime.now(tz=timezone.utc).
+Context_bus : ConstitutionalChecker publi...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\v120_alignment.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/v120_alignment.py (11077 chars)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/v120_generation.py
+[2026-06-19 09:03:32] [INFO]    Raison : overlord_utils centralise : _llm() via fallback_llm, _get_api_key() supprime.
+Context_bus : DiffusionScheduler publie sc...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\v120_generation.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/v120_generation.py (14229 chars)
+[2026-06-19 09:03:32] [INFO] ── [UPDATE] agents/v120_dashboard.py
+[2026-06-19 09:03:32] [INFO]    Raison : overlord_utils centralise : _get_api_key() supprime, _llm_chat() via fallback_llm.
+Context_bus : _get_bus_snapshot() rec...
+[2026-06-19 09:03:32] [INFO]   Backup → workspace\patch_backups\v120_dashboard.py.20260619_090332.bak
+[2026-06-19 09:03:32] [OK  ]   ✓ UPDATE → agents/v120_dashboard.py (13042 chars)
+[2026-06-19 12:01:05] [INFO] 1 patch(es) détecté(s)
+[2026-06-19 12:01:05] [INFO] ── [CREATE] overlord_utils_utf8.py
+[2026-06-19 12:01:05] [INFO]    Raison : Recreation de overlord_utils_utf8.py a la racine D:\OVERLORD\.
+Ce fichier est importe en premiere ligne de maestro.py :
+...
+[2026-06-19 12:01:05] [WARN]   Le fichier existe déjà. Traité comme UPDATE.
+[2026-06-19 12:01:05] [INFO]   Backup → workspace\patch_backups\overlord_utils_utf8.py.20260619_120105.bak
+[2026-06-19 12:01:05] [OK  ]   ✓ UPDATE → overlord_utils_utf8.py (1151 chars)
+[2026-06-19 12:05:55] [INFO] 1 patch(es) détecté(s)
+[2026-06-19 12:05:55] [INFO] ── [UPDATE] maestro.py
+[2026-06-19 12:05:55] [INFO]    Raison : FIX V1.49n - deux bugs silencieux corrigés :
+1. sys.stdout.reconfigure(line_buffering=True) SUPPRIMÉ : incompatible avec...
+[2026-06-19 12:05:55] [INFO]   Backup → workspace\patch_backups\maestro.py.20260619_120555.bak
+[2026-06-19 12:05:55] [OK  ]   ✓ UPDATE → maestro.py (29273 chars)
+[2026-06-19 12:15:00] [INFO] 8 patch(es) détecté(s)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/context_bus.py
+[2026-06-19 12:15:00] [INFO]    Raison : FIX CRITIQUE V1.49o : write() n'acceptait pas agent_id et confidence en arguments.
+30+ modules les passaient depuis les ...
+[2026-06-19 12:15:00] [INFO]   Backup → workspace\patch_backups\context_bus.py.20260619_121500.bak
+[2026-06-19 12:15:00] [OK  ]   ✓ UPDATE → agents/context_bus.py (5681 chars)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/__init__.py
+[2026-06-19 12:15:00] [INFO]    Raison : FIX : __init__.py etait vide (44 octets) -> test_pipeline.py signalait FAIL.
+Le check verifie taille > 100 octets. Ajout...
+[2026-06-19 12:15:00] [WARN]   Ratio taille suspect (583/44 = 13.2x). Patch bloqué.
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/v140_model_downloader.py
+[2026-06-19 12:15:00] [INFO]    Raison : _llm() -> fallback_llm, _get_api_key() supprime.
+Context_bus : download() publie downloader.<model_id>/last_model,
+downl...
+[2026-06-19 12:15:00] [INFO]   Backup → workspace\patch_backups\v140_model_downloader.py.20260619_121500.bak
+[2026-06-19 12:15:00] [OK  ]   ✓ UPDATE → agents/v140_model_downloader.py (9283 chars)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/v140_synchronicity.py
+[2026-06-19 12:15:00] [INFO]    Raison : _llm() -> fallback_llm. _get_api_key() supprime.
+datetime.utcnow() -> datetime.now(tz=timezone.utc).
+Context_bus : build...
+[2026-06-19 12:15:00] [INFO]   Backup → workspace\patch_backups\v140_synchronicity.py.20260619_121500.bak
+[2026-06-19 12:15:00] [OK  ]   ✓ UPDATE → agents/v140_synchronicity.py (8918 chars)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/v140_theory_of_mind.py
+[2026-06-19 12:15:00] [INFO]    Raison : _llm() -> fallback_llm, _get_api_key() supprime.
+Context_bus : find_irony_opportunities() publie tom.irony_count/max_ten...
+[2026-06-19 12:15:00] [INFO]   Backup → workspace\patch_backups\v140_theory_of_mind.py.20260619_121500.bak
+[2026-06-19 12:15:00] [OK  ]   ✓ UPDATE → agents/v140_theory_of_mind.py (10604 chars)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/v140_thermal_protection.py
+[2026-06-19 12:15:00] [INFO]    Raison : datetime.utcnow() -> datetime.now(tz=timezone.utc) dans GpuMonitor.read().
+Context_bus : monitoring publie thermal.temp_...
+[2026-06-19 12:15:00] [INFO]   Backup → workspace\patch_backups\v140_thermal_protection.py.20260619_121500.bak
+[2026-06-19 12:15:00] [OK  ]   ✓ UPDATE → agents/v140_thermal_protection.py (7985 chars)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/v140_video_pipeline.py
+[2026-06-19 12:15:00] [INFO]    Raison : _llm() -> fallback_llm, _get_api_key() supprime.
+datetime.utcnow() -> datetime.now(tz=timezone.utc).
+Context_bus : proce...
+[2026-06-19 12:15:00] [INFO]   Backup → workspace\patch_backups\v140_video_pipeline.py.20260619_121500.bak
+[2026-06-19 12:15:00] [OK  ]   ✓ UPDATE → agents/v140_video_pipeline.py (10956 chars)
+[2026-06-19 12:15:00] [INFO] ── [UPDATE] agents/v140_voice_synthesis.py
+[2026-06-19 12:15:00] [INFO]    Raison : _llm() -> fallback_llm, _get_api_key() supprime -> get_api_key depuis overlord_utils.
+ELEVENLABS_API_KEY : lu depuis os....
+[2026-06-19 12:15:00] [ERR ]   Syntaxe invalide dans agents/v140_voice_synthesis.py : invalid syntax. Maybe you meant '==' or ':=' instead of '='? (<unknown>, line 57)
+[2026-06-19 12:44:04] [INFO] 9 patch(es) détecté(s)
+[2026-06-19 12:44:04] [INFO] ── [CREATE] agents/__init__.py
+[2026-06-19 12:44:04] [INFO]    Raison : ACTION CREATE car le patcher bloquait UPDATE (ratio 13.2x > seuil de securite).
+Le fichier existant etait vide (44 octet...
+[2026-06-19 12:44:04] [WARN]   Le fichier existe déjà. Traité comme UPDATE.
+[2026-06-19 12:44:04] [WARN]   Ratio taille suspect (514/44 = 11.7x). Patch bloqué.
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agents/v140_voice_synthesis.py
+[2026-06-19 12:44:04] [INFO]    Raison : FIX SYNTAXE ligne 57 : "dataclass_ready = True" suivi de "try: from dataclasses import"
+etait du code invalide (assignat...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\v140_voice_synthesis.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agents/v140_voice_synthesis.py (7496 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agent_supervisor_v2.py
+[2026-06-19 12:44:04] [INFO]    Raison : FIX : sys.stdout.reconfigure(line_buffering=True) supprime ligne 13.
+Remplace par le pattern standard V1.49 (TextIOWrapp...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agent_supervisor_v2.py (14016 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agents/v130_emotion_engine.py
+[2026-06-19 12:44:04] [INFO]    Raison : FIX V1.49p - deux methodes ajoutees requises par director.py :
+1. generate_params(emotion, intensity) : retourne les par...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\v130_emotion_engine.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agents/v130_emotion_engine.py (8087 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agents/v130_generative_world.py
+[2026-06-19 12:44:04] [INFO]    Raison : FIX V1.49p - deux aliases ajoutes pour compatibilite director.py :
+1. advance_run(episode) : director.py appelle self.ge...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\v130_generative_world.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agents/v130_generative_world.py (11445 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agents/v130_world_model.py
+[2026-06-19 12:44:04] [INFO]    Raison : FIX V1.49p - trois corrections pour compatibilite director.py :
+1. validate_and_fix_prompt() retourne maintenant un dict...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\v130_world_model.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agents/v130_world_model.py (7444 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agents/critic.py
+[2026-06-19 12:44:04] [INFO]    Raison : _get_api_key() + _call_claude() locaux supprimes -> overlord_utils.fallback_llm.
+datetime.utcnow() -> datetime.now(tz=ti...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\critic.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agents/critic.py (10162 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] agents/roles_registry.py
+[2026-06-19 12:44:04] [INFO]    Raison : get_system_prompt(role, **kwargs) ajoute : fonction requise par v120_dashboard.py
+(import dans _llm_chat()) et oracle_in...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\roles_registry.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → agents/roles_registry.py (7643 chars)
+[2026-06-19 12:44:04] [INFO] ── [UPDATE] launcher.py
+[2026-06-19 12:44:04] [INFO]    Raison : FIX V1.49p :
+1. _session_elapsed et _session_start initialises au debut de __init__() AVANT
+   _build_window() -> Attrib...
+[2026-06-19 12:44:04] [INFO]   Backup → workspace\patch_backups\launcher.py.20260619_124404.bak
+[2026-06-19 12:44:04] [OK  ]   ✓ UPDATE → launcher.py (49830 chars)
+[2026-06-19 19:30:52] [INFO] 4 patch(es) détecté(s)
+[2026-06-19 19:30:52] [INFO] ── [CREATE] overlord_utils_utf8.py
+[2026-06-19 19:30:52] [INFO]    Raison : Recree overlord_utils_utf8.py a la racine D:\OVERLORD\.
+Ce fichier est importe en ligne 1 de maestro.py.
+S'il est absent...
+[2026-06-19 19:30:52] [WARN]   Le fichier existe déjà. Traité comme UPDATE.
+[2026-06-19 19:30:52] [INFO]   Backup → workspace\patch_backups\overlord_utils_utf8.py.20260619_193052.bak
+[2026-06-19 19:30:52] [OK  ]   ✓ UPDATE → overlord_utils_utf8.py (1152 chars)
+[2026-06-19 19:30:52] [INFO] ── [UPDATE] agents/overlord_utils.py
+[2026-06-19 19:30:52] [INFO]    Raison : V1.49q - refonte du systeme de fallback LLM :
+1. _get_llm_mode() : lit OV_LLM_MODE dans .env ou variable Windows.
+   'of...
+[2026-06-19 19:30:52] [INFO]   Backup → workspace\patch_backups\overlord_utils.py.20260619_193052.bak
+[2026-06-19 19:30:52] [OK  ]   ✓ UPDATE → agents/overlord_utils.py (11856 chars)
+[2026-06-19 19:30:52] [INFO] ── [UPDATE] build_exe.py
+[2026-06-19 19:30:52] [INFO]    Raison : FIX CRITIQUE V1.49q : guard if __name__ == "__main__" ajoute.
+Sans lui, PyInstaller (en mode onefile) relance le module ...
+[2026-06-19 19:30:52] [WARN]   Ratio taille suspect (7740/2328 = 3.3x). Patch bloqué.
+[2026-06-19 19:30:52] [INFO] ── [UPDATE] test_pipeline.py
+[2026-06-19 19:30:52] [INFO]    Raison : V1.49q - evolutions du test_pipeline :
+1. Check __init__.py assoupli : WARN au lieu de FAIL si fichier vide (44 octets)....
+[2026-06-19 19:30:52] [INFO]   Backup → workspace\patch_backups\test_pipeline.py.20260619_193052.bak
+[2026-06-19 19:30:52] [OK  ]   ✓ UPDATE → test_pipeline.py (9687 chars)
+[2026-06-19 19:35:37] [INFO] 9 patch(es) détecté(s)
+[2026-06-19 19:35:37] [INFO] ── [CREATE] agents/__init__.py
+[2026-06-19 19:35:37] [INFO]    Raison : ACTION CREATE car le patcher bloquait UPDATE (ratio 13.2x > seuil de securite).
+Le fichier existant etait vide (44 octet...
+[2026-06-19 19:35:37] [OK  ]   ✓ CREATE → agents/__init__.py (514 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agents/v140_voice_synthesis.py
+[2026-06-19 19:35:37] [INFO]    Raison : FIX SYNTAXE ligne 57 : "dataclass_ready = True" suivi de "try: from dataclasses import"
+etait du code invalide (assignat...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\v140_voice_synthesis.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agents/v140_voice_synthesis.py (7496 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agent_supervisor_v2.py
+[2026-06-19 19:35:37] [INFO]    Raison : FIX : sys.stdout.reconfigure(line_buffering=True) supprime ligne 13.
+Remplace par le pattern standard V1.49 (TextIOWrapp...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agent_supervisor_v2.py (14016 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agents/v130_emotion_engine.py
+[2026-06-19 19:35:37] [INFO]    Raison : FIX V1.49p - deux methodes ajoutees requises par director.py :
+1. generate_params(emotion, intensity) : retourne les par...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\v130_emotion_engine.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agents/v130_emotion_engine.py (8087 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agents/v130_generative_world.py
+[2026-06-19 19:35:37] [INFO]    Raison : FIX V1.49p - deux aliases ajoutes pour compatibilite director.py :
+1. advance_run(episode) : director.py appelle self.ge...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\v130_generative_world.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agents/v130_generative_world.py (11445 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agents/v130_world_model.py
+[2026-06-19 19:35:37] [INFO]    Raison : FIX V1.49p - trois corrections pour compatibilite director.py :
+1. validate_and_fix_prompt() retourne maintenant un dict...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\v130_world_model.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agents/v130_world_model.py (7444 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agents/critic.py
+[2026-06-19 19:35:37] [INFO]    Raison : _get_api_key() + _call_claude() locaux supprimes -> overlord_utils.fallback_llm.
+datetime.utcnow() -> datetime.now(tz=ti...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\critic.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agents/critic.py (10162 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] agents/roles_registry.py
+[2026-06-19 19:35:37] [INFO]    Raison : get_system_prompt(role, **kwargs) ajoute : fonction requise par v120_dashboard.py
+(import dans _llm_chat()) et oracle_in...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\roles_registry.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → agents/roles_registry.py (7643 chars)
+[2026-06-19 19:35:37] [INFO] ── [UPDATE] launcher.py
+[2026-06-19 19:35:37] [INFO]    Raison : FIX V1.49p :
+1. _session_elapsed et _session_start initialises au debut de __init__() AVANT
+   _build_window() -> Attrib...
+[2026-06-19 19:35:37] [INFO]   Backup → workspace\patch_backups\launcher.py.20260619_193537.bak
+[2026-06-19 19:35:37] [OK  ]   ✓ UPDATE → launcher.py (49830 chars)
+[2026-06-19 23:39:48] [INFO] 1 patch(es) détecté(s)
+[2026-06-19 23:39:48] [INFO] ── [UPDATE] agents/overlord_utils.py
+[2026-06-19 23:39:48] [INFO]    Raison : FIX 1 : safe_json_parse() accepte **kwargs silencieux.
+  scenario.py ligne 66 appelait safe_json_parse(raw, logger=log)
+...
+[2026-06-19 23:39:48] [INFO]   Backup → workspace\patch_backups\overlord_utils.py.20260619_233948.bak
+[2026-06-19 23:39:48] [OK  ]   ✓ UPDATE → agents/overlord_utils.py (10409 chars)
+[2026-06-19 23:59:06] [INFO] 2 patch(es) détecté(s)
+[2026-06-19 23:59:06] [INFO] ── [UPDATE] agents/overlord_utils.py
+[2026-06-19 23:59:06] [INFO]    Raison : FIX V1.49s -- safe_json_parse() V2 :
+Le probleme : llama3 enveloppe souvent le JSON dans du texte conversationnel.
+  Ex:...
+[2026-06-19 23:59:06] [INFO]   Backup → workspace\patch_backups\overlord_utils.py.20260619_235906.bak
+[2026-06-19 23:59:06] [OK  ]   ✓ UPDATE → agents/overlord_utils.py (11982 chars)
+[2026-06-19 23:59:06] [INFO] ── [UPDATE] agents/storyboard.py
+[2026-06-19 23:59:06] [INFO]    Raison : FIX V1.49s -- deux corrections pour le storyboard :
+
+1. safe_json_parse V2 dans overlord_utils.py :
+   llama3 enveloppe ...
+[2026-06-19 23:59:06] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260619_235906.bak
+[2026-06-19 23:59:06] [OK  ]   ✓ UPDATE → agents/storyboard.py (9872 chars)
+[2026-06-20 00:07:25] [INFO] 2 patch(es) détecté(s)
+[2026-06-20 00:07:25] [INFO] ── [UPDATE] agents/overlord_utils.py
+[2026-06-20 00:07:25] [INFO]    Raison : FIX V1.49s -- safe_json_parse() V2 :
+Le probleme : llama3 enveloppe souvent le JSON dans du texte conversationnel.
+  Ex:...
+[2026-06-20 00:07:25] [INFO]   Backup → workspace\patch_backups\overlord_utils.py.20260620_000725.bak
+[2026-06-20 00:07:25] [OK  ]   ✓ UPDATE → agents/overlord_utils.py (11982 chars)
+[2026-06-20 00:07:25] [INFO] ── [UPDATE] agents/storyboard.py
+[2026-06-20 00:07:25] [INFO]    Raison : FIX V1.49s -- deux corrections pour le storyboard :
+
+1. safe_json_parse V2 dans overlord_utils.py :
+   llama3 enveloppe ...
+[2026-06-20 00:07:25] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260620_000725.bak
+[2026-06-20 00:07:25] [OK  ]   ✓ UPDATE → agents/storyboard.py (9872 chars)
+[2026-06-21 21:20:14] [WARN] Aucun patch trouvé dans le bundle. Vérifier le format.
+[2026-06-21 21:20:46] [WARN] Aucun patch trouvé dans le bundle. Vérifier le format.
+[2026-06-21 21:28:51] [WARN] Aucun patch trouvé dans le bundle. Vérifier le format.
+[2026-06-21 22:53:42] [INFO] Format bundle détecté : find_replace
+[2026-06-21 22:53:42] [INFO] 2 patch(es) détecté(s)
+[2026-06-21 22:53:42] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 22:53:42] [OK  ]   [DRY-RUN] FIND_REPLACE dans maestro.py (602 → 931 chars)
+[2026-06-21 22:53:42] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 22:53:42] [OK  ]   [DRY-RUN] FIND_REPLACE dans maestro.py (145 → 465 chars)
+[2026-06-21 22:53:57] [INFO] Format bundle détecté : find_replace
+[2026-06-21 22:53:57] [INFO] 2 patch(es) détecté(s)
+[2026-06-21 22:53:57] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 22:53:57] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_225357.bak
+[2026-06-21 22:53:57] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-21 22:53:57] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 22:53:57] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_225357.bak
+[2026-06-21 22:53:57] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-21 23:20:29] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:20:29] [INFO] 2 patch(es) détecté(s)
+[2026-06-21 23:20:29] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:20:29] [OK  ]   [DRY-RUN] FIND_REPLACE dans maestro.py (98 → 520 chars)
+[2026-06-21 23:20:29] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:20:29] [OK  ]   [DRY-RUN] FIND_REPLACE dans maestro.py (42 → 46 chars)
+[2026-06-21 23:20:37] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:20:37] [INFO] 2 patch(es) détecté(s)
+[2026-06-21 23:20:37] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:20:37] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_232037.bak
+[2026-06-21 23:20:37] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-21 23:20:37] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:20:37] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_232037.bak
+[2026-06-21 23:20:37] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-21 23:21:00] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:21:00] [INFO] 2 patch(es) détecté(s)
+[2026-06-21 23:21:00] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:21:00] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_232100.bak
+[2026-06-21 23:21:00] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-21 23:21:00] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:21:00] [ERR ]   Texte FIND non trouvé dans maestro.py
+[2026-06-21 23:21:00] [ERR ]   Début FIND attendu : '    ch = logging.StreamHandler(sys.stdout)'
+[2026-06-21 23:25:44] [ERR ] Bundle introuvable : patch_bundle_V170c.txt
+[2026-06-21 23:26:09] [ERR ] Bundle introuvable : patch_bundle_V170c.txt
+[2026-06-21 23:28:04] [ERR ] Bundle introuvable : C:\Users\Ov3rL0rD\Downloads\patch_bundle_V170c.txt
+[2026-06-21 23:29:35] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:29:35] [INFO] 1 patch(es) détecté(s)
+[2026-06-21 23:29:35] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:29:35] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_232935.bak
+[2026-06-21 23:29:35] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-21 23:29:53] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:29:53] [INFO] 1 patch(es) détecté(s)
+[2026-06-21 23:29:53] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:29:53] [ERR ]   Texte FIND non trouvé dans maestro.py
+[2026-06-21 23:29:53] [ERR ]   Début FIND attendu : 'def _safe_stdout():\n    """Retourne un stream stdout valide même si sys.stdout e'
+[2026-06-21 23:40:43] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:40:43] [INFO] 1 patch(es) détecté(s)
+[2026-06-21 23:40:43] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-21 23:40:43] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260621_234043.bak
+[2026-06-21 23:40:43] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-21 23:49:19] [INFO] Format bundle détecté : find_replace
+[2026-06-21 23:49:19] [INFO] 2 patch(es) détecté(s)
+[2026-06-21 23:49:19] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-21 23:49:19] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260621_234919.bak
+[2026-06-21 23:49:19] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-21 23:49:19] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-21 23:49:19] [INFO]   Backup → workspace\patch_backups\maestro.py.20260621_234919.bak
+[2026-06-21 23:49:19] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-22 00:20:23] [ERR ] Bundle introuvable : C:\Users\Ov3rL0rD\Downloads\patch_bundle_V170f.txt
+[2026-06-22 00:42:48] [ERR ] Bundle introuvable : C:\Users\Ov3rL0rD\Downloads\patch_bundle_V170f.txt
+[2026-06-22 00:43:14] [ERR ] Bundle introuvable : C:\Users\Ov3rL0rD\Downloads\patch_bundle_V170f.txt
+[2026-06-22 00:43:51] [INFO] Format bundle détecté : find_replace
+[2026-06-22 00:43:51] [INFO] 1 patch(es) détecté(s)
+[2026-06-22 00:43:51] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-22 00:43:51] [ERR ]   Texte FIND non trouvé dans agents/storyboard.py
+[2026-06-22 00:43:51] [ERR ]   Début FIND attendu : '    log.info(f"[STORYBOARD] {len(shots)} jobs ComfyUI prepares")\n    return shot'
+[2026-06-22 01:12:23] [INFO] Format bundle détecté : find_replace
+[2026-06-22 01:12:23] [INFO] 1 patch(es) détecté(s)
+[2026-06-22 01:12:23] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-22 01:12:23] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260622_011223.bak
+[2026-06-22 01:12:23] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-22 02:11:07] [INFO] Format bundle détecté : find_replace
+[2026-06-22 02:11:07] [INFO] 1 patch(es) détecté(s)
+[2026-06-22 02:11:07] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-22 02:11:07] [ERR ]   Texte FIND non trouvé dans agents/scenario.py
+[2026-06-22 02:11:07] [ERR ]   Début FIND attendu : '    prompt = (\n        f"Tu es un scénariste anime professionnel.\\n"'
+[2026-06-22 02:29:39] [INFO] Format bundle détecté : find_replace
+[2026-06-22 02:29:39] [INFO] 1 patch(es) détecté(s)
+[2026-06-22 02:29:39] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-22 02:29:39] [INFO]   Backup → workspace\patch_backups\scenario.py.20260622_022939.bak
+[2026-06-22 02:29:39] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/scenario.py
+[2026-06-22 05:14:06] [ERR ] Bundle introuvable : C:\Users\Ov3rL0rD\Downloads\patch_bundle_5080_params.txt
+[2026-06-22 05:14:37] [INFO] Format bundle détecté : find_replace
+[2026-06-22 05:14:37] [INFO] 1 patch(es) détecté(s)
+[2026-06-22 05:14:37] [INFO] ── [FIND_REPLACE] agents/gpu_optimizer.py
+[2026-06-22 05:14:37] [ERR ]   Texte FIND non trouvé dans agents/gpu_optimizer.py
+[2026-06-22 05:14:37] [ERR ]   Début FIND attendu : '    "rtx5080": {\n        "steps":     80,'
+[2026-06-22 06:31:09] [INFO] Format bundle détecté : find_replace
+[2026-06-22 06:31:09] [INFO] 1 patch(es) détecté(s)
+[2026-06-22 06:31:09] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-22 06:31:09] [ERR ]   Syntaxe invalide : unexpected indent (<unknown>, line 588)
+[2026-06-23 03:05:42] [INFO] Format bundle détecté : create_update
+[2026-06-23 03:05:42] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 03:05:42] [INFO] ── [UPDATE] maestro.py
+[2026-06-23 03:05:42] [ERR ]   Syntaxe invalide : unterminated string literal (detected at line 2) (<unknown>, line 2)
+[2026-06-23 15:24:34] [ERR ] Bundle introuvable : patch_bundle.txt
+[2026-06-23 15:24:57] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:24:57] [INFO] 4 patch(es) détecté(s)
+[2026-06-23 15:24:57] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:24:57] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_152457.bak
+[2026-06-23 15:24:57] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 15:24:57] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:24:57] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_152457.bak
+[2026-06-23 15:24:57] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 15:24:57] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:24:57] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_152457.bak
+[2026-06-23 15:24:57] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 15:24:57] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:24:57] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_152457.bak
+[2026-06-23 15:24:57] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 15:30:11] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:30:11] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 15:30:11] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-23 15:30:12] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260623_153011.bak
+[2026-06-23 15:30:12] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-23 15:30:17] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:30:17] [INFO] 3 patch(es) détecté(s)
+[2026-06-23 15:30:17] [INFO] ── [FIND_REPLACE] agents/agent_supervisor_v2.py
+[2026-06-23 15:30:17] [ERR ]   Fichier cible introuvable : agents/agent_supervisor_v2.py
+[2026-06-23 15:30:17] [INFO] ── [FIND_REPLACE] agents/agent_supervisor_v2.py
+[2026-06-23 15:30:17] [ERR ]   Fichier cible introuvable : agents/agent_supervisor_v2.py
+[2026-06-23 15:30:17] [INFO] ── [FIND_REPLACE] agents/agent_supervisor_v2.py
+[2026-06-23 15:30:17] [ERR ]   Fichier cible introuvable : agents/agent_supervisor_v2.py
+[2026-06-23 15:31:00] [ERR ] Bundle introuvable : patch_bundle_postprod.txt
+[2026-06-23 15:31:30] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:31:30] [INFO] 2 patch(es) détecté(s)
+[2026-06-23 15:31:30] [INFO] ── [FIND_REPLACE] agents/postprod.py
+[2026-06-23 15:31:30] [INFO]   Backup → workspace\patch_backups\postprod.py.20260623_153130.bak
+[2026-06-23 15:31:30] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/postprod.py
+[2026-06-23 15:31:30] [INFO] ── [FIND_REPLACE] agents/postprod.py
+[2026-06-23 15:31:30] [INFO]   Backup → workspace\patch_backups\postprod.py.20260623_153130.bak
+[2026-06-23 15:31:30] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/postprod.py
+[2026-06-23 15:31:37] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:31:37] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 15:31:37] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:31:37] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_153137.bak
+[2026-06-23 15:31:37] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 15:32:04] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:32:04] [INFO] 3 patch(es) détecté(s)
+[2026-06-23 15:32:04] [INFO] ── [FIND_REPLACE] agents/agent_supervisor_v2.py
+[2026-06-23 15:32:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_153204.bak
+[2026-06-23 15:32:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/agent_supervisor_v2.py
+[2026-06-23 15:32:04] [INFO] ── [FIND_REPLACE] agents/agent_supervisor_v2.py
+[2026-06-23 15:32:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_153204.bak
+[2026-06-23 15:32:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/agent_supervisor_v2.py
+[2026-06-23 15:32:04] [INFO] ── [FIND_REPLACE] agents/agent_supervisor_v2.py
+[2026-06-23 15:32:04] [INFO]   Backup → workspace\patch_backups\agent_supervisor_v2.py.20260623_153204.bak
+[2026-06-23 15:32:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/agent_supervisor_v2.py
+[2026-06-23 15:35:08] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:35:08] [INFO] 5 patch(es) détecté(s)
+[2026-06-23 15:35:08] [INFO] ── [FIND_REPLACE] agents/prompt_translator.py
+[2026-06-23 15:35:08] [INFO]   Backup → workspace\patch_backups\prompt_translator.py.20260623_153508.bak
+[2026-06-23 15:35:08] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/prompt_translator.py
+[2026-06-23 15:35:08] [INFO] ── [FIND_REPLACE] agents/prompt_translator.py
+[2026-06-23 15:35:08] [INFO]   Backup → workspace\patch_backups\prompt_translator.py.20260623_153508.bak
+[2026-06-23 15:35:08] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/prompt_translator.py
+[2026-06-23 15:35:08] [INFO] ── [FIND_REPLACE] agents/prompt_translator.py
+[2026-06-23 15:35:08] [INFO]   Backup → workspace\patch_backups\prompt_translator.py.20260623_153508.bak
+[2026-06-23 15:35:08] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/prompt_translator.py
+[2026-06-23 15:35:08] [INFO] ── [FIND_REPLACE] agents/scenario.py
+[2026-06-23 15:35:08] [INFO]   Backup → workspace\patch_backups\scenario.py.20260623_153508.bak
+[2026-06-23 15:35:08] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/scenario.py
+[2026-06-23 15:35:08] [INFO] ── [FIND_REPLACE] agents/storyboard.py
+[2026-06-23 15:35:08] [INFO]   Backup → workspace\patch_backups\storyboard.py.20260623_153508.bak
+[2026-06-23 15:35:08] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/storyboard.py
+[2026-06-23 15:55:37] [ERR ] Bundle introuvable : patch_bundle_utf8_fix.txt
+[2026-06-23 15:56:12] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:56:12] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 15:56:12] [INFO] ── [FIND_REPLACE] overlord_utils_utf8.py
+[2026-06-23 15:56:12] [INFO]   Backup → workspace\patch_backups\overlord_utils_utf8.py.20260623_155612.bak
+[2026-06-23 15:56:12] [OK  ]   ✓ FIND_REPLACE appliqué dans overlord_utils_utf8.py
+[2026-06-23 15:56:19] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:56:19] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 15:56:19] [INFO] ── [FIND_REPLACE] agents/character_sheet_generator.py
+[2026-06-23 15:56:19] [INFO]   Backup → workspace\patch_backups\character_sheet_generator.py.20260623_155619.bak
+[2026-06-23 15:56:19] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/character_sheet_generator.py
+[2026-06-23 15:56:31] [INFO] Format bundle détecté : find_replace
+[2026-06-23 15:56:31] [INFO] 2 patch(es) détecté(s)
+[2026-06-23 15:56:31] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:56:31] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_155631.bak
+[2026-06-23 15:56:31] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 15:56:31] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 15:56:31] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_155631.bak
+[2026-06-23 15:56:31] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 16:03:43] [INFO] Format bundle détecté : find_replace
+[2026-06-23 16:03:43] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 16:03:43] [INFO] ── [FIND_REPLACE] overlord_utils_utf8.py
+[2026-06-23 16:03:43] [INFO]   Backup → workspace\patch_backups\overlord_utils_utf8.py.20260623_160343.bak
+[2026-06-23 16:03:43] [OK  ]   ✓ FIND_REPLACE appliqué dans overlord_utils_utf8.py
+[2026-06-23 17:35:20] [INFO] Format bundle détecté : find_replace
+[2026-06-23 17:35:20] [INFO] 2 patch(es) détecté(s)
+[2026-06-23 17:35:20] [INFO] ── [FIND_REPLACE] agents/style_continuity.py
+[2026-06-23 17:35:20] [INFO]   Backup → workspace\patch_backups\style_continuity.py.20260623_173520.bak
+[2026-06-23 17:35:20] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/style_continuity.py
+[2026-06-23 17:35:20] [INFO] ── [FIND_REPLACE] agents/style_continuity.py
+[2026-06-23 17:35:20] [INFO]   Backup → workspace\patch_backups\style_continuity.py.20260623_173520.bak
+[2026-06-23 17:35:20] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/style_continuity.py
+[2026-06-23 17:36:09] [INFO] Format bundle détecté : find_replace
+[2026-06-23 17:36:09] [INFO] 1 patch(es) détecté(s)
+[2026-06-23 17:36:09] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-23 17:36:09] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_173609.bak
+[2026-06-23 17:36:09] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-23 18:04:21] [INFO] Format bundle détecté : find_replace
+[2026-06-23 18:04:21] [INFO] 2 patch(es) détecté(s)
+[2026-06-23 18:04:21] [INFO] ── [FIND_REPLACE] agents/style_continuity.py
+[2026-06-23 18:04:21] [INFO]   Backup → workspace\patch_backups\style_continuity.py.20260623_180421.bak
+[2026-06-23 18:04:21] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/style_continuity.py
+[2026-06-23 18:04:21] [INFO] ── [FIND_REPLACE] agents/style_continuity.py
+[2026-06-23 18:04:21] [INFO]   Backup → workspace\patch_backups\style_continuity.py.20260623_180421.bak
+[2026-06-23 18:04:21] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/style_continuity.py

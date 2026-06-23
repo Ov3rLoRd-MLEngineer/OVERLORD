@@ -1,0 +1,13 @@
+{
+  "name": "region_mask_generator",
+  "version": "V1.70",
+  "checksum": "a25ee5a17b401623",
+  "lines": 408,
+  "dependencies": [
+    "context_bus",
+    "region_mask_generator"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.385124",
+  "path": "agents\\region_mask_generator.py"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "dream_mode",
+  "version": "V1.70",
+  "checksum": "9bd9b45853416bc7",
+  "lines": 301,
+  "dependencies": [
+    "config_manager",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.959035",
+  "path": "agents\\dream_mode.py"
+}

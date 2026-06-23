@@ -1,0 +1,10 @@
+{
+  "name": "ollama_bridge",
+  "version": "V?.?",
+  "checksum": "449c9c1264fa2315",
+  "lines": 189,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.216930",
+  "path": "agents\\ollama_bridge.py"
+}

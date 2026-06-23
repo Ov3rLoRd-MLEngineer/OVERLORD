@@ -1,0 +1,10 @@
+{
+  "name": "anime_palette_generator",
+  "version": "V1.70",
+  "checksum": "224d8c74506f0826",
+  "lines": 631,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.768103",
+  "path": "agents\\anime_palette_generator.py"
+}

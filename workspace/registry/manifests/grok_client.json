@@ -1,0 +1,10 @@
+{
+  "name": "grok_client",
+  "version": "V1.50",
+  "checksum": "58e0dbfa2ec779e0",
+  "lines": 101,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.020194",
+  "path": "agents\\grok_client.py"
+}

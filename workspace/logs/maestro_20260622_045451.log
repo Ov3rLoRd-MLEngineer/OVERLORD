@@ -1,0 +1,34 @@
+2026-06-22 04:54:51 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-22 04:54:51 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-22 04:54:51 [INFO    ] [CHECKPOINT] Charge : maestro_20260622_023256 | Etat : interrupted | Blocs termines : ['sourcing', 'scenario']
+2026-06-22 04:54:51 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'storyboard' (2/5 blocs deja termines : ['sourcing', 'scenario'])
+2026-06-22 04:54:51 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260622_045451
+2026-06-22 04:54:51 [INFO    ] [GPU] Optimisation pour : rtx5080 — RTX 5080 16GB — cible Ov3rLoRd
+2026-06-22 04:54:51 [INFO    ] [GPU] Workflow patché (8 changements) :
+2026-06-22 04:54:51 [INFO    ]   node 116.steps = 80
+2026-06-22 04:54:51 [INFO    ]   node 116.cfg = 7.0
+2026-06-22 04:54:51 [INFO    ]   node 116.sampler_name = dpmpp_2m_sde
+2026-06-22 04:54:51 [INFO    ]   node 75.value = 1344
+2026-06-22 04:54:51 [INFO    ]   node 77.value = 1984
+2026-06-22 04:54:51 [INFO    ]   node 104.width = 1344
+2026-06-22 04:54:51 [INFO    ]   node 104.height = 1984
+2026-06-22 04:54:51 [INFO    ]   node 100.vae_name = sdxl_vae.safetensors
+2026-06-22 04:54:51 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-22 04:54:51 [INFO    ] [GPU] Optimisation auto : rtx5080
+2026-06-22 04:54:51 [INFO    ] ============================================================
+2026-06-22 04:54:51 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-22 04:54:51 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260622_045451
+2026-06-22 04:54:51 [INFO    ]   Critique : OK
+2026-06-22 04:54:51 [INFO    ]   Watchdog : OK
+2026-06-22 04:54:51 [INFO    ]   Director : OK
+2026-06-22 04:54:51 [INFO    ]   Bus      : OK
+2026-06-22 04:54:51 [INFO    ]   Blocs    : storyboard -> production -> postprod -> 3d
+2026-06-22 04:54:51 [INFO    ] ============================================================
+2026-06-22 04:54:51 [ERROR   ] Pas de script -- arret
+2026-06-22 04:54:51 [INFO    ] [REPORTER] Génération rapport run=maestro_20260622_045451
+2026-06-22 04:54:52 [INFO    ] [REPORTER] OK — JSON: 20260622_045452_maestro_20260622_045451.json | MD: 20260622_045452_maestro_20260622_045451.md
+2026-06-22 04:54:52 [INFO    ] [REPORTER] Résumé : 100 images | vidéo: True
+2026-06-22 04:54:57 [INFO    ] [WATCHDOG] Arrete
+2026-06-22 04:54:57 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=15s
+2026-06-22 04:54:57 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260622_045451 | Blocs termines : []
+2026-06-22 04:54:57 [INFO    ] [CRITIQUE] Bilan : 0 verifications | score moyen=0 | sante=UNKNOWN

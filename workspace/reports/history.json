@@ -1,0 +1,302 @@
+[
+  {
+    "run_id": "maestro_20260621_210214",
+    "timestamp": "2026-06-21T21:05:15.752849",
+    "scenario": "Evangelion: Ephemeral Episodes",
+    "images": 0,
+    "video": false,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260621_210515_maestro_20260621_210214.json",
+    "report_md": "workspace\\reports\\20260621_210515_maestro_20260621_210214.md"
+  },
+  {
+    "run_id": "maestro_20260621_211200",
+    "timestamp": "2026-06-21T21:12:01.378915",
+    "scenario": "Evangelion: Ephemeral Episodes",
+    "images": 0,
+    "video": false,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260621_211201_maestro_20260621_211200.json",
+    "report_md": "workspace\\reports\\20260621_211201_maestro_20260621_211200.md"
+  },
+  {
+    "run_id": "maestro_20260621_233637",
+    "timestamp": "2026-06-21T23:37:10.342392",
+    "scenario": "Evangelion: Reborn Episodes",
+    "images": 0,
+    "video": false,
+    "score": 83,
+    "report_json": "workspace\\reports\\20260621_233710_maestro_20260621_233637.json",
+    "report_md": "workspace\\reports\\20260621_233710_maestro_20260621_233637.md"
+  },
+  {
+    "run_id": "maestro_20260621_234129",
+    "timestamp": "2026-06-21T23:41:30.262787",
+    "scenario": "Evangelion: Reborn Episodes",
+    "images": 0,
+    "video": false,
+    "score": 83,
+    "report_json": "workspace\\reports\\20260621_234130_maestro_20260621_234129.json",
+    "report_md": "workspace\\reports\\20260621_234130_maestro_20260621_234129.md"
+  },
+  {
+    "run_id": "maestro_20260621_234938",
+    "timestamp": "2026-06-22T00:00:28.080615",
+    "scenario": "Evangelion: Shadows Rise",
+    "images": 36,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260622_000028_maestro_20260621_234938.json",
+    "report_md": "workspace\\reports\\20260622_000028_maestro_20260621_234938.md"
+  },
+  {
+    "run_id": "maestro_20260622_002102",
+    "timestamp": "2026-06-22T00:31:23.281864",
+    "scenario": "Evangelion: The Crimson Detective",
+    "images": 100,
+    "video": true,
+    "score": 82,
+    "report_json": "workspace\\reports\\20260622_003123_maestro_20260622_002102.json",
+    "report_md": "workspace\\reports\\20260622_003123_maestro_20260622_002102.md"
+  },
+  {
+    "run_id": "maestro_20260622_011305",
+    "timestamp": "2026-06-22T01:14:01.581510",
+    "scenario": "Evangelion: Conan's Case of the Battle Mecha Girl",
+    "images": 100,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260622_011401_maestro_20260622_011305.json",
+    "report_md": "workspace\\reports\\20260622_011401_maestro_20260622_011305.md"
+  },
+  {
+    "run_id": "maestro_20260622_023017",
+    "timestamp": "2026-06-22T02:30:18.473860",
+    "scenario": "Evangelion: Conan's Case of the Battle Mecha Girl",
+    "images": 100,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260622_023018_maestro_20260622_023017.json",
+    "report_md": "workspace\\reports\\20260622_023018_maestro_20260622_023017.md"
+  },
+  {
+    "run_id": "maestro_20260622_023256",
+    "timestamp": "2026-06-22T02:33:42.124304",
+    "scenario": "Evangelion: Conan's Case File",
+    "images": 100,
+    "video": true,
+    "score": 78,
+    "report_json": "workspace\\reports\\20260622_023342_maestro_20260622_023256.json",
+    "report_md": "workspace\\reports\\20260622_023342_maestro_20260622_023256.md"
+  },
+  {
+    "run_id": "maestro_20260622_045451",
+    "timestamp": "2026-06-22T04:54:52.007871",
+    "scenario": "Evangelion: Conan's Case File",
+    "images": 100,
+    "video": true,
+    "score": 78,
+    "report_json": "workspace\\reports\\20260622_045452_maestro_20260622_045451.json",
+    "report_md": "workspace\\reports\\20260622_045452_maestro_20260622_045451.md"
+  },
+  {
+    "run_id": "maestro_20260622_052444",
+    "timestamp": "2026-06-22T05:24:55.143168",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 100,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_052455_maestro_20260622_052444.json",
+    "report_md": "workspace\\reports\\20260622_052455_maestro_20260622_052444.md"
+  },
+  {
+    "run_id": "maestro_20260622_052758",
+    "timestamp": "2026-06-22T05:27:58.739262",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 100,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_052758_maestro_20260622_052758.json",
+    "report_md": "workspace\\reports\\20260622_052758_maestro_20260622_052758.md"
+  },
+  {
+    "run_id": "maestro_20260622_053015",
+    "timestamp": "2026-06-22T05:30:18.882484",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 100,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_053018_maestro_20260622_053015.json",
+    "report_md": "workspace\\reports\\20260622_053018_maestro_20260622_053015.md"
+  },
+  {
+    "run_id": "maestro_20260622_053533",
+    "timestamp": "2026-06-22T05:35:33.983614",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 100,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_053533_maestro_20260622_053533.json",
+    "report_md": "workspace\\reports\\20260622_053533_maestro_20260622_053533.md"
+  },
+  {
+    "run_id": "maestro_20260622_054915",
+    "timestamp": "2026-06-22T05:54:45.193251",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 0,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_055445_maestro_20260622_054915.json",
+    "report_md": "workspace\\reports\\20260622_055445_maestro_20260622_054915.md"
+  },
+  {
+    "run_id": "maestro_20260622_060611",
+    "timestamp": "2026-06-22T06:06:45.995905",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 48,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_060645_maestro_20260622_060611.json",
+    "report_md": "workspace\\reports\\20260622_060645_maestro_20260622_060611.md"
+  },
+  {
+    "run_id": "maestro_20260622_061839",
+    "timestamp": "2026-06-22T06:19:54.364612",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 0,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_061954_maestro_20260622_061839.json",
+    "report_md": "workspace\\reports\\20260622_061954_maestro_20260622_061839.md"
+  },
+  {
+    "run_id": "maestro_20260622_062120",
+    "timestamp": "2026-06-22T06:22:31.609588",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 0,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_062231_maestro_20260622_062120.json",
+    "report_md": "workspace\\reports\\20260622_062231_maestro_20260622_062120.md"
+  },
+  {
+    "run_id": "maestro_20260622_063438",
+    "timestamp": "2026-06-22T06:35:05.395900",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 48,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_063505_maestro_20260622_063438.json",
+    "report_md": "workspace\\reports\\20260622_063505_maestro_20260622_063438.md"
+  },
+  {
+    "run_id": "maestro_20260622_064743",
+    "timestamp": "2026-06-22T06:49:40.000766",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 54,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_064940_maestro_20260622_064743.json",
+    "report_md": "workspace\\reports\\20260622_064940_maestro_20260622_064743.md"
+  },
+  {
+    "run_id": "maestro_20260622_065831",
+    "timestamp": "2026-06-22T07:00:05.419295",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 63,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_070005_maestro_20260622_065831.json",
+    "report_md": "workspace\\reports\\20260622_070005_maestro_20260622_065831.md"
+  },
+  {
+    "run_id": "maestro_20260622_070255",
+    "timestamp": "2026-06-22T07:04:32.926108",
+    "scenario": "evangelion battle mecha girl: New Chapter",
+    "images": 72,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260622_070432_maestro_20260622_070255.json",
+    "report_md": "workspace\\reports\\20260622_070432_maestro_20260622_070255.md"
+  },
+  {
+    "run_id": "maestro_20260622_071603",
+    "timestamp": "2026-06-22T07:26:28.834324",
+    "scenario": "Evangelion: Shadows Rise",
+    "images": 236,
+    "video": true,
+    "score": 82,
+    "report_json": "workspace\\reports\\20260622_072628_maestro_20260622_071603.json",
+    "report_md": "workspace\\reports\\20260622_072628_maestro_20260622_071603.md"
+  },
+  {
+    "run_id": "maestro_20260623_013451",
+    "timestamp": "2026-06-23T01:44:47.665882",
+    "scenario": "Evangelion: Shadows of Tomorrow",
+    "images": 300,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260623_014447_maestro_20260623_013451.json",
+    "report_md": "workspace\\reports\\20260623_014447_maestro_20260623_013451.md"
+  },
+  {
+    "run_id": "maestro_20260623_032748",
+    "timestamp": "2026-06-23T03:38:21.930570",
+    "scenario": "Evangelion: Asuka's Standoff",
+    "images": 343,
+    "video": true,
+    "score": 82,
+    "report_json": "workspace\\reports\\20260623_033821_maestro_20260623_032748.json",
+    "report_md": "workspace\\reports\\20260623_033821_maestro_20260623_032748.md"
+  },
+  {
+    "run_id": "maestro_20260623_043731",
+    "timestamp": "2026-06-23T04:40:03.870843",
+    "scenario": "Evangelion Battle Asuka: The Detective's Gift",
+    "images": 343,
+    "video": true,
+    "score": 83,
+    "report_json": "workspace\\reports\\20260623_044003_maestro_20260623_043731.json",
+    "report_md": "workspace\\reports\\20260623_044003_maestro_20260623_043731.md"
+  },
+  {
+    "run_id": "maestro_20260623_171028",
+    "timestamp": "2026-06-23T17:10:55.924554",
+    "scenario": "evangelion battle asuka: New Chapter",
+    "images": 343,
+    "video": true,
+    "score": 50,
+    "report_json": "workspace\\reports\\20260623_171055_maestro_20260623_171028.json",
+    "report_md": "workspace\\reports\\20260623_171055_maestro_20260623_171028.md"
+  },
+  {
+    "run_id": "maestro_20260623_172555",
+    "timestamp": "2026-06-23T17:26:49.547448",
+    "scenario": "Evangelion Battle: Asuka - The Detective's Puzzle",
+    "images": 343,
+    "video": true,
+    "score": 82,
+    "report_json": "workspace\\reports\\20260623_172649_maestro_20260623_172555.json",
+    "report_md": "workspace\\reports\\20260623_172649_maestro_20260623_172555.md"
+  },
+  {
+    "run_id": "maestro_20260623_173635",
+    "timestamp": "2026-06-23T17:36:57.358990",
+    "scenario": "Evangelion Battle: Asuka - The Detective's Puzzle",
+    "images": 343,
+    "video": true,
+    "score": 82,
+    "report_json": "workspace\\reports\\20260623_173657_maestro_20260623_173635.json",
+    "report_md": "workspace\\reports\\20260623_173657_maestro_20260623_173635.md"
+  },
+  {
+    "run_id": "maestro_20260623_174628",
+    "timestamp": "2026-06-23T17:53:58.392891",
+    "scenario": "Evangelion: Battle Asuka - The Crimson Detective",
+    "images": 644,
+    "video": true,
+    "score": 85,
+    "report_json": "workspace\\reports\\20260623_175358_maestro_20260623_174628.json",
+    "report_md": "workspace\\reports\\20260623_175358_maestro_20260623_174628.md"
+  }
+]

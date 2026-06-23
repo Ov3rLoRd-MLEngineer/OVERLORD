@@ -1,0 +1,14 @@
+{
+  "name": "error_recovery",
+  "version": "V1.47",
+  "checksum": "8bb9b58173ab910c",
+  "lines": 295,
+  "dependencies": [
+    "overlord_utils",
+    "error_recovery",
+    "comfy_autoconfig"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.995366",
+  "path": "agents\\error_recovery.py"
+}

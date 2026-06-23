@@ -1,0 +1,12 @@
+{
+  "name": "v130_agent_personality",
+  "version": "V1.30",
+  "checksum": "8de078491258ddac",
+  "lines": 481,
+  "dependencies": [
+    "roles_registry"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.882443",
+  "path": "agents\\v130_agent_personality.py"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "transmedia_export",
+  "version": "V1.47",
+  "checksum": "20cdd034aa489128",
+  "lines": 296,
+  "dependencies": [
+    "overlord_utils",
+    "telegram_bot",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.735418",
+  "path": "agents\\transmedia_export.py"
+}

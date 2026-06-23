@@ -1,0 +1,439 @@
+"""
+oracle_interface.py — Assistant Oracle V1.42
+Interface vocale/textuelle naturelle pour piloter OverLord.
+
+"Oracle, génère un épisode Dragon Ball style Broly, qualité max"
+"Oracle, switch thème Katana Steel"
+"Oracle, status pipeline"
+"Oracle, optimise la carte pour le rendu, garde les fans sous 40%"
+
+Intègre :
+- Parsing commandes naturelles via Claude
+- Exécution directe maestro.py
+- Contrôle thèmes UI
+- Monitoring temps réel
+- Voix TTS optionnelle (gTTS)
+"""
+
+import json
+import logging
+import subprocess
+import sys
+import os
+import threading
+import time
+from pathlib import Path
+from datetime import datetime
+
+# ── Charte graphique Ov3rLoRd ─────────────────────────────────────────
+try:
+    import colorama; colorama.init()
+    C_GREEN  = "\033[92m"
+    C_YELLOW = "\033[93m"
+    C_RED    = "\033[91m"
+    C_CYAN   = "\033[96m"
+    C_BLUE   = "\033[94m"
+    C_MAGENTA= "\033[95m"
+    C_BOLD   = "\033[1m"
+    C_DIM    = "\033[2m"
+    C_RESET  = "\033[0m"
+except ImportError:
+    C_GREEN=C_YELLOW=C_RED=C_CYAN=C_BLUE=C_MAGENTA=C_BOLD=C_DIM=C_RESET=""
+
+
+BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+try:
+    from agents.overlord_utils import fallback_llm, safe_json_parse, get_api_key
+    UTILS_OK = True
+except ImportError:
+    UTILS_OK = False
+
+try:
+    from gtts import gTTS
+    import io
+    TTS_OK = True
+except ImportError:
+    TTS_OK = False
+
+log = logging.getLogger("oracle")
+
+# ── Thèmes UI disponibles ─────────────────────────────────────────────
+THEMES = {
+    "digital_bamboo": {
+        "name": "Digital Bamboo",
+        "bg": "#0A0A0A", "accent1": "#00FF41", "accent2": "#1A4A1A",
+        "font": "Orbitron", "description": "Matrix dans la forêt de bambou"
+    },
+    "katana_steel": {
+        "name": "Katana Steel",
+        "bg": "#1A1A1A", "accent1": "#8B0000", "accent2": "#00FFFF",
+        "font": "Orbitron", "description": "Précision froide et performance pure"
+    },
+    "shibuya_neon": {
+        "name": "Shibuya Neon",
+        "bg": "#020818", "accent1": "#FF00FF", "accent2": "#7B00FF",
+        "font": "Orbitron", "description": "Énergie du flux tokyoïte"
+    },
+    "zen_garden": {
+        "name": "Zen Garden Arc",
+        "bg": "#C8C8C0", "accent1": "#B8962E", "accent2": "#F5F0E8",
+        "font": "Orbitron", "description": "Équilibre et stabilité durable"
+    },
+    "obsidian": {
+        "name": "Obsidian Black",
+        "bg": "#000000", "accent1": "#FFFFFF", "accent2": "#333333",
+        "font": "Orbitron", "description": "Noir mat profond"
+    },
+}
+
+CURRENT_THEME = "digital_bamboo"
+
+# ── Commandes reconnues ───────────────────────────────────────────────
+# Self-improve intégré
+try:
+    from self_improve import SelfImprover
+    SELF_IMPROVE_OK = True
+except ImportError:
+    SELF_IMPROVE_OK = False
+    SelfImprover = None
+
+COMMAND_PATTERNS = {
+    "pipeline":  ["génère", "lance", "produis", "démarre", "run", "start", "pipeline"],
+    "status":    ["status", "état", "bilan", "rapport", "santé"],
+    "theme":     ["thème", "theme", "switch", "change", "style"],
+    "stop":      ["stop", "arrête", "halt", "pause"],
+    "test":      ["test", "vérifie", "check", "diagnostic"],
+    "help":      ["aide", "help", "commandes", "quoi faire"],
+    "improve":   ["améliore", "improve", "self-improve", "auto-améliore", "optimise le code"],
+    "rollback":  ["rollback", "annule", "restaure"],
+}
+
+MEDIA_TYPES = ["anime", "manga", "comics", "3d", "photoreal", "art", "game", "short", "film"]
+
+
+class Oracle:
+    """
+    Assistant Oracle — interface naturelle pour OverLord Pipeline.
+    Comprend le langage naturel et traduit en actions concrètes.
+    """
+
+    def __init__(self, voice: bool = False, logger: logging.Logger = None):
+        self.log         = logger or logging.getLogger("oracle")
+        self.voice_mode  = voice and TTS_OK
+        self.history     = []
+        self.running     = False
+        self.theme       = CURRENT_THEME
+        self._pipeline_proc = None
+
+        self.log.info("[ORACLE] Initialisé — " + ("voix activée" if self.voice_mode else "mode texte"))
+
+    # ── Parsing commande naturelle ────────────────────────────────────
+    def parse_command(self, text: str) -> dict:
+        """
+        Analyse le texte en langage naturel et extrait l'intention.
+        Utilise Claude si disponible, sinon parsing par mots-clés.
+        """
+        text_lower = text.lower()
+
+        # Détection par mots-clés (rapide, offline)
+        for intent, keywords in COMMAND_PATTERNS.items():
+            if any(kw in text_lower for kw in keywords):
+                cmd = {"intent": intent, "raw": text, "params": {}}
+
+                if intent == "pipeline":
+                    # Extraire media_type
+                    for mt in MEDIA_TYPES:
+                        if mt in text_lower:
+                            cmd["params"]["media_type"] = mt
+                            break
+                    if "media_type" not in cmd["params"]:
+                        cmd["params"]["media_type"] = "anime"
+                    # Extraire univers
+                    for trigger in ["style", "univers", "universe", "like", "comme"]:
+                        if trigger in text_lower:
+                            idx = text_lower.find(trigger)
+                            cmd["params"]["universe"] = text[idx + len(trigger):].strip()[:100]
+                            break
+
+                elif intent == "theme":
+                    for theme_key, theme_data in THEMES.items():
+                        if theme_key.replace("_", " ") in text_lower or \
+                           theme_data["name"].lower() in text_lower:
+                            cmd["params"]["theme"] = theme_key
+                            break
+
+                return cmd
+
+        # Fallback : demander à Claude d'interpréter
+        if UTILS_OK:
+            system = (
+                "Tu es l'assistant Oracle du pipeline OverLord. "
+                "Analyse la commande et retourne UNIQUEMENT ce JSON : "
+                '{"intent": "pipeline|status|theme|stop|test|help|unknown", '
+                '"params": {"media_type": "anime", "universe": "", "theme": ""}, '
+                '"explanation": "ce que tu vas faire"}'
+            )
+            raw = fallback_llm(text, system=system, max_tokens=200, logger=self.log)
+            ok, data, _ = safe_json_parse(raw, logger=self.log)
+            if ok and data:
+                return data
+
+        return {"intent": "unknown", "raw": text, "params": {}}
+
+    # ── Exécution des commandes ───────────────────────────────────────
+    def execute(self, cmd: dict) -> str:
+        """Exécute une commande parsée et retourne la réponse."""
+        intent = cmd.get("intent", "unknown")
+        params = cmd.get("params", {})
+
+        if intent == "pipeline":
+            return self._cmd_pipeline(params)
+        elif intent == "status":
+            return self._cmd_status()
+        elif intent == "theme":
+            return self._cmd_theme(params)
+        elif intent == "stop":
+            return self._cmd_stop()
+        elif intent == "test":
+            return self._cmd_test()
+        elif intent == "help":
+            return self._cmd_help()
+        else:
+            return "Commande non reconnue. Dis 'aide' pour voir les commandes disponibles."
+
+    def _cmd_pipeline(self, params: dict) -> str:
+        media_type = params.get("media_type", "anime")
+        universe   = params.get("universe", "")
+
+        args = [sys.executable, "maestro.py", "--media-type", media_type]
+        if universe:
+            args += ["--universe", universe]
+
+        self.log.info(f"[ORACLE] Lancement pipeline : {' '.join(args)}")
+        try:
+            self._pipeline_proc = subprocess.Popen(
+                args, cwd=str(BASE_DIR),
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                text=True, encoding="utf-8"
+            )
+            threading.Thread(target=self._stream_output,
+                             args=(self._pipeline_proc,), daemon=True).start()
+            return f"Pipeline démarré — media={media_type}" + (f" | univers={universe}" if universe else "")
+        except Exception as e:
+            return f"Erreur lancement pipeline : {e}"
+
+    def _stream_output(self, proc):
+        """Stream les logs du pipeline en temps réel."""
+        for line in proc.stdout:
+            print(f"  [PIPELINE] {line}", end="")
+        proc.wait()
+        self.log.info(f"[ORACLE] Pipeline terminé (code={proc.returncode})")
+
+    def _cmd_status(self) -> str:
+        lines = [f"═══ Ov3rLoRd Status — {datetime.now().strftime('%H:%M:%S')} ═══"]
+
+        # Pipeline en cours ?
+        if self._pipeline_proc and self._pipeline_proc.poll() is None:
+            lines.append("Pipeline     : ▶ EN COURS")
+        else:
+            lines.append("Pipeline     : ○ Inactif")
+
+        # ComfyUI
+        try:
+            import requests
+            r = requests.get("http://127.0.0.1:8188/system_stats", timeout=2)
+            if r.status_code == 200:
+                gpu = r.json().get("devices", [{}])[0].get("name", "GPU")
+                lines.append(f"ComfyUI      : ✓ En ligne ({gpu})")
+            else:
+                lines.append("ComfyUI      : ✗ Hors ligne")
+        except Exception:
+            lines.append("ComfyUI      : ✗ Hors ligne")
+
+        # Ollama
+        try:
+            import requests
+            r = requests.get("http://localhost:11434/api/tags", timeout=2)
+            models = [m["name"].split(":")[0] for m in r.json().get("models", [])]
+            lines.append(f"Ollama       : ✓ {models}")
+        except Exception:
+            lines.append("Ollama       : ✗ Non disponible")
+
+        # Clé API
+        key = get_api_key() if UTILS_OK else os.environ.get("ANTHROPIC_API_KEY", "")
+        lines.append(f"API Claude   : {'✓ Configurée' if key else '✗ Manquante'}")
+
+        # Thème actif
+        theme_data = THEMES.get(self.theme, {})
+        lines.append(f"Thème UI     : {theme_data.get('name', self.theme)}")
+
+        # Derniers checkpoints
+        cp_dir = BASE_DIR / "workspace" / "checkpoints"
+        if cp_dir.exists():
+            cps = sorted(cp_dir.glob("*.json"), key=lambda f: f.stat().st_mtime, reverse=True)
+            if cps:
+                lines.append(f"Checkpoint   : {cps[0].name}")
+
+        return "\n".join(lines)
+
+    def _cmd_theme(self, params: dict) -> str:
+        theme_key = params.get("theme", "")
+        if not theme_key:
+            available = ", ".join(THEMES.keys())
+            return f"Thèmes disponibles : {available}\nDis 'switch thème katana_steel' par exemple."
+
+        if theme_key not in THEMES:
+            return f"Thème '{theme_key}' inconnu. Disponibles : {', '.join(THEMES.keys())}"
+
+        self.theme = theme_key
+        theme_data = THEMES[theme_key]
+
+        # Sauvegarder le thème dans settings.json
+        settings_path = BASE_DIR / "settings.json"
+        try:
+            settings = {}
+            if settings_path.exists():
+                settings = json.loads(settings_path.read_text(encoding="utf-8"))
+            settings["active_theme"] = theme_key
+            settings["theme_data"]   = theme_data
+            settings_path.write_text(
+                json.dumps(settings, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+        except Exception:
+            pass
+
+        return (f"Thème activé : {theme_data['name']}\n"
+                f"  {theme_data['description']}\n"
+                f"  BG: {theme_data['bg']} | Accent: {theme_data['accent1']}")
+
+    def _cmd_stop(self) -> str:
+        if self._pipeline_proc and self._pipeline_proc.poll() is None:
+            self._pipeline_proc.terminate()
+            return "Pipeline arrêté."
+        return "Aucun pipeline en cours."
+
+    def _cmd_test(self) -> str:
+        try:
+            result = subprocess.run(
+                [sys.executable, "test_pipeline.py", "--quick"],
+                cwd=str(BASE_DIR), capture_output=True, text=True, timeout=30
+            )
+            lines = [l for l in result.stdout.split('\n') if l.strip()]
+            return "\n".join(lines[-8:])  # Dernières 8 lignes
+        except Exception as e:
+            return f"Erreur test : {e}"
+
+    def _cmd_improve(self, params: dict) -> str:
+        if not SELF_IMPROVE_OK:
+            return "self_improve.py non disponible — place-le à la racine D:\\OVERLORD\\"
+        try:
+            improver = SelfImprover()
+            dry = params.get("dry_run", True)
+            result = improver.run(max_patches=3, dry_run=dry)
+            return (f"Auto-amélioration terminée\n"
+                    f"Score santé : {result.get('health_score',0)}/100\n"
+                    f"Patches : {result.get('patches_applied',0)} appliqués | {result.get('patches_failed',0)} échoués")
+        except Exception as e:
+            return f"Erreur self-improve : {e}"
+
+    def _cmd_rollback(self, params: dict) -> str:
+        if not SELF_IMPROVE_OK:
+            return "self_improve.py non disponible"
+        try:
+            fname = params.get("file", "")
+            if not fname:
+                return "Précise le fichier : 'rollback scenario.py'"
+            improver = SelfImprover()
+            ok = improver.rollback(fname)
+            return f"Rollback {'✓ réussi' if ok else '✗ échoué'} pour {fname}"
+        except Exception as e:
+            return f"Erreur rollback : {e}"
+
+    def _cmd_help(self) -> str:
+        return """╔══ ORACLE V1.43 — Commandes ══════════════╗
+║  "génère un anime Dragon Ball"           ║
+║  "lance le pipeline manga"               ║
+║  "status"                                ║
+║  "switch thème katana_steel"             ║
+║  "test" / "diagnostic"                   ║
+║  "améliore le code"  → self-improve      ║
+║  "rollback scenario.py" → restaurer      ║
+║  "stop" / "aide"                         ║
+╚══════════════════════════════════════════╝"""
+
+    # ── TTS ───────────────────────────────────────────────────────────
+    def speak(self, text: str):
+        """Synthèse vocale optionnelle."""
+        if not self.voice_mode:
+            return
+        try:
+            import tempfile, subprocess as sp
+            tts = gTTS(text=text[:200], lang="fr", slow=False)
+            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
+                tts.save(f.name)
+                sp.Popen(["start", "", f.name], shell=True)
+        except Exception:
+            pass
+
+    # ── Interface principale ──────────────────────────────────────────
+    def run(self):
+        """Boucle interactive Oracle."""
+        self.running = True
+        print("\n" + "═"*50)
+        print("  Ov3rLoRd Oracle — Interface V1.42")
+        print("  Dis 'aide' pour voir les commandes")
+        print("═"*50 + "\n")
+
+        self.speak("Oracle en ligne. Comment puis-je vous aider ?")
+
+        while self.running:
+            try:
+                user_input = input("  Oracle › ").strip()
+                if not user_input:
+                    continue
+                if user_input.lower() in ["exit", "quit", "bye"]:
+                    print("  Oracle désactivé.")
+                    break
+
+                self.history.append({"role": "user", "content": user_input, "ts": datetime.now().isoformat()})
+
+                cmd      = self.parse_command(user_input)
+                response = self.execute(cmd)
+
+                print(f"\n  {response}\n")
+                self.speak(response[:150])
+
+                self.history.append({"role": "oracle", "content": response, "ts": datetime.now().isoformat()})
+
+            except KeyboardInterrupt:
+                print("\n  Oracle mis en pause.")
+                break
+            except Exception as e:
+                self.log.error(f"[ORACLE] Erreur : {e}")
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Oracle — Interface Ov3rLoRd V1.42")
+    parser.add_argument("--voice",   action="store_true", help="Activer la synthèse vocale")
+    parser.add_argument("--cmd",     type=str, default="", help="Commande directe (non interactif)")
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s [%(levelname)-8s] %(message)s")
+
+    oracle = Oracle(voice=args.voice)
+
+    if args.cmd:
+        cmd      = oracle.parse_command(args.cmd)
+        response = oracle.execute(cmd)
+        print(response)
+    else:
+        oracle.run()
+
+
+if __name__ == "__main__":
+    main()

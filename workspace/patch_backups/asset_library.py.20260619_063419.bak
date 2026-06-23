@@ -1,0 +1,304 @@
+"""
+agents/asset_library.py — Bibliothèque d'Assets Ov3rLoRd V1.46
+Personnages, décors, effets — prompts verrouillés, réutilisables entre épisodes.
+Lie style_dna + narrative_memory pour une cohérence totale.
+
+Usage :
+    from agents.asset_library import AssetLibrary
+    lib = AssetLibrary("Dragon Ball Ov3rLoRd")
+    lib.add_character("Goku", positive_prompt="...", lora="goku_v2.safetensors")
+    prompt = lib.get_character_prompt("Goku", scene_context="coucher de soleil")
+"""
+
+import json
+import hashlib
+import logging
+from pathlib import Path
+from datetime import datetime
+from typing import Optional
+
+try:
+    from agents.overlord_utils import fallback_llm, safe_json_parse
+    UTILS_OK = True
+except ImportError:
+    UTILS_OK = False
+
+log = logging.getLogger("asset_library")
+LIBRARY_DIR = Path("workspace/asset_library")
+
+
+class Asset:
+    """Représente un asset (personnage, décor, effet) avec son prompt verrouillé."""
+    def __init__(self, asset_id: str, name: str, category: str, data: dict):
+        self.id       = asset_id
+        self.name     = name
+        self.category = category  # character | location | effect | object | style
+        self.data     = data
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "name": self.name,
+                "category": self.category, "data": self.data}
+
+
+class AssetLibrary:
+    """
+    Bibliothèque centralisée d'assets réutilisables.
+    Catégories : character | location | effect | object | style
+    """
+
+    def __init__(self, series: str, logger: logging.Logger = None):
+        self.log    = logger or log
+        self.series = series
+        self.lib_id = hashlib.md5(series.encode()).hexdigest()[:8]
+        self.path   = LIBRARY_DIR / f"{self.lib_id}.json"
+        LIBRARY_DIR.mkdir(parents=True, exist_ok=True)
+        self._data  = self._load()
+
+    def _load(self) -> dict:
+        if self.path.exists():
+            try:
+                return json.loads(self.path.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        return {"series": self.series, "assets": {}, "usage_log": []}
+
+    def _save(self):
+        self.path.write_text(
+            json.dumps(self._data, ensure_ascii=False, indent=2, default=str),
+            encoding="utf-8"
+        )
+
+    # ── Ajout d'assets ────────────────────────────────────────────────
+    def add_character(self, name: str, positive_prompt: str,
+                      negative_prompt: str = "", lora: str = "",
+                      lora_strength: float = 0.8,
+                      reference_images: list = None,
+                      traits: dict = None) -> str:
+        """
+        Ajoute un personnage à la bibliothèque.
+        Le prompt est verrouillé — utilisé pour toutes ses apparitions.
+        """
+        asset_id = f"char_{hashlib.md5(name.encode()).hexdigest()[:6]}"
+        self._data["assets"][asset_id] = {
+            "id": asset_id, "name": name, "category": "character",
+            "data": {
+                "positive_prompt":  positive_prompt,
+                "negative_prompt":  negative_prompt or "bad anatomy, wrong proportions",
+                "lora":             lora,
+                "lora_strength":    lora_strength,
+                "reference_images": reference_images or [],
+                "traits":           traits or {},
+                "created_at":       datetime.now().isoformat(),
+                "version":          1,
+            }
+        }
+        self._save()
+        self.log.info(f"[LIBRARY] Personnage ajouté : {name} ({asset_id})")
+        return asset_id
+
+    def add_location(self, name: str, positive_prompt: str,
+                     time_variants: dict = None,
+                     weather_variants: dict = None) -> str:
+        """
+        Ajoute un décor avec ses variantes (jour/nuit, météo).
+        time_variants : {"day":"prompt jour","night":"prompt nuit","dusk":"prompt crépuscule"}
+        """
+        asset_id = f"loc_{hashlib.md5(name.encode()).hexdigest()[:6]}"
+        self._data["assets"][asset_id] = {
+            "id": asset_id, "name": name, "category": "location",
+            "data": {
+                "positive_prompt": positive_prompt,
+                "time_variants":   time_variants or {"day": positive_prompt},
+                "weather_variants":weather_variants or {},
+                "created_at":      datetime.now().isoformat(),
+            }
+        }
+        self._save()
+        self.log.info(f"[LIBRARY] Décor ajouté : {name}")
+        return asset_id
+
+    def add_effect(self, name: str, positive_prompt: str,
+                   category: str = "effect") -> str:
+        """Ajoute un effet visuel ou un objet récurrent."""
+        asset_id = f"{category[:3]}_{hashlib.md5(name.encode()).hexdigest()[:6]}"
+        self._data["assets"][asset_id] = {
+            "id": asset_id, "name": name, "category": category,
+            "data": {"positive_prompt": positive_prompt,
+                     "created_at": datetime.now().isoformat()}
+        }
+        self._save()
+        return asset_id
+
+    # ── Récupération et composition de prompts ────────────────────────
+    def get_character_prompt(self, name: str,
+                             scene_context: str = "",
+                             time_of_day: str = "day") -> dict:
+        """
+        Retourne le prompt complet pour un personnage dans un contexte.
+        Compose automatiquement : personnage + contexte + LoRA.
+        """
+        asset = self._find_asset(name, "character")
+        if not asset:
+            self.log.warning(f"[LIBRARY] Personnage '{name}' introuvable")
+            return {"positive": name, "negative": "", "lora": ""}
+
+        data = asset["data"]
+        parts = [data["positive_prompt"]]
+        if scene_context:
+            parts.append(scene_context)
+
+        # Enregistrer l'usage
+        self._log_usage(asset["id"], "character", name)
+
+        return {
+            "positive":      ", ".join(parts),
+            "negative":      data.get("negative_prompt", ""),
+            "lora":          data.get("lora", ""),
+            "lora_strength": data.get("lora_strength", 0.8),
+            "asset_id":      asset["id"],
+        }
+
+    def get_location_prompt(self, name: str,
+                            time_of_day: str = "day",
+                            weather: str = "") -> dict:
+        """Retourne le prompt d'un décor selon l'heure et la météo."""
+        asset = self._find_asset(name, "location")
+        if not asset:
+            return {"positive": name, "negative": ""}
+
+        data = asset["data"]
+        variants = data.get("time_variants", {})
+        base = variants.get(time_of_day, data.get("positive_prompt", name))
+
+        weather_variants = data.get("weather_variants", {})
+        if weather and weather in weather_variants:
+            base = f"{base}, {weather_variants[weather]}"
+
+        self._log_usage(asset["id"], "location", name)
+        return {"positive": base, "negative": "", "asset_id": asset["id"]}
+
+    def compose_scene_prompt(self, characters: list, location: str,
+                             time_of_day: str = "day",
+                             action: str = "",
+                             style_prompt: str = "") -> dict:
+        """
+        Compose le prompt complet d'une scène multi-personnages.
+        Combine : personnages + décor + action + style DNA.
+        """
+        parts = []
+        loras = []
+        negatives = []
+
+        for char_name in characters:
+            cp = self.get_character_prompt(char_name, time_of_day=time_of_day)
+            parts.append(cp["positive"])
+            if cp.get("lora"):
+                loras.append({"name": cp["lora"], "strength": cp.get("lora_strength", 0.8)})
+            if cp.get("negative"):
+                negatives.append(cp["negative"])
+
+        if location:
+            lp = self.get_location_prompt(location, time_of_day=time_of_day)
+            parts.append(lp["positive"])
+
+        if action:
+            parts.append(action)
+        if style_prompt:
+            parts.append(style_prompt)
+
+        return {
+            "positive": ", ".join(p for p in parts if p),
+            "negative": ", ".join(set(n for n in negatives if n)) or "bad quality, blurry, deformed",
+            "loras":    loras,
+        }
+
+    def _find_asset(self, name: str, category: str = None) -> Optional[dict]:
+        for asset in self._data["assets"].values():
+            if asset["name"].lower() == name.lower():
+                if category is None or asset["category"] == category:
+                    return asset
+        return None
+
+    def _log_usage(self, asset_id: str, category: str, name: str):
+        self._data["usage_log"].append({
+            "asset_id": asset_id, "category": category,
+            "name": name, "used_at": datetime.now().isoformat()
+        })
+        self._data["usage_log"] = self._data["usage_log"][-200:]
+        self._save()
+
+    # ── IA : génération automatique de prompts ────────────────────────
+    def generate_character_prompt(self, name: str, description: str,
+                                  style: str = "anime SDXL") -> str:
+        """Génère un prompt ComfyUI depuis une description textuelle via LLM."""
+        if not UTILS_OK:
+            return f"1character, {description}, {style}, high quality"
+
+        prompt = (
+            f"Génère un prompt ComfyUI SDXL pour ce personnage.\n"
+            f"Nom : {name}\nDescription : {description}\nStyle : {style}\n"
+            f"Retourne UNIQUEMENT le prompt positif, en anglais, sans explication."
+        )
+        result = fallback_llm(prompt, max_tokens=200, logger=self.log)
+        return result.strip() if result else f"1character, {description}, {style}"
+
+    # ── Gestion bibliothèque ──────────────────────────────────────────
+    def list_assets(self, category: str = None) -> list:
+        assets = list(self._data["assets"].values())
+        if category:
+            assets = [a for a in assets if a["category"] == category]
+        return assets
+
+    def get_most_used(self, n: int = 5) -> list:
+        from collections import Counter
+        names = [u["name"] for u in self._data.get("usage_log", [])]
+        return Counter(names).most_common(n)
+
+    def export_for_storyboard(self) -> dict:
+        """Exporte un résumé utilisable par storyboard.py."""
+        chars = {a["name"]: a["data"] for a in self.list_assets("character")}
+        locs  = {a["name"]: a["data"] for a in self.list_assets("location")}
+        return {"characters": chars, "locations": locs,
+                "series": self.series, "asset_count": len(self._data["assets"])}
+
+    def summary(self) -> dict:
+        by_cat = {}
+        for a in self._data["assets"].values():
+            c = a["category"]
+            by_cat[c] = by_cat.get(c, 0) + 1
+        return {"series": self.series, "total": len(self._data["assets"]),
+                "by_category": by_cat, "usage_logs": len(self._data.get("usage_log",[]))}
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    lib = AssetLibrary("Dragon Ball Ov3rLoRd")
+
+    lib.add_character("Goku",
+        positive_prompt="1male, muscular, spiky black hair, orange gi, blue eyes, determined expression, ultra detail",
+        negative_prompt="female, dress, glasses",
+        lora="goku_sdxl_v2.safetensors",
+        traits={"power_level": "Ultra Instinct", "alignment": "hero"})
+
+    lib.add_character("Broly",
+        positive_prompt="1male, extremely muscular, long green hair, dark armor, wild expression, massive physique",
+        lora="broly_xl_v1.safetensors",
+        traits={"power_level": "Legendary Super Saiyan", "alignment": "rival"})
+
+    lib.add_location("Plaine désertique",
+        positive_prompt="vast desert plain, red earth, dramatic sky, rocky formations",
+        time_variants={
+            "day":   "vast desert plain, harsh sunlight, heat haze",
+            "night": "vast desert plain, star filled sky, moonlight",
+            "dusk":  "vast desert plain, orange sunset, dramatic clouds",
+        })
+
+    scene = lib.compose_scene_prompt(
+        characters=["Goku", "Broly"],
+        location="Plaine désertique",
+        time_of_day="dusk",
+        action="epic battle, energy clash, dramatic confrontation",
+        style_prompt="anime cel shading, dynamic action, Toriyama style"
+    )
+    print(json.dumps(scene, indent=2, ensure_ascii=False))
+    print("\nSummary:", json.dumps(lib.summary(), indent=2))

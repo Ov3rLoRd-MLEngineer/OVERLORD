@@ -1,0 +1,518 @@
+"""
+agent_supervisor.py v2 -- Usine a Animes Ov3rLoRd
+Orchestrateur industriel avec machine d'etat, loopback reel,
+archivage images, notifications et structure modulaire.
+FIX V1.49p : sys.stdout.reconfigure() supprime (incompatible overlord_utils_utf8).
+"""
+
+import requests
+import json
+import shutil
+import time
+import random
+import logging
+import sys
+import hashlib
+import io
+from pathlib import Path
+from datetime import datetime
+
+# Force UTF-8 si overlord_utils_utf8 n'a pas deja ete appele
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
+try:
+    from PIL import Image, ImageFilter
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+
+try:
+    from agents.context_bus import get_bus
+    BUS_OK = True
+except ImportError:
+    BUS_OK = False
+
+try:
+    from agents.audit_logger import init_db, log_run_start, log_run_end, log_frame, log_decision
+    init_db()
+    AUDIT_OK = True
+except Exception:
+    AUDIT_OK = False
+    def log_run_start(*a, **kw): return False
+    def log_run_end(*a, **kw): return False
+    def log_frame(*a, **kw): return -1
+    def log_decision(*a, **kw): return False
+
+try:
+    from agents.negative_bank import get_negative
+    NEGBANK_OK = True
+except Exception:
+    NEGBANK_OK = False
+    def get_negative(**kw): return DEFAULT_NEGATIVE
+
+# ── Configuration centrale ────────────────────────────────────────────
+COMFY_URL     = "http://127.0.0.1:8188"
+WORKFLOW_FILE = "Combined_V35_API.json"
+
+WORKSPACE   = Path("workspace")
+LOGS_DIR    = WORKSPACE / "logs"
+ARCHIVE_DIR = WORKSPACE / "archive"
+FAILED_FILE = WORKSPACE / "failed_jobs.json"
+STATE_FILE  = WORKSPACE / "state.json"
+CONFIG_FILE = "config.json"
+
+STORAGE = {
+    "hot":  Path("F:/ComfyUI_Output"),
+    "warm": Path("D:/NVMe_Production"),
+    "cold": Path("E:/HDD_Archive"),
+    "hot_threshold_gb":  150,
+    "warm_threshold_gb": 800,
+}
+
+TELEGRAM_TOKEN   = ""
+TELEGRAM_CHAT_ID = ""
+
+SHARPNESS_THRESHOLD = 80.0
+MAX_RETRIES         = 3
+RETRY_DELAY         = 5
+
+ADV_LORA_ID  = "62"
+ADV_SEED_ID  = "112"
+ADV_DIFF_ID  = "68"
+ADV_POS_87   = "87"
+ADV_POS_99   = "99"
+ADV_NEG_ID   = "111"
+ADV_WIDTH_ID = "75"
+ADV_HEIGHT_ID= "77"
+
+DET_LORA_ID = "303"
+DET_SEED_ID = "382"
+DET_POS_ID  = "301"
+DET_NEG_ID  = "380"
+
+IMAGE_SAVER_NODE = "334"
+
+AVAILABLE_LORAS = [
+    "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+    "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+    "rei-ayanami-classic-ponyxl-lora-nochekaiser.safetensors",
+]
+DEFAULT_LORA_MAIN = AVAILABLE_LORAS[0]
+DEFAULT_LORA_DET  = AVAILABLE_LORAS[2]
+
+DEFAULT_POSITIVE = (
+    "masterpiece, best quality, absurdres, highly detailed, "
+    "1girl, solo, looking at viewer, anime style, "
+    "detailed face, expressive eyes, dynamic pose, "
+    "vibrant colors, sharp lineart, cinematic lighting"
+)
+DEFAULT_NEGATIVE = "bad quality, worst quality, worst detail, sketch, bad hands, bad anatomy, deformed, artist name, watermark, signature, patreon, twitter username"
+
+
+# ── Initialisation ────────────────────────────────────────────────────
+def init_workspace():
+    for d in [WORKSPACE, LOGS_DIR, ARCHIVE_DIR]:
+        d.mkdir(parents=True, exist_ok=True)
+    if not FAILED_FILE.exists():
+        FAILED_FILE.write_text("[]", encoding="utf-8")
+    if not STATE_FILE.exists():
+        STATE_FILE.write_text(
+            json.dumps({"current_job": 0, "run_id": None}),
+            encoding="utf-8"
+        )
+
+def get_logger(run_id: str) -> logging.Logger:
+    logger = logging.getLogger(run_id)
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.DEBUG)
+    fmt = logging.Formatter(
+        "%(asctime)s [%(levelname)-8s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(fmt)
+    logger.addHandler(ch)
+    fh = logging.FileHandler(LOGS_DIR / f"{run_id}.log", encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(fmt)
+    logger.addHandler(fh)
+    return logger
+
+
+# ── Machine d'etat ────────────────────────────────────────────────────
+def load_state() -> dict:
+    try:
+        return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {"current_job": 0, "run_id": None}
+
+def save_state(index: int, run_id: str):
+    STATE_FILE.write_text(
+        json.dumps({"current_job": index, "run_id": run_id}),
+        encoding="utf-8"
+    )
+
+def clear_state():
+    save_state(0, None)
+
+
+# ── Utilitaires ───────────────────────────────────────────────────────
+def job_hash(job: dict) -> str:
+    return hashlib.md5(
+        json.dumps(job, sort_keys=True).encode()
+    ).hexdigest()[:8]
+
+def workflow_fingerprint(wf: dict) -> str:
+    canonical = json.dumps(wf, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+
+def timestamp() -> str:
+    return datetime.now().strftime("%Y%m%d_%H%M%S")
+
+def save_failed_job(job: dict, reason: str):
+    try:
+        failed = json.loads(FAILED_FILE.read_text(encoding="utf-8"))
+        failed.append({"job": job, "reason": reason,
+                        "ts": timestamp(), "hash": job_hash(job)})
+        FAILED_FILE.write_text(json.dumps(failed, ensure_ascii=False, indent=2),
+                                encoding="utf-8")
+    except Exception:
+        pass
+
+
+# ── Notifications Telegram ────────────────────────────────────────────
+def notify_telegram(message: str):
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        return
+    try:
+        requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            json={"chat_id": TELEGRAM_CHAT_ID, "text": message},
+            timeout=10
+        )
+    except Exception:
+        pass
+
+
+# ── ComfyUI API ───────────────────────────────────────────────────────
+def load_workflow() -> dict:
+    """
+    Charge le workflow JSON.
+    Fallback : workflow minimal dynamique si Combined_V35_API.json absent.
+    """
+    wf_path = Path(WORKFLOW_FILE)
+    if wf_path.exists():
+        try:
+            return json.loads(wf_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            raise RuntimeError(f"Workflow corrompu : {WORKFLOW_FILE} — {e}")
+    # Fallback : workflow minimal compatible fabricatedXL_v70 + taesdxl
+    # Les prompts/seed/steps sont injectes par patch_workflow()
+    return {
+        "1":  {"class_type": "CheckpointLoaderSimple",
+               "inputs": {"ckpt_name": "fabricatedXL_v70.safetensors"}},
+        "62": {"class_type": "LoraLoader",
+               "inputs": {"model": ["1",0], "clip": ["1",1],
+                          "lora_name": DEFAULT_LORA_MAIN,
+                          "strength_model": 1.0, "strength_clip": 1.0}},
+        "87": {"class_type": "CLIPTextEncode",
+               "inputs": {"text": DEFAULT_POSITIVE, "clip": ["62",1]}},
+        "111":{"class_type": "CLIPTextEncode",
+               "inputs": {"text": DEFAULT_NEGATIVE, "clip": ["62",1]}},
+        "104":{"class_type": "EmptyLatentImage",
+               "inputs": {"width": 1344, "height": 1984, "batch_size": 1}},
+        "112":{"class_type": "KSampler",
+               "inputs": {"model": ["62",0], "positive": ["87",0],
+                          "negative": ["111",0], "latent_image": ["104",0],
+                          "seed": 0, "steps": 35, "cfg": 7.0,
+                          "sampler_name": "dpmpp_2m_sde",
+                          "scheduler": "karras", "denoise": 1.0}},
+        "6":  {"class_type": "VAEDecode",
+               "inputs": {"samples": ["112",0], "vae": ["1",2]}},
+        "334":{"class_type": "SaveImage",
+               "inputs": {"images": ["6",0],
+                          "filename_prefix": "overlord_"}},
+    }
+
+def get_comfy_status() -> dict:
+    try:
+        r = requests.get(f"{COMFY_URL}/system_stats", timeout=5)
+        if r.status_code == 200:
+            return r.json()
+    except Exception:
+        pass
+    return {}
+
+def wait_for_comfy(timeout: int = 120) -> bool:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        stats = get_comfy_status()
+        if stats:
+            return True
+        time.sleep(3)
+    return False
+
+def get_queue_status() -> dict:
+    try:
+        r = requests.get(f"{COMFY_URL}/queue", timeout=5)
+        if r.status_code == 200:
+            return r.json()
+    except Exception:
+        pass
+    return {}
+
+def queue_prompt(workflow: dict) -> str:
+    payload = {"prompt": workflow, "client_id": "overlord_supervisor"}
+    r = requests.post(f"{COMFY_URL}/prompt", json=payload, timeout=30)
+    r.raise_for_status()
+    return r.json().get("prompt_id","")
+
+def wait_for_completion(prompt_id: str, timeout: int = 600,
+                         logger: logging.Logger = None) -> bool:
+    log = logger or logging.getLogger("supervisor")
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            r = requests.get(f"{COMFY_URL}/history/{prompt_id}", timeout=10)
+            if r.status_code == 200:
+                hist = r.json()
+                if prompt_id in hist:
+                    status = hist[prompt_id].get("status",{})
+                    if status.get("completed"):
+                        return True
+                    if status.get("status_str") == "error":
+                        log.error(f"[SUPERVISOR] ComfyUI error on {prompt_id}")
+                        return False
+        except Exception:
+            pass
+        queue = get_queue_status()
+        pending = [q[1] for q in queue.get("queue_pending",[])]
+        running = [q[1] for q in queue.get("queue_running",[])]
+        if prompt_id not in pending and prompt_id not in running:
+            return True
+        time.sleep(2)
+    log.error(f"[SUPERVISOR] Timeout ({timeout}s) sur {prompt_id}")
+    return False
+
+
+# ── Score qualite image ───────────────────────────────────────────────
+def compute_sharpness(image_path: Path) -> float:
+    if not PIL_AVAILABLE:
+        return 100.0
+    try:
+        img  = Image.open(image_path).convert("L").resize((512,512), Image.LANCZOS)
+        lap  = img.filter(ImageFilter.FIND_EDGES)
+        data = list(lap.getdata())
+        mean = sum(data)/len(data)
+        var  = sum((x-mean)**2 for x in data)/len(data)
+        return round(var, 2)
+    except Exception:
+        return 100.0
+
+
+# ── Archivage ─────────────────────────────────────────────────────────
+def archive_images(source_dir: Path, job: dict,
+                    run_id: str, job_idx: int) -> list[Path]:
+    archived = []
+    patterns = ["*.png","*.jpg","*.jpeg","*.webp"]
+    images   = []
+    for pat in patterns:
+        images.extend(source_dir.glob(pat))
+    if not images:
+        return archived
+    ts       = timestamp()
+    dest_dir = ARCHIVE_DIR / run_id
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for img in sorted(images):
+        dest = dest_dir / f"job{job_idx:04d}_{ts}_{img.name}"
+        try:
+            shutil.copy2(img, dest)
+            archived.append(dest)
+        except Exception:
+            pass
+    return archived
+
+
+# ── Patch du workflow ─────────────────────────────────────────────────
+def patch_workflow(wf: dict, job: dict) -> dict:
+    import copy
+    wf = copy.deepcopy(wf)
+
+    def set_node(node_id: str, input_key: str, value):
+        node = wf.get(node_id, {})
+        if "inputs" in node:
+            node["inputs"][input_key] = value
+
+    seed = job.get("seed", random.randint(1, 2**31))
+
+    lora_main = job.get("lora") or random.choice(AVAILABLE_LORAS)
+    set_node(ADV_LORA_ID,  "lora_name",   lora_main)
+    set_node(ADV_LORA_ID,  "strength_model", job.get("strength", 1.0))
+    set_node(ADV_SEED_ID,  "seed",         seed)
+    set_node(ADV_POS_87,   "text",         job.get("positive", DEFAULT_POSITIVE))
+    set_node(ADV_POS_99,   "text",         job.get("positive", DEFAULT_POSITIVE))
+    # V2.20 : negative_bank -- prompt negatif contextuel par personnage/shot/univers
+    if NEGBANK_OK:
+        _intent  = job.get("_intent", {})
+        _neg_ctx = get_negative(
+            character = job.get("character",  ""),
+            universe  = job.get("universe",   "evangelion"),
+            shot_type = _intent.get("shot_type",  ""),
+            lighting  = _intent.get("lighting",   ""),
+            extra     = job.get("negative",   ""),
+        )
+    else:
+        _neg_ctx = job.get("negative", DEFAULT_NEGATIVE)
+    set_node(ADV_NEG_ID,   "text",         _neg_ctx)
+    set_node(ADV_WIDTH_ID, "width",        job.get("width",  1024))
+    set_node(ADV_HEIGHT_ID,"height",       job.get("height",  576))
+
+    lora_det = job.get("det_lora") or random.choice(AVAILABLE_LORAS)
+    set_node(DET_LORA_ID, "lora_name",     lora_det)
+    set_node(DET_LORA_ID, "strength_model", job.get("det_strength", 0.8))
+    set_node(DET_SEED_ID, "seed",            seed + 1)
+    set_node(DET_POS_ID,  "text",            job.get("positive", DEFAULT_POSITIVE))
+    set_node(DET_NEG_ID,  "text",            job.get("negative", DEFAULT_NEGATIVE))
+
+    return wf
+
+
+# ── Batch runner principal ────────────────────────────────────────────
+def run_batch_advanced(jobs: list[dict], run_id: str = None,
+                        resume: bool = True) -> dict:
+    run_id = run_id or f"run_{timestamp()}"
+    logger = get_logger(run_id)
+    init_workspace()
+
+    logger.info(f"[SUPERVISOR] Batch started : {len(jobs)} jobs | run_id={run_id}")
+    notify_telegram(f"[Ov3rLoRd] Batch started : {len(jobs)} jobs")
+    if AUDIT_OK:
+        log_run_start(run_id, logger=logger)
+
+    if not wait_for_comfy(timeout=60):
+        logger.error("[SUPERVISOR] ComfyUI unreachable — aborting")
+        return {"success":0,"failed":len(jobs),"total":len(jobs),"run_id":run_id}
+
+    state     = load_state()
+    start_idx = state.get("current_job",0) if resume and state.get("run_id")==run_id else 0
+
+    results   = {"success":0,"failed":0,"total":len(jobs),"run_id":run_id,"jobs":[]}
+    wf_base   = load_workflow()
+
+    for idx in range(start_idx, len(jobs)):
+        job  = jobs[idx]
+        jhash= job_hash(job)
+        logger.info(f"[SUPERVISOR] Job {idx+1}/{len(jobs)} | hash={jhash}")
+
+        save_state(idx, run_id)
+        wf = patch_workflow(wf_base, job)
+
+        success = False
+        for attempt in range(1, MAX_RETRIES+1):
+            try:
+                prompt_id = queue_prompt(wf)
+                logger.debug(f"[SUPERVISOR] Queued : {prompt_id}")
+                ok = wait_for_completion(prompt_id, timeout=600, logger=logger)
+                if ok:
+                    # Archiver les images produites
+                    comfy_out = Path(r"D:/Ov3rLoRd AI/ComfyUI/output")
+                    if not comfy_out.exists():
+                        comfy_out = Path("workspace/outputs/images")
+                    archived = archive_images(comfy_out, job, run_id, idx)
+
+                    # Score qualite
+                    scores = [compute_sharpness(p) for p in archived]
+                    avg_s  = sum(scores)/len(scores) if scores else 0
+
+                    if avg_s < SHARPNESS_THRESHOLD and attempt < MAX_RETRIES:
+                        logger.warning(
+                            f"[SUPERVISOR] Job {idx+1} low quality score "
+                            f"({avg_s:.0f} < {SHARPNESS_THRESHOLD}) — retrying"
+                        )
+                        time.sleep(RETRY_DELAY)
+                        continue
+
+                    results["success"] += 1
+                    _job_meta   = job.get("_shot_meta", {})
+                    _shot_id    = _job_meta.get("shot_id", f"S{idx+1:02d}")
+                    _intent     = job.get("_intent", {})
+                    _img_path   = str(archived[0]) if archived else None
+                    if AUDIT_OK:
+                        log_frame(
+                            run_id=run_id,
+                            shot_id=_shot_id,
+                            frame_index=idx,
+                            seed=job.get("seed", 0),
+                            lora=job.get("lora", ""),
+                            positive_prompt=job.get("positive", ""),
+                            negative_prompt=job.get("negative", ""),
+                            intent=_intent,
+                            width=job.get("width", 1344),
+                            height=job.get("height", 1984),
+                            steps=job.get("steps", 35),
+                            cfg=job.get("cfg_scale", 7.0),
+                            score_clip=-1.0,
+                            score_conformite=round(avg_s / 100.0, 3),
+                            verdict="PASS",
+                            image_path=_img_path,
+                            logger=logger
+                        )
+                    results["jobs"].append({
+                        "idx": idx, "hash": jhash,
+                        "archived": [str(p) for p in archived],
+                        "sharpness": round(avg_s,1),
+                    })
+                    success = True
+                    if BUS_OK:
+                        try:
+                            get_bus().write("supervisor.last_job",     idx,          agent_id="supervisor")
+                            get_bus().write("supervisor.success_count",results["success"], agent_id="supervisor")
+                        except Exception:
+                            pass
+                    break
+                else:
+                    logger.warning(f"[SUPERVISOR] Job {idx+1} ComfyUI failure — attempt {attempt}")
+                    time.sleep(RETRY_DELAY)
+            except Exception as e:
+                logger.error(f"[SUPERVISOR] Exception job {idx+1} : {e}")
+                time.sleep(RETRY_DELAY)
+
+        if not success:
+            results["failed"] += 1
+            save_failed_job(job, f"failed after {MAX_RETRIES} attempts")
+            logger.error(f"[SUPERVISOR] Job {idx+1} abandoned")
+
+    clear_state()
+    if AUDIT_OK:
+        log_run_end(
+            run_id=run_id,
+            total_frames=results["total"],
+            frames_ok=results["success"],
+            frames_failed=results["failed"],
+            pipeline_health="OK" if results["failed"] == 0 else "DEGRADED",
+            logger=logger
+        )
+    logger.info(
+        f"[SUPERVISOR] Batch complete : "
+        f"{results['success']}/{results['total']} succes"
+    )
+    notify_telegram(
+        f"[Ov3rLoRd] Batch complete : "
+        f"{results['success']}/{results['total']} succes"
+    )
+
+    if BUS_OK:
+        try:
+            get_bus().write("supervisor.batch_done",      True,                           agent_id="supervisor")
+            get_bus().write("supervisor.final_success",   results["success"],             agent_id="supervisor")
+            get_bus().write("supervisor.final_failed",    results["failed"],              agent_id="supervisor")
+            get_bus().write("supervisor.archive_dir",     str(ARCHIVE_DIR / run_id),      agent_id="supervisor")
+            get_bus().write("supervisor.archived_images", results.get("_all_archived",[]), agent_id="supervisor")
+            get_bus().write("production.image_dir",       str(ARCHIVE_DIR / run_id),      agent_id="supervisor")
+        except Exception:
+            pass
+
+    return results

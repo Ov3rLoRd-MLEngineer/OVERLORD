@@ -1,0 +1,10 @@
+{
+  "name": "context_bus",
+  "version": "V1.49o",
+  "checksum": "503440ef34811552",
+  "lines": 174,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.902941",
+  "path": "agents\\context_bus.py"
+}

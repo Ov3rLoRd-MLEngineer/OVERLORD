@@ -1,0 +1,40 @@
+{
+  "mode": "balance",
+  "emotion_arc": "wonder",
+  "emotion_params": {
+    "cfg": 7.8,
+    "steps": 31,
+    "sampler": "euler_a",
+    "denoise": 0.75,
+    "palette": [
+      "#2c2c2c",
+      "#555555",
+      "#aaaaaa"
+    ],
+    "comfyui_tags": "balanced lighting, natural colors",
+    "emotion": "neutral",
+    "intensity": 0.8
+  },
+  "world_context": {
+    "series": "Dragon Ball",
+    "entities": [],
+    "alive": [],
+    "locations": [],
+    "entity_count": 0,
+    "location_count": 0,
+    "run_id": null,
+    "gen_world_episode": 1,
+    "dominant_faction": null,
+    "world_tension": 0.0,
+    "faction_count": 0,
+    "aging_context": ""
+  },
+  "personality_lead": "viktor",
+  "quality_threshold": 73,
+  "critic_strictness": 1.0,
+  "creative_risk": 0.5,
+  "fatigue_level": 0.0,
+  "inspiration_boost": [],
+  "world_run_id": null,
+  "created_at": "2026-06-20T00:30:25.063376"
+}

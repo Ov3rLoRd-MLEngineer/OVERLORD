@@ -1,0 +1,10 @@
+{
+  "name": "capture",
+  "version": "V?.?",
+  "checksum": "803745a0ca6a15b7",
+  "lines": 224,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.863283",
+  "path": "agents\\capture.py"
+}

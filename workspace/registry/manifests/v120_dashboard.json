@@ -1,0 +1,16 @@
+{
+  "name": "v120_dashboard",
+  "version": "V1.20",
+  "checksum": "57a8731d1832f1c0",
+  "lines": 330,
+  "dependencies": [
+    "v120_generation",
+    "context_bus",
+    "roles_registry",
+    "overlord_utils",
+    "v120_collective"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.831976",
+  "path": "agents\\v120_dashboard.py"
+}

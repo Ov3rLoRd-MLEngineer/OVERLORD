@@ -1,0 +1,49 @@
+2026-06-23 17:36:36 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-23 17:36:36 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-23 17:36:36 [INFO    ] [CHECKPOINT] Charge : maestro_20260623_172555 | Etat : interrupted | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-23 17:36:36 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'production' (3/5 blocs deja termines : ['sourcing', 'scenario', 'storyboard'])
+2026-06-23 17:36:36 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260623_173635
+2026-06-23 17:36:36 [INFO    ] [GPU] Optimisation pour : rtx5080 — RTX 5080 16GB — cible Ov3rLoRd (35 steps valide Jerémy)
+2026-06-23 17:36:36 [ERROR   ] [GPU] Workflow introuvable : Combined_V35_API.json
+2026-06-23 17:36:36 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-23 17:36:36 [INFO    ] [GPU] Optimisation auto : rtx5080
+2026-06-23 17:36:36 [INFO    ] ============================================================
+2026-06-23 17:36:36 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-23 17:36:36 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260623_173635
+2026-06-23 17:36:36 [INFO    ]   Critique : OK
+2026-06-23 17:36:36 [INFO    ]   Watchdog : OK
+2026-06-23 17:36:36 [INFO    ]   Director : OK
+2026-06-23 17:36:36 [INFO    ]   Bus      : OK
+2026-06-23 17:36:36 [INFO    ]   Blocs    : production -> postprod -> 3d
+2026-06-23 17:36:36 [INFO    ] ============================================================
+2026-06-23 17:36:36 [INFO    ] =======================================================
+2026-06-23 17:36:36 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-23 17:36:36 [INFO    ] =======================================================
+2026-06-23 17:36:36 [WARNING ] [PRODUCTION] Aucun job
+2026-06-23 17:36:36 [INFO    ] [QC] no_qc=True -- skipped
+2026-06-23 17:36:36 [INFO    ] =======================================================
+2026-06-23 17:36:36 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-23 17:36:36 [INFO    ] =======================================================
+2026-06-23 17:36:36 [INFO    ] [POST-PROD] Archive run depuis bus : workspace\archive\maestro_20260623_032748_prod
+2026-06-23 17:36:36 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-23 17:36:36 [WARNING ] [POST-PROD] Aucun shot dans la shotlist — fallback toutes images
+2026-06-23 17:36:36 [WARNING ] [POST-PROD] Fallback : 343 images alpha
+2026-06-23 17:36:36 [INFO    ] [VIDEO] Assemblage 343 images -> workspace\exports\20260623_173636_untitled.mp4
+2026-06-23 17:36:57 [INFO    ] [VIDEO] OK Video creee : workspace\exports\20260623_173636_untitled.mp4
+2026-06-23 17:36:57 [INFO    ] [POST-PROD] OK Export final -> workspace\exports\20260623_173636_untitled.mp4
+2026-06-23 17:36:57 [INFO    ] [POST-PROD] OK Export -> workspace\exports\20260623_173636_untitled.mp4
+2026-06-23 17:36:57 [INFO    ] =======================================================
+2026-06-23 17:36:57 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-23 17:36:57 [INFO    ] =======================================================
+2026-06-23 17:36:57 [INFO    ] [3D] Moteurs disponibles : []
+2026-06-23 17:36:57 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-23 17:36:57 [INFO    ] [REPORTER] Génération rapport run=maestro_20260623_173635
+2026-06-23 17:36:57 [INFO    ] [REPORTER] OK — JSON: 20260623_173657_maestro_20260623_173635.json | MD: 20260623_173657_maestro_20260623_173635.md
+2026-06-23 17:36:57 [INFO    ] [REPORTER] Résumé : 343 images | vidéo: True
+2026-06-23 17:37:02 [INFO    ] [WATCHDOG] Arrete
+2026-06-23 17:37:02 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=30s
+2026-06-23 17:37:02 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260623_173635
+2026-06-23 17:37:02 [INFO    ] [CRITIQUE] Bilan : 0 verifications | score moyen=0 | sante=UNKNOWN
+2026-06-23 17:37:02 [INFO    ] ============================================================
+2026-06-23 17:37:02 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260623_173635 | duree=21s
+2026-06-23 17:37:02 [INFO    ] ============================================================

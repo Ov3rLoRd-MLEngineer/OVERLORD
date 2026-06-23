@@ -1,0 +1,7 @@
+requests
+flask
+psutil
+Pillow
+numpy
+gTTS
+pydub

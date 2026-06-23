@@ -1,0 +1,4 @@
+2026-06-19 08:33:02 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=70 | arc=wonder
+2026-06-19 08:33:02 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-19 08:33:02 [INFO    ] [CHECKPOINT] Charge : maestro_20260619_082437 | Etat : interrupted | Blocs termines : []
+2026-06-19 08:33:02 [INFO    ] [CHECKPOINT] Reprise détectée : Reprise depuis 'sourcing' (0/5 blocs deja termines : [])

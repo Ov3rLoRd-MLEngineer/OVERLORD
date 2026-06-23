@@ -1,0 +1,10 @@
+{
+  "name": "marketing_pub",
+  "version": "V?.?",
+  "checksum": "e8bfdd716df8d466",
+  "lines": 577,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.138803",
+  "path": "agents\\marketing_pub.py"
+}

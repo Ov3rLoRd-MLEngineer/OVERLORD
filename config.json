@@ -1,0 +1,26 @@
+{
+  "version": "1.30",
+  "install_date": "2026-06-17T08:24:09.469536",
+  "install_root": "D:\\OVERLORD",
+  "target_drive": "D",
+  "disks": {
+    "primary": {
+      "drive": "D:",
+      "threshold_pct": 50
+    },
+    "hot": {
+      "drive": "E:",
+      "threshold_pct": 80
+    },
+    "cold": {
+      "drive": "G:",
+      "threshold_pct": 90
+    }
+  },
+  "comfyui_url": "http://127.0.0.1:8188",
+  "comfyui_args": "--disable-smart-memory --normalvram --cpu-vae --use-pytorch-cross-attention --preview-method none --disable-auto-launch",
+  "ollama_url": "http://localhost:11434",
+  "api_port": 5001,
+  "pipeline_api_port": 5002,
+  "storage_check_interval_minutes": 30
+}

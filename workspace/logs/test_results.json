@@ -1,0 +1,91 @@
+{
+  "timestamp": "2026-06-19T23:17:04.882306",
+  "results": [
+    {
+      "name": "Python version",
+      "status": "PASS",
+      "detail": "Python 3.14.6"
+    },
+    {
+      "name": "Dossier agents/",
+      "status": "PASS",
+      "detail": "D:\\OVERLORD\\agents -- 80 fichiers"
+    },
+    {
+      "name": "__init__.py agents",
+      "status": "PASS",
+      "detail": "529 octets"
+    },
+    {
+      "name": "maestro.py",
+      "status": "PASS",
+      "detail": "present (30Ko)"
+    },
+    {
+      "name": "overlord_utils_utf8.py",
+      "status": "PASS",
+      "detail": "present (1Ko)"
+    },
+    {
+      "name": "Cle API (environ)",
+      "status": "PASS",
+      "detail": "Variable d'environnement definie (sk-ant-a...)"
+    },
+    {
+      "name": "Cle API (.env)",
+      "status": "PASS",
+      "detail": "Absent ou vide -- mode Ollama si OV_LLM_MODE=offline"
+    },
+    {
+      "name": "LLM Mode",
+      "status": "PASS",
+      "detail": "OV_LLM_MODE=auto | OV_OLLAMA_MODEL=llama3"
+    },
+    {
+      "name": "Import agents",
+      "status": "PASS",
+      "detail": "Package agents charge : D:\\OVERLORD\\agents\\__init__.py"
+    },
+    {
+      "name": "Import sourcing",
+      "status": "PASS",
+      "detail": "run_sourcing importe"
+    },
+    {
+      "name": "Import scenario",
+      "status": "PASS",
+      "detail": "run_scenario importe"
+    },
+    {
+      "name": "Import critic",
+      "status": "PASS",
+      "detail": "CriticAgent importe"
+    },
+    {
+      "name": "Import watchdog",
+      "status": "PASS",
+      "detail": "Watchdog importe"
+    },
+    {
+      "name": "Import overlord_utils",
+      "status": "PASS",
+      "detail": "overlord_utils OK (fallback_llm, get_api_key, build_headers, is_ollama_available)"
+    },
+    {
+      "name": "Import context_bus",
+      "status": "PASS",
+      "detail": "context_bus OK -- ContextBus | write/read valide"
+    },
+    {
+      "name": "Workspace structure",
+      "status": "PASS",
+      "detail": "Dossiers crees : ['narrative']"
+    }
+  ],
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "warned": 0,
+    "failed": 0
+  }
+}

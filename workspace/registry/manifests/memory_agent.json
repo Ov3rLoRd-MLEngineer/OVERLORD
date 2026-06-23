@@ -1,0 +1,10 @@
+{
+  "name": "memory_agent",
+  "version": "V?.?",
+  "checksum": "ad3a820944571045",
+  "lines": 546,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.154093",
+  "path": "agents\\memory_agent.py"
+}

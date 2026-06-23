@@ -1,0 +1,25 @@
+{
+  "name": "Asuka Langley Soryu",
+  "series": "Neon Genesis Evangelion",
+  "role": "protagonist",
+  "lora": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+  "lora_strength": 0.9,
+  "base_tags": "asuka langley, asuka langley soryu, red hair, long hair, blue eyes, hair clips, evangelion, red plug suit, unit-02 pilot, confident expression, tsundere",
+  "action_tags": "dynamic pose, battle stance, intense expression, speed lines",
+  "portrait_tags": "looking at viewer, close-up, sharp eyes, determined",
+  "casual_tags": "school uniform, white shirt, red jacket",
+  "physical": {
+    "hair": "long auburn-red hair with hair clips",
+    "eyes": "vivid blue eyes, intense gaze",
+    "height": "average, slender build",
+    "distinctive": "hair clips, confident posture, German-Japanese heritage"
+  },
+  "personality": "fiercely competitive, proud, tsundere, hides vulnerability",
+  "color_palette": [
+    "deep red",
+    "white",
+    "blue",
+    "orange"
+  ],
+  "created_at": "2026-06-23T01:29:50.009433"
+}

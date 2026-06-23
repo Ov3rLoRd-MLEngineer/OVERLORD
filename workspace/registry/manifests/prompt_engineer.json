@@ -1,0 +1,13 @@
+{
+  "name": "prompt_engineer",
+  "version": "V1.60",
+  "checksum": "5c8cd1d2a7a5c8ac",
+  "lines": 194,
+  "dependencies": [
+    "overlord_utils",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.314228",
+  "path": "agents\\prompt_engineer.py"
+}

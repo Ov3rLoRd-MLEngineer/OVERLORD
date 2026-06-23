@@ -1,0 +1,65 @@
+2026-06-20 05:28:33 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-20 05:28:33 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 05:28:33 [INFO    ] [CHECKPOINT] Charge : maestro_20260620_052533 | Etat : interrupted | Blocs termines : []
+2026-06-20 05:28:33 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'sourcing' (0/5 blocs deja termines : [])
+2026-06-20 05:28:33 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_052832
+2026-06-20 05:28:33 [INFO    ] ============================================================
+2026-06-20 05:28:33 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 05:28:33 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_052832
+2026-06-20 05:28:33 [INFO    ]   Critique : OK
+2026-06-20 05:28:33 [INFO    ]   Watchdog : OK
+2026-06-20 05:28:33 [INFO    ]   Director : OK
+2026-06-20 05:28:33 [INFO    ]   Bus      : OK
+2026-06-20 05:28:33 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 05:28:33 [INFO    ] ============================================================
+2026-06-20 05:28:33 [INFO    ] =======================================================
+2026-06-20 05:28:33 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 05:28:33 [INFO    ] =======================================================
+2026-06-20 05:28:33 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-20 05:28:33 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 05:28:33 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 05:28:33 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 05:28:33 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 05:28:34 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 05:28:35 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 05:28:35 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 05:28:35 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 05:28:35 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 05:28:35 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 05:28:35 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 05:28:35 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 05:28:35 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 05:28:35 [INFO    ] =======================================================
+2026-06-20 05:28:35 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 05:28:35 [INFO    ] =======================================================
+2026-06-20 05:28:35 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-20 05:28:35 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 05:28:55 [DEBUG   ] [LLM] Ollama/mistral OK (2975 chars)
+2026-06-20 05:28:55 [INFO    ] [SCENARISTE] Script genere : 'Evangelion: Detective Conan Crossover'
+2026-06-20 05:28:55 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 05:29:03 [DEBUG   ] [LLM] Ollama/mistral OK (1100 chars)
+2026-06-20 05:29:03 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-20 05:29:03 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-20 05:29:03 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260620_032903_Evangelion:_Detective_Conan_Crossover.json
+2026-06-20 05:29:03 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-20 05:29:03 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 05:29:03 [INFO    ] [SCENARIO] OK 'Evangelion: Detective Conan Crossover'
+2026-06-20 05:29:03 [INFO    ] =======================================================
+2026-06-20 05:29:03 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-20 05:29:03 [INFO    ] =======================================================
+2026-06-20 05:29:03 [INFO    ] [STORYBOARD] Generation -- titre='Evangelion: Detective Conan Crossover'
+2026-06-20 05:29:21 [INFO    ] [STORYBOARD] OK -- 8 shots generes
+2026-06-20 05:29:21 [INFO    ] [STORYBOARD] Sauvegarde -> 20260620_052921_Evangelion: Detective Conan Crossover.json
+2026-06-20 05:29:21 [INFO    ] [STORYBOARD] 8 jobs ComfyUI prepares
+2026-06-20 05:29:21 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-20 05:29:21 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-20 05:29:21 [INFO    ] [STORYBOARD] OK 8 jobs
+2026-06-20 05:29:21 [INFO    ] =======================================================
+2026-06-20 05:29:21 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-20 05:29:21 [INFO    ] =======================================================

@@ -1,0 +1,11 @@
+{
+  "script_quality_threshold": 73,
+  "max_script_iterations": 1,
+  "max_storyboard_iterations": 2,
+  "critic_strictness": 1.2,
+  "preferred_llm": "claude-sonnet-4-6",
+  "sourcing_reddit_limit": 10,
+  "loopback_patience": 2,
+  "_version": "V1.49",
+  "_updated": "2026-06-23T17:53:58.738573"
+}

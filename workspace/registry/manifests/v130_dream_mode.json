@@ -1,0 +1,10 @@
+{
+  "name": "v130_dream_mode",
+  "version": "V1.30",
+  "checksum": "41a9aa06b98fa8a9",
+  "lines": 490,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.913088",
+  "path": "agents\\v130_dream_mode.py"
+}

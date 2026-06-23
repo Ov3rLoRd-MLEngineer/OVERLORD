@@ -1,0 +1,10 @@
+{
+  "name": "v130_narrative_dna",
+  "version": "V1.30",
+  "checksum": "1f3b8b276b66af28",
+  "lines": 675,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.972748",
+  "path": "agents\\v130_narrative_dna.py"
+}

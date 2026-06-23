@@ -1,0 +1,83 @@
+2026-06-20 00:30:25 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-20 00:30:25 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 00:30:25 [INFO    ] [CHECKPOINT] Charge : maestro_20260620_001228 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-20 00:30:25 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_003025
+2026-06-20 00:30:25 [INFO    ] ============================================================
+2026-06-20 00:30:25 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 00:30:25 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_003025
+2026-06-20 00:30:25 [INFO    ]   Critique : OK
+2026-06-20 00:30:25 [INFO    ]   Watchdog : OK
+2026-06-20 00:30:25 [INFO    ]   Director : OK
+2026-06-20 00:30:25 [INFO    ]   Bus      : OK
+2026-06-20 00:30:25 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 00:30:25 [INFO    ] ============================================================
+2026-06-20 00:30:25 [INFO    ] =======================================================
+2026-06-20 00:30:25 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 00:30:25 [INFO    ] =======================================================
+2026-06-20 00:30:25 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-20 00:30:25 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 00:30:25 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 00:30:25 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 00:30:26 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 00:30:27 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 00:30:27 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 00:30:27 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 00:30:27 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 00:30:27 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 61 mots-cles
+2026-06-20 00:30:27 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos...
+2026-06-20 00:30:27 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 00:30:27 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 00:30:27 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, crunchyroll, presents. Pos
+2026-06-20 00:30:27 [INFO    ] =======================================================
+2026-06-20 00:30:27 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 00:30:27 [INFO    ] =======================================================
+2026-06-20 00:30:27 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-20 00:30:27 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 00:30:45 [DEBUG   ] [LLM] Ollama/mistral OK (2916 chars)
+2026-06-20 00:30:45 [INFO    ] [SCENARISTE] Script genere : 'Dragon Ball: The Detective Case Files'
+2026-06-20 00:30:45 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 00:30:53 [DEBUG   ] [LLM] Ollama/mistral OK (1260 chars)
+2026-06-20 00:30:53 [INFO    ] [SCRIPT DOCTOR] Score=85/100 | Valide=oui
+2026-06-20 00:30:53 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=85
+2026-06-20 00:30:53 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260619_223053_Dragon_Ball:_The_Detective_Case_Files.json
+2026-06-20 00:30:53 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-20 00:30:53 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 00:30:53 [INFO    ] [SCENARIO] OK 'Dragon Ball: The Detective Case Files'
+2026-06-20 00:30:53 [INFO    ] =======================================================
+2026-06-20 00:30:53 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-20 00:30:53 [INFO    ] =======================================================
+2026-06-20 00:30:53 [INFO    ] [STORYBOARD] Generation -- titre='Dragon Ball: The Detective Case Files'
+2026-06-20 00:31:07 [INFO    ] [STORYBOARD] OK -- 7 shots generes
+2026-06-20 00:31:07 [INFO    ] [STORYBOARD] Sauvegarde -> 20260620_003107_Dragon Ball: The Detective Case Files.json
+2026-06-20 00:31:07 [INFO    ] [STORYBOARD] 7 jobs ComfyUI prepares
+2026-06-20 00:31:07 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-20 00:31:07 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-20 00:31:07 [INFO    ] [STORYBOARD] OK 7 jobs
+2026-06-20 00:31:07 [INFO    ] =======================================================
+2026-06-20 00:31:07 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-20 00:31:07 [INFO    ] =======================================================
+2026-06-20 00:32:57 [INFO    ] [CRITIQUE] production->postprod | WARN | score=40 | Taux succes faible : 0/7
+2026-06-20 00:32:58 [WARNING ] [MAESTRO/CRITIQUE] production->postprod warn
+2026-06-20 00:32:58 [INFO    ] [PRODUCTION] OK 0 succes | 7 echecs
+2026-06-20 00:32:58 [INFO    ] =======================================================
+2026-06-20 00:32:58 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-20 00:32:58 [INFO    ] =======================================================
+2026-06-20 00:32:58 [WARNING ] [POST-PROD] Aucune image -- ignore
+2026-06-20 00:32:58 [INFO    ] =======================================================
+2026-06-20 00:32:58 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-20 00:32:58 [INFO    ] =======================================================
+2026-06-20 00:32:58 [INFO    ] [3D] Moteurs disponibles : ['trimesh']
+2026-06-20 00:32:58 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-20 00:33:03 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 00:33:03 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=165s
+2026-06-20 00:33:03 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260620_003025
+2026-06-20 00:33:03 [INFO    ] [CRITIQUE] Bilan : 4 verifications | score moyen=70.0 | sante=DEGRADED
+2026-06-20 00:33:03 [INFO    ] ============================================================
+2026-06-20 00:33:03 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260620_003025 | duree=153s
+2026-06-20 00:33:03 [INFO    ] ============================================================

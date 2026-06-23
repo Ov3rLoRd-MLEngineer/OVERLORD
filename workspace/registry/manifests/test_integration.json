@@ -1,0 +1,16 @@
+{
+  "name": "test_integration",
+  "version": "V1.49",
+  "checksum": "2c04ca2cfcd041d2",
+  "lines": 218,
+  "dependencies": [
+    "v130_emotion_engine",
+    "context_bus",
+    "director",
+    "api_server",
+    "v130_world_model"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.691610",
+  "path": "agents\\test_integration.py"
+}

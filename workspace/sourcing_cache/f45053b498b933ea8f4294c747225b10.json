@@ -1,0 +1,35 @@
+{
+  "trends": [
+    {
+      "keyword": "anime 2025",
+      "avg_interest": 0,
+      "geo": "FR",
+      "source": "google_trends"
+    },
+    {
+      "keyword": "manga trending",
+      "avg_interest": 0,
+      "geo": "FR",
+      "source": "google_trends"
+    },
+    {
+      "keyword": "dragon ball",
+      "avg_interest": 48,
+      "geo": "FR",
+      "source": "google_trends"
+    },
+    {
+      "keyword": "webtoon",
+      "avg_interest": 27,
+      "geo": "FR",
+      "source": "google_trends"
+    },
+    {
+      "keyword": "AI art",
+      "avg_interest": 0,
+      "geo": "FR",
+      "source": "google_trends"
+    }
+  ],
+  "_ts": 1782182257.2600656
+}

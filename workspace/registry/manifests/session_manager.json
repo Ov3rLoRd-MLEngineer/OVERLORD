@@ -1,0 +1,12 @@
+{
+  "name": "session_manager",
+  "version": "V1.47",
+  "checksum": "a87dfb8ab084121f",
+  "lines": 268,
+  "dependencies": [
+    "session_manager"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.520717",
+  "path": "agents\\session_manager.py"
+}

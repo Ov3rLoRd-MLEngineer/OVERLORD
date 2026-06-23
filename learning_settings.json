@@ -1,0 +1,7 @@
+{
+  "theme": "dark",
+  "n_episodes": "400",
+  "interval_s": "60",
+  "auto_start": false,
+  "media_type": "manga"
+}

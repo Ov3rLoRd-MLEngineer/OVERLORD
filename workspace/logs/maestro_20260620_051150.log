@@ -1,0 +1,52 @@
+2026-06-20 05:11:51 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.FACTORY | seuil=63 | arc=wonder
+2026-06-20 05:11:51 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 05:11:51 [INFO    ] [CHECKPOINT] Charge : maestro_20260620_045352 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-20 05:11:51 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_051150
+2026-06-20 05:11:51 [INFO    ] ============================================================
+2026-06-20 05:11:51 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 05:11:51 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_051150
+2026-06-20 05:11:51 [INFO    ]   Critique : OK
+2026-06-20 05:11:51 [INFO    ]   Watchdog : OK
+2026-06-20 05:11:51 [INFO    ]   Director : OK
+2026-06-20 05:11:51 [INFO    ]   Bus      : OK
+2026-06-20 05:11:51 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 05:11:51 [INFO    ] ============================================================
+2026-06-20 05:11:51 [INFO    ] =======================================================
+2026-06-20 05:11:51 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 05:11:51 [INFO    ] =======================================================
+2026-06-20 05:11:51 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-20 05:11:51 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 05:11:51 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 05:11:51 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 05:11:51 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 05:11:51 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 05:11:52 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 05:11:53 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 05:11:53 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 05:11:53 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 05:11:53 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 05:11:53 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 05:11:53 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 05:11:53 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 05:11:53 [INFO    ] =======================================================
+2026-06-20 05:11:53 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 05:11:53 [INFO    ] =======================================================
+2026-06-20 05:11:53 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=63
+2026-06-20 05:11:53 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-20 05:12:09 [DEBUG   ] [LLM] Ollama/mistral OK (2250 chars)
+2026-06-20 05:12:09 [ERROR   ] [SCENARISTE] JSON invalide
+2026-06-20 05:12:09 [ERROR   ] [SCENARIO] Echec generation initiale
+2026-06-20 05:12:14 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=100 | The scenario is well-structured and provides all necessary d
+2026-06-20 05:12:14 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 05:12:14 [INFO    ] [SCENARIO] OK '?'
+2026-06-20 05:12:14 [ERROR   ] Scenario echoue : json_parse_failed -- arret
+2026-06-20 05:12:19 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 05:12:19 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=30s
+2026-06-20 05:12:19 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260620_051150 | Blocs termines : ['sourcing', 'scenario']
+2026-06-20 05:12:19 [INFO    ] [CRITIQUE] Bilan : 2 verifications | score moyen=90.0 | sante=STABLE

@@ -1,0 +1,17 @@
+{
+  "trends": [
+    {
+      "keyword": "animated short film",
+      "avg_interest": 0,
+      "geo": "FR",
+      "source": "google_trends"
+    },
+    {
+      "keyword": "comic book",
+      "avg_interest": 1,
+      "geo": "FR",
+      "source": "google_trends"
+    }
+  ],
+  "_ts": 1782182259.6262393
+}

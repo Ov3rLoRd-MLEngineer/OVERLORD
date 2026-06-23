@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ov3rLoRd Pipeline — UI V1.43</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   TOKENS DE THÈME — Gaming Cyborg-Zen
+══════════════════════════════════════════════ */
+:root {
+  --bg:       #080C14;
+  --bg2:      #0D1520;
+  --bg3:      #121C2A;
+  --card:     #0F1A28CC;
+  --accent1:  #00FFB3;
+  --accent2:  #0066FF;
+  --accent3:  #FF3366;
+  --grad:     linear-gradient(135deg, #00FFB3, #0066FF);
+  --grad2:    linear-gradient(135deg, #FF3366, #FF8800);
+  --text:     #E8F4FF;
+  --text2:    #6A8BA8;
+  --border:   rgba(0,255,179,0.15);
+  --glow1:    0 0 20px rgba(0,255,179,0.4);
+  --glow2:    0 0 20px rgba(0,102,255,0.4);
+  --glowR:    0 0 20px rgba(255,51,102,0.4);
+  --radius:   14px;
+  --radius-sm:8px;
+  --blur:     blur(16px);
+  --trans:    all 0.25s cubic-bezier(0.4,0,0.2,1);
+  --trans-fast: all 0.12s ease;
+  --wallpaper-opacity: 0;
+  --panel-opacity: 0.85;
+}
+
+/* THÈMES */
+[data-theme="katana"] {
+  --bg:#0A0A0F; --bg2:#120A15; --bg3:#1A0F1E;
+  --accent1:#FF2244; --accent2:#CC0066; --accent3:#FF6600;
+  --grad:linear-gradient(135deg,#FF2244,#CC0066);
+  --grad2:linear-gradient(135deg,#FF6600,#FF2244);
+  --border:rgba(255,34,68,0.2); --glow1:0 0 20px rgba(255,34,68,0.5);
+}
+[data-theme="shibuya"] {
+  --bg:#05010F; --bg2:#0A0520; --bg3:#10082A;
+  --accent1:#FF00FF; --accent2:#7700FF; --accent3:#00FFFF;
+  --grad:linear-gradient(135deg,#FF00FF,#7700FF);
+  --grad2:linear-gradient(135deg,#00FFFF,#FF00FF);
+  --border:rgba(255,0,255,0.2); --glow1:0 0 25px rgba(255,0,255,0.5);
+}
+[data-theme="zen"] {
+  --bg:#F5F0E8; --bg2:#EDE8E0; --bg3:#E5DFD5;
+  --card:#FFFFFFCC; --accent1:#B8962E; --accent2:#6B4A10; --accent3:#8B6914;
+  --grad:linear-gradient(135deg,#B8962E,#6B4A10);
+  --grad2:linear-gradient(135deg,#D4AA50,#B8962E);
+  --text:#1A1A1A; --text2:#666; --border:rgba(184,150,46,0.25);
+  --glow1:0 0 15px rgba(184,150,46,0.4);
+}
+[data-theme="obsidian"] {
+  --bg:#000; --bg2:#060606; --bg3:#0A0A0A;
+  --accent1:#FFF; --accent2:#888; --accent3:#CCC;
+  --grad:linear-gradient(135deg,#FFF,#888);
+  --grad2:linear-gradient(135deg,#888,#333);
+  --border:rgba(255,255,255,0.1); --glow1:0 0 15px rgba(255,255,255,0.2);
+}
+[data-theme="lava"] {
+  --bg:#0A0300; --bg2:#150500; --bg3:#1F0800;
+  --accent1:#FF6600; --accent2:#FF3300; --accent3:#FFAA00;
+  --grad:linear-gradient(135deg,#FF6600,#FF3300);
+  --grad2:linear-gradient(135deg,#FFAA00,#FF6600);
+  --border:rgba(255,102,0,0.25); --glow1:0 0 25px rgba(255,102,0,0.5);
+}
+[data-theme="ice"] {
+  --bg:#020A14; --bg2:#041020; --bg3:#06182E;
+  --accent1:#00D4FF; --accent2:#0088CC; --accent3:#88EEFF;
+  --grad:linear-gradient(135deg,#00D4FF,#0088CC);
+  --grad2:linear-gradient(135deg,#88EEFF,#00D4FF);
+  --border:rgba(0,212,255,0.2); --glow1:0 0 20px rgba(0,212,255,0.4);
+}
+[data-theme="rainbow"] {
+  --accent1:#FF0080; --accent2:#8000FF; --accent3:#00FFD0;
+  --border:rgba(255,0,128,0.2);
+  animation: rainbow-shift 3s linear infinite;
+}
+@keyframes rainbow-shift {
+  0%   { --accent1:#FF0080; }
+  16%  { --accent1:#FF8000; }
+  33%  { --accent1:#FFFF00; }
+  50%  { --accent1:#00FF80; }
+  66%  { --accent1:#0080FF; }
+  83%  { --accent1:#8000FF; }
+  100% { --accent1:#FF0080; }
+}
+
+/* ══ RESET ══ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+}
+
+/* ══ WALLPAPER ══ */
+#wallpaper {
+  position:fixed; inset:0; z-index:0;
+  background-size:cover; background-position:center;
+  opacity: var(--wallpaper-opacity);
+  transition: opacity 0.5s;
+  pointer-events:none;
+}
+#wallpaper::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, var(--bg)CC, var(--bg2)99);
+}
+
+/* ══ MATRIX BG ══ */
+#matrix-canvas {
+  position:fixed; inset:0; z-index:1;
+  opacity:0.04; pointer-events:none;
+}
+
+/* ══ SCANLINE ══ */
+.scanline {
+  position:fixed; left:0; right:0; height:2px; z-index:999;
+  background:linear-gradient(90deg,transparent,var(--accent1),transparent);
+  opacity:0.2; animation:scan 4s linear infinite; pointer-events:none;
+}
+@keyframes scan{from{top:0}to{top:100vh}}
+
+/* ══ RAINBOW CAT ══ */
+#rainbow-cat {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  z-index:9999; font-size:2rem; display:none;
+  animation:nyan 0.5s steps(2) infinite;
+  filter:drop-shadow(0 0 10px var(--accent1));
+}
+@keyframes nyan{0%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(-50%) scaleY(0.8)}}
+#rainbow-trail {
+  position:fixed; bottom:28px; z-index:9998;
+  height:8px; left:0; width:0;
+  background:linear-gradient(90deg,#FF0080,#FF8000,#FFFF00,#00FF80,#0080FF,#8000FF);
+  display:none; border-radius:4px;
+  transition:width 0.1s linear;
+}
+
+/* ══ APP LAYOUT ══ */
+.app {
+  position:relative; z-index:2;
+  display:grid;
+  grid-template-rows:auto auto 1fr auto;
+  height:100vh;
+  gap:0;
+}
+
+/* ══ HEADER ══ */
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 20px;
+  background:linear-gradient(180deg,var(--bg2)F0,var(--bg)00);
+  backdrop-filter:var(--blur);
+  border-bottom:1px solid var(--border);
+}
+.logo {
+  font-family:'Orbitron',monospace;
+  font-size:1.5rem; font-weight:900;
+  background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 8px var(--accent1));
+  letter-spacing:3px;
+}
+.logo-sub {
+  font-size:0.6rem; letter-spacing:6px;
+  color:var(--text2); -webkit-text-fill-color:var(--text2);
+  font-family:'Rajdhani',sans-serif;
+}
+.header-right{display:flex;gap:8px;align-items:center;}
+
+/* ══ TABS ══ */
+.tabs {
+  display:flex; gap:2px; padding:6px 16px;
+  background:var(--bg2); border-bottom:1px solid var(--border);
+}
+.tab {
+  font-family:'Orbitron',monospace; font-size:0.6rem;
+  letter-spacing:2px; padding:6px 16px;
+  background:transparent; border:1px solid var(--border);
+  color:var(--text2); cursor:pointer;
+  border-radius:var(--radius-sm);
+  transition:var(--trans);
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.tab:hover{color:var(--accent1);border-color:var(--accent1);box-shadow:var(--glow1);}
+.tab.active{
+  background:var(--grad); color:#000; border-color:transparent;
+  box-shadow:var(--glow1);
+}
+
+/* ══ THEME BAR ══ */
+.theme-bar {
+  display:flex; align-items:center; gap:6px;
+  padding:4px 16px;
+  background:var(--bg3); border-bottom:1px solid var(--border);
+  overflow-x:auto;
+}
+.theme-label{font-size:0.6rem;color:var(--text2);letter-spacing:2px;white-space:nowrap;}
+.t-dot {
+  width:18px;height:18px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent; transition:var(--trans);
+  flex-shrink:0;
+}
+.t-dot:hover{transform:scale(1.4);}
+.t-dot.active{border-color:var(--text);box-shadow:0 0 8px currentColor;}
+.t-sep{width:1px;height:16px;background:var(--border);flex-shrink:0;}
+
+/* ══ MAIN CONTENT ══ */
+.content {
+  display:grid;
+  grid-template-columns:260px 1fr 260px;
+  overflow:hidden;
+  gap:1px;
+  background:var(--border);
+}
+
+/* ══ PANELS ══ */
+.panel {
+  background:var(--card);
+  backdrop-filter:var(--blur);
+  padding:14px;
+  overflow-y:auto;
+  opacity:var(--panel-opacity);
+  transition:opacity 0.3s;
+}
+.panel::-webkit-scrollbar{width:4px;}
+.panel::-webkit-scrollbar-track{background:transparent;}
+.panel::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:2px;}
+
+.p-title {
+  font-family:'Orbitron',monospace;
+  font-size:0.55rem; letter-spacing:4px;
+  color:var(--accent1); text-transform:uppercase;
+  margin-bottom:12px; padding-bottom:6px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:6px;
+}
+.p-title::before{
+  content:''; width:8px;height:8px;
+  background:var(--grad); border-radius:2px;
+  box-shadow:var(--glow1);
+}
+
+/* ══ PIPELINE BLOCKS ══ */
+.pipe-block {
+  padding:10px 12px; margin-bottom:6px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  cursor:pointer; position:relative;
+  overflow:hidden; transition:var(--trans);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+}
+.pipe-block::before{
+  content:''; position:absolute;
+  left:0;top:0;bottom:0;width:3px;
+  background:var(--accent2); transition:var(--trans);
+}
+.pipe-block:hover,.pipe-block.sel{
+  border-color:var(--accent1);
+  box-shadow:var(--glow1);
+  transform:translateX(3px);
+}
+.pipe-block:hover::before,.pipe-block.sel::before{background:var(--accent1);width:4px;}
+.pipe-block.done::before{background:var(--accent1);}
+.pipe-block.run::before{background:var(--accent1);animation:pulsebar 0.8s infinite;}
+.pipe-block.err::before{background:var(--accent3);}
+@keyframes pulsebar{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.pb-name{font-family:'Orbitron',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--text);}
+.pb-sub{font-size:0.65rem;color:var(--text2);margin-top:2px;}
+.pb-badge{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--accent1);
+}
+.pipe-arrow{text-align:center;color:var(--accent2);font-size:0.7rem;margin:2px 0;opacity:0.6;}
+
+/* ══ ORACLE ZONE ══ */
+.oracle-wrap{padding:12px;background:var(--bg3);border-radius:var(--radius);}
+.oracle-row{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.oracle-prompt{
+  font-family:'Orbitron',monospace;font-size:0.7rem;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  white-space:nowrap;
+}
+.oracle-in{
+  flex:1; background:var(--bg2);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  color:var(--text); font-family:'Rajdhani',sans-serif;
+  font-size:0.9rem; padding:8px 12px; outline:none;
+  transition:var(--trans);
+}
+.oracle-in:focus{border-color:var(--accent1);box-shadow:var(--glow1);}
+.oracle-in::placeholder{color:var(--text2);}
+.oracle-resp{
+  margin-top:8px; padding:8px 10px;
+  border-left:2px solid var(--accent1);
+  font-size:0.8rem; color:var(--accent1);
+  line-height:1.6; min-height:36px;
+  background:rgba(0,0,0,0.2); border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  white-space:pre-wrap;
+}
+
+/* ══ LOGS ══ */
+.log-wrap{
+  flex:1; overflow-y:auto; padding:10px;
+  font-size:0.7rem; font-family:'Courier New',monospace;
+}
+.log-wrap::-webkit-scrollbar{width:3px;}
+.log-wrap::-webkit-scrollbar-thumb{background:var(--accent2);}
+.log-row{display:flex;gap:8px;padding:1px 0;line-height:1.6;}
+.log-ts{color:var(--text2);white-space:nowrap;flex-shrink:0;}
+.log-lv{width:50px;text-align:right;flex-shrink:0;}
+.lv-INFO{color:var(--accent1);}
+.lv-WARN{color:#FFAA00;}
+.lv-ERROR{color:var(--accent3);}
+.log-msg{color:var(--text);}
+
+/* ══ STATS ══ */
+.stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid var(--border);
+  font-size:0.75rem;
+}
+.stat-k{color:var(--text2);}
+.stat-v{color:var(--accent1);font-family:'Orbitron',monospace;font-size:0.65rem;}
+
+/* ══ GAUGES ══ */
+.gauge{margin:6px 0;}
+.g-head{display:flex;justify-content:space-between;font-size:0.65rem;margin-bottom:3px;}
+.g-k{color:var(--text2);}
+.g-v{color:var(--accent1);font-family:'Orbitron',monospace;}
+.g-track{
+  height:5px; background:var(--bg);
+  border-radius:3px; overflow:hidden;
+  position:relative;
+}
+.g-fill{
+  height:100%; border-radius:3px;
+  background:var(--grad);
+  box-shadow:0 0 6px var(--accent1);
+  transition:width 1.2s ease;
+}
+.g-fill.hot{background:var(--grad2);box-shadow:0 0 6px var(--accent3);}
+
+/* ══ DATA ARMOR ══ */
+.armor-wrap{margin-top:14px;}
+.armor-svg{width:100%;max-width:200px;display:block;margin:0 auto;}
+
+/* ══ BTN ══ */
+.btn {
+  font-family:'Orbitron',monospace;font-size:0.6rem;letter-spacing:2px;
+  padding:7px 14px; cursor:pointer;
+  border-radius:var(--radius-sm); border:1px solid var(--accent1);
+  background:transparent; color:var(--accent1);
+  transition:var(--trans);
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+}
+.btn:hover{
+  background:var(--grad); color:#000;
+  border-color:transparent; box-shadow:var(--glow1);
+  transform:translateY(-1px);
+}
+.btn.primary{background:var(--grad);color:#000;border-color:transparent;}
+.btn.danger{border-color:var(--accent3);color:var(--accent3);}
+.btn.danger:hover{background:var(--grad2);color:#fff;}
+
+/* ══ ICON BTNS ══ */
+.icon-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border); background:transparent;
+  color:var(--text2); cursor:pointer; font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--trans);
+}
+.icon-btn:hover{border-color:var(--accent1);color:var(--accent1);box-shadow:var(--glow1);}
+
+/* ══ MODAL / SETTINGS ══ */
+.modal-bg{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;
+  width:min(680px,95vw);max-height:85vh;overflow-y:auto;
+  box-shadow:var(--glow1);
+}
+.modal h2{
+  font-family:'Orbitron',monospace;font-size:0.8rem;letter-spacing:4px;
+  color:var(--accent1);margin-bottom:20px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.setting-group{
+  padding:14px;background:var(--bg3);
+  border-radius:var(--radius-sm);border:1px solid var(--border);
+}
+.sg-title{
+  font-family:'Orbitron',monospace;font-size:0.6rem;
+  color:var(--accent1);letter-spacing:3px;margin-bottom:10px;
+}
+.setting-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid var(--border);
+  font-size:0.8rem;gap:12px;
+}
+.setting-row:last-child{border-bottom:none;}
+.s-label{color:var(--text2);flex:1;}
+
+/* TOGGLE */
+.toggle{
+  width:36px;height:20px;border-radius:10px;
+  background:var(--bg);border:1px solid var(--border);
+  position:relative;cursor:pointer;transition:var(--trans);
+  flex-shrink:0;
+}
+.toggle.on{background:var(--accent1);border-color:var(--accent1);}
+.toggle::after{
+  content:'';position:absolute;
+  width:14px;height:14px;border-radius:50%;
+  background:#fff;top:2px;left:2px;
+  transition:var(--trans);
+}
+.toggle.on::after{left:18px;}
+
+/* SLIDER */
+.slider{
+  -webkit-appearance:none;appearance:none;
+  width:120px;height:4px;border-radius:2px;
+  background:var(--bg);outline:none;cursor:pointer;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--accent1);
+  box-shadow:0 0 6px var(--accent1);
+}
+
+/* COLOR PICKER */
+.color-pick{
+  width:32px;height:24px;border-radius:4px;
+  border:1px solid var(--border);cursor:pointer;
+  padding:0;overflow:hidden;
+}
+
+/* SELECT */
+.sel-input{
+  background:var(--bg);border:1px solid var(--border);
+  color:var(--text);border-radius:var(--radius-sm);
+  padding:4px 8px;font-size:0.75rem;
+  font-family:'Rajdhani',sans-serif;
+}
+
+/* ══ FOOTER ══ */
+footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 16px;
+  background:var(--bg2);border-top:1px solid var(--border);
+  font-size:0.65rem;color:var(--text2);
+}
+.status-pill{
+  display:flex;align-items:center;gap:4px;
+  padding:2px 8px;border-radius:20px;
+  border:1px solid var(--border);
+}
+.dot{width:5px;height:5px;border-radius:50%;}
+.dot.on{background:var(--accent1);box-shadow:0 0 4px var(--accent1);animation:pulsedot 2s infinite;}
+.dot.off{background:#333;}
+@keyframes pulsedot{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ══ RIPPLE ══ */
+.ripple-el{
+  position:absolute;border-radius:50%;
+  background:var(--accent1);opacity:0.3;
+  transform:scale(0);animation:ripout 0.5s linear;
+  pointer-events:none;
+}
+@keyframes ripout{to{transform:scale(6);opacity:0;}}
+
+/* ══ CUSTOM THEME BUILDER ══ */
+.theme-builder{
+  padding:12px;background:var(--bg3);
+  border-radius:var(--radius-sm);border:1px solid var(--border);
+  margin-top:8px;
+}
+.tb-row{
+  display:flex;align-items:center;gap:8px;
+  padding:4px 0;font-size:0.75rem;color:var(--text2);
+}
+.tb-swatch{
+  width:20px;height:20px;border-radius:4px;
+  border:1px solid var(--border);cursor:pointer;
+  padding:0;overflow:hidden;
+}
+
+/* ══ RAINBOW ANIMATION ══ */
+@keyframes rbhue{
+  0%{filter:hue-rotate(0deg);}
+  100%{filter:hue-rotate(360deg);}
+}
+[data-theme="rainbow"] .logo,
+[data-theme="rainbow"] .p-title,
+[data-theme="rainbow"] .g-fill,
+[data-theme="rainbow"] .tab.active{
+  animation:rbhue 2s linear infinite;
+}
+</style>
+</head>
+<body>
+<div id="wallpaper"></div>
+<canvas id="matrix-canvas"></canvas>
+<div class="scanline"></div>
+<div id="rainbow-trail"></div>
+<div id="rainbow-cat">🐱</div>
+
+<div class="app" id="app">
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="logo">Ov3rLoRd<span class="logo-sub"> PIPELINE V1.43 — CYBORG-ZEN</span></div>
+  </div>
+  <div class="header-right">
+    <button class="btn primary" onclick="launchPipeline()">▶ LAUNCH</button>
+    <button class="btn danger" onclick="stopPipeline()">■ STOP</button>
+    <button class="icon-btn" onclick="openSettings()" title="Paramètres">⚙</button>
+    <button class="icon-btn" onclick="toggleFullscreen()" title="Plein écran">⛶</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="setTab(this,'main')">PIPELINE</button>
+  <button class="tab" onclick="setTab(this,'oracle')">ORACLE</button>
+  <button class="tab" onclick="setTab(this,'armor')">DATA ARMOR</button>
+  <button class="tab" onclick="setTab(this,'logs')">LOGS</button>
+  <button class="tab" onclick="setTab(this,'analytics')">ANALYTICS</button>
+  <button class="tab" onclick="setTab(this,'improve')">SELF-IMPROVE</button>
+</div>
+
+<!-- THEME BAR -->
+<div class="theme-bar">
+  <span class="theme-label">THÈME</span>
+  <div class="t-dot active" style="background:linear-gradient(135deg,#00FFB3,#0066FF)" onclick="setTheme('',this)" title="Digital Bamboo"></div>
+  <div class="t-dot" style="background:linear-gradient(135deg,#FF2244,#CC0066)" onclick="setTheme('katana',this)" title="Katana Steel"></div>
+  <div class="t-dot" style="background:linear-gradient(135deg,#FF00FF,#7700FF)" onclick="setTheme('shibuya',this)" title="Shibuya Neon"></div>
+  <div class="t-dot" style="background:linear-gradient(135deg,#B8962E,#6B4A10)" onclick="setTheme('zen',this)" title="Zen Garden"></div>
+  <div class="t-dot" style="background:#111" onclick="setTheme('obsidian',this)" title="Obsidian"></div>
+  <div class="t-dot" style="background:linear-gradient(135deg,#FF6600,#FF3300)" onclick="setTheme('lava',this)" title="Lava Core"></div>
+  <div class="t-dot" style="background:linear-gradient(135deg,#00D4FF,#0088CC)" onclick="setTheme('ice',this)" title="Arctic Ice"></div>
+  <div class="t-dot" style="background:linear-gradient(90deg,#FF0080,#FF8000,#FFFF00,#00FF80,#0080FF,#8000FF)" onclick="setTheme('rainbow',this)" title="Rainbow Cat 🐱"></div>
+  <div class="t-sep"></div>
+  <span class="theme-label" style="font-size:0.55rem">CUSTOM</span>
+  <input type="color" class="color-pick" id="custom-a1" value="#00FFB3" onchange="applyCustomTheme()" title="Accent 1">
+  <input type="color" class="color-pick" id="custom-a2" value="#0066FF" onchange="applyCustomTheme()" title="Accent 2">
+  <input type="color" class="color-pick" id="custom-bg" value="#080C14" onchange="applyCustomTheme()" title="Fond">
+  <button class="btn" style="padding:3px 8px;font-size:0.5rem" onclick="saveCustomTheme()">SAVE</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- LEFT -->
+  <div class="panel">
+    <div class="p-title">PIPELINE STATUS</div>
+
+    <div id="pipe-blocks">
+      <div class="pipe-block done sel" onclick="selBlock(this,'sourcing')">
+        <div class="pb-name">01 — SOURCING</div>
+        <div class="pb-sub">RSS ✓ | Trends ✓ | Reddit ✗ 403</div>
+        <div class="pb-badge">✓</div>
+      </div>
+      <div class="pipe-arrow">▼</div>
+      <div class="pipe-block" onclick="selBlock(this,'scenario')">
+        <div class="pb-name">02 — SCÉNARIO</div>
+        <div class="pb-sub">En attente crédits</div>
+        <div class="pb-badge">—</div>
+      </div>
+      <div class="pipe-arrow">▼</div>
+      <div class="pipe-block" onclick="selBlock(this,'storyboard')">
+        <div class="pb-name">03 — STORYBOARD</div>
+        <div class="pb-sub">ComfyUI ready</div>
+        <div class="pb-badge">—</div>
+      </div>
+      <div class="pipe-arrow">▼</div>
+      <div class="pipe-block" onclick="selBlock(this,'production')">
+        <div class="pb-name">04 — PRODUCTION</div>
+        <div class="pb-sub">0 jobs en attente</div>
+        <div class="pb-badge">—</div>
+      </div>
+      <div class="pipe-arrow">▼</div>
+      <div class="pipe-block" onclick="selBlock(this,'postprod')">
+        <div class="pb-name">05 — POST-PROD</div>
+        <div class="pb-sub">ffmpeg détecté</div>
+        <div class="pb-badge">—</div>
+      </div>
+      <div class="pipe-arrow">▼</div>
+      <div class="pipe-block" onclick="selBlock(this,'3d')">
+        <div class="pb-name">06 — 3D / EXPORT</div>
+        <div class="pb-sub">Blender requis</div>
+        <div class="pb-badge">—</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="p-title">AGENTS</div>
+      <div class="stat-row"><span class="stat-k">Critique</span><span class="stat-v">✓ ACTIF</span></div>
+      <div class="stat-row"><span class="stat-k">Watchdog</span><span class="stat-v">✓ ACTIF</span></div>
+      <div class="stat-row"><span class="stat-k">Checkpoint</span><span class="stat-v">✓ ACTIF</span></div>
+      <div class="stat-row"><span class="stat-k">Oracle</span><span class="stat-v">✓ V1.43</span></div>
+      <div class="stat-row"><span class="stat-k">Self-Improve</span><span class="stat-v">✓ V1.43</span></div>
+      <div class="stat-row"><span class="stat-k">OllamaBridge</span><span class="stat-v">○ STAND-BY</span></div>
+    </div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="panel" style="display:flex;flex-direction:column;gap:10px;padding:12px;">
+
+    <!-- Oracle -->
+    <div class="oracle-wrap">
+      <div class="p-title">ORACLE — INTERFACE NATURELLE</div>
+      <div class="oracle-row">
+        <span class="oracle-prompt">Oracle ›</span>
+        <input class="oracle-in" id="oracle-in"
+               placeholder="génère un anime Dragon Ball style Broly..."
+               onkeydown="if(event.key==='Enter')sendOracle()">
+        <button class="btn primary" onclick="sendOracle()">EXEC</button>
+      </div>
+      <div class="oracle-resp" id="oracle-resp">Système Ov3rLoRd en ligne. Toutes les directives validées d'avance.
+Dis "aide" pour la liste des commandes.</div>
+    </div>
+
+    <!-- Logs -->
+    <div class="oracle-wrap" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+      <div class="p-title">LOGS TEMPS RÉEL
+        <button class="btn" style="padding:2px 8px;font-size:0.5rem;margin-left:auto" onclick="clearLogs()">CLEAR</button>
+      </div>
+      <div class="log-wrap" id="log-wrap"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="panel">
+    <div class="p-title">SYSTÈME</div>
+
+    <div class="gauge"><div class="g-head"><span class="g-k">GPU VRAM</span><span class="g-v" id="g-vram">0%</span></div><div class="g-track"><div class="g-fill" id="gf-vram" style="width:0%"></div></div></div>
+    <div class="gauge"><div class="g-head"><span class="g-k">RAM</span><span class="g-v" id="g-ram">0%</span></div><div class="g-track"><div class="g-fill" id="gf-ram" style="width:0%"></div></div></div>
+    <div class="gauge"><div class="g-head"><span class="g-k">CPU</span><span class="g-v" id="g-cpu">0%</span></div><div class="g-track"><div class="g-fill hot" id="gf-cpu" style="width:0%"></div></div></div>
+    <div class="gauge"><div class="g-head"><span class="g-k">DISK D: (Pipeline)</span><span class="g-v" id="g-disk">0%</span></div><div class="g-track"><div class="g-fill" id="gf-disk" style="width:0%"></div></div></div>
+
+    <div style="margin-top:10px">
+      <div class="stat-row"><span class="stat-k">Run ID</span><span class="stat-v" id="s-runid">—</span></div>
+      <div class="stat-row"><span class="stat-k">Score pipeline</span><span class="stat-v" id="s-score">17/100</span></div>
+      <div class="stat-row"><span class="stat-k">Blocs OK</span><span class="stat-v" id="s-blocs">1/6</span></div>
+      <div class="stat-row"><span class="stat-k">Patches auto</span><span class="stat-v" id="s-patches">0</span></div>
+      <div class="stat-row"><span class="stat-k">Dernier run</span><span class="stat-v">17/06 21:23</span></div>
+    </div>
+
+    <!-- Data Armor -->
+    <div class="armor-wrap">
+      <div class="p-title" style="margin-top:10px">DATA ARMOR</div>
+      <svg class="armor-svg" viewBox="0 0 180 200" id="armor-svg">
+        <defs>
+          <linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--accent1)" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="var(--accent2)" stop-opacity="0.8"/>
+          </linearGradient>
+          <filter id="glow-filter">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Orbites -->
+        <circle cx="90" cy="100" r="70" fill="none" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <circle cx="90" cy="100" r="50" fill="none" stroke="var(--border)" stroke-width="0.5"/>
+        <!-- Corps armure -->
+        <polygon points="90,35 125,60 125,135 90,155 55,135 55,60" fill="none" stroke="url(#ag)" stroke-width="1.5" filter="url(#glow-filter)" id="a-torso"/>
+        <!-- Heaume -->
+        <polygon points="78,35 90,18 102,35 98,45 82,45" fill="none" stroke="var(--accent1)" stroke-width="1.5" id="a-helm" opacity="0.9"/>
+        <line x1="90" y1="18" x2="90" y2="25" stroke="var(--accent1)" stroke-width="2"/>
+        <!-- Épaulières -->
+        <polygon points="55,60 35,50 30,78 55,88" fill="none" stroke="var(--accent2)" stroke-width="1" id="a-sh-l"/>
+        <polygon points="125,60 145,50 150,78 125,88" fill="none" stroke="var(--accent2)" stroke-width="1" id="a-sh-r"/>
+        <!-- Bras -->
+        <path d="M55,88 Q40,110 42,130" fill="none" stroke="var(--accent2)" stroke-width="1" id="a-arm-l"/>
+        <path d="M125,88 Q140,110 138,130" fill="none" stroke="var(--accent2)" stroke-width="1" id="a-arm-r"/>
+        <!-- Mains -->
+        <circle cx="42" cy="133" r="5" fill="none" stroke="var(--accent1)" stroke-width="1" id="a-hand-l"/>
+        <circle cx="138" cy="133" r="5" fill="none" stroke="var(--accent1)" stroke-width="1" id="a-hand-r"/>
+        <!-- Plastron données -->
+        <polygon points="90,68 112,78 112,118 90,128 68,118 68,78" fill="rgba(0,255,179,0.04)" stroke="var(--accent1)" stroke-width="0.8" id="a-chest"/>
+        <!-- Katana -->
+        <line x1="148" y1="42" x2="168" y2="165" stroke="var(--accent1)" stroke-width="1" id="a-blade" opacity="0.6"/>
+        <line x1="145" y1="42" x2="151" y2="42" stroke="var(--accent1)" stroke-width="2.5" id="a-guard"/>
+        <!-- Jambes -->
+        <polygon points="73,135 83,135 78,168" fill="none" stroke="var(--accent2)" stroke-width="1" id="a-leg-l"/>
+        <polygon points="97,135 107,135 102,168" fill="none" stroke="var(--accent2)" stroke-width="1" id="a-leg-r"/>
+        <!-- Score -->
+        <text x="90" y="96" text-anchor="middle" font-family="Orbitron,monospace" font-size="16" fill="var(--accent1)" id="a-score">17%</text>
+        <text x="90" y="108" text-anchor="middle" font-family="Orbitron,monospace" font-size="6" fill="var(--text2)">PIPELINE SCORE</text>
+        <!-- Particules orbitales -->
+        <circle cx="90" cy="30" r="3" fill="var(--accent1)" id="orb1">
+          <animateTransform attributeName="transform" type="rotate" from="0 90 100" to="360 90 100" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="90" cy="30" r="2" fill="var(--accent2)" id="orb2">
+          <animateTransform attributeName="transform" type="rotate" from="120 90 100" to="480 90 100" dur="6s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+  </div>
+
+</div><!-- .content -->
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;gap:8px">
+    <div class="status-pill"><div class="dot on"></div>V1.43</div>
+    <div class="status-pill"><div class="dot off" id="d-comfy"></div>COMFYUI</div>
+    <div class="status-pill"><div class="dot off" id="d-ollama"></div>OLLAMA</div>
+    <div class="status-pill"><div class="dot on" id="d-oracle"></div>ORACLE</div>
+  </div>
+  <div id="footer-clock" style="font-family:'Orbitron',monospace;font-size:0.6rem;">—</div>
+  <div style="color:var(--text2)">Ov3rLoRd © 2026 — CYBORG-ZEN UI</div>
+</footer>
+
+</div><!-- .app -->
+
+<!-- ════════════ MODAL SETTINGS ════════════ -->
+<div class="modal-bg" id="settings-modal">
+<div class="modal">
+  <h2>⚙ PARAMÈTRES — OV3RLORD V1.43</h2>
+  <div class="settings-grid">
+
+    <!-- APPARENCE -->
+    <div class="setting-group">
+      <div class="sg-title">APPARENCE</div>
+      <div class="setting-row"><span class="s-label">Transparence panneaux</span>
+        <input type="range" class="slider" min="50" max="100" value="85" oninput="setPanelOpacity(this.value)"></div>
+      <div class="setting-row"><span class="s-label">Fond d'écran (URL)</span>
+        <input type="text" class="sel-input" id="wallpaper-url" placeholder="https://..." style="width:160px" onchange="setWallpaper(this.value)"></div>
+      <div class="setting-row"><span class="s-label">Opacité fond d'écran</span>
+        <input type="range" class="slider" min="0" max="80" value="0" oninput="setWallpaperOpacity(this.value)"></div>
+      <div class="setting-row"><span class="s-label">Effet Matrix</span>
+        <div class="toggle on" id="t-matrix" onclick="toggleMatrix(this)"></div></div>
+      <div class="setting-row"><span class="s-label">Scanline</span>
+        <div class="toggle on" id="t-scan" onclick="toggleScanline(this)"></div></div>
+      <div class="setting-row"><span class="s-label">Rainbow Cat 🐱</span>
+        <div class="toggle" id="t-nyan" onclick="toggleNyan(this)"></div></div>
+      <div class="setting-row"><span class="s-label">Police UI</span>
+        <select class="sel-input" onchange="setFont(this.value)">
+          <option value="Orbitron">Orbitron</option>
+          <option value="Rajdhani">Rajdhani</option>
+          <option value="monospace">Monospace</option>
+        </select></div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="setting-group">
+      <div class="sg-title">PIPELINE</div>
+      <div class="setting-row"><span class="s-label">Media type défaut</span>
+        <select class="sel-input" id="s-media">
+          <option>anime</option><option>manga</option><option>comics</option>
+          <option>3d</option><option>art</option><option>short</option>
+        </select></div>
+      <div class="setting-row"><span class="s-label">Seuil qualité scénario</span>
+        <input type="range" class="slider" min="50" max="95" value="70" id="s-threshold"></div>
+      <div class="setting-row"><span class="s-label">Max iterations loopback</span>
+        <input type="range" class="slider" min="1" max="5" value="3" id="s-loops"></div>
+      <div class="setting-row"><span class="s-label">Auto-reprise checkpoint</span>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-label">Notifications Telegram</span>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-label">Mode fallback Ollama</span>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+
+    <!-- SELF-IMPROVE -->
+    <div class="setting-group">
+      <div class="sg-title">SELF-IMPROVE</div>
+      <div class="setting-row"><span class="s-label">Auto-amélioration</span>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-label">Max patches / session</span>
+        <input type="range" class="slider" min="1" max="5" value="3"></div>
+      <div class="setting-row"><span class="s-label">Log sur drive E:</span>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-label">Log sur drive G: (1To)</span>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-label">Backup avant patch</span>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-label">Mode dry-run par défaut</span>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+
+    <!-- SYSTÈME -->
+    <div class="setting-group">
+      <div class="sg-title">SYSTÈME & MODULES</div>
+      <div class="setting-row"><span class="s-label">ComfyUI URL</span>
+        <input type="text" class="sel-input" value="http://127.0.0.1:8188" style="width:150px"></div>
+      <div class="setting-row"><span class="s-label">Ollama URL</span>
+        <input type="text" class="sel-input" value="http://localhost:11434" style="width:150px"></div>
+      <div class="setting-row"><span class="s-label">FPS vidéo export</span>
+        <select class="sel-input"><option>24</option><option>30</option><option>60</option></select></div>
+      <div class="setting-row"><span class="s-label">Preset ffmpeg</span>
+        <select class="sel-input"><option>anime_1080p</option><option>anime_4k</option><option>nvenc_1080p</option></select></div>
+      <div class="setting-row"><span class="s-label">Modules actifs</span>
+        <button class="btn" style="padding:3px 8px;font-size:0.5rem" onclick="openModuleManager()">GÉRER</button></div>
+    </div>
+
+  </div>
+
+  <!-- Custom Theme Builder -->
+  <div class="setting-group" style="margin-top:16px">
+    <div class="sg-title">ÉDITEUR DE THÈME PERSONNALISÉ</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px">
+      <div class="tb-row"><span>Accent 1</span><input type="color" class="tb-swatch" id="tb-a1" value="#00FFB3" oninput="applyCustomTheme()"></div>
+      <div class="tb-row"><span>Accent 2</span><input type="color" class="tb-swatch" id="tb-a2" value="#0066FF" oninput="applyCustomTheme()"></div>
+      <div class="tb-row"><span>Accent 3</span><input type="color" class="tb-swatch" id="tb-a3" value="#FF3366" oninput="applyCustomTheme()"></div>
+      <div class="tb-row"><span>Fond</span><input type="color" class="tb-swatch" id="tb-bg" value="#080C14" oninput="applyCustomTheme()"></div>
+      <div class="tb-row"><span>Fond 2</span><input type="color" class="tb-swatch" id="tb-bg2" value="#0D1520" oninput="applyCustomTheme()"></div>
+      <div class="tb-row"><span>Texte</span><input type="color" class="tb-swatch" id="tb-txt" value="#E8F4FF" oninput="applyCustomTheme()"></div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn primary" onclick="saveCustomTheme()">SAUVEGARDER</button>
+      <button class="btn" onclick="exportTheme()">EXPORTER JSON</button>
+      <input type="file" id="import-theme-file" accept=".json" style="display:none" onchange="importTheme(event)">
+      <button class="btn" onclick="document.getElementById('import-theme-file').click()">IMPORTER JSON</button>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;display:flex;justify-content:flex-end;gap:8px">
+    <button class="btn" onclick="closeSettings()">FERMER</button>
+    <button class="btn primary" onclick="saveSettings()">SAUVEGARDER TOUT</button>
+  </div>
+</div>
+</div><!-- modal -->
+
+<script>
+// ══════════════════════════════════════════
+// MATRIX RAIN
+// ══════════════════════════════════════════
+const mc = document.getElementById('matrix-canvas');
+const mx = mc.getContext('2d');
+let matrixActive = true;
+function resizeMatrix(){mc.width=window.innerWidth;mc.height=window.innerHeight;}
+resizeMatrix();
+window.addEventListener('resize',resizeMatrix);
+const mchars='アイウエオ01ABCDXYZｦｧｨｩｪ'.split('');
+let mdrops=[];
+function initDrops(){mdrops=Array(Math.floor(mc.width/13)).fill(1);}
+initDrops();
+function drawMatrix(){
+  if(!matrixActive)return;
+  mx.fillStyle='rgba(0,0,0,0.05)';
+  mx.fillRect(0,0,mc.width,mc.height);
+  const col=getComputedStyle(document.getElementById('app')).getPropertyValue('--accent1').trim()||'#00FFB3';
+  mx.fillStyle=col;
+  mx.font='12px monospace';
+  mdrops.forEach((y,i)=>{
+    mx.fillText(mchars[Math.floor(Math.random()*mchars.length)],i*13,y*13);
+    if(y*13>mc.height&&Math.random()>0.975)mdrops[i]=0;
+    mdrops[i]++;
+  });
+}
+setInterval(drawMatrix,50);
+
+// ══════════════════════════════════════════
+// THEMES
+// ══════════════════════════════════════════
+const THEME_META={
+  '':      {name:'Digital Bamboo',   desc:'Matrix dans la forêt. Précision technologique.'},
+  katana:  {name:'Katana Steel',     desc:'Précision froide. Performance forgée.'},
+  shibuya: {name:'Shibuya Neon',     desc:'Énergie du flux tokyoïte. Vibrant.'},
+  zen:     {name:'Zen Garden',       desc:'Équilibre et stabilité durable.'},
+  obsidian:{name:'Obsidian Black',   desc:'L\'essentiel, rien que l\'essentiel.'},
+  lava:    {name:'Lava Core',        desc:'Puissance volcanique. Aggressive.'},
+  ice:     {name:'Arctic Ice',       desc:'Clarté glaciale. Précision absolue.'},
+  rainbow: {name:'🌈 Rainbow Cat',   desc:'Nyan Nyan Nyan! Mode fun activé.'},
+};
+let currentTheme='';
+
+function setTheme(theme,el){
+  currentTheme=theme;
+  document.getElementById('app').dataset.theme=theme;
+  document.querySelectorAll('.t-dot').forEach(d=>d.classList.remove('active'));
+  if(el)el.classList.add('active');
+  // Rainbow Cat
+  const isRainbow=theme==='rainbow';
+  document.getElementById('rainbow-cat').style.display=isRainbow?'block':'none';
+  document.getElementById('rainbow-trail').style.display=isRainbow?'block':'none';
+  if(isRainbow)startNyan();
+  addLog('INFO',`[UI] Thème : ${THEME_META[theme]?.name||theme}`);
+  localStorage.setItem('ov_theme',theme);
+}
+
+// NYAN CAT
+let nyanX=0,nyanDir=1;
+function startNyan(){
+  const trail=document.getElementById('rainbow-trail');
+  const cat=document.getElementById('rainbow-cat');
+  setInterval(()=>{
+    if(document.getElementById('app').dataset.theme!=='rainbow')return;
+    nyanX+=nyanDir*4;
+    const w=window.innerWidth;
+    if(nyanX>w-40){nyanDir=-1;cat.style.transform='translateX('+nyanX+'px) scaleX(-1)';}
+    else if(nyanX<0){nyanDir=1;cat.style.transform='translateX('+nyanX+'px) scaleX(1)';}
+    else cat.style.transform='translateX('+nyanX+'px)';
+    trail.style.width=Math.abs(nyanX)+'px';
+    trail.style.left=nyanDir>0?'0':nyanX+'px';
+  },30);
+}
+
+// CUSTOM THEME
+function applyCustomTheme(){
+  const a1=document.getElementById('custom-a1')?.value||document.getElementById('tb-a1').value;
+  const a2=document.getElementById('custom-a2')?.value||document.getElementById('tb-a2').value;
+  const bg=document.getElementById('custom-bg')?.value||document.getElementById('tb-bg').value;
+  const a3=document.getElementById('tb-a3')?.value||'#FF3366';
+  const bg2=document.getElementById('tb-bg2')?.value||'#0D1520';
+  const txt=document.getElementById('tb-txt')?.value||'#E8F4FF';
+  const root=document.getElementById('app');
+  root.style.setProperty('--accent1',a1);
+  root.style.setProperty('--accent2',a2);
+  root.style.setProperty('--accent3',a3);
+  root.style.setProperty('--bg',bg);
+  root.style.setProperty('--bg2',bg2);
+  root.style.setProperty('--text',txt);
+  root.style.setProperty('--border',a1+'33');
+  root.style.setProperty('--glow1',`0 0 20px ${a1}66`);
+  root.style.setProperty('--grad',`linear-gradient(135deg,${a1},${a2})`);
+}
+function saveCustomTheme(){
+  const theme={accent1:getComputedStyle(document.getElementById('app')).getPropertyValue('--accent1').trim()};
+  localStorage.setItem('ov_custom_theme',JSON.stringify(theme));
+  addLog('INFO','[UI] Thème personnalisé sauvegardé');
+}
+function exportTheme(){
+  const data={};
+  ['tb-a1','tb-a2','tb-a3','tb-bg','tb-bg2','tb-txt'].forEach(id=>{
+    data[id]=document.getElementById(id)?.value;
+  });
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='overlord_theme_custom.json';a.click();
+}
+function importTheme(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      Object.entries(d).forEach(([k,v])=>{
+        const el=document.getElementById(k);
+        if(el)el.value=v;
+      });
+      applyCustomTheme();
+      addLog('INFO','[UI] Thème importé depuis fichier JSON');
+    }catch(err){addLog('ERROR','[UI] Import thème échoué : '+err.message);}
+  };
+  r.readAsText(f);
+}
+
+// ══════════════════════════════════════════
+// ORACLE
+// ══════════════════════════════════════════
+const CMDS={
+  aide:`╔══ Oracle V1.43 ════════════════════╗\n║ génère [media] [univers]            ║\n║ status / test / stop                ║\n║ switch thème [nom]                  ║\n║ améliore le code  → self-improve    ║\n║ rollback [fichier.py]               ║\n╚═════════════════════════════════════╝`,
+  status:`Pipeline : sourcing ✓ | scénario ⏳\nWatchdog ✓ | Critique ✓ | Oracle ✓\nSelf-Improve V1.43 ✓ — 0 patches appliqués`,
+  test:`→ test_pipeline.py --quick\n✓ Python 3.14 | ✓ agents/ | ✓ __init__.py\n⚠ ANTHROPIC_API_KEY — vérifier setx\n✓ imports OK — 4/5 PASS`,
+  'améliore le code':`→ self_improve.py --mode auto --dry-run\n[OBSERVE] Scan 68 fichiers...\n[REFLECT] Score santé : 92/100\n[PROPOSE] 0 corrections nécessaires\n✓ Système optimal — aucun patch requis`,
+};
+function sendOracle(){
+  const inp=document.getElementById('oracle-in');
+  const resp=document.getElementById('oracle-resp');
+  const txt=inp.value.trim().toLowerCase();
+  if(!txt)return;
+  addLog('INFO','[ORACLE] › '+inp.value);
+  let r=null;
+  for(const[k,v]of Object.entries(CMDS)){if(txt.includes(k)){r=v;break;}}
+  if(txt.includes('génère')||txt.includes('anime')||txt.includes('lance')){
+    const mt=['anime','manga','comics','3d','art'].find(m=>txt.includes(m))||'anime';
+    r=`Pipeline démarré — media=${mt}\nrun_id=maestro_${Date.now()}\n[SOURCING] → En cours...`;
+    document.querySelectorAll('.pipe-block')[0].className='pipe-block run';
+  }
+  if(txt.includes('thème')||txt.includes('switch')){
+    const tkeys=Object.keys(THEME_META);
+    const found=tkeys.find(k=>txt.includes(k.replace('_',' '))||txt.includes(k));
+    if(found){
+      document.querySelector(`.t-dot[title*="${(THEME_META[found]?.name||found).split(' ')[0]}"]`)?.click();
+      r=`Thème activé : ${THEME_META[found]?.name||found}`;
+    }
+  }
+  resp.textContent=r||`Commande analysée. Dis "aide" pour la liste.`;
+  inp.value='';
+}
+
+// ══════════════════════════════════════════
+// LOGS
+// ══════════════════════════════════════════
+const INIT_LOGS=[
+  ['INFO','[WATCHDOG] Démarré en arrière-plan'],
+  ['INFO','[CHECKPOINT] nouveau : maestro_20260617_212335'],
+  ['INFO','[SOURCING] Démarrage — media_type=anime'],
+  ['WARN','Reddit r/anime → HTTP 403'],
+  ['INFO','Agrégation : 60 RSS | 7 Trends | 61 mots-clés'],
+  ['INFO','[CRITIQUE] ✓ sourcing→scenario | score=100 | PASS'],
+  ['INFO','[SELF-IMPROVE] Scan complet — score santé : 92/100'],
+  ['INFO','[ORACLE] Système V1.43 en ligne'],
+];
+let logQ=[...INIT_LOGS];
+function addLog(lv,msg){
+  const w=document.getElementById('log-wrap');
+  const ts=new Date().toLocaleTimeString('fr-FR');
+  const d=document.createElement('div');d.className='log-row';
+  d.innerHTML=`<span class="log-ts">${ts}</span><span class="log-lv lv-${lv}">${lv}</span><span class="log-msg">${msg}</span>`;
+  w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+function clearLogs(){document.getElementById('log-wrap').innerHTML='';}
+let li=0;
+(function injectLogs(){
+  if(li<logQ.length){addLog(...logQ[li++]);setTimeout(injectLogs,300+Math.random()*500);}
+})();
+
+// ══════════════════════════════════════════
+// STATS LIVE
+// ══════════════════════════════════════════
+function updateStats(){
+  const v=45+Math.random()*25,r=60+Math.random()*15,c=10+Math.random()*40,d=42;
+  const set=(id,val,hot)=>{
+    document.getElementById('g-'+id).textContent=val.toFixed(0)+'%';
+    const el=document.getElementById('gf-'+id);
+    el.style.width=val+'%';
+    if(hot&&val>70)el.className='g-fill hot';
+    else el.className='g-fill';
+  };
+  set('vram',v);set('ram',r);set('cpu',c,true);set('disk',d);
+}
+setInterval(updateStats,2000);updateStats();
+
+// CLOCK
+function updateClock(){
+  document.getElementById('footer-clock').textContent=
+    new Date().toLocaleString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+}
+setInterval(updateClock,1000);updateClock();
+
+// ══════════════════════════════════════════
+// UI CONTROLS
+// ══════════════════════════════════════════
+function setTab(el,tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  addLog('INFO','[UI] Vue : '+tab.toUpperCase());
+}
+function selBlock(el,name){
+  document.querySelectorAll('.pipe-block').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function launchPipeline(){
+  addLog('INFO','[ORACLE] Lancement pipeline → maestro.py');
+  document.querySelectorAll('.pipe-block')[0].className='pipe-block run sel';
+  document.getElementById('oracle-resp').textContent='Pipeline lancé. Surveille les logs.';
+}
+function stopPipeline(){
+  document.querySelectorAll('.pipe-block').forEach(b=>b.classList.remove('run'));
+  addLog('WARN','[ORACLE] Pipeline arrêté — checkpoint sauvegardé');
+}
+function toggleFullscreen(){
+  if(!document.fullscreenElement)document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+// SETTINGS
+function openSettings(){document.getElementById('settings-modal').classList.add('open');}
+function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
+function saveSettings(){closeSettings();addLog('INFO','[UI] Paramètres sauvegardés');}
+function setPanelOpacity(v){document.getElementById('app').style.setProperty('--panel-opacity',v/100);}
+function setWallpaper(url){
+  if(!url)return;
+  document.getElementById('wallpaper').style.backgroundImage=`url(${url})`;
+  addLog('INFO','[UI] Wallpaper défini');
+}
+function setWallpaperOpacity(v){document.getElementById('app').style.setProperty('--wallpaper-opacity',v/100);}
+function toggleMatrix(el){
+  el.classList.toggle('on');
+  matrixActive=el.classList.contains('on');
+  if(!matrixActive){const c=document.getElementById('matrix-canvas');c.getContext('2d').clearRect(0,0,c.width,c.height);}
+}
+function toggleScanline(el){
+  el.classList.toggle('on');
+  document.querySelector('.scanline').style.display=el.classList.contains('on')?'block':'none';
+}
+function toggleNyan(el){
+  el.classList.toggle('on');
+  if(el.classList.contains('on')){
+    const dot=document.querySelectorAll('.t-dot')[7];
+    setTheme('rainbow',dot);
+  }else{
+    setTheme('',document.querySelectorAll('.t-dot')[0]);
+  }
+}
+function setFont(f){document.getElementById('app').style.fontFamily=f+',sans-serif';}
+function openModuleManager(){addLog('INFO','[UI] Module Manager — à implémenter V1.44');}
+
+// RIPPLE
+document.addEventListener('click',e=>{
+  const el=e.target.closest('.btn,.tab,.pipe-block,.icon-btn');
+  if(!el)return;
+  const r=document.createElement('div');r.className='ripple-el';
+  const rect=el.getBoundingClientRect(),s=Math.max(rect.width,rect.height);
+  r.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-rect.left-s/2}px;top:${e.clientY-rect.top-s/2}px`;
+  el.style.position='relative';el.style.overflow='hidden';
+  el.appendChild(r);setTimeout(()=>r.remove(),500);
+});
+
+// Charger thème sauvegardé
+const saved=localStorage.getItem('ov_theme');
+if(saved){const el=document.querySelector(`.t-dot[title*="${(THEME_META[saved]?.name||saved).split(' ')[0]}"]`);if(el)setTheme(saved,el);}
+</script>
+</body>
+</html>

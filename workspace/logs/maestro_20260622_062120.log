@@ -1,0 +1,136 @@
+2026-06-22 06:21:20 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-22 06:21:20 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-22 06:21:20 [INFO    ] [CHECKPOINT] Charge : maestro_20260622_061839 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-22 06:21:20 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260622_062120
+2026-06-22 06:21:20 [INFO    ] [GPU] Optimisation pour : rtx5080 — RTX 5080 16GB — cible Ov3rLoRd
+2026-06-22 06:21:20 [INFO    ] [GPU] Workflow déjà à jour
+2026-06-22 06:21:20 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-22 06:21:20 [INFO    ] [GPU] Optimisation auto : rtx5080
+2026-06-22 06:21:20 [INFO    ] ============================================================
+2026-06-22 06:21:20 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-22 06:21:20 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260622_062120
+2026-06-22 06:21:20 [INFO    ]   Critique : OK
+2026-06-22 06:21:20 [INFO    ]   Watchdog : OK
+2026-06-22 06:21:20 [INFO    ]   Director : OK
+2026-06-22 06:21:20 [INFO    ]   Bus      : OK
+2026-06-22 06:21:20 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-22 06:21:20 [INFO    ] ============================================================
+2026-06-22 06:21:20 [INFO    ] =======================================================
+2026-06-22 06:21:20 [INFO    ] BLOC 1 -- SOURCING
+2026-06-22 06:21:20 [INFO    ] =======================================================
+2026-06-22 06:21:20 [INFO    ] [SOURCING] Demarrage — media_type=anime
+2026-06-22 06:21:21 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-22 06:21:21 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-22 06:21:21 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-22 06:21:21 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-22 06:21:21 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-22 06:21:21 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-22 06:21:21 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-22 06:21:22 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-22 06:21:23 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 66 mots-cles
+2026-06-22 06:21:23 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts ...
+2026-06-22 06:21:23 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-22 06:21:23 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-22 06:21:23 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (anime) : episode, anime, season, conan, crunchyroll. Posts 
+2026-06-22 06:21:23 [INFO    ] [NARRATIVE] Contexte inter-épisodes injecté
+2026-06-22 06:21:23 [INFO    ] =======================================================
+2026-06-22 06:21:23 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-22 06:21:23 [INFO    ] =======================================================
+2026-06-22 06:21:23 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-22 06:21:23 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [WARNING ] [SCENARISTE] JSON invalide (tentative 1/2)
+2026-06-22 06:21:23 [INFO    ] [SCENARISTE] Retry 2/2
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [WARNING ] [SCENARISTE] JSON invalide (tentative 2/2)
+2026-06-22 06:21:23 [ERROR   ] [SCENARISTE] Toutes les tentatives echouees — utilisation du fallback
+2026-06-22 06:21:23 [INFO    ] [SCENARISTE] Fallback script : 'evangelion battle mecha girl: New Chapter'
+2026-06-22 06:21:23 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [INFO    ] [SCENARIO] Iteration 1 score=50 < 73 — amelioration...
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [WARNING ] [IMPROVE] JSON invalide — conservation du script precedent
+2026-06-22 06:21:23 [INFO    ] [SCRIPT DOCTOR] Revision iteration 2
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [INFO    ] [SCENARIO] Iteration 2 score=50 < 73 — amelioration...
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [WARNING ] [IMPROVE] JSON invalide — conservation du script precedent
+2026-06-22 06:21:23 [INFO    ] [SCRIPT DOCTOR] Revision iteration 3
+2026-06-22 06:21:23 [ERROR   ] [SCENARIO] overlord_utils unavailable
+2026-06-22 06:21:23 [WARNING ] [SCENARIO] Seuil non atteint — meilleur score=50
+2026-06-22 06:21:23 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260622_042123_evangelion_battle_mecha_girl:_New_Chapte.json
+2026-06-22 06:21:23 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-22 06:21:23 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-22 06:21:23 [INFO    ] [SCENARIO] OK 'evangelion battle mecha girl: New Chapter'
+2026-06-22 06:21:23 [INFO    ] =======================================================
+2026-06-22 06:21:23 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-22 06:21:23 [INFO    ] =======================================================
+2026-06-22 06:21:23 [INFO    ] [STORYBOARD] Generation -- titre='evangelion battle mecha girl: New Chapter'
+2026-06-22 06:21:23 [WARNING ] [STORYBOARD] LLM vide (tentative 1/3)
+2026-06-22 06:21:23 [WARNING ] [STORYBOARD] LLM vide (tentative 2/3)
+2026-06-22 06:21:23 [WARNING ] [STORYBOARD] LLM vide (tentative 3/3)
+2026-06-22 06:21:23 [WARNING ] [STORYBOARD] Echec LLM apres 3 tentatives -- utilisation du fallback minimal
+2026-06-22 06:21:23 [INFO    ] [STORYBOARD] Fallback minimal -- 3 shots
+2026-06-22 06:21:23 [INFO    ] [STORYBOARD] Sauvegarde -> 20260622_062123_evangelion battle mecha girl: New Chapter.json
+2026-06-22 06:21:23 [INFO    ] [STORYBOARD] 3 jobs ComfyUI prepares
+2026-06-22 06:21:23 [INFO    ] [STORYBOARD] Métadonnées passes studio ajoutées à 3 jobs
+2026-06-22 06:21:23 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-22 06:21:23 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-22 06:21:23 [INFO    ] [STORYBOARD] OK 3 jobs
+2026-06-22 06:21:23 [DEBUG   ] [CHARS] Aucun personnage preset détecté
+2026-06-22 06:21:23 [INFO    ] [STYLE] Ancre créée — seed=35390 | lora=mari-makinami-rebuild-ponyxl-lora-n... | arc=wonder
+2026-06-22 06:21:23 [INFO    ] [STYLE] Application continuité à 3 jobs
+2026-06-22 06:21:23 [DEBUG   ] [STYLE] Job 1 seed=35390 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 06:21:23 [DEBUG   ] [STYLE] Job 2 seed=35527 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 06:21:23 [DEBUG   ] [STYLE] Job 3 seed=35664 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-22 06:21:23 [INFO    ] [STYLE] Continuité appliquée — seed_range=[35390, 35664]
+2026-06-22 06:21:23 [INFO    ] [STYLE] Continuité appliquée à 3 jobs
+2026-06-22 06:21:23 [INFO    ] [MEMORY] Script mémorisé | 6 personnages | 5 épisodes
+2026-06-22 06:21:23 [INFO    ] =======================================================
+2026-06-22 06:21:23 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-22 06:21:23 [INFO    ] =======================================================
+2026-06-22 06:21:23 [INFO    ] [QUALITY_GATE] PASS — 19 nœuds | 0 avertissement(s)
+2026-06-22 06:21:23 [INFO    ] [PROMPT_ENG] Upsampling 3 jobs...
+2026-06-22 06:21:23 [INFO    ] [PROMPT_ENG] Job 1/3 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 06:21:23 [INFO    ] [PROMPT_ENG] Job 2/3 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 06:21:23 [INFO    ] [PROMPT_ENG] Job 3/3 | lora=mari-makinami-rebuild-ponyxl-lora-n...
+2026-06-22 06:21:23 [INFO    ] [PROMPT_ENG] OK — 3 jobs enrichis
+2026-06-22 06:21:23 [INFO    ] [PROMPT_ENG] Jobs enrichis : 3
+2026-06-22 06:22:27 [INFO    ] [WATCHDOG/FRAME] job0002_20260622_060639_overlord__00014_ -> PASS | nettete=1403.0 | luminosite=81.3 | OK
+2026-06-22 06:22:27 [INFO    ] [WATCHDOG/FRAME] job0002_20260622_060639_overlord__00015_ -> PASS | nettete=1695.1 | luminosite=50.3 | OK
+2026-06-22 06:22:27 [INFO    ] [WATCHDOG/FRAME] job0002_20260622_060639_overlord__00016_ -> PASS | nettete=1804.3 | luminosite=62.0 | OK
+2026-06-22 06:22:27 [INFO    ] [WATCHDOG] Sequence coherente — drift moyen=0.189
+2026-06-22 06:22:27 [INFO    ] [CRITIQUE] production->postprod | WARN | score=40 | Taux succes faible : 0/3
+2026-06-22 06:22:27 [WARNING ] [MAESTRO/CRITIQUE] production->postprod warn
+2026-06-22 06:22:27 [INFO    ] [PRODUCTION] OK 0 succes | 3 echecs
+2026-06-22 06:22:27 [INFO    ] =======================================================
+2026-06-22 06:22:27 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-22 06:22:27 [INFO    ] =======================================================
+2026-06-22 06:22:27 [INFO    ] [POST-PROD] Archive run fallback : workspace\archive\maestro_20260622_060611_prod
+2026-06-22 06:22:27 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-22 06:22:27 [WARNING ] [POST-PROD] Fallback : 48 images alpha
+2026-06-22 06:22:27 [INFO    ] [VIDEO] Assemblage 48 images -> workspace\exports\20260622_062227_untitled.mp4
+2026-06-22 06:22:30 [INFO    ] [VIDEO] OK Video creee : workspace\exports\20260622_062227_untitled.mp4
+2026-06-22 06:22:30 [INFO    ] [POST-PROD] OK Export final -> workspace\exports\20260622_062227_untitled.mp4
+2026-06-22 06:22:30 [INFO    ] [POST-PROD] OK Export -> workspace\exports\20260622_062227_untitled.mp4
+2026-06-22 06:22:30 [INFO    ] =======================================================
+2026-06-22 06:22:30 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-22 06:22:30 [INFO    ] =======================================================
+2026-06-22 06:22:31 [INFO    ] [3D] Moteurs disponibles : ['trimesh']
+2026-06-22 06:22:31 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-22 06:22:31 [INFO    ] [REPORTER] Génération rapport run=maestro_20260622_062120
+2026-06-22 06:22:31 [INFO    ] [REPORTER] OK — JSON: 20260622_062231_maestro_20260622_062120.json | MD: 20260622_062231_maestro_20260622_062120.md
+2026-06-22 06:22:31 [INFO    ] [REPORTER] Résumé : 0 images | vidéo: True
+2026-06-22 06:22:36 [INFO    ] [WATCHDOG] Arrete
+2026-06-22 06:22:36 [INFO    ] [WATCHDOG] Bilan : 3 frames | echecs=0 | ComfyUI uptime=75s
+2026-06-22 06:22:36 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260622_062120
+2026-06-22 06:22:36 [INFO    ] [CRITIQUE] Bilan : 4 verifications | score moyen=70.0 | sante=DEGRADED
+2026-06-22 06:22:36 [INFO    ] ============================================================
+2026-06-22 06:22:36 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260622_062120 | duree=71s
+2026-06-22 06:22:36 [INFO    ] ============================================================

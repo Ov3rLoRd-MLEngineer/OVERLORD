@@ -1,0 +1,12 @@
+{
+  "name": "style_dna",
+  "version": "V1.44",
+  "checksum": "202e8c8409280e85",
+  "lines": 206,
+  "dependencies": [
+    "style_dna"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.643766",
+  "path": "agents\\style_dna.py"
+}

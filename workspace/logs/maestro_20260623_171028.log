@@ -1,0 +1,125 @@
+2026-06-23 17:10:28 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-23 17:10:28 [INFO    ] [CHECKPOINT] Charge : maestro_20260623_043731 | Etat : interrupted | Blocs termines : ['sourcing', 'scenario', 'storyboard', 'bible_visuelle']
+2026-06-23 17:10:28 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'production' (4/5 blocs deja termines : ['sourcing', 'scenario', 'storyboard', 'bible_visuelle'])
+2026-06-23 17:10:29 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260623_171028
+2026-06-23 17:10:29 [INFO    ] [GPU] Optimisation pour : rtx5080 — RTX 5080 16GB — cible Ov3rLoRd (35 steps valide Jerémy)
+2026-06-23 17:10:29 [ERROR   ] [GPU] Workflow introuvable : Combined_V35_API.json
+2026-06-23 17:10:29 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-23 17:10:29 [INFO    ] [GPU] Optimisation auto : rtx5080
+2026-06-23 17:10:29 [INFO    ] ============================================================
+2026-06-23 17:10:29 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-23 17:10:29 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260623_171028
+2026-06-23 17:10:29 [INFO    ]   Critique : OK
+2026-06-23 17:10:29 [INFO    ]   Watchdog : INACTIF
+2026-06-23 17:10:29 [INFO    ]   Director : OK
+2026-06-23 17:10:29 [INFO    ]   Bus      : OK
+2026-06-23 17:10:29 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-23 17:10:29 [INFO    ] ============================================================
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] BLOC 1 -- SOURCING
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [WARNING ] [SOURCING] Module indisponible -- fallback config
+2026-06-23 17:10:29 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-23 17:10:29 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-23 17:10:29 [INFO    ] [SOURCING] OK Brief : Production standard
+2026-06-23 17:10:29 [INFO    ] [NARRATIVE] Contexte inter-épisodes injecté
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] [SCENARIO] Pipeline demarre — media=anime | seuil=73
+2026-06-23 17:10:29 [INFO    ] [SCENARISTE] Generation — media=anime | duree=short
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [SCENARISTE] JSON invalide (tentative 1/2)
+2026-06-23 17:10:29 [INFO    ] [SCENARISTE] Retry 2/2
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [SCENARISTE] JSON invalide (tentative 2/2)
+2026-06-23 17:10:29 [ERROR   ] [SCENARISTE] Toutes les tentatives echouees — utilisation du fallback
+2026-06-23 17:10:29 [INFO    ] [SCENARISTE] Fallback script : 'evangelion battle asuka: New Chapter'
+2026-06-23 17:10:29 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [INFO    ] [SCENARIO] Iteration 1 score=50 < 73 — amelioration...
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [IMPROVE] JSON invalide — conservation du script precedent
+2026-06-23 17:10:29 [INFO    ] [SCRIPT DOCTOR] Revision iteration 2
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [INFO    ] [SCENARIO] Iteration 2 score=50 < 73 — amelioration...
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [IMPROVE] JSON invalide — conservation du script precedent
+2026-06-23 17:10:29 [INFO    ] [SCRIPT DOCTOR] Revision iteration 3
+2026-06-23 17:10:29 [ERROR   ] [LLM] Ollama indisponible en mode offline : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [SCENARIO] Seuil non atteint — meilleur score=50
+2026-06-23 17:10:29 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260623_151029_evangelion_battle_asuka:_New_Chapter.json
+2026-06-23 17:10:29 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-23 17:10:29 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-23 17:10:29 [INFO    ] [SCENARIO] OK 'evangelion battle asuka: New Chapter'
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] Generation -- titre='evangelion battle asuka: New Chapter'
+2026-06-23 17:10:29 [WARNING ] [STORYBOARD] LLM vide (tentative 1/3)
+2026-06-23 17:10:29 [WARNING ] [STORYBOARD] LLM vide (tentative 2/3)
+2026-06-23 17:10:29 [WARNING ] [STORYBOARD] LLM vide (tentative 3/3)
+2026-06-23 17:10:29 [WARNING ] [STORYBOARD] Echec LLM apres 3 tentatives -- utilisation du fallback minimal
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] Fallback minimal -- 3 shots
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] Sauvegarde -> 20260623_171029_evangelion battle asuka: New Chapter.json
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] 3 jobs ComfyUI prepares
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] Métadonnées passes studio ajoutées à 3 jobs
+2026-06-23 17:10:29 [INFO    ] [TRANSLATOR] Traduction shot : anime style, evangelion battle asuka: New Chapter, ...
+2026-06-23 17:10:29 [WARNING ] [LLM] Ollama indisponible : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [LLM] Anthropic API : No module named 'requests'
+2026-06-23 17:10:29 [ERROR   ] [LLM] Tous les backends LLM ont échoué
+2026-06-23 17:10:29 [WARNING ] [TRANSLATOR] LLM retourne vide -- fallback default
+2026-06-23 17:10:29 [DEBUG   ] [TRANSLATOR] Shot 1/3 traduit
+2026-06-23 17:10:29 [INFO    ] [TRANSLATOR] Traduction shot : anime style, evangelion battle asuka: New Chapter, ...
+2026-06-23 17:10:29 [WARNING ] [LLM] Ollama indisponible : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [LLM] Anthropic API : No module named 'requests'
+2026-06-23 17:10:29 [ERROR   ] [LLM] Tous les backends LLM ont échoué
+2026-06-23 17:10:29 [WARNING ] [TRANSLATOR] LLM retourne vide -- fallback default
+2026-06-23 17:10:29 [DEBUG   ] [TRANSLATOR] Shot 2/3 traduit
+2026-06-23 17:10:29 [INFO    ] [TRANSLATOR] Traduction shot : anime style, evangelion battle asuka: New Chapter, ...
+2026-06-23 17:10:29 [WARNING ] [LLM] Ollama indisponible : No module named 'requests'
+2026-06-23 17:10:29 [WARNING ] [LLM] Anthropic API : No module named 'requests'
+2026-06-23 17:10:29 [ERROR   ] [LLM] Tous les backends LLM ont échoué
+2026-06-23 17:10:29 [WARNING ] [TRANSLATOR] LLM retourne vide -- fallback default
+2026-06-23 17:10:29 [DEBUG   ] [TRANSLATOR] Shot 3/3 traduit
+2026-06-23 17:10:29 [INFO    ] [TRANSLATOR] Storyboard traduit : 3 shots
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] Prompt Translator OK -- intents de realisation injectes
+2026-06-23 17:10:29 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-23 17:10:29 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-23 17:10:29 [INFO    ] [STORYBOARD] OK 3 jobs
+2026-06-23 17:10:29 [DEBUG   ] [CHARS] Aucun personnage preset détecté
+2026-06-23 17:10:29 [INFO    ] [STYLE] Ancre créée — seed=97959 | lora=mari-makinami-rebuild-ponyxl-lora-n... | arc=wonder
+2026-06-23 17:10:29 [INFO    ] [STYLE] Application continuité à 3 jobs
+2026-06-23 17:10:29 [DEBUG   ] [STYLE] Job 1 seed=97959 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-23 17:10:29 [DEBUG   ] [STYLE] Job 2 seed=98096 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-23 17:10:29 [DEBUG   ] [STYLE] Job 3 seed=98233 | lora=mari-makinami-rebuild-ponyxl-l...
+2026-06-23 17:10:29 [INFO    ] [STYLE] Continuité appliquée — seed_range=[97959, 98233]
+2026-06-23 17:10:29 [INFO    ] [STYLE] Continuité appliquée à 3 jobs
+2026-06-23 17:10:29 [INFO    ] [MEMORY] Script mémorisé | 7 personnages | 11 épisodes
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [ERROR   ] [PRODUCTION] agent_supervisor_v2 indisponible
+2026-06-23 17:10:29 [INFO    ] [QC] no_qc=True -- skipped
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-23 17:10:29 [INFO    ] =======================================================
+2026-06-23 17:10:29 [INFO    ] [POST-PROD] Archive run depuis bus : workspace\archive\maestro_20260623_032748_prod
+2026-06-23 17:10:29 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-23 17:10:29 [WARNING ] [POST-PROD] Fallback : 343 images alpha
+2026-06-23 17:10:29 [INFO    ] [VIDEO] Assemblage 343 images -> workspace\exports\20260623_171029_untitled.mp4
+2026-06-23 17:10:53 [INFO    ] [VIDEO] OK Video creee : workspace\exports\20260623_171029_untitled.mp4
+2026-06-23 17:10:55 [INFO    ] [POST-PROD] OK Export final -> workspace\exports\20260623_171029_untitled.mp4
+2026-06-23 17:10:55 [INFO    ] [POST-PROD] OK Export -> workspace\exports\20260623_171029_untitled.mp4
+2026-06-23 17:10:55 [INFO    ] =======================================================
+2026-06-23 17:10:55 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-23 17:10:55 [INFO    ] =======================================================
+2026-06-23 17:10:55 [WARNING ] [3D] agent_3d_modeler.py indisponible -- bloc ignore
+2026-06-23 17:10:55 [INFO    ] [REPORTER] Génération rapport run=maestro_20260623_171028
+2026-06-23 17:10:55 [INFO    ] [REPORTER] OK — JSON: 20260623_171055_maestro_20260623_171028.json | MD: 20260623_171055_maestro_20260623_171028.md
+2026-06-23 17:10:55 [INFO    ] [REPORTER] Résumé : 343 images | vidéo: True
+2026-06-23 17:10:55 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260623_171028
+2026-06-23 17:10:55 [INFO    ] [CRITIQUE] Bilan : 3 verifications | score moyen=80.0 | sante=STABLE
+2026-06-23 17:10:55 [INFO    ] ============================================================
+2026-06-23 17:10:55 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260623_171028 | duree=27s
+2026-06-23 17:10:55 [INFO    ] ============================================================

@@ -1,0 +1,10 @@
+{
+  "name": "telegram_bot",
+  "version": "V1.49",
+  "checksum": "03bfe6d234b917f9",
+  "lines": 172,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.680226",
+  "path": "agents\\telegram_bot.py"
+}

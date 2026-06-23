@@ -1,0 +1,26 @@
+2026-06-21 23:41:30 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-21 23:41:30 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-21 23:41:30 [INFO    ] [CHECKPOINT] Charge : maestro_20260621_233637 | Etat : interrupted | Blocs termines : ['sourcing', 'scenario']
+2026-06-21 23:41:30 [INFO    ] [CHECKPOINT] Reprise : Reprise depuis 'storyboard' (2/5 blocs deja termines : ['sourcing', 'scenario'])
+2026-06-21 23:41:30 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260621_234129
+2026-06-21 23:41:30 [INFO    ] [GPU] Optimisation pour : rtx2070 — RTX 2070 8GB — config stable certifiée
+2026-06-21 23:41:30 [INFO    ] [GPU] Workflow déjà à jour
+2026-06-21 23:41:30 [INFO    ] [GPU] Config centralisée mise à jour
+2026-06-21 23:41:30 [INFO    ] [GPU] Optimisation auto : rtx2070
+2026-06-21 23:41:30 [INFO    ] ============================================================
+2026-06-21 23:41:30 [INFO    ]     Ov3rLoRd Pipeline V1.70
+2026-06-21 23:41:30 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260621_234129
+2026-06-21 23:41:30 [INFO    ]   Critique : OK
+2026-06-21 23:41:30 [INFO    ]   Watchdog : OK
+2026-06-21 23:41:30 [INFO    ]   Director : OK
+2026-06-21 23:41:30 [INFO    ]   Bus      : OK
+2026-06-21 23:41:30 [INFO    ]   Blocs    : storyboard -> production -> postprod -> 3d
+2026-06-21 23:41:30 [INFO    ] ============================================================
+2026-06-21 23:41:30 [ERROR   ] Pas de script -- arret
+2026-06-21 23:41:30 [INFO    ] [REPORTER] Génération rapport run=maestro_20260621_234129
+2026-06-21 23:41:30 [INFO    ] [REPORTER] OK — JSON: 20260621_234130_maestro_20260621_234129.json | MD: 20260621_234130_maestro_20260621_234129.md
+2026-06-21 23:41:30 [INFO    ] [REPORTER] Résumé : 0 images | vidéo: False
+2026-06-21 23:41:35 [INFO    ] [WATCHDOG] Arrete
+2026-06-21 23:41:35 [INFO    ] [WATCHDOG] Bilan : 0 frames | echecs=0 | ComfyUI uptime=15s
+2026-06-21 23:41:35 [WARNING ] [CHECKPOINT] Sauvegarde d'urgence : maestro_20260621_234129 | Blocs termines : []
+2026-06-21 23:41:35 [INFO    ] [CRITIQUE] Bilan : 0 verifications | score moyen=0 | sante=UNKNOWN

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "ponyxl_anime",
+    "description": "PonyXL anime style — vibrant, sharp lineart, Booru tags",
+    "base_tags": "masterpiece, best quality, absurdres, highly detailed, anime style",
+    "negative_base": "bad quality, worst quality, bad anatomy, deformed, blurry, extra limbs, bad hands, mutated hands, text, watermark, logo, censored, artist name, signature, patreon, twitter username",
+    "recommended_cfg": 6.0,
+    "recommended_steps": 50,
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras"
+  }
+]

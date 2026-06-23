@@ -1,0 +1,99 @@
+2026-06-20 07:24:31 [INFO    ] [DIRECTOR] Intent: mode=ProductionMode.BALANCE | seuil=73 | arc=wonder
+2026-06-20 07:24:31 [INFO    ] [WATCHDOG] Demarre en arriere-plan
+2026-06-20 07:24:31 [INFO    ] [CHECKPOINT] Charge : maestro_20260620_072204 | Etat : completed | Blocs termines : ['sourcing', 'scenario', 'storyboard']
+2026-06-20 07:24:31 [INFO    ] [CHECKPOINT] Nouveau checkpoint : maestro_20260620_072431
+2026-06-20 07:24:31 [INFO    ] ============================================================
+2026-06-20 07:24:31 [INFO    ]     Ov3rLoRd Pipeline V1.49n
+2026-06-20 07:24:31 [INFO    ]   PIPELINE DEMARRE -- run_id=maestro_20260620_072431
+2026-06-20 07:24:31 [INFO    ]   Critique : OK
+2026-06-20 07:24:31 [INFO    ]   Watchdog : OK
+2026-06-20 07:24:31 [INFO    ]   Director : OK
+2026-06-20 07:24:31 [INFO    ]   Bus      : OK
+2026-06-20 07:24:31 [INFO    ]   Blocs    : sourcing -> scenario -> storyboard -> production -> postprod -> 3d
+2026-06-20 07:24:31 [INFO    ] ============================================================
+2026-06-20 07:24:31 [INFO    ] =======================================================
+2026-06-20 07:24:31 [INFO    ] BLOC 1 -- SOURCING
+2026-06-20 07:24:31 [INFO    ] =======================================================
+2026-06-20 07:24:31 [INFO    ] [SOURCING] Demarrage — media_type=manga
+2026-06-20 07:24:31 [WARNING ] Reddit r/anime -> HTTP 403
+2026-06-20 07:24:31 [WARNING ] Reddit r/manga -> HTTP 403
+2026-06-20 07:24:32 [WARNING ] Reddit r/dragonball -> HTTP 403
+2026-06-20 07:24:32 [WARNING ] Reddit r/OnePiece -> HTTP 403
+2026-06-20 07:24:32 [WARNING ] Reddit r/Naruto -> HTTP 403
+2026-06-20 07:24:32 [WARNING ] Reddit r/webtoons -> HTTP 403
+2026-06-20 07:24:32 [WARNING ] Reddit r/comicbooks -> HTTP 403
+2026-06-20 07:24:32 [WARNING ] Reddit r/Marvel -> HTTP 403
+2026-06-20 07:24:33 [WARNING ] Reddit r/gamedev -> HTTP 403
+2026-06-20 07:24:33 [WARNING ] Reddit r/blender -> HTTP 403
+2026-06-20 07:24:33 [WARNING ] Reddit r/learnart -> HTTP 403
+2026-06-20 07:24:33 [WARNING ] Reddit r/worldnews -> HTTP 403
+2026-06-20 07:24:33 [WARNING ] Reddit r/technology -> HTTP 403
+2026-06-20 07:24:33 [WARNING ] Reddit r/artificial -> HTTP 403
+2026-06-20 07:24:33 [INFO    ] Agregation : 0 Reddit | 60 RSS | 7 Trends | -> 67 mots-cles
+2026-06-20 07:24:33 [INFO    ] [SOURCING] Termine — brief: Tendances actuelles (manga) : anime, episode, season, crunchyroll, presents. Pos...
+2026-06-20 07:24:33 [INFO    ] [CRITIQUE] sourcing->scenario | PASS | score=80 | OK
+2026-06-20 07:24:33 [INFO    ] [CHECKPOINT] OK Bloc 'sourcing' sauvegarde (1/5 blocs)
+2026-06-20 07:24:33 [INFO    ] [SOURCING] OK Brief : Tendances actuelles (manga) : anime, episode, season, crunchyroll, presents. Pos
+2026-06-20 07:24:33 [INFO    ] =======================================================
+2026-06-20 07:24:33 [INFO    ] BLOC 2 -- SCENARIO
+2026-06-20 07:24:33 [INFO    ] =======================================================
+2026-06-20 07:24:33 [INFO    ] [SCENARIO] Pipeline demarre — media=manga | seuil=73
+2026-06-20 07:24:33 [INFO    ] [SCENARISTE] Generation — media=manga | duree=short
+2026-06-20 07:24:44 [DEBUG   ] [LLM] Ollama/mistral OK (1961 chars)
+2026-06-20 07:24:44 [INFO    ] [SCENARISTE] Script genere : 'Conan's Christmas Case'
+2026-06-20 07:24:44 [INFO    ] [SCRIPT DOCTOR] Revision iteration 1
+2026-06-20 07:24:52 [DEBUG   ] [LLM] Ollama/mistral OK (1452 chars)
+2026-06-20 07:24:52 [INFO    ] [SCRIPT DOCTOR] Score=75/100 | Valide=oui
+2026-06-20 07:24:52 [INFO    ] [SCENARIO] OK Valide iteration 1 — score=75
+2026-06-20 07:24:52 [INFO    ] [SCENARIO] Script sauvegarde -> workspace\scripts\20260620_052452_Conan's_Christmas_Case.json
+2026-06-20 07:24:52 [INFO    ] [CRITIQUE] scenario->storyboard | PASS | score=80 | OK
+2026-06-20 07:24:52 [INFO    ] [CHECKPOINT] OK Bloc 'scenario' sauvegarde (2/5 blocs)
+2026-06-20 07:24:52 [INFO    ] [SCENARIO] OK 'Conan's Christmas Case'
+2026-06-20 07:24:52 [INFO    ] =======================================================
+2026-06-20 07:24:52 [INFO    ] BLOC 3 -- STORYBOARD
+2026-06-20 07:24:52 [INFO    ] =======================================================
+2026-06-20 07:24:52 [INFO    ] [STORYBOARD] Generation -- titre='Conan's Christmas Case'
+2026-06-20 07:25:09 [INFO    ] [STORYBOARD] OK -- 8 shots generes
+2026-06-20 07:25:09 [INFO    ] [STORYBOARD] Sauvegarde -> 20260620_072509_Conan's Christmas Case.json
+2026-06-20 07:25:09 [INFO    ] [STORYBOARD] 8 jobs ComfyUI prepares
+2026-06-20 07:25:09 [INFO    ] [CRITIQUE] storyboard->production | PASS | score=80 | OK
+2026-06-20 07:25:09 [INFO    ] [CHECKPOINT] OK Bloc 'storyboard' sauvegarde (3/5 blocs)
+2026-06-20 07:25:09 [INFO    ] [STORYBOARD] OK 8 jobs
+2026-06-20 07:25:09 [INFO    ] =======================================================
+2026-06-20 07:25:09 [INFO    ] BLOC 4 -- PRODUCTION COMFYUI
+2026-06-20 07:25:09 [INFO    ] =======================================================
+2026-06-20 07:33:59 [INFO    ] [WATCHDOG/FRAME] job0000_20260620_072632_overlord__00001_ -> PASS | nettete=499.1 | luminosite=124.4 | OK
+2026-06-20 07:33:59 [INFO    ] [WATCHDOG/FRAME] job0001_20260620_072743_overlord__00001_ -> PASS | nettete=1842.2 | luminosite=154.4 | OK
+2026-06-20 07:34:00 [INFO    ] [WATCHDOG/FRAME] job0002_20260620_072908_overlord__00001_ -> PASS | nettete=4283.4 | luminosite=119.8 | OK
+2026-06-20 07:34:00 [INFO    ] [WATCHDOG/FRAME] job0003_20260620_073018_overlord__00001_ -> PASS | nettete=4199.8 | luminosite=129.3 | OK
+2026-06-20 07:34:00 [INFO    ] [WATCHDOG/FRAME] job0004_20260620_073123_overlord__00001_ -> PASS | nettete=1081.9 | luminosite=79.0 | OK
+2026-06-20 07:34:01 [INFO    ] [WATCHDOG/FRAME] job0005_20260620_073216_overlord__00001_ -> PASS | nettete=1057.8 | luminosite=71.1 | OK
+2026-06-20 07:34:01 [WARNING ] [WATCHDOG/FRAME] job0006_20260620_073306_overlord__00001_ -> FAIL | nettete=317.7 | luminosite=159.0 | problemes=['Image monochrome/artefact (color_std=8.3)']
+2026-06-20 07:34:01 [INFO    ] [WATCHDOG/FRAME] job0007_20260620_073359_overlord__00001_ -> PASS | nettete=1587.6 | luminosite=88.0 | OK
+2026-06-20 07:34:02 [WARNING ] [WATCHDOG] Rupture style : frame 1->2 (drift=0.579)
+2026-06-20 07:34:02 [WARNING ] [WATCHDOG] Rupture style : frame 2->3 (drift=0.503)
+2026-06-20 07:34:02 [WARNING ] [WATCHDOG] Rupture style : frame 3->4 (drift=0.512)
+2026-06-20 07:34:02 [WARNING ] [WATCHDOG] Rupture style : frame 5->6 (drift=0.851)
+2026-06-20 07:34:02 [WARNING ] [WATCHDOG] Rupture style : frame 6->7 (drift=0.910)
+2026-06-20 07:34:02 [WARNING ] [WATCHDOG] 5 rupture(s) de style aux frames : [2, 3, 4, 6, 7]
+2026-06-20 07:34:02 [INFO    ] [CRITIQUE] production->postprod | PASS | score=80 | OK
+2026-06-20 07:34:02 [INFO    ] [PRODUCTION] OK 8 succes | 0 echecs
+2026-06-20 07:34:02 [INFO    ] =======================================================
+2026-06-20 07:34:02 [INFO    ] BLOC 5 -- POST-PRODUCTION
+2026-06-20 07:34:02 [INFO    ] =======================================================
+2026-06-20 07:34:02 [INFO    ] [POST-PROD] Pipeline demarre — preset=anime_1080p
+2026-06-20 07:34:02 [WARNING ] [POST-PROD] Fallback : 0 images alpha
+2026-06-20 07:34:02 [ERROR   ] [POST-PROD] Aucune image trouvee
+2026-06-20 07:34:02 [INFO    ] [POST-PROD] OK Export -> N/A
+2026-06-20 07:34:02 [INFO    ] =======================================================
+2026-06-20 07:34:02 [INFO    ] BLOC 3D -- MODELISATION
+2026-06-20 07:34:02 [INFO    ] =======================================================
+2026-06-20 07:34:02 [INFO    ] [3D] Moteurs disponibles : ['trimesh']
+2026-06-20 07:34:02 [INFO    ] [3D] OK 0/0 modele(s)
+2026-06-20 07:34:07 [INFO    ] [WATCHDOG] Arrete
+2026-06-20 07:34:07 [INFO    ] [WATCHDOG] Bilan : 8 frames | echecs=1 | ComfyUI uptime=570s
+2026-06-20 07:34:07 [INFO    ] [CHECKPOINT] Pipeline complete : maestro_20260620_072431
+2026-06-20 07:34:07 [INFO    ] [CRITIQUE] Bilan : 4 verifications | score moyen=80.0 | sante=STABLE
+2026-06-20 07:34:07 [INFO    ] ============================================================
+2026-06-20 07:34:07 [INFO    ] PIPELINE TERMINE -- run_id=maestro_20260620_072431 | duree=571s
+2026-06-20 07:34:07 [INFO    ] ============================================================

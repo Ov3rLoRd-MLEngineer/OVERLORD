@@ -1,0 +1,12 @@
+{
+  "name": "quality_gate",
+  "version": "V1.60",
+  "checksum": "55e87db2bd50ff35",
+  "lines": 198,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.336617",
+  "path": "agents\\quality_gate.py"
+}

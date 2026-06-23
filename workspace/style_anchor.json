@@ -1,0 +1,13 @@
+{
+  "run_id": "maestro_20260623_174628",
+  "emotion_arc": "wonder",
+  "base_seed": 32589,
+  "lora": "mari-makinami-rebuild-ponyxl-lora-nochekaiser.safetensors",
+  "palette": [
+    "vibrant blue",
+    "golden yellow",
+    "white highlights"
+  ],
+  "coherence_suffix": "consistent style, same character design, unified color palette, anime style, sharp lineart",
+  "palette_str": "vibrant blue, golden yellow, white highlights"
+}

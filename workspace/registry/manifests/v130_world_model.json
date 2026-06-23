@@ -1,0 +1,12 @@
+{
+  "name": "v130_world_model",
+  "version": "V1.30",
+  "checksum": "07f63f717cdf0267",
+  "lines": 195,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.982783",
+  "path": "agents\\v130_world_model.py"
+}

@@ -1,0 +1,113 @@
+@echo off
+chcp 65001 >nul
+title Ov3rLoRd Pipeline v1.45
+cd /d "%~dp0"
+
+:: Lire le .env proprement (setx une seule fois si nécessaire)
+if exist ".env" (
+    for /f "usebackq tokens=1,* delims==" %%A in (".env") do (
+        if not "%%A"=="" if not "%%B"=="" (
+            set "%%A=%%B"
+        )
+    )
+)
+
+cls
+echo.
+echo  ================================================================
+echo    _  _     ___ ___ _    ___  ___  ___
+echo   ^| ^|^| ^|   ^|__ ^\ ^\ ^| ^|  ^/ _ \^|  _ \^|   \
+echo   ^| ^|^| ^|_   __) ^\ .` ^| ^| ^| ^| ^| ^|_) ^| ^|) ^|
+echo   ^|___/ ^| ^|/ __/^|_^|\_^| ^|  \___/^|  __/^|___/
+echo   ^|____/  ^|_____^|         ^|_^|       Pipeline v1.45
+echo  ================================================================
+echo.
+echo  Dossier : %~dp0
+echo.
+
+:MENU
+echo  ┌─────────────────────────────────────────────────┐
+echo  │  MODULES DISPONIBLES                            │
+echo  ├─────────────────────────────────────────────────┤
+echo  │  [1]  Interface principale    launcher.py       │
+echo  │  [2]  Oracle CLI              oracle_interface  │
+echo  │  [3]  Agent apprenant         learning_ui.py    │
+echo  │  [4]  Chat Llama              llama_chat.py     │
+echo  │  [5]  Serveur de licences     licence_server    │
+echo  │  [6]  Dashboard v1.30         agents\v130_dash  │
+echo  │  [7]  Dashboard v1.20         agents\v120_dash  │
+echo  │  [8]  Graphe neuronal         agents\v110_graph │
+echo  │  [9]  Gestionnaire stockage   storage_manager   │
+echo  │  [M]  Pipeline Maestro        maestro.py        │
+echo  │  [T]  Tests pipeline          test_pipeline.py  │
+echo  │  [S]  Self-Improve            self_improve.py   │
+echo  │  [0]  Quitter                                   │
+echo  └─────────────────────────────────────────────────┘
+echo.
+set /p choice="  Choix : "
+
+if /i "%choice%"=="1" (
+    python launcher.py
+    if errorlevel 1 echo [ERREUR] launcher.py a planté. Code : %errorlevel%
+    goto MENU
+)
+if /i "%choice%"=="2" (
+    python oracle_interface.py
+    if errorlevel 1 echo [ERREUR] oracle_interface.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="3" (
+    python learning_ui.py
+    if errorlevel 1 echo [ERREUR] learning_ui.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="4" (
+    python llama_chat.py
+    if errorlevel 1 echo [ERREUR] llama_chat.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="5" (
+    python licence_server.py
+    if errorlevel 1 echo [ERREUR] licence_server.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="6" (
+    python agents\v130_dashboard.py
+    if errorlevel 1 echo [ERREUR] v130_dashboard.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="7" (
+    python agents\v120_dashboard.py
+    if errorlevel 1 echo [ERREUR] v120_dashboard.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="8" (
+    python agents\v110_graph_ui.py
+    if errorlevel 1 echo [ERREUR] v110_graph_ui.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="9" (
+    python storage_manager.py
+    if errorlevel 1 echo [ERREUR] storage_manager.py a planté.
+    goto MENU
+)
+if /i "%choice%"=="M" (
+    set /p MEDIA="  Media type [anime/manga/3d] : "
+    set /p UNIVERSE="  Univers (ex: Dragon Ball) : "
+    python maestro.py --media-type %MEDIA% --universe "%UNIVERSE%"
+    if errorlevel 1 echo [ERREUR] maestro.py a planté.
+    pause
+    goto MENU
+)
+if /i "%choice%"=="T" (
+    python test_pipeline.py --quick
+    pause
+    goto MENU
+)
+if /i "%choice%"=="S" (
+    python self_improve.py --mode status
+    pause
+    goto MENU
+)
+if /i "%choice%"=="0" exit /b 0
+goto MENU

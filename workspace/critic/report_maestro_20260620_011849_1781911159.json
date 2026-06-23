@@ -1,0 +1,7 @@
+{
+  "handoff": "scenario->storyboard",
+  "verdict": "reject",
+  "score": 10,
+  "reason": "Erreur dans les donnees : json_parse_failed",
+  "ts": "2026-06-19T23:19:14.182814+00:00"
+}

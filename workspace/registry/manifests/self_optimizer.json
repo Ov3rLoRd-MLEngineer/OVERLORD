@@ -1,0 +1,13 @@
+{
+  "name": "self_optimizer",
+  "version": "V1.70",
+  "checksum": "2c684423cbd3bcda",
+  "lines": 405,
+  "dependencies": [
+    "overlord_utils",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.509478",
+  "path": "agents\\self_optimizer.py"
+}

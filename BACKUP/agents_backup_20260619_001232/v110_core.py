@@ -1,0 +1,765 @@
+"""
+agents/v110_core.py — OverLord V1.10 — Extensions Neuronales Avancées
+Inspiré des mécanismes internes de Claude et des architectures Transformer modernes.
+
+Nouvelles fonctionnalités V1.10 :
+  1. Residual Connections  — outputs enrichissent les inputs suivants
+  2. Dynamic Temperature   — créativité réglable par agent
+  3. Circuit Breaker       — isole les agents défaillants
+  4. Hot Reload            — modifier le code sans redémarrer
+  5. Backpressure          — synchronise la vitesse des agents
+  6. Event Sourcing        — rejouabilité complète de chaque run
+  7. Confidence Calibration— l'agent sait quand il ne sait pas
+  8. KV Cache              — évite de recalculer ce qui n'a pas changé
+"""
+
+import ast
+import json
+import importlib
+import importlib.util
+import hashlib
+import logging
+import threading
+import time
+import math
+import queue
+from pathlib import Path
+from datetime import datetime
+from dataclasses import dataclass, field
+from typing import Any, Callable, Optional
+from enum import Enum
+
+EVENTS_DIR = Path("workspace/events")
+CACHE_DIR  = Path("workspace/kv_cache")
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 1. RESIDUAL CONNECTIONS
+# Inspiré des connexions résiduelles de ResNet / GPT
+# L'output d'un bloc s'ajoute à l'input du suivant
+# → évite la dégradation du signal sur les longues chaînes d'agents
+# ══════════════════════════════════════════════════════════════════════
+
+class ResidualPipeline:
+    """
+    Pipeline avec connexions résiduelles entre les blocs.
+
+    Sans résiduel :  [Sourcing] → [Scénario] → [Storyboard] → ...
+    Avec résiduel :  [Sourcing] → [Scénario + ε(Sourcing)] → [Storyboard + ε(Scénario+Sourcing)]
+
+    L'information de chaque étape se propage à TOUTES les étapes suivantes,
+    pondérée par un facteur ε (résidual_weight, défaut 0.2).
+    Résultat : le storyboard "se souvient" du brief sourcing sans qu'on le lui rappelle.
+    """
+
+    def __init__(self, residual_weight: float = 0.2,
+                 logger: logging.Logger = None):
+        self.log    = logger or logging.getLogger("residual")
+        self.weight = residual_weight   # ε — contribution des blocs précédents
+        self._accumulated: dict = {}    # état résiduel cumulé
+
+    def run_with_residual(self, blocks: list[tuple[str, Callable]],
+                           initial_input: dict) -> dict:
+        """
+        Exécute une séquence de blocs avec connexions résiduelles.
+
+        blocks : [(nom, fonction), ...]
+        initial_input : données d'entrée initiales
+
+        Chaque fonction reçoit : input_courant + résiduel pondéré des blocs précédents
+        """
+        current_input = dict(initial_input)
+        self._accumulated = {}
+        results = {}
+
+        for block_name, block_fn in blocks:
+            # Injecter le résiduel dans l'input
+            enriched_input = dict(current_input)
+            if self._accumulated:
+                enriched_input["_residual"] = {
+                    k: v for k, v in self._accumulated.items()
+                }
+                self.log.debug(
+                    f"[RESIDUAL] {block_name} reçoit résiduel "
+                    f"de {list(self._accumulated.keys())}"
+                )
+
+            # Exécuter le bloc
+            start = time.time()
+            try:
+                result = block_fn(enriched_input)
+                duration = time.time() - start
+                self.log.info(
+                    f"[RESIDUAL] ✓ {block_name} ({duration:.1f}s)"
+                )
+            except Exception as e:
+                self.log.error(f"[RESIDUAL] ✗ {block_name} : {e}")
+                result = {"error": str(e)}
+
+            results[block_name] = result
+
+            # Accumuler dans le résiduel (pondéré par ε)
+            if isinstance(result, dict):
+                for k, v in result.items():
+                    if k.startswith("_"):
+                        continue
+                    if k in self._accumulated:
+                        # Fusion pondérée : ancienne valeur × (1-ε) + nouvelle × ε
+                        old = self._accumulated[k]
+                        if isinstance(old, (int, float)) and isinstance(v, (int, float)):
+                            self._accumulated[k] = old * (1-self.weight) + v * self.weight
+                        else:
+                            self._accumulated[k] = v  # remplacement si non numérique
+                    else:
+                        self._accumulated[k] = v
+
+            # Le résultat devient le prochain input (+ résiduel)
+            current_input = enriched_input
+            if isinstance(result, dict):
+                current_input.update({k:v for k,v in result.items() if not k.startswith("_")})
+
+        return {
+            "blocks_run": len(blocks),
+            "final_state": current_input,
+            "results":     results,
+            "residual":    dict(self._accumulated),
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 2. DYNAMIC TEMPERATURE
+# Comme le paramètre temperature des LLMs — contrôle la créativité
+# ══════════════════════════════════════════════════════════════════════
+
+class TemperatureController:
+    """
+    Contrôleur de température dynamique pour les agents.
+
+    temperature=0.0 → déterministe, reproductible, conservateur
+    temperature=1.0 → créatif, varié, exploratoire
+    temperature=2.0 → chaotique, très expérimental
+
+    Chaque agent peut avoir sa propre température, modifiable en live.
+    Le système adapte aussi automatiquement la température selon
+    l'historique de succès (si ça marche, on exploite ; sinon, on explore).
+    """
+
+    DEFAULT_TEMPS = {
+        "sourcing":    0.7,   # un peu exploratoire
+        "scenario":    0.9,   # créatif
+        "storyboard":  0.8,   # équilibré
+        "production":  0.3,   # déterministe (reproductibilité)
+        "postprod":    0.5,   # modéré
+        "critic":      0.1,   # très déterministe
+        "watchdog":    0.0,   # purement analytique
+        "learning":    1.2,   # très exploratoire
+        "legacy":      0.4,   # conservateur (modif de code = risque)
+        "marketing":   1.0,   # créatif
+        "community":   0.8,   # naturel mais varié
+    }
+
+    def __init__(self):
+        self._temps: dict[str, float] = dict(self.DEFAULT_TEMPS)
+        self._history: dict[str, list] = {}   # historique succès par agent
+        self._lock = threading.Lock()
+
+    def get(self, agent: str) -> float:
+        with self._lock:
+            return self._temps.get(agent, 0.7)
+
+    def set(self, agent: str, temp: float):
+        temp = max(0.0, min(2.0, temp))
+        with self._lock:
+            self._temps[agent] = temp
+
+    def adapt(self, agent: str, success: bool, score: float = 0.5):
+        """
+        Adaptation automatique de la température selon le succès.
+        Succès répétés → exploitation (temp ↓)
+        Échecs répétés → exploration (temp ↑)
+        """
+        with self._lock:
+            if agent not in self._history:
+                self._history[agent] = []
+            self._history[agent].append((success, score))
+            # Garder les 10 dernières
+            self._history[agent] = self._history[agent][-10:]
+
+            recent = self._history[agent]
+            if len(recent) < 3:
+                return
+
+            success_rate = sum(1 for s,_ in recent if s) / len(recent)
+            avg_score    = sum(sc for _,sc in recent) / len(recent)
+            current      = self._temps.get(agent, 0.7)
+
+            if success_rate > 0.8 and avg_score > 0.7:
+                # Ça marche → légère réduction (exploitation)
+                self._temps[agent] = max(0.1, current - 0.05)
+            elif success_rate < 0.4 or avg_score < 0.4:
+                # Ça ne marche pas → augmenter (exploration)
+                self._temps[agent] = min(1.5, current + 0.1)
+
+    def apply_to_llm_params(self, agent: str,
+                             base_params: dict) -> dict:
+        """Injecte la température dans les paramètres d'un appel LLM."""
+        temp   = self.get(agent)
+        params = dict(base_params)
+        # Claude/Ollama : temperature 0-1
+        params["temperature"] = min(1.0, temp)
+        # ComfyUI : CFG inversement corrélé à la température
+        if "cfg" in params:
+            # haute temp → CFG bas (plus créatif)
+            # basse temp → CFG haut (plus fidèle au prompt)
+            params["cfg"] = round(params["cfg"] * (1.5 - temp * 0.5), 1)
+            params["cfg"] = max(3.0, min(12.0, params["cfg"]))
+        return params
+
+    def get_all(self) -> dict:
+        with self._lock:
+            return dict(self._temps)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 3. CIRCUIT BREAKER
+# Isole automatiquement un agent défaillant
+# ══════════════════════════════════════════════════════════════════════
+
+class CircuitState(Enum):
+    CLOSED   = "closed"    # normal, laisse passer
+    OPEN     = "open"      # bloqué (trop d'échecs)
+    HALF_OPEN = "half_open"# test — on essaie de nouveau
+
+
+@dataclass
+class CircuitBreaker:
+    """
+    Circuit breaker par agent.
+    Si un agent échoue N fois de suite → le circuit s'ouvre.
+    Après un délai, on réessaie (half_open).
+    Si ça marche → closed (normal). Sinon → open à nouveau.
+    """
+    name:           str
+    failure_threshold: int   = 3      # N échecs consécutifs → OPEN
+    recovery_timeout: float  = 60.0   # secondes avant de retenter
+    state:          CircuitState = CircuitState.CLOSED
+    failure_count:  int      = 0
+    last_failure:   float    = 0.0
+    success_count:  int      = 0      # en HALF_OPEN
+
+    def call(self, fn: Callable, *args, **kwargs) -> Any:
+        """Exécute fn à travers le circuit breaker."""
+        if self.state == CircuitState.OPEN:
+            elapsed = time.time() - self.last_failure
+            if elapsed >= self.recovery_timeout:
+                self.state = CircuitState.HALF_OPEN
+            else:
+                raise RuntimeError(
+                    f"[CIRCUIT/{self.name}] Circuit OUVERT "
+                    f"({self.recovery_timeout - elapsed:.0f}s restantes)"
+                )
+        try:
+            result = fn(*args, **kwargs)
+            self._on_success()
+            return result
+        except Exception as e:
+            self._on_failure()
+            raise
+
+    def _on_success(self):
+        if self.state == CircuitState.HALF_OPEN:
+            self.success_count += 1
+            if self.success_count >= 2:
+                self.state         = CircuitState.CLOSED
+                self.failure_count = 0
+                self.success_count = 0
+        elif self.state == CircuitState.CLOSED:
+            self.failure_count = max(0, self.failure_count - 1)
+
+    def _on_failure(self):
+        self.failure_count += 1
+        self.last_failure   = time.time()
+        self.success_count  = 0
+        if self.failure_count >= self.failure_threshold:
+            self.state = CircuitState.OPEN
+
+    def status(self) -> dict:
+        return {
+            "name":          self.name,
+            "state":         self.state.value,
+            "failures":      self.failure_count,
+            "threshold":     self.failure_threshold,
+            "time_to_retry": max(0, self.recovery_timeout -
+                                  (time.time()-self.last_failure))
+                              if self.state == CircuitState.OPEN else 0,
+        }
+
+
+class CircuitBreakerRegistry:
+    """Registre central des circuit breakers."""
+    _breakers: dict[str, CircuitBreaker] = {}
+    _lock = threading.Lock()
+
+    @classmethod
+    def get(cls, name: str, **kwargs) -> CircuitBreaker:
+        with cls._lock:
+            if name not in cls._breakers:
+                cls._breakers[name] = CircuitBreaker(name=name, **kwargs)
+            return cls._breakers[name]
+
+    @classmethod
+    def status_all(cls) -> list[dict]:
+        with cls._lock:
+            return [b.status() for b in cls._breakers.values()]
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 4. HOT RELOAD
+# Recharge un agent modifié sans redémarrer le pipeline
+# ══════════════════════════════════════════════════════════════════════
+
+class HotReloader:
+    """
+    Surveille les fichiers Python des agents et les recharge à la volée
+    quand ils sont modifiés — sans redémarrer le pipeline.
+
+    Équivalent de ce que font les frameworks web (Flask debug mode).
+    """
+
+    def __init__(self, watch_dir: str, logger: logging.Logger = None):
+        self.log       = logger or logging.getLogger("hotreload")
+        self.watch_dir = Path(watch_dir)
+        self._modules: dict[str, tuple] = {}   # path → (module, mtime, hash)
+        self._running  = False
+        self._lock     = threading.Lock()
+        self._callbacks: list[Callable] = []
+
+    def add_callback(self, cb: Callable):
+        """Appelé à chaque rechargement : cb(module_name, new_module)"""
+        self._callbacks.append(cb)
+
+    def _file_hash(self, path: Path) -> str:
+        return hashlib.md5(path.read_bytes()).hexdigest()
+
+    def register(self, py_path: str) -> bool:
+        """Enregistre un fichier pour la surveillance."""
+        p = Path(py_path)
+        if not p.exists():
+            return False
+        try:
+            spec   = importlib.util.spec_from_file_location(p.stem, str(p))
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            with self._lock:
+                self._modules[str(p)] = (module, p.stat().st_mtime, self._file_hash(p))
+            self.log.debug(f"[HOT] Enregistré : {p.name}")
+            return True
+        except Exception as e:
+            self.log.warning(f"[HOT] Register {p.name} : {e}")
+            return False
+
+    def _check_and_reload(self):
+        """Vérifie et recharge les fichiers modifiés."""
+        with self._lock:
+            paths = list(self._modules.keys())
+        for path_str in paths:
+            p = Path(path_str)
+            if not p.exists():
+                continue
+            try:
+                current_mtime = p.stat().st_mtime
+                current_hash  = self._file_hash(p)
+                _, old_mtime, old_hash = self._modules[path_str]
+                if current_hash != old_hash:
+                    self.log.info(f"[HOT] Rechargement : {p.name}")
+                    spec   = importlib.util.spec_from_file_location(p.stem, str(p))
+                    module = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(module)
+                    with self._lock:
+                        self._modules[path_str] = (module, current_mtime, current_hash)
+                    for cb in self._callbacks:
+                        try: cb(p.stem, module)
+                        except Exception: pass
+            except SyntaxError as e:
+                self.log.error(f"[HOT] Syntaxe invalide {p.name} : {e} — rechargement ignoré")
+            except Exception:
+                pass
+
+    def start(self, interval_s: float = 2.0):
+        """Démarre la surveillance en tâche de fond."""
+        self._running = True
+        def _loop():
+            while self._running:
+                self._check_and_reload()
+                time.sleep(interval_s)
+        t = threading.Thread(target=_loop, daemon=True)
+        t.start()
+        self.log.info(f"[HOT] Surveillance démarrée — {len(self._modules)} modules")
+
+    def stop(self):
+        self._running = False
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 5. KV CACHE
+# Évite de recalculer ce qui n'a pas changé — comme le KV cache des LLMs
+# ══════════════════════════════════════════════════════════════════════
+
+class KVCache:
+    """
+    Cache clé-valeur pour éviter les recalculs coûteux.
+    Inspiré du KV cache des transformers : on stocke les résultats
+    intermédiaires et on les réutilise si l'input n'a pas changé.
+
+    Usage typique : ne pas rappeler le LLM si le prompt n'a pas changé.
+    """
+
+    def __init__(self, max_size: int = 200, ttl_s: float = 3600):
+        self._cache:   dict[str, dict] = {}
+        self._max_size = max_size
+        self._ttl_s    = ttl_s
+        self._lock     = threading.Lock()
+        self._hits     = 0
+        self._misses   = 0
+        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+    def _key(self, *args, **kwargs) -> str:
+        content = json.dumps({"args": list(args), "kwargs": kwargs},
+                              sort_keys=True, ensure_ascii=False, default=str)
+        return hashlib.sha256(content.encode()).hexdigest()[:16]
+
+    def get(self, *args, **kwargs) -> tuple[bool, Any]:
+        """Retourne (hit, valeur) — hit=True si trouvé en cache."""
+        k = self._key(*args, **kwargs)
+        with self._lock:
+            entry = self._cache.get(k)
+            if entry and (time.time() - entry["ts"]) < self._ttl_s:
+                self._hits += 1
+                return True, entry["value"]
+            self._misses += 1
+            return False, None
+
+    def set(self, value: Any, *args, **kwargs):
+        """Met en cache une valeur."""
+        k = self._key(*args, **kwargs)
+        with self._lock:
+            self._cache[k] = {"value": value, "ts": time.time()}
+            if len(self._cache) > self._max_size:
+                # LRU simplifié : supprimer les plus anciens
+                oldest = sorted(self._cache.items(),
+                                key=lambda x: x[1]["ts"])
+                for ok, _ in oldest[:self._max_size//4]:
+                    del self._cache[ok]
+
+    def cached(self, fn: Callable) -> Callable:
+        """Décorateur : met automatiquement en cache le résultat."""
+        def wrapper(*args, **kwargs):
+            hit, val = self.get(*args, **kwargs)
+            if hit:
+                return val
+            result = fn(*args, **kwargs)
+            self.set(result, *args, **kwargs)
+            return result
+        return wrapper
+
+    def stats(self) -> dict:
+        total  = self._hits + self._misses
+        return {
+            "hits":    self._hits,
+            "misses":  self._misses,
+            "hit_rate": round(self._hits/total*100, 1) if total else 0,
+            "size":    len(self._cache),
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 6. EVENT SOURCING
+# Rejouabilité complète de n'importe quel run
+# ══════════════════════════════════════════════════════════════════════
+
+class EventType(Enum):
+    AGENT_STARTED  = "agent_started"
+    AGENT_ENDED    = "agent_ended"
+    CONTEXT_WRITE  = "context_write"
+    PARAM_CHANGE   = "param_change"
+    LLM_CALL       = "llm_call"
+    IMAGE_GENERATED= "image_generated"
+    ERROR          = "error"
+    HUMAN_INPUT    = "human_input"
+    FEEDBACK       = "feedback"
+
+
+@dataclass
+class Event:
+    id:        str
+    type:      EventType
+    agent:     str
+    data:      dict
+    timestamp: float = field(default_factory=time.time)
+    run_id:    str = ""
+
+
+class EventStore:
+    """
+    Stocke tous les événements du pipeline pour rejouabilité complète.
+    Si quelque chose se passe mal, on peut "rejouer" n'importe quel run
+    depuis n'importe quel point.
+    """
+
+    def __init__(self, run_id: str):
+        self.run_id  = run_id
+        self._events: list[Event] = []
+        self._lock   = threading.Lock()
+        EVENTS_DIR.mkdir(parents=True, exist_ok=True)
+        self._file   = EVENTS_DIR / f"{run_id}.jsonl"
+
+    def record(self, event_type: EventType, agent: str, data: dict) -> Event:
+        """Enregistre un événement."""
+        event = Event(
+            id=hashlib.md5(f"{agent}{time.time()}".encode()).hexdigest()[:8],
+            type=event_type, agent=agent, data=data, run_id=self.run_id,
+        )
+        with self._lock:
+            self._events.append(event)
+            # Append-only (JSONL)
+            with open(self._file, "a", encoding="utf-8") as f:
+                f.write(json.dumps({
+                    "id": event.id, "type": event.type.value,
+                    "agent": event.agent, "data": event.data,
+                    "timestamp": event.timestamp, "run_id": event.run_id,
+                }, ensure_ascii=False) + "\n")
+        return event
+
+    def replay_from(self, from_agent: str) -> list[Event]:
+        """Retourne les événements depuis un agent donné pour rejouabilité."""
+        with self._lock:
+            found = False
+            replay = []
+            for e in self._events:
+                if e.agent == from_agent:
+                    found = True
+                if found:
+                    replay.append(e)
+        return replay
+
+    def get_timeline(self) -> list[dict]:
+        """Timeline complète du run."""
+        with self._lock:
+            return [
+                {
+                    "time":  datetime.fromtimestamp(e.timestamp).strftime("%H:%M:%S.%f")[:11],
+                    "agent": e.agent,
+                    "type":  e.type.value,
+                    "data":  str(e.data)[:80],
+                }
+                for e in self._events
+            ]
+
+    @classmethod
+    def load(cls, run_id: str) -> "EventStore":
+        """Charge un event store existant."""
+        store = cls(run_id)
+        f     = EVENTS_DIR / f"{run_id}.jsonl"
+        if f.exists():
+            for line in f.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                try:
+                    d = json.loads(line)
+                    store._events.append(Event(
+                        id=d["id"], type=EventType(d["type"]),
+                        agent=d["agent"], data=d["data"],
+                        timestamp=d["timestamp"], run_id=d["run_id"],
+                    ))
+                except Exception:
+                    pass
+        return store
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 7. CONFIDENCE CALIBRATION
+# L'agent sait quand il ne sait pas
+# ══════════════════════════════════════════════════════════════════════
+
+class ConfidenceCalibrator:
+    """
+    Calibre la confiance d'un agent selon son historique de précision.
+    Si un agent dit "je suis sûr à 90%" mais se trompe 50% du temps
+    → il est sur-confiant. Le calibrateur corrige ça.
+
+    Inspiré de la calibration de confiance dans les LLMs modernes.
+    """
+
+    def __init__(self):
+        self._history: dict[str, list] = {}   # agent → [(declared, actual)]
+
+    def record(self, agent: str,
+               declared_confidence: float,
+               actual_success: bool):
+        """Enregistre une prédiction et son résultat."""
+        if agent not in self._history:
+            self._history[agent] = []
+        self._history[agent].append((declared_confidence, float(actual_success)))
+
+    def calibrate(self, agent: str,
+                  raw_confidence: float) -> float:
+        """Retourne la confiance calibrée selon l'historique."""
+        history = self._history.get(agent, [])
+        if len(history) < 5:
+            return raw_confidence   # pas assez de données
+
+        # Calibration de Platt simplifiée
+        declared  = [h[0] for h in history]
+        actual    = [h[1] for h in history]
+        avg_decl  = sum(declared) / len(declared)
+        avg_act   = sum(actual)   / len(actual)
+        ratio     = avg_act / (avg_decl + 1e-9)
+        calibrated = raw_confidence * ratio
+        return max(0.01, min(0.99, calibrated))
+
+    def is_uncertain(self, agent: str,
+                      confidence: float,
+                      threshold: float = 0.5) -> bool:
+        """Retourne True si l'agent est peu sûr."""
+        calibrated = self.calibrate(agent, confidence)
+        return calibrated < threshold
+
+    def get_agent_reliability(self, agent: str) -> dict:
+        """Score de fiabilité d'un agent."""
+        history = self._history.get(agent, [])
+        if not history:
+            return {"agent": agent, "reliability": 0.5, "n_samples": 0}
+        avg_success = sum(h[1] for h in history) / len(history)
+        avg_conf    = sum(h[0] for h in history) / len(history)
+        calibration_error = abs(avg_conf - avg_success)
+        return {
+            "agent":             agent,
+            "reliability":       round(avg_success, 3),
+            "avg_confidence":    round(avg_conf, 3),
+            "calibration_error": round(calibration_error, 3),
+            "n_samples":         len(history),
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# FAÇADE V1.10 — Accès unifié à tous les composants
+# ══════════════════════════════════════════════════════════════════════
+
+class OverLordV110:
+    """
+    Point d'entrée unique pour les nouvelles fonctionnalités V1.10.
+    À intégrer dans neural_orchestrator.py et maestro.py.
+    """
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log         = logger or logging.getLogger("v110")
+        self.residual    = ResidualPipeline(logger=self.log)
+        self.temperature = TemperatureController()
+        self.breakers    = CircuitBreakerRegistry()
+        self.hot_reload  = HotReloader("agents", logger=self.log)
+        self.kv_cache    = KVCache()
+        self.calibrator  = ConfidenceCalibrator()
+        self._event_stores: dict[str, EventStore] = {}
+
+    def new_run(self, run_id: str) -> EventStore:
+        store = EventStore(run_id)
+        self._event_stores[run_id] = store
+        return store
+
+    def get_run(self, run_id: str) -> Optional[EventStore]:
+        return self._event_stores.get(run_id)
+
+    def safe_call(self, agent_name: str,
+                   fn: Callable, *args, **kwargs) -> Any:
+        """
+        Appelle fn à travers le circuit breaker de l'agent.
+        Thread-safe, avec logging automatique.
+        """
+        breaker = self.breakers.get(agent_name)
+        try:
+            result = breaker.call(fn, *args, **kwargs)
+            self.calibrator.record(agent_name, 0.8, True)
+            self.temperature.adapt(agent_name, True, 0.8)
+            return result
+        except RuntimeError as e:
+            # Circuit ouvert
+            self.log.warning(f"[V110] {e}")
+            return None
+        except Exception as e:
+            self.calibrator.record(agent_name, 0.8, False)
+            self.temperature.adapt(agent_name, False, 0.2)
+            self.log.error(f"[V110] Erreur {agent_name} : {e}")
+            return None
+
+    def get_dashboard(self) -> dict:
+        return {
+            "version":     "1.10",
+            "temperatures": self.temperature.get_all(),
+            "circuits":    CircuitBreakerRegistry.status_all(),
+            "kv_cache":    self.kv_cache.stats(),
+            "hot_modules": len(self.hot_reload._modules),
+            "event_runs":  len(self._event_stores),
+        }
+
+
+# Singleton
+_v110: Optional[OverLordV110] = None
+
+def get_v110(logger=None) -> OverLordV110:
+    global _v110
+    if _v110 is None:
+        _v110 = OverLordV110(logger)
+    return _v110
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    log = logging.getLogger("v110_test")
+
+    v110 = OverLordV110(log)
+
+    print("=== V1.10 — Tests des composants ===\n")
+
+    # Residual connections
+    def bloc_sourcing(inp):
+        return {"trend": "dark_fantasy", "score": 0.85}
+    def bloc_scenario(inp):
+        residual = inp.get("_residual",{})
+        trend    = residual.get("trend","neutre")
+        return {"title": f"Histoire {trend}", "acts": 3}
+    def bloc_storyboard(inp):
+        residual = inp.get("_residual",{})
+        return {"shots": 12, "inherited_trend": residual.get("trend","?")}
+
+    result = v110.residual.run_with_residual(
+        [("sourcing",bloc_sourcing),("scenario",bloc_scenario),("storyboard",bloc_storyboard)],
+        initial_input={"media": "anime"}
+    )
+    print(f"Residual : storyboard voit trend = '{result['results']['storyboard']['inherited_trend']}'")
+
+    # Temperature
+    print(f"\nTempérature scenario    : {v110.temperature.get('scenario')}")
+    print(f"Température watchdog    : {v110.temperature.get('watchdog')}")
+    v110.temperature.adapt("scenario", False, 0.2)  # simuler échec
+    print(f"Température scenario +  : {v110.temperature.get('scenario'):.2f} (après échec)")
+
+    # Circuit breaker
+    cb = CircuitBreakerRegistry.get("test_agent", failure_threshold=2)
+    for i in range(3):
+        try:
+            cb.call(lambda: (_ for _ in ()).throw(ValueError("Erreur simulée")))
+        except Exception:
+            pass
+    print(f"\nCircuit test_agent : {cb.status()['state']}")
+
+    # KV Cache
+    cache = v110.kv_cache
+    cache.set("résultat coûteux", "prompt=test", "agent=sourcing")
+    hit, val = cache.get("prompt=test", "agent=sourcing")
+    print(f"\nKV Cache hit : {hit} | valeur : {val}")
+    print(f"Stats cache  : {cache.stats()}")
+
+    # Dashboard
+    print(f"\n=== DASHBOARD V1.10 ===")
+    import json as _j
+    print(_j.dumps(v110.get_dashboard(), indent=2, ensure_ascii=False))

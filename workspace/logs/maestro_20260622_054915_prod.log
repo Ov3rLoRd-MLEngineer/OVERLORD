@@ -1,0 +1,17 @@
+2026-06-22 05:49:18 [INFO    ] [SUPERVISOR] Batch started : 3 jobs | run_id=maestro_20260622_054915_prod
+2026-06-22 05:49:18 [INFO    ] [SUPERVISOR] Job 1/3 | hash=c1bed69a
+2026-06-22 05:49:48 [ERROR   ] [SUPERVISOR] Exception job 1 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:50:23 [ERROR   ] [SUPERVISOR] Exception job 1 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:50:58 [ERROR   ] [SUPERVISOR] Exception job 1 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:51:03 [ERROR   ] [SUPERVISOR] Job 1 abandoned
+2026-06-22 05:51:03 [INFO    ] [SUPERVISOR] Job 2/3 | hash=6ef86ad7
+2026-06-22 05:51:33 [ERROR   ] [SUPERVISOR] Exception job 2 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:52:08 [ERROR   ] [SUPERVISOR] Exception job 2 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:52:43 [ERROR   ] [SUPERVISOR] Exception job 2 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:52:48 [ERROR   ] [SUPERVISOR] Job 2 abandoned
+2026-06-22 05:52:48 [INFO    ] [SUPERVISOR] Job 3/3 | hash=ec928e4f
+2026-06-22 05:53:18 [ERROR   ] [SUPERVISOR] Exception job 3 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:53:53 [ERROR   ] [SUPERVISOR] Exception job 3 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:54:28 [ERROR   ] [SUPERVISOR] Exception job 3 : HTTPConnectionPool(host='127.0.0.1', port=8188): Read timed out. (read timeout=30)
+2026-06-22 05:54:33 [ERROR   ] [SUPERVISOR] Job 3 abandoned
+2026-06-22 05:54:33 [INFO    ] [SUPERVISOR] Batch complete : 0/3 succes

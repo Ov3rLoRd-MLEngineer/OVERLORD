@@ -1,0 +1,13 @@
+{
+  "name": "module_manager",
+  "version": "V1.46",
+  "checksum": "facdb3cce5faecf1",
+  "lines": 221,
+  "dependencies": [
+    "overlord_utils",
+    "module_manager"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.164929",
+  "path": "agents\\module_manager.py"
+}

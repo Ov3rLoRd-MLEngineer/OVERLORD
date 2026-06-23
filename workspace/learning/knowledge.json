@@ -1,0 +1,86 @@
+{
+  "optimal_steps": {
+    "value": 27.027284755440288,
+    "confidence": 0.99,
+    "occurrences": 130,
+    "last_seen": "2026-06-17T17:26:24.190714"
+  },
+  "optimal_cfg": {
+    "value": 5.989550000000003,
+    "confidence": 0.99,
+    "occurrences": 130,
+    "last_seen": "2026-06-17T17:26:24.191916"
+  },
+  "optimal_sampler": {
+    "value": "dpm++_2m_sde",
+    "confidence": 0.99,
+    "occurrences": 130,
+    "last_seen": "2026-06-17T17:26:24.192845"
+  },
+  "optimal_strength": {
+    "value": 0.9717428660000001,
+    "confidence": 0.99,
+    "occurrences": 130,
+    "last_seen": "2026-06-17T17:26:24.193748"
+  },
+  "avg_score_sampler_euler_ancestral": {
+    "value": 94.55602859420476,
+    "confidence": 0.82566077995,
+    "occurrences": 11,
+    "last_seen": "2026-06-17T15:27:35.623990"
+  },
+  "avg_score_steps_28": {
+    "value": 95.99176495294364,
+    "confidence": 0.99,
+    "occurrences": 90,
+    "last_seen": "2026-06-17T17:06:15.607824"
+  },
+  "avg_score_steps_40": {
+    "value": 93.33521524156917,
+    "confidence": 0.55,
+    "occurrences": 2,
+    "last_seen": "2026-06-17T16:15:02.614495"
+  },
+  "avg_score_sampler_dpm++_2m": {
+    "value": 93.19182416948154,
+    "confidence": 0.99,
+    "occurrences": 40,
+    "last_seen": "2026-06-17T16:10:46.531073"
+  },
+  "avg_score_steps_29": {
+    "value": 96.44808297140557,
+    "confidence": 0.67195,
+    "occurrences": 5,
+    "last_seen": "2026-06-17T15:28:35.865663"
+  },
+  "avg_score_sampler_dpm++_2m_sde": {
+    "value": 91.1795673956356,
+    "confidence": 0.9828315808985374,
+    "occurrences": 33,
+    "last_seen": "2026-06-17T17:26:24.194633"
+  },
+  "avg_score_steps_24": {
+    "value": 88.09790757074488,
+    "confidence": 0.55,
+    "occurrences": 2,
+    "last_seen": "2026-06-17T16:02:44.152332"
+  },
+  "avg_score_steps_27": {
+    "value": 90.80043780263497,
+    "confidence": 0.9764493565137687,
+    "occurrences": 30,
+    "last_seen": "2026-06-17T17:26:24.195522"
+  },
+  "avg_score_sampler_euler": {
+    "value": 93.27524856528034,
+    "confidence": 0.99,
+    "occurrences": 46,
+    "last_seen": "2026-06-17T17:11:19.816899"
+  },
+  "avg_score_steps_20": {
+    "value": 88.3783785392529,
+    "confidence": 0.5,
+    "occurrences": 1,
+    "last_seen": "2026-06-17T17:07:16.024245"
+  }
+}

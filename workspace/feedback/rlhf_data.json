@@ -1,0 +1,48 @@
+{
+  "feedback": [
+    {
+      "run_id": "test_neural_001",
+      "score": 8.0,
+      "liked": [
+        "composition",
+        "style_visuel"
+      ],
+      "disliked": [
+        "mains"
+      ],
+      "comments": "",
+      "timestamp": "2026-06-19T05:56:43.318046"
+    },
+    {
+      "run_id": "test_neural_001",
+      "score": 8.0,
+      "liked": [
+        "composition",
+        "style_visuel"
+      ],
+      "disliked": [
+        "mains"
+      ],
+      "comments": "",
+      "timestamp": "2026-06-19T05:58:27.352760"
+    },
+    {
+      "run_id": "test_neural_001",
+      "score": 8.0,
+      "liked": [
+        "composition",
+        "style_visuel"
+      ],
+      "disliked": [
+        "mains"
+      ],
+      "comments": "",
+      "timestamp": "2026-06-19T06:15:10.729247"
+    }
+  ],
+  "preferences": {},
+  "param_adjustments": {
+    "enable_hand_detailer": -0.30000000000000004,
+    "cfg": 0.045
+  }
+}

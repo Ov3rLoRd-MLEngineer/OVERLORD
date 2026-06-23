@@ -1,0 +1,770 @@
+"""
+agents/v120_collective.py — Ov3rLoRd V1.20 — Intelligence Collective & Nouveaux Agents
+
+1. Agent Parliament       — vote démocratique pondéré entre agents
+2. Emergent Communication — protocole de communication auto-optimisé
+3. Agent Specialization   — spécialisation automatique par la performance
+4. Collective Intelligence— intelligence collective > somme des parties
+
+NOUVEAUX AGENTS (expansion du champ de vision) :
+5. CareerManagerAgent     — manager de carrière artistique IA
+6. PressAttacheAgent      — attaché de presse / image médiatique
+7. StructuralInnovatorAgent — agent d'innovation structurelle continue
+8. MonetizationAgent      — stratégie de revenus et monétisation
+9. LegalComplianceAgent   — conformité légale (droits, RGPD, watermarks)
+10. TalentScoutAgent      — repérage et analyse des tendances de talent IA
+"""
+
+import json
+import math
+import time
+import random
+import logging
+import threading
+from pathlib import Path
+from dataclasses import dataclass, field
+from typing import Any, Callable, Optional
+from enum import Enum
+import requests
+
+COLLECTIVE_DIR = Path("workspace/collective")
+ANTHROPIC_URL  = "https://api.anthropic.com/v1/messages"
+CLAUDE_MODEL   = "claude-sonnet-4-6"
+
+
+def _llm(prompt: str, system: str = "", max_tokens: int = 400) -> str:
+    try:
+        body = {"model": CLAUDE_MODEL, "max_tokens": max_tokens,
+                "messages": [{"role": "user", "content": prompt}]}
+        if system:
+            body["system"] = system
+        r = requests.post(ANTHROPIC_URL,
+                          headers={
+                "Content-Type": "application/json",
+                "x-api-key": _get_api_key(),
+                "anthropic-version": "2023-06-01",
+            },
+                          json=body, timeout=25)
+        if r.status_code == 200:
+            return r.json()["content"][0]["text"].strip()
+    except Exception:
+        pass
+    return ""
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 1. AGENT PARLIAMENT — Vote démocratique pondéré
+# ══════════════════════════════════════════════════════════════════════
+
+@dataclass
+class Vote:
+    agent:      str
+    option:     str
+    confidence: float = 1.0
+    reasoning:  str   = ""
+
+
+class AgentParliament:
+    """
+    Parlement d'agents — démocratie pondérée par la performance historique.
+
+    Pour les décisions importantes (choix de style, direction narrative,
+    paramètres critiques), tous les agents votent.
+    Le vote est pondéré par le succès historique de chaque agent :
+    un agent fiable a plus de poids qu'un agent qui se trompe souvent.
+
+    Évite la "tyrannie du majoritaire" via le vote Condorcet simplifié.
+    """
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log   = logger or logging.getLogger("parliament")
+        self._agent_weights: dict[str, float] = {}   # historique de fiabilité
+        self._vote_history:  list[dict] = []
+        COLLECTIVE_DIR.mkdir(parents=True, exist_ok=True)
+
+    def set_agent_weight(self, agent: str, weight: float):
+        self._agent_weights[agent] = max(0.1, min(3.0, weight))
+
+    def call_vote(self, question: str,
+                  options: list[str],
+                  participating_agents: list[str],
+                  context: dict = None) -> dict:
+        """
+        Organise un vote entre agents.
+
+        Pour simuler les votes des agents non-connectés en temps réel,
+        utilise le LLM pour générer leurs positions argumentées.
+        """
+        ctx_str = json.dumps(context or {}, ensure_ascii=False)[:300]
+        votes   = []
+
+        for agent in participating_agents:
+            weight = self._agent_weights.get(agent, 1.0)
+            domain_role = {
+                "scenario":   "tu te soucies de la cohérence narrative",
+                "storyboard": "tu penses visuellement et en termes de composition",
+                "production": "tu priorise la faisabilité technique",
+                "critic":     "tu évalues la qualité objective",
+                "marketing":  "tu penses audience et viralité",
+                "learning":   "tu optimises pour l'apprentissage long terme",
+            }.get(agent, "tu as une perspective généraliste")
+
+            prompt = (
+                f"Tu es l'agent '{agent}' d'OverLord Pipeline ({domain_role}).\n"
+                f"Question : {question}\n"
+                f"Options : {', '.join(options)}\n"
+                + (f"Contexte : {ctx_str}\n" if ctx_str else "")
+                + f"Vote pour l'option qui correspond le mieux à ta perspective. "
+                f"Réponds en JSON : "
+                f'{{ "choice": "option exacte", "confidence": 0.8, '
+                f'"reasoning": "1 phrase" }}'
+            )
+            result = _llm(prompt, max_tokens=150)
+            try:
+                if result and result.startswith("```"):
+                    result = "\n".join(result.split("\n")[1:-1])
+                data   = json.loads(result) if result else {}
+                choice = data.get("choice", options[0])
+                # Valider que le choix est dans les options
+                if choice not in options:
+                    choice = min(options, key=lambda o: len(set(o) ^ set(choice)))
+                votes.append(Vote(
+                    agent      = agent,
+                    option     = choice,
+                    confidence = data.get("confidence", 0.7) * weight,
+                    reasoning  = data.get("reasoning", ""),
+                ))
+            except Exception:
+                votes.append(Vote(agent=agent, option=options[0], confidence=0.3))
+
+        # Comptage pondéré
+        tallied: dict[str, float] = {o: 0.0 for o in options}
+        for vote in votes:
+            if vote.option in tallied:
+                tallied[vote.option] += vote.confidence
+
+        total   = sum(tallied.values()) or 1
+        winner  = max(tallied, key=tallied.get)
+        margins = {o: round(v/total*100, 1) for o, v in tallied.items()}
+
+        result_dict = {
+            "question":    question,
+            "winner":      winner,
+            "margins":     margins,
+            "n_voters":    len(votes),
+            "consensus":   margins[winner] > 60,   # majorité qualifiée
+            "votes":       [{"agent":v.agent,"choice":v.option,
+                              "conf":round(v.confidence,2)} for v in votes],
+        }
+        self._vote_history.append(result_dict)
+        self.log.info(
+            f"[PARLIAMENT] '{question[:40]}' → {winner} "
+            f"({margins[winner]:.0f}% | {len(votes)} votants)"
+        )
+        return result_dict
+
+    def get_democratic_params(self, agents: list[str],
+                               param_options: dict) -> dict:
+        """Vote sur chaque paramètre de production."""
+        decided = {}
+        for param, options in param_options.items():
+            if len(options) > 1:
+                result = self.call_vote(
+                    f"Quel {param} choisir ?", options, agents[:4]
+                )
+                decided[param] = result["winner"]
+            else:
+                decided[param] = options[0]
+        return decided
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 2. EMERGENT COMMUNICATION
+# Les agents développent leur propre protocole optimisé
+# ══════════════════════════════════════════════════════════════════════
+
+class EmergentCommunicationProtocol:
+    """
+    Protocole de communication émergent entre agents.
+
+    Inspiré de la recherche sur l'émergence du langage dans les systèmes multi-agents.
+    Les agents développent des "mots" courts pour décrire des concepts complexes,
+    réduisant la bande passante de communication.
+
+    Exemples émergents dans OverLord :
+    "dark_epic_720" → [mood=dark, energy=epic, bpm=720]
+    "char3_action_gold" → [3 personnages, action, palette dorée]
+    """
+
+    def __init__(self):
+        self._vocabulary: dict[str, dict] = {}   # token → signification
+        self._usage_count: dict[str, int] = {}
+        self._compression_history: list[dict] = []
+
+    def encode(self, message: dict) -> str:
+        """Encode un message structuré en token court."""
+        # Vérifier si un token existant couvre ce message
+        for token, meaning in self._vocabulary.items():
+            if all(message.get(k) == v for k, v in meaning.items()):
+                self._usage_count[token] = self._usage_count.get(token, 0) + 1
+                return token
+
+        # Créer un nouveau token
+        token = self._generate_token(message)
+        self._vocabulary[token] = dict(message)
+        self._usage_count[token] = 1
+        return token
+
+    def decode(self, token: str) -> dict:
+        """Décode un token en message structuré."""
+        return dict(self._vocabulary.get(token, {"raw": token}))
+
+    def _generate_token(self, message: dict) -> str:
+        """Génère un token mémorisable depuis un message."""
+        parts = []
+        priority = ["mood", "energy", "style", "n_chars", "action", "palette"]
+        for key in priority:
+            if key in message:
+                val = str(message[key])[:6]
+                parts.append(val)
+        if not parts:
+            parts = [str(v)[:4] for v in list(message.values())[:3]]
+        return "_".join(parts)[:20]
+
+    def compress_context(self, context: dict) -> dict:
+        """Comprime le contexte en tokens."""
+        compressed = {}
+        for k, v in context.items():
+            if isinstance(v, dict) and len(v) > 2:
+                compressed[k] = self.encode(v)
+            else:
+                compressed[k] = v
+        self._compression_history.append({
+            "original_size": len(json.dumps(context)),
+            "compressed_size": len(json.dumps(compressed)),
+        })
+        return compressed
+
+    def vocabulary_stats(self) -> dict:
+        if not self._compression_history:
+            return {"vocabulary_size": len(self._vocabulary), "compressions": 0}
+        avg_ratio = sum(
+            h["compressed_size"]/max(h["original_size"],1)
+            for h in self._compression_history
+        ) / len(self._compression_history)
+        return {
+            "vocabulary_size":   len(self._vocabulary),
+            "compressions":      len(self._compression_history),
+            "avg_compression":   f"{avg_ratio*100:.1f}%",
+            "top_tokens":        sorted(self._usage_count.items(),
+                                        key=lambda x:-x[1])[:5],
+        }
+
+
+# ══════════════════════════════════════════════════════════════════════
+# NOUVEAUX AGENTS — EXPANSION DU CHAMP DE VISION
+# ══════════════════════════════════════════════════════════════════════
+
+class CareerManagerAgent:
+    """
+    Agent Manager de Carrière Artistique.
+
+    Gère la "carrière" de la production OverLord comme un vrai manager :
+    - Stratégie de lancement de contenu
+    - Planification de portfolio
+    - Relations avec les plateformes (Crunchyroll, Webtoon, Wattpad...)
+    - Développement de l'audience sur le long terme
+    - Négociation et licences (templates de contrats)
+    - Positionnement de marque
+    """
+
+    SYSTEM = (
+        "Tu es un manager de carrière expert dans l'industrie créative numérique, "
+        "spécialisé dans les créateurs de contenu anime/manga IA. "
+        "Tu penses long terme, tu construis des audiences durables, "
+        "tu identifies les opportunités de partenariat et de monétisation. "
+        "Tu parles le langage des créateurs ET celui des plateformes."
+    )
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("career_manager")
+
+    def build_content_roadmap(self, creator_profile: dict,
+                               horizon_months: int = 6) -> dict:
+        """Construit une roadmap de contenu sur N mois."""
+        prompt = (
+            f"Profil créateur : {json.dumps(creator_profile, ensure_ascii=False)}\n"
+            f"Crée une roadmap de contenu sur {horizon_months} mois avec :\n"
+            f"- 1 flagship content/mois (production principale)\n"
+            f"- Contenu secondaire (shorts, making-of, behind the scenes)\n"
+            f"- Jalons de croissance d'audience\n"
+            f"- Plateformes prioritaires\n"
+            f"Réponds en JSON structuré par mois."
+        )
+        result = _llm(prompt, self.SYSTEM, max_tokens=800)
+        self.log.info(f"[CAREER] Roadmap {horizon_months}m générée")
+        return {"roadmap": result, "horizon": horizon_months}
+
+    def platform_strategy(self, content_type: str,
+                           audience_size: int = 0) -> dict:
+        """Recommande les plateformes et stratégies selon le contenu."""
+        prompt = (
+            f"Pour un créateur de contenu {content_type} "
+            f"avec {audience_size} abonnés actuels :\n"
+            f"Recommande les 3 meilleures plateformes à prioriser "
+            f"avec une stratégie spécifique pour chacune. "
+            f"Inclure : timing publication, format, objectifs de 90 jours."
+        )
+        return {"strategy": _llm(prompt, self.SYSTEM, max_tokens=500)}
+
+    def licensing_template(self, content_title: str,
+                            usage_type: str = "streaming") -> str:
+        """Génère un template de licence pour une production."""
+        prompt = (
+            f"Génère un template de licence simple (non juridique, modèle) "
+            f"pour : '{content_title}'\n"
+            f"Usage : {usage_type}\n"
+            f"Inclure : durée, territoire, droits accordés, restrictions, compensation."
+        )
+        return _llm(prompt, self.SYSTEM, max_tokens=400)
+
+    def chat(self, message: str) -> str:
+        return _llm(message, self.SYSTEM, max_tokens=500)
+
+
+class PressAttacheAgent:
+    """
+    Agent Attaché de Presse / Spécialiste de l'Image Médiatique.
+
+    Gère la présence médiatique et l'image publique de la production :
+    - Communiqués de presse pour les lancements
+    - Gestion de crise médiatique
+    - Relations avec les médias spécialisés (blogs anime, YouTube reviewers)
+    - Pitches pour les médias mainstream
+    - Monitoring de la réputation en ligne
+    """
+
+    SYSTEM = (
+        "Tu es un attaché de presse expert dans les médias culturels et le divertissement, "
+        "spécialisé dans la communication autour des productions IA créatives. "
+        "Tu maîtrises les codes des médias spécialisés anime/manga ET les médias généralistes. "
+        "Tu construis des narratives convaincantes qui font parler des productions de tes clients."
+    )
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("press_attache")
+
+    def write_press_release(self, production: dict) -> str:
+        """Rédige un communiqué de presse pour une production."""
+        prompt = (
+            f"Rédige un communiqué de presse professionnel pour cette production IA :\n"
+            f"{json.dumps(production, ensure_ascii=False)}\n\n"
+            f"Structure : accroche percutante → corps → citation → contacts.\n"
+            f"Ton : enthousiaste mais crédible. Longueur : 300-400 mots."
+        )
+        result = _llm(prompt, self.SYSTEM, max_tokens=600)
+        self.log.info(f"[PRESS] Communiqué généré pour : {production.get('title','?')}")
+        return result
+
+    def crisis_management(self, situation: str) -> dict:
+        """Protocole de gestion de crise médiatique."""
+        prompt = (
+            f"Situation de crise médiatique : '{situation}'\n\n"
+            f"Propose un plan de gestion en 3 phases :\n"
+            f"1. Réponse immédiate (24h)\n"
+            f"2. Communication active (semaine 1)\n"
+            f"3. Récupération de réputation (mois 1)\n"
+            f"Inclure les messages clés et ce qu'il ne faut JAMAIS dire."
+        )
+        return {"crisis": situation, "plan": _llm(prompt, self.SYSTEM, max_tokens=500)}
+
+    def media_pitch(self, production: dict,
+                     target_media: str = "blog anime spécialisé") -> str:
+        """Pitch personnalisé pour un média cible."""
+        prompt = (
+            f"Écris un pitch email court (200 mots max) pour {target_media} "
+            f"au sujet de : {production.get('title','?')}\n"
+            f"Description : {production.get('description','')}\n"
+            f"Angle unique : production IA innovante. Ton adapté au média ciblé."
+        )
+        return _llm(prompt, self.SYSTEM, max_tokens=300)
+
+    def chat(self, message: str) -> str:
+        return _llm(message, self.SYSTEM, max_tokens=500)
+
+
+class StructuralInnovatorAgent:
+    """
+    Agent d'Innovation Structurelle Continue.
+
+    Analyse en permanence le pipeline et propose des évolutions architecturales :
+    - Identifier les goulots d'étranglement
+    - Proposer de nouvelles intégrations (nouveaux outils, APIs)
+    - Anticiper les évolutions technologiques (nouveaux modèles, techniques)
+    - Suggérer des refactorings pour la maintenabilité
+    - Veille technologique IA générative
+    """
+
+    SYSTEM = (
+        "Tu es un architecte de systèmes IA visionnaire, spécialisé dans les "
+        "pipelines de génération de contenu. Tu restes à jour sur les dernières "
+        "avancées en IA générative (SDXL, LLMs, diffusion, agents). "
+        "Tu proposes des évolutions structurelles réalistes et impactantes, "
+        "en priorisant par ROI (impact/effort)."
+    )
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("innovator")
+        self._proposals: list[dict] = []
+
+    def analyze_pipeline_gaps(self, current_architecture: list[str]) -> list[dict]:
+        """Analyse les lacunes de l'architecture actuelle."""
+        prompt = (
+            f"Architecture actuelle d'OverLord Pipeline :\n"
+            + "\n".join(f"  - {c}" for c in current_architecture) +
+            "\n\nIdentifie 5 gaps ou opportunités d'amélioration majeurs. "
+            "Pour chaque gap : nom, problème actuel, solution proposée, "
+            "impact (1-10), effort (1-10), technologies suggérées. "
+            "Réponds en JSON : [{'gap': str, 'problem': str, 'solution': str, "
+            "'impact': int, 'effort': int, 'tech': [str]}]"
+        )
+        result = _llm(prompt, self.SYSTEM, max_tokens=800)
+        try:
+            if result and result.startswith("```"):
+                result = "\n".join(result.split("\n")[1:-1])
+            proposals = json.loads(result) if result else []
+            for p in proposals:
+                p["roi"] = p.get("impact",5) / max(p.get("effort",5), 1)
+            self._proposals.extend(sorted(proposals, key=lambda x: -x.get("roi",1)))
+            self.log.info(f"[INNOVATOR] {len(proposals)} gaps analysés")
+            return proposals
+        except Exception:
+            return []
+
+    def technology_watch(self) -> dict:
+        """Veille technologique sur les évolutions IA."""
+        prompt = (
+            "En tant qu'expert IA génératif (état en 2025-2026) :\n"
+            "Quelles sont les 5 évolutions technologiques les plus importantes "
+            "pour un pipeline de production anime IA dans les 12 prochains mois ?\n"
+            "Pour chacune : technologie, impact potentiel, délai d'adoption, "
+            "comment intégrer dans OverLord."
+        )
+        return {"watch": _llm(prompt, self.SYSTEM, max_tokens=600)}
+
+    def propose_next_version(self, current_version: str = "V1.20") -> dict:
+        """Propose les features de la prochaine version."""
+        prompt = (
+            f"OverLord Pipeline est en version {current_version}.\n"
+            f"Propose les 5 features les plus impactantes pour la V{float(current_version[1:])+0.1:.2f}.\n"
+            f"Pour chaque feature : nom, description, pourquoi maintenant, "
+            f"dépendances techniques, temps d'implémentation estimé."
+        )
+        return {"next_version": _llm(prompt, self.SYSTEM, max_tokens=600)}
+
+    def chat(self, message: str) -> str:
+        return _llm(message, self.SYSTEM, max_tokens=500)
+
+
+class MonetizationAgent:
+    """
+    Agent de Monétisation et Revenus.
+
+    Stratégies de revenus pour les productions OverLord :
+    - Modèles freemium / premium pour les outputs
+    - Licences de contenu B2B
+    - NFTs et Web3 (si pertinent)
+    - Patreon / Ko-fi / Kickstarter
+    - Synergies avec les plateformes
+    - Analyse de coûts vs revenus
+    """
+
+    SYSTEM = (
+        "Tu es un expert en monétisation de contenu créatif numérique, "
+        "spécialisé dans les nouvelles économies IA. Tu connais les modèles "
+        "de revenus des créateurs (Patreon, licensing, B2B, NFT, streaming). "
+        "Tu analyses le ROI de façon réaliste et proposes des stratégies "
+        "progressives adaptées à la taille et maturité de la production."
+    )
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("monetization")
+
+    def revenue_strategy(self, production_profile: dict) -> dict:
+        """Propose une stratégie de revenus personnalisée."""
+        prompt = (
+            f"Profil de production : {json.dumps(production_profile, ensure_ascii=False)}\n\n"
+            f"Propose 3 stratégies de monétisation progressives :\n"
+            f"1. Court terme (0-3 mois) : revenus rapides\n"
+            f"2. Moyen terme (3-12 mois) : construction de revenus récurrents\n"
+            f"3. Long terme (12+ mois) : scale et diversification\n"
+            f"Pour chaque stratégie : canaux, montants réalistes, conditions, risques."
+        )
+        return {"strategy": _llm(prompt, self.SYSTEM, max_tokens=700)}
+
+    def cost_analysis(self, infrastructure: dict) -> dict:
+        """Analyse les coûts d'infrastructure vs revenus potentiels."""
+        prompt = (
+            f"Infrastructure OverLord : {json.dumps(infrastructure, ensure_ascii=False)}\n"
+            f"Analyse les coûts mensuels (GPU, APIs, stockage, bande passante) "
+            f"et le seuil de rentabilité. Propose des optimisations de coûts "
+            f"sans sacrifier la qualité."
+        )
+        return {"analysis": _llm(prompt, self.SYSTEM, max_tokens=500)}
+
+    def chat(self, message: str) -> str:
+        return _llm(message, self.SYSTEM, max_tokens=500)
+
+
+class LegalComplianceAgent:
+    """
+    Agent de Conformité Légale.
+
+    IMPORTANT : Cet agent fournit des informations générales,
+    pas des conseils juridiques. Consulter un avocat pour les cas réels.
+
+    Domaines couverts :
+    - Droits des images générées par IA (varies par pays)
+    - Conformité RGPD pour les données utilisateurs
+    - Watermarking obligatoire (certaines juridictions)
+    - Droits des LoRAs et datasets d'entraînement
+    - Copyright des références utilisées
+    """
+
+    SYSTEM = (
+        "Tu es un spécialiste en droit du numérique et propriété intellectuelle "
+        "pour les productions IA créatives (INFORMATION GÉNÉRALE, non conseil juridique). "
+        "Tu expliques les enjeux légaux de façon claire, tu signales les zones grises "
+        "et recommandes toujours de consulter un avocat pour les décisions importantes."
+    )
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("legal")
+
+    def compliance_check(self, production: dict) -> dict:
+        """Vérifie les points de conformité d'une production."""
+        prompt = (
+            f"Production à vérifier : {json.dumps(production, ensure_ascii=False)}\n\n"
+            f"Identifie les points de vigilance légaux :\n"
+            f"1. Droits sur les contenus générés par IA\n"
+            f"2. Utilisation des personnages/univers existants\n"
+            f"3. Données personnelles si présentes\n"
+            f"4. Watermarking et transparence IA\n"
+            f"5. Territoires de distribution\n"
+            f"Pour chaque point : statut (ok/attention/risque), explication, recommandation."
+        )
+        return {
+            "production": production.get("title","?"),
+            "check": _llm(prompt, self.SYSTEM, max_tokens=600),
+            "disclaimer": "INFORMATION GÉNÉRALE — Consulter un avocat pour les cas réels."
+        }
+
+    def watermark_strategy(self, output_type: str = "image") -> str:
+        """Recommande une stratégie de watermarking."""
+        prompt = (
+            f"Pour un {output_type} généré par IA dans le cadre d'une production anime :\n"
+            f"Recommande une stratégie de watermarking qui :\n"
+            f"1. Respecte les obligations légales émergentes (AI Act EU, etc.)\n"
+            f"2. Protège les droits du créateur\n"
+            f"3. Permet la distribution commerciale\n"
+            f"4. Reste esthétiquement acceptable\n"
+            f"Inclure : type de watermark, position, métadonnées EXIF recommandées."
+        )
+        return _llm(prompt, self.SYSTEM, max_tokens=400)
+
+    def chat(self, message: str) -> str:
+        return _llm(message, self.SYSTEM, max_tokens=500)
+
+
+class TalentScoutAgent:
+    """
+    Agent de Repérage de Talents IA.
+
+    Surveille l'écosystème IA créatif pour :
+    - Identifier les nouvelles techniques de génération prometteuses
+    - Repérer les modèles/LoRAs émergents à intégrer
+    - Analyser les créateurs IA influents (style, technique, audience)
+    - Benchmark de la concurrence IA
+    - Veille sur les datasets innovants
+    """
+
+    SYSTEM = (
+        "Tu es un talent scout spécialisé dans l'écosystème IA créatif. "
+        "Tu surveilles CivitAI, HuggingFace, Pixiv, ArtStation, Twitter/X "
+        "pour identifier les tendances émergentes et les talents à suivre. "
+        "Tu fournis des analyses précises sur ce qui va marquer la prochaine vague créative."
+    )
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or logging.getLogger("talent_scout")
+
+    def scout_models(self, style_requirements: dict) -> dict:
+        """Identifie les modèles IA correspondant aux besoins."""
+        prompt = (
+            f"Besoins de style : {json.dumps(style_requirements, ensure_ascii=False)}\n\n"
+            f"Recommande les 5 meilleurs modèles/LoRAs disponibles sur CivitAI "
+            f"ou HuggingFace pour ces besoins. Pour chacun :\n"
+            f"nom, source, points forts, points faibles, compatibilité SDXL, "
+            f"score popularité estimé, cas d'usage idéal."
+        )
+        return {"recommendations": _llm(prompt, self.SYSTEM, max_tokens=700)}
+
+    def benchmark_competition(self, our_production: dict) -> dict:
+        """Benchmark par rapport aux autres productions IA similaires."""
+        prompt = (
+            f"Notre production : {json.dumps(our_production, ensure_ascii=False)}\n\n"
+            f"Analyse le paysage concurrentiel des productions anime IA :\n"
+            f"- Qui sont les créateurs IA anime les plus influents actuellement ?\n"
+            f"- Quelles techniques ils utilisent ?\n"
+            f"- Comment nous différencier ?\n"
+            f"- Quelles opportunités de niche sont encore disponibles ?"
+        )
+        return {"benchmark": _llm(prompt, self.SYSTEM, max_tokens=600)}
+
+    def trend_prediction(self, horizon: str = "3 months") -> dict:
+        """Prédit les tendances IA créatives à venir."""
+        prompt = (
+            f"Prédit les 5 tendances majeures en génération IA créative "
+            f"pour les prochains {horizon} :\n"
+            f"Chaque tendance : nom, description, probabilité (%), "
+            f"opportunité pour OverLord, comment s'y préparer maintenant."
+        )
+        return {"horizon": horizon, "predictions": _llm(prompt, self.SYSTEM, max_tokens=600)}
+
+    def chat(self, message: str) -> str:
+        return _llm(message, self.SYSTEM, max_tokens=500)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# FAÇADE COLLECTIVE V1.20 + REGISTRE DES NOUVEAUX AGENTS
+# ══════════════════════════════════════════════════════════════════════
+
+# Registre complet des nouveaux agents (pour l'UI et le routage)
+NEW_AGENTS_REGISTRY = {
+    "career_manager": {
+        "class":    CareerManagerAgent,
+        "icon":     "🎬",
+        "title":    "Manager de Carrière",
+        "desc":     "Stratégie long terme, plateformes, licences, roadmap",
+        "role":     "Gère la carrière artistique de la production OverLord",
+        "inputs":   ["profil créateur", "objectifs", "ressources disponibles"],
+        "outputs":  ["roadmap", "stratégie plateformes", "templates contrats"],
+    },
+    "press_attache": {
+        "class":    PressAttacheAgent,
+        "icon":     "📰",
+        "title":    "Attaché de Presse",
+        "desc":     "Communiqués, relations médias, gestion de crise",
+        "role":     "Gère l'image médiatique et les relations publiques",
+        "inputs":   ["production", "événement", "crise éventuelle"],
+        "outputs":  ["communiqués", "pitches", "plans de crise"],
+    },
+    "structural_innovator": {
+        "class":    StructuralInnovatorAgent,
+        "icon":     "🔬",
+        "title":    "Innovateur Structurel",
+        "desc":     "Analyse des gaps, veille techno, évolution architecturale",
+        "role":     "Propose en continu des améliorations du pipeline",
+        "inputs":   ["architecture actuelle", "performances", "objectifs"],
+        "outputs":  ["proposals", "veille techno", "roadmap technique"],
+    },
+    "monetization": {
+        "class":    MonetizationAgent,
+        "icon":     "💰",
+        "title":    "Agent de Monétisation",
+        "desc":     "Stratégies de revenus, analyse coûts, modèles business",
+        "role":     "Transforme la production en revenus durables",
+        "inputs":   ["profil production", "infrastructure", "audience"],
+        "outputs":  ["stratégies revenus", "analyse ROI", "canaux prioritaires"],
+    },
+    "legal_compliance": {
+        "class":    LegalComplianceAgent,
+        "icon":     "⚖️",
+        "title":    "Conformité Légale",
+        "desc":     "Droits IA, RGPD, watermarking, propriété intellectuelle",
+        "role":     "Assure la conformité légale des productions",
+        "inputs":   ["production", "territoires distribution", "contenu"],
+        "outputs":  ["rapport conformité", "stratégie watermark", "recommandations"],
+    },
+    "talent_scout": {
+        "class":    TalentScoutAgent,
+        "icon":     "🔭",
+        "title":    "Talent Scout",
+        "desc":     "Veille modèles IA, benchmark, tendances émergentes",
+        "role":     "Identifie les meilleures ressources IA disponibles",
+        "inputs":   ["besoins style", "production", "horizon temporel"],
+        "outputs":  ["recommandations modèles", "benchmark", "tendances"],
+    },
+}
+
+
+class CollectiveIntelligenceV120:
+    """Façade Intelligence Collective V1.20."""
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log         = logger or logging.getLogger("collective_v120")
+        self.parliament  = AgentParliament(logger=self.log)
+        self.comm        = EmergentCommunicationProtocol()
+        # Nouveaux agents
+        self.career      = CareerManagerAgent(logger=self.log)
+        self.press       = PressAttacheAgent(logger=self.log)
+        self.innovator   = StructuralInnovatorAgent(logger=self.log)
+        self.monetize    = MonetizationAgent(logger=self.log)
+        self.legal       = LegalComplianceAgent(logger=self.log)
+        self.scout       = TalentScoutAgent(logger=self.log)
+
+    def democratic_production_params(self, context: dict) -> dict:
+        """Vote démocratique sur les paramètres de production."""
+        return self.parliament.get_democratic_params(
+            agents=["scenario","storyboard","production","critic","marketing"],
+            param_options={
+                "sampler":   ["euler_ancestral","dpm++_2m","dpm++_2m_sde"],
+                "scheduler": ["normal","karras","exponential"],
+                "style":     ["anime","cinematic_anime","illustration"],
+            }
+        )
+
+    def get_new_agents_list(self) -> list[dict]:
+        """Retourne la liste des nouveaux agents disponibles."""
+        return [
+            {
+                "id":    agent_id,
+                "icon":  info["icon"],
+                "title": info["title"],
+                "desc":  info["desc"],
+                "role":  info["role"],
+            }
+            for agent_id, info in NEW_AGENTS_REGISTRY.items()
+        ]
+
+    def get_dashboard(self) -> dict:
+        return {
+            "version":          "1.20_collective",
+            "parliament_votes": len(self.parliament._vote_history),
+            "comm_vocabulary":  self.comm.vocabulary_stats(),
+            "new_agents":       len(NEW_AGENTS_REGISTRY),
+            "agents_list":      self.get_new_agents_list(),
+        }
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    col = CollectiveIntelligenceV120()
+
+    print("=== V1.20 COLLECTIVE INTELLIGENCE TEST ===\n")
+
+    print("Nouveaux agents disponibles :")
+    for a in col.get_new_agents_list():
+        print(f"  {a['icon']} {a['title']:<25} — {a['desc'][:55]}")
+
+    print("\nVote démocratique sur les paramètres :")
+    params = col.democratic_production_params({"style":"anime","mood":"épique"})
+    print(f"  {params}")
+
+    print("\nTalent Scout — Benchmark :")
+    bench = col.scout.benchmark_competition({"title":"Anime IA OverLord","style":"shonen"})
+    print(f"  {bench['benchmark'][:200]}...")
+
+    print("\nManager Carrière — Stratégie plateforme :")
+    strat = col.career.platform_strategy("anime court métrage IA", audience_size=0)
+    print(f"  {strat['strategy'][:200]}...")

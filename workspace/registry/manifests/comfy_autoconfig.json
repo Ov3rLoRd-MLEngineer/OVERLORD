@@ -1,0 +1,12 @@
+{
+  "name": "comfy_autoconfig",
+  "version": "V1.49",
+  "checksum": "4335748a30c6bb32",
+  "lines": 156,
+  "dependencies": [
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.890575",
+  "path": "agents\\comfy_autoconfig.py"
+}

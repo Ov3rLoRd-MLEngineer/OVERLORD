@@ -1,0 +1,13 @@
+{
+  "name": "style_continuity",
+  "version": "V1.70",
+  "checksum": "d53508055e19f85a",
+  "lines": 263,
+  "dependencies": [
+    "config_manager",
+    "context_bus"
+  ],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:02.633392",
+  "path": "agents\\style_continuity.py"
+}

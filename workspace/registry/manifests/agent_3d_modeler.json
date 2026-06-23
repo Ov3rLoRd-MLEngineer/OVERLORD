@@ -1,0 +1,10 @@
+{
+  "name": "agent_3d_modeler",
+  "version": "V?.?",
+  "checksum": "5e87b1cbb23f97c8",
+  "lines": 1007,
+  "dependencies": [],
+  "syntax_ok": true,
+  "last_scan": "2026-06-23T01:30:01.709066",
+  "path": "agents\\agent_3d_modeler.py"
+}
