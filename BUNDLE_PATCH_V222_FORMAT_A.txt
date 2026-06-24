@@ -1,0 +1,139 @@
+==== FILE: agents/clip_validator.py ====
+==== FIND ====
+import os
+import sys
+import json
+import logging
+import sqlite3
+from pathlib import Path
+from datetime import datetime
+==== REPLACE ====
+import os
+import sys
+import json
+import logging
+import sqlite3
+from pathlib import Path
+from datetime import datetime
+
+# ── Watchdog config adaptatif V2.22 ───────────────────────────────────────────
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from watchdog_config import load_config as _load_watchdog_cfg
+    _WD_CFG = _load_watchdog_cfg()
+    CLIP_THRESHOLD = _WD_CFG.get("clip_threshold", 0.80)
+except Exception:
+    CLIP_THRESHOLD = 0.80
+==== END ====
+
+==== FILE: agents/visual_validator.py ====
+==== FIND ====
+import json
+import logging
+import requests
+import base64
+from pathlib import Path
+from datetime import datetime
+==== REPLACE ====
+import json
+import logging
+import requests
+import base64
+from pathlib import Path
+from datetime import datetime
+import os
+import sys
+
+# ── QwenVL prompts dynamiques V2.22 ───────────────────────────────────────────
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from watchdog_config import load_config as _load_wd, qwenvl_prompts_for_scene
+    _WD_CFG     = _load_wd()
+    _SCENE_TYPE = _WD_CFG.get("scene_type", "default")
+    try:
+        from agents.context_bus import get_bus as _get_bus
+        _bus          = _get_bus()
+        _CHARACTER    = _bus.read("director.character") or "asuka"
+        _override_pos = _bus.read("qwenvl.prompt_positive") or ""
+        _override_neg = _bus.read("qwenvl.prompt_negative") or ""
+    except Exception:
+        _CHARACTER    = "asuka"
+        _override_pos = ""
+        _override_neg = ""
+    _QWEN_PROMPTS = qwenvl_prompts_for_scene(_SCENE_TYPE, _CHARACTER)
+    if _override_pos:
+        _QWEN_PROMPTS["positive"] = _override_pos
+    if _override_neg:
+        _QWEN_PROMPTS["negative"] = _override_neg
+except Exception:
+    _QWEN_PROMPTS = {
+        "positive": "correct anatomy, single character, masterpiece quality",
+        "negative": "extra limbs, deformed, multiple characters, low quality",
+        "focus":    "overall quality",
+    }
+
+QWENVL_SYSTEM = (
+    "You are a quality control expert for anime production. "
+    "Analyze the image and check: "
+    f"EXPECT: {_QWEN_PROMPTS['positive']}. "
+    f"REJECT IF: {_QWEN_PROMPTS['negative']}. "
+    f"FOCUS ON: {_QWEN_PROMPTS['focus']}. "
+    'Reply with JSON: {"pass": true/false, "score": 0-100, "issues": [...]}'
+)
+==== END ====
+
+==== FILE: maestro.py ====
+==== FIND ====
+    parser.add_argument("--auto-source",        action="store_true",
+                        help="Mode sourcing autonome : collecte tendances puis génère")
+==== REPLACE ====
+    parser.add_argument("--auto-source",        action="store_true",
+                        help="Mode sourcing autonome : collecte tendances puis génère")
+    parser.add_argument("--scene-type",  type=str, default=None,
+                        choices=["default", "action_dynamic", "cockpit_static", "contemplative"],
+                        help="Type de scene pour adapter seuils watchdog/CLIP/QwenVL")
+    parser.add_argument("--qwenvl-pos",  type=str, default=None,
+                        help="Prompt positif QwenVL custom")
+    parser.add_argument("--qwenvl-neg",  type=str, default=None,
+                        help="Prompt negatif QwenVL custom")
+==== END ====
+
+==== FILE: agents/director.py ====
+==== FIND ====
+import os
+import sys
+import json
+import logging
+from pathlib import Path
+==== REPLACE ====
+import os
+import sys
+import json
+import logging
+from pathlib import Path
+
+# ── Scene type resolver V2.22 ──────────────────────────────────────────────────
+def _resolve_scene_type(universe: str = "", action: str = "", scene_type: str = None) -> str:
+    if scene_type:
+        return scene_type
+    universe = (universe or "").lower()
+    action   = (action   or "").lower()
+    dynamic  = ["combat", "run", "fight", "battle", "chase", "fall", "jump", "course"]
+    static   = ["cockpit", "sit", "contemplat", "think", "interieur"]
+    for kw in dynamic:
+        if kw in universe or kw in action:
+            return "action_dynamic"
+    for kw in static:
+        if kw in universe or kw in action:
+            return "cockpit_static"
+    return "default"
+==== END ====
+
+==== FILE: agent_supervisor_v2.py ====
+==== FIND ====
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "controlnet-openpose-sdxl-1.0.safetensors"}},
+==== REPLACE ====
+        "500":{"class_type": "ControlNetLoader",
+               "inputs": {"control_net_name": "OpenPoseXL2.safetensors"}},
+==== END ====

@@ -1248,6 +1248,13 @@ if __name__ == "__main__":
                         help="Utiliser prompts Booru locaux (data/prompts/)")
     parser.add_argument("--auto-source",        action="store_true",
                         help="Mode sourcing autonome : collecte tendances puis génère")
+    parser.add_argument("--scene-type",  type=str, default=None,
+                        choices=["default", "action_dynamic", "cockpit_static", "contemplative"],
+                        help="Type de scene pour adapter seuils watchdog/CLIP/QwenVL")
+    parser.add_argument("--qwenvl-pos",  type=str, default=None,
+                        help="Prompt positif QwenVL custom")
+    parser.add_argument("--qwenvl-neg",  type=str, default=None,
+                        help="Prompt negatif QwenVL custom")
     parser.add_argument("--no-prompt-engineer", action="store_true",
                         help="Désactiver l'upsampling Booru des prompts")
     parser.add_argument("--no-quality-gate",    action="store_true",

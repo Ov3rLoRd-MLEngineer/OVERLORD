@@ -13,6 +13,15 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime
 
+# ── Watchdog config adaptatif V2.22 ───────────────────────────────────────────
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from watchdog_config import load_config as _load_watchdog_cfg
+    _WD_CFG = _load_watchdog_cfg()
+    CLIP_THRESHOLD = _WD_CFG.get("clip_threshold", 0.80)
+except Exception:
+    CLIP_THRESHOLD = 0.80
+
 # ── Imports optionnels CLIP ────────────────────────────────────────────────────
 try:
     import torch

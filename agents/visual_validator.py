@@ -12,6 +12,45 @@ import requests
 import base64
 from pathlib import Path
 from datetime import datetime
+import os
+import sys
+
+# ── QwenVL prompts dynamiques V2.22 ───────────────────────────────────────────
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from watchdog_config import load_config as _load_wd, qwenvl_prompts_for_scene
+    _WD_CFG     = _load_wd()
+    _SCENE_TYPE = _WD_CFG.get("scene_type", "default")
+    try:
+        from agents.context_bus import get_bus as _get_bus
+        _bus          = _get_bus()
+        _CHARACTER    = _bus.read("director.character") or "asuka"
+        _override_pos = _bus.read("qwenvl.prompt_positive") or ""
+        _override_neg = _bus.read("qwenvl.prompt_negative") or ""
+    except Exception:
+        _CHARACTER    = "asuka"
+        _override_pos = ""
+        _override_neg = ""
+    _QWEN_PROMPTS = qwenvl_prompts_for_scene(_SCENE_TYPE, _CHARACTER)
+    if _override_pos:
+        _QWEN_PROMPTS["positive"] = _override_pos
+    if _override_neg:
+        _QWEN_PROMPTS["negative"] = _override_neg
+except Exception:
+    _QWEN_PROMPTS = {
+        "positive": "correct anatomy, single character, masterpiece quality",
+        "negative": "extra limbs, deformed, multiple characters, low quality",
+        "focus":    "overall quality",
+    }
+
+QWENVL_SYSTEM = (
+    "You are a quality control expert for anime production. "
+    "Analyze the image and check: "
+    f"EXPECT: {_QWEN_PROMPTS['positive']}. "
+    f"REJECT IF: {_QWEN_PROMPTS['negative']}. "
+    f"FOCUS ON: {_QWEN_PROMPTS['focus']}. "
+    'Reply with JSON: {"pass": true/false, "score": 0-100, "issues": [...]}'
+)
 
 try:
     from agents.inpaint_queue import InpaintQueue

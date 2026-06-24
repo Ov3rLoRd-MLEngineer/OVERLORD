@@ -31,6 +31,23 @@ import logging
 import time
 from pathlib import Path
 from datetime import datetime
+
+# ── Scene type resolver V2.22 ──────────────────────────────────────────────────
+def _resolve_scene_type(universe: str = "", action: str = "", scene_type: str = None) -> str:
+    """Deduit le scene_type depuis l'univers et l'action du run."""
+    if scene_type:
+        return scene_type
+    universe = (universe or "").lower()
+    action   = (action   or "").lower()
+    dynamic  = ["combat", "run", "fight", "battle", "chase", "fall", "jump", "course"]
+    static   = ["cockpit", "sit", "contemplat", "think", "interieur"]
+    for kw in dynamic:
+        if kw in universe or kw in action:
+            return "action_dynamic"
+    for kw in static:
+        if kw in universe or kw in action:
+            return "cockpit_static"
+    return "default"
 from enum import Enum
 from typing import Optional
 

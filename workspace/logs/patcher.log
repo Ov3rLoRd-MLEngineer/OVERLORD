@@ -838,3 +838,37 @@ Le probleme : llama3 enveloppe souvent le JSON dans du texte conversationnel.
 [2026-06-23 23:11:18] [INFO] ── [FIND_REPLACE] maestro.py
 [2026-06-23 23:11:18] [INFO]   Backup → workspace\patch_backups\maestro.py.20260623_231118.bak
 [2026-06-23 23:11:18] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-24 02:24:22] [INFO] Format bundle détecté : unknown
+[2026-06-24 02:24:22] [ERR ] Format de bundle non reconnu.
+[2026-06-24 02:24:22] [ERR ] Formats supportés :
+[2026-06-24 02:24:22] [ERR ]   A) ==== FILE: f.py ==== / ==== FIND ==== / ==== REPLACE ==== / ==== END ====
+[2026-06-24 02:24:22] [ERR ]   B) [ACTION: UPDATE | FILE: f.py] / [CONTENU:] / [EXPLICATION:]
+[2026-06-24 02:24:22] [WARN] Aucun patch trouvé. Vérifier le format du bundle.
+[2026-06-24 02:25:00] [INFO] Format bundle détecté : unknown
+[2026-06-24 02:25:00] [ERR ] Format de bundle non reconnu.
+[2026-06-24 02:25:00] [ERR ] Formats supportés :
+[2026-06-24 02:25:00] [ERR ]   A) ==== FILE: f.py ==== / ==== FIND ==== / ==== REPLACE ==== / ==== END ====
+[2026-06-24 02:25:00] [ERR ]   B) [ACTION: UPDATE | FILE: f.py] / [CONTENU:] / [EXPLICATION:]
+[2026-06-24 02:25:00] [WARN] Aucun patch trouvé. Vérifier le format du bundle.
+[2026-06-24 02:37:28] [INFO] Format bundle détecté : find_replace
+[2026-06-24 02:37:28] [INFO] 5 patch(es) détecté(s)
+[2026-06-24 02:37:28] [INFO] ── [FIND_REPLACE] agents/clip_validator.py
+[2026-06-24 02:37:28] [INFO]   Backup → workspace\patch_backups\clip_validator.py.20260624_023728.bak
+[2026-06-24 02:37:28] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/clip_validator.py
+[2026-06-24 02:37:28] [INFO] ── [FIND_REPLACE] agents/visual_validator.py
+[2026-06-24 02:37:28] [INFO]   Backup → workspace\patch_backups\visual_validator.py.20260624_023728.bak
+[2026-06-24 02:37:28] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/visual_validator.py
+[2026-06-24 02:37:28] [INFO] ── [FIND_REPLACE] maestro.py
+[2026-06-24 02:37:28] [INFO]   Backup → workspace\patch_backups\maestro.py.20260624_023728.bak
+[2026-06-24 02:37:28] [OK  ]   ✓ FIND_REPLACE appliqué dans maestro.py
+[2026-06-24 02:37:28] [INFO] ── [FIND_REPLACE] agents/director.py
+[2026-06-24 02:37:28] [ERR ]   Texte FIND non trouvé dans agents/director.py
+[2026-06-24 02:37:28] [ERR ]   Début FIND attendu : 'import os\nimport sys\nimport json\nimport logging\nfrom pathlib import Path'
+[2026-06-24 02:37:28] [INFO] ── [FIND_REPLACE] agent_supervisor_v2.py
+[2026-06-24 02:37:28] [ERR ]   Texte FIND non trouvé dans agent_supervisor_v2.py
+[2026-06-24 02:37:28] [ERR ]   Début FIND attendu : '        "500":{"class_type": "ControlNetLoader",\n               "inputs": {"cont'
+[2026-06-24 02:41:26] [INFO] Format bundle détecté : find_replace
+[2026-06-24 02:41:26] [INFO] 1 patch(es) détecté(s)
+[2026-06-24 02:41:26] [INFO] ── [FIND_REPLACE] agents/director.py
+[2026-06-24 02:41:26] [INFO]   Backup → workspace\patch_backups\director.py.20260624_024126.bak
+[2026-06-24 02:41:26] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/director.py
