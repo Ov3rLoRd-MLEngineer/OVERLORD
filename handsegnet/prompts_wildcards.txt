@@ -1,0 +1,13 @@
+# prompts_wildcards.txt — HandSegNet
+# Un template par ligne. Tokens __nom__ résolus depuis wildcards\nom.txt.
+# Prompts en ANGLAIS (ADR-006). Cible : buste 1024x1280, mains TOUJOURS
+# visibles, grandes dans le cadre, doigts détaillés.
+
+score_9, score_8_up, source_anime, 1girl, solo, upper body, __gestures__, wearing __outfits__, __accessories__, __backgrounds__, hands in focus, detailed fingers, anime style
+score_9, score_8_up, source_anime, 1boy, solo, upper body, __gestures__, wearing __outfits__, __accessories__, __backgrounds__, hands prominently visible, clean hand anatomy, anime style
+score_9, score_8_up, source_anime, 1girl, solo, cowboy shot, __gestures__, __outfits__, __accessories__, __backgrounds__, both hands visible, five fingers, anime style
+score_9, score_8_up, source_anime, 1girl, solo, close-up on hands, __gestures__, __accessories__, __backgrounds__, detailed palm and knuckles, wrist visible, anime style
+score_9, score_8_up, source_anime, 1boy, solo, upper body, arms extended toward viewer, __gestures__, __outfits__, __backgrounds__, hands close to camera, detailed fingernails, anime style
+score_9, score_8_up, source_anime, 1girl, solo, upper body, three-quarter view, __gestures__, __outfits__, __accessories__, __backgrounds__, dynamic hand pose, anime style
+score_9, score_8_up, source_anime, 1girl, solo, upper body, both hands raised, __gestures__, __outfits__, __backgrounds__, palms facing viewer, spread fingers, anime style
+score_9, score_8_up, source_anime, 1boy, solo, cowboy shot, __gestures__, __outfits__, __accessories__, __backgrounds__, one hand in foreground, depth of field, anime style

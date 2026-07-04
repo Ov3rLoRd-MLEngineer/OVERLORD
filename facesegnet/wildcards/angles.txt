@@ -1,0 +1,11 @@
+# wildcards\angles.txt — angles de vue du visage
+front view, looking at viewer
+three-quarter view
+slight profile view
+looking up at viewer
+looking down
+tilted head
+slight low angle
+slight high angle
+looking to the side
+chin resting on hand

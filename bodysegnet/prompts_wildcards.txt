@@ -1,0 +1,13 @@
+# prompts_wildcards.txt — BodySegNet
+# Un template par ligne. Tokens __nom__ résolus depuis wildcards\nom.txt.
+# Prompts en ANGLAIS (ADR-006). Cible : full body 1024x1536, corps entier
+# visible, frontières peau/vêtements nettes.
+
+score_9, score_8_up, source_anime, 1girl, solo, full body, __poses__, wearing __outfits__, __backgrounds__, whole body visible, clean silhouette, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, __poses__, wearing __outfits__, __backgrounds__, entire body in frame, defined limbs, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body, side view, __poses__, __outfits__, __backgrounds__, arms and legs visible, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body, back view, __poses__, __outfits__, __backgrounds__, full silhouette, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, three-quarter view, __poses__, __outfits__, __backgrounds__, dynamic lighting, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body, __poses__, __outfits__, bare arms and legs, __backgrounds__, skin clearly visible, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body from low angle, __poses__, __outfits__, __backgrounds__, strong perspective, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, action pose, __poses__, __outfits__, __backgrounds__, limbs spread, clear body outline, anime style
