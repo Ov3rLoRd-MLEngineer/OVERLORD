@@ -9,6 +9,7 @@ import os
 import json
 import logging
 import re
+from pathlib import Path
 
 # Fix UTF-8
 if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding', '').lower() != 'utf-8':
@@ -27,6 +28,30 @@ OLLAMA_TIMEOUT_S = 30   # timeout PAR modèle de la séquence
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 _log = logging.getLogger("overlord_utils")
+
+_LLM_ENDPOINTS_CACHE = None
+
+
+def _load_llm_endpoints_config() -> dict:
+    """Charge config/llm_endpoints.json (source externe de config LLM :
+    endpoints Ollama / GLM-5.2 (Z.ai) etc.). Cherché en remontant depuis ce
+    fichier vers la racine du repo. Retourne {} si absent ou invalide
+    (fallback_llm() continue alors avec les constantes par défaut)."""
+    global _LLM_ENDPOINTS_CACHE
+    if _LLM_ENDPOINTS_CACHE is not None:
+        return _LLM_ENDPOINTS_CACHE
+    _LLM_ENDPOINTS_CACHE = {}
+    p = Path(__file__).resolve()
+    for _ in range(4):
+        p = p.parent
+        cfg_path = p / "config" / "llm_endpoints.json"
+        if cfg_path.exists():
+            try:
+                _LLM_ENDPOINTS_CACHE = json.loads(cfg_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as e:
+                _log.warning(f"[LLM] config/llm_endpoints.json invalide : {e}")
+            break
+    return _LLM_ENDPOINTS_CACHE
 
 
 def _get_api_key() -> str:
@@ -80,26 +105,32 @@ def fallback_llm(
         str : réponse du LLM ou "" en cas d'échec
     """
     log = logger or _log
+    _cfg = _load_llm_endpoints_config()
+
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
 
     # ── Tentative 1 : séquence Ollama (30s par modèle) ────────────────
+    _ollama_cfg = _cfg.get("ollama", {})
+    ollama_url = _ollama_cfg.get("url", OLLAMA_URL) if _ollama_cfg.get("enabled", True) else OLLAMA_URL
+    ollama_models = _ollama_cfg.get("models") or OLLAMA_MODELS
+
     sequence = []
     if model:
         sequence.append(model)
-    for m in [OLLAMA_MODEL] + OLLAMA_MODELS:
+    for m in [OLLAMA_MODEL] + ollama_models:
         if m and m not in sequence:
             sequence.append(m)
 
     try:
         import requests
-        messages = []
-        if system:
-            messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": prompt})
 
         for _model in sequence:
             try:
                 resp = requests.post(
-                    f"{OLLAMA_URL}/api/chat",
+                    f"{ollama_url}/api/chat",
                     json={
                         "model":    _model,
                         "messages": messages,
@@ -124,7 +155,44 @@ def fallback_llm(
     except Exception as e:
         log.warning(f"[LLM] Ollama indisponible : {e}")
 
-    # ── Tentative 2 : API Anthropic ───────────────────────────────────
+    # ── Tentative 2 : GLM (Z.ai API), si configuré et activé ──────────
+    _glm_cfg = _cfg.get("glm", {})
+    if _glm_cfg.get("enabled"):
+        glm_key = os.environ.get(_glm_cfg.get("api_key_env", "ZAI_API_KEY"), "").strip()
+        if not glm_key:
+            glm_key = _glm_cfg.get("api_key", "")
+        if glm_key and not glm_key.startswith("PLACEHOLDER"):
+            try:
+                import requests
+                resp = requests.post(
+                    _glm_cfg.get("url", "https://api.z.ai/api/paas/v4/chat/completions"),
+                    headers={
+                        "Authorization": f"Bearer {glm_key}",
+                        "Content-Type":  "application/json",
+                    },
+                    json={
+                        "model":      _glm_cfg.get("model", "glm-5.2"),
+                        "messages":   messages,
+                        "max_tokens": max_tokens,
+                    },
+                    timeout=_glm_cfg.get("timeout", timeout),
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = _strip_think(
+                        data.get("choices", [{}])[0].get("message", {}).get("content", ""))
+                    if text:
+                        log.debug(f"[LLM] GLM/{_glm_cfg.get('name', 'GLM-5.2')} OK ({len(text)} chars)")
+                        return text
+                    log.warning("[LLM] GLM réponse vide — fallback suivant")
+                else:
+                    log.warning(f"[LLM] GLM HTTP {resp.status_code} — fallback suivant")
+            except Exception as e:
+                log.warning(f"[LLM] GLM (Z.ai) : {e}")
+        else:
+            log.debug("[LLM] GLM activé mais clé absente/placeholder — skip")
+
+    # ── Tentative 3 : API Anthropic ───────────────────────────────────
     api_key = _get_api_key()
     if api_key:
         try:

@@ -26,6 +26,57 @@ DEFAULT_OLLAMA_MODEL = "mistral"
 OLLAMA_MODEL_SEQUENCE = ["mistral", "qwen2.5:7b", "deepseek-r1:7b"]
 OLLAMA_TIMEOUT_S      = 30   # timeout PAR modele de la sequence
 
+_LLM_ENDPOINTS_CACHE = None
+
+
+def _load_llm_endpoints_config() -> dict:
+    """Charge config/llm_endpoints.json (source externe de config LLM :
+    endpoints Ollama / GLM-5.2 (Z.ai) etc.). Cherche en remontant depuis ce
+    fichier vers la racine du repo. Retourne {} si absent/invalide (les
+    fonctions appelantes retombent alors sur les constantes par defaut)."""
+    global _LLM_ENDPOINTS_CACHE
+    if _LLM_ENDPOINTS_CACHE is not None:
+        return _LLM_ENDPOINTS_CACHE
+    _LLM_ENDPOINTS_CACHE = {}
+    p = Path(__file__).resolve()
+    for _ in range(4):
+        p = p.parent
+        cfg_path = p / "config" / "llm_endpoints.json"
+        if cfg_path.exists():
+            try:
+                _LLM_ENDPOINTS_CACHE = json.loads(cfg_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as e:
+                log.warning(f"[LLM] config/llm_endpoints.json invalide : {e}")
+            break
+    return _LLM_ENDPOINTS_CACHE
+
+
+def _get_ollama_endpoint() -> tuple:
+    """(url, sequence de modeles, timeout) Ollama, avec override par
+    config/llm_endpoints.json (section 'ollama') si present et active."""
+    cfg = _load_llm_endpoints_config().get("ollama", {})
+    if not cfg.get("enabled", True):
+        return OLLAMA_URL, OLLAMA_MODEL_SEQUENCE, OLLAMA_TIMEOUT_S
+    return (
+        cfg.get("url", OLLAMA_URL),
+        cfg.get("models") or OLLAMA_MODEL_SEQUENCE,
+        cfg.get("timeout", OLLAMA_TIMEOUT_S),
+    )
+
+
+def _get_glm_config() -> dict:
+    """Config GLM (Z.ai) depuis config/llm_endpoints.json. La cle API vient
+    en priorite de la variable d'environnement (api_key_env) ou du .env,
+    jamais du JSON qui ne doit contenir qu'un placeholder."""
+    cfg = dict(_load_llm_endpoints_config().get("glm", {}))
+    env_var = cfg.get("api_key_env", "ZAI_API_KEY")
+    key = os.environ.get(env_var, "").strip() or _read_env_value(env_var).strip()
+    if not key:
+        placeholder = cfg.get("api_key", "")
+        key = "" if placeholder.startswith("PLACEHOLDER") else placeholder
+    cfg["api_key"] = key
+    return cfg
+
 
 def get_api_key(env_file: Path = None) -> str:
     key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -156,10 +207,10 @@ def _read_env_value(key: str) -> str:
 
 def _get_llm_mode() -> str:
     mode = os.environ.get("OV_LLM_MODE", "").lower().strip()
-    if mode in ("online", "offline", "auto", "grok"):
+    if mode in ("online", "offline", "auto", "grok", "glm"):
         return mode
     mode = _read_env_value("OV_LLM_MODE").lower()
-    if mode in ("online", "offline", "auto", "grok"):
+    if mode in ("online", "offline", "auto", "grok", "glm"):
         return mode
     return "auto" if get_api_key() else "offline"
 
@@ -200,6 +251,35 @@ def _call_grok(prompt: str, system: str = "",
     raise RuntimeError(f"Grok HTTP {resp.status_code} : {resp.text[:200]}")
 
 
+def _call_glm(prompt: str, system: str = "",
+             max_tokens: int = 1000) -> str:
+    """Appelle GLM-5.2 via l'API Z.ai. Endpoint/modele/cle lus depuis
+    config/llm_endpoints.json (section 'glm'), cle surchargeable par
+    ZAI_API_KEY (env ou .env)."""
+    import requests
+    cfg = _get_glm_config()
+    if not cfg.get("enabled"):
+        raise ValueError("GLM desactive dans config/llm_endpoints.json (enabled=false)")
+    key = cfg.get("api_key", "")
+    if not key:
+        raise ValueError(
+            f"{cfg.get('api_key_env', 'ZAI_API_KEY')} absent (.env / config/llm_endpoints.json)")
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
+    resp = requests.post(
+        cfg.get("url", "https://api.z.ai/api/paas/v4/chat/completions"),
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        json={"model": cfg.get("model", "glm-5.2"), "messages": messages,
+              "max_tokens": max_tokens},
+        timeout=cfg.get("timeout", 60),
+    )
+    if resp.status_code == 200:
+        return _strip_think(resp.json()["choices"][0]["message"]["content"])
+    raise RuntimeError(f"GLM HTTP {resp.status_code} : {resp.text[:200]}")
+
+
 def _call_claude(prompt: str, system: str = "",
                  model: str = DEFAULT_MODEL,
                  max_tokens: int = 1000) -> str:
@@ -236,6 +316,7 @@ def _call_ollama(prompt: str, system: str = "",
                  max_tokens: int = 1000,
                  timeout: int = OLLAMA_TIMEOUT_S) -> str:
     import requests
+    ollama_url, _, _ = _get_ollama_endpoint()
     ollama_model = _get_ollama_model()
     if model and "claude" not in model.lower() and "/" not in model:
         ollama_model = model
@@ -245,7 +326,7 @@ def _call_ollama(prompt: str, system: str = "",
     messages.append({"role": "user", "content": prompt})
     try:
         resp = requests.post(
-            f"{OLLAMA_URL}/api/chat",
+            f"{ollama_url}/api/chat",
             json={"model": ollama_model, "messages": messages,
                   "stream": False,
                   "options": {"num_predict": max_tokens}},
@@ -256,7 +337,7 @@ def _call_ollama(prompt: str, system: str = "",
         pass
     full_prompt = f"{system}\n\n{prompt}" if system else prompt
     resp = requests.post(
-        f"{OLLAMA_URL}/api/generate",
+        f"{ollama_url}/api/generate",
         json={"model": ollama_model, "prompt": full_prompt,
               "stream": False,
               "options": {"num_predict": max_tokens}},
@@ -271,24 +352,26 @@ def _call_ollama_sequence(prompt: str, system: str = "",
                           max_tokens: int = 1000,
                           logger: logging.Logger = None) -> str:
     """
-    Essaie les modeles Ollama en SEQUENCE avec OLLAMA_TIMEOUT_S par modele :
-    mistral -> qwen2.5:7b -> deepseek-r1:7b (OLLAMA_MODEL_SEQUENCE).
+    Essaie les modeles Ollama en SEQUENCE avec un timeout par modele :
+    mistral -> qwen2.5:7b -> deepseek-r1:7b par defaut (OLLAMA_MODEL_SEQUENCE),
+    surchargeable par config/llm_endpoints.json (section 'ollama').
     Si `model` force un modele Ollama valide, il passe en tete de sequence ;
     OV_OLLAMA_MODEL (env/.env) est aussi insere en tete s'il differe.
     Retourne la premiere reponse non vide, "" si tous echouent.
     """
     _log = logger or log
+    _, ollama_models, ollama_timeout = _get_ollama_endpoint()
     sequence = []
     if model and "claude" not in model.lower() and "/" not in model:
         sequence.append(model)
-    for m in [_get_ollama_model()] + OLLAMA_MODEL_SEQUENCE:
+    for m in [_get_ollama_model()] + ollama_models:
         if m and m not in sequence:
             sequence.append(m)
     for m in sequence:
         try:
             result = _call_ollama(prompt, system=system, model=m,
                                   max_tokens=max_tokens,
-                                  timeout=OLLAMA_TIMEOUT_S)
+                                  timeout=ollama_timeout)
             if result:
                 _log.debug(f"[LLM] Ollama/{m} OK ({len(result)} chars)")
                 return result
@@ -338,6 +421,21 @@ def fallback_llm(prompt: str, system: str = "",
             if result:
                 return result
             _log.error("[LLM] Sequence Ollama epuisee apres Grok")
+            return ""
+
+    # ── Mode GLM-5.2 (Z.ai) ──────────────────────────────────────────────
+    if llm_mode == "glm":
+        try:
+            result = _call_glm(prompt, system=system, max_tokens=max_tokens)
+            _log.debug(f"[LLM] GLM-5.2 OK ({len(result)} chars)")
+            return result
+        except Exception as e:
+            _log.warning(f"[LLM] GLM echoue : {str(e)[:120]} -- fallback Ollama")
+            result = _call_ollama_sequence(prompt, system=system,
+                                           max_tokens=max_tokens, logger=_log)
+            if result:
+                return result
+            _log.error("[LLM] Sequence Ollama epuisee apres GLM")
             return ""
 
     if llm_mode == "offline":

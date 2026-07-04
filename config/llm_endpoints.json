@@ -1,0 +1,21 @@
+{
+  "_readme": "Config externe des endpoints LLM lue par fallback_llm() (overlord_utils.py / agents/overlord_utils.py). Les champs api_key sont des PLACEHOLDERS -- ne jamais committer de vraies clés ici. Renseigne plutôt la variable d'environnement indiquée par api_key_env (ou .env), qui a toujours priorité sur la valeur de ce fichier.",
+
+  "ollama": {
+    "enabled": true,
+    "url": "http://127.0.0.1:11434",
+    "models": ["mistral", "qwen2.5:7b", "deepseek-r1:7b"],
+    "timeout": 30
+  },
+
+  "glm": {
+    "enabled": false,
+    "provider": "zai",
+    "name": "GLM-5.2",
+    "url": "https://api.z.ai/api/paas/v4/chat/completions",
+    "model": "glm-5.2",
+    "api_key": "PLACEHOLDER_ZAI_API_KEY",
+    "api_key_env": "ZAI_API_KEY",
+    "timeout": 60
+  }
+}
