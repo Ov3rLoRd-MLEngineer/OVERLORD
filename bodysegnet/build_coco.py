@@ -85,6 +85,33 @@ def mask_to_annotation(mask_bin: np.ndarray, ann_id: int, image_id: int,
     }
 
 
+# ── Augmentation ─────────────────────────────────────────────────────────────
+
+def augment_hflip(img_path: Path, bins: dict,
+                  img_out: Path, mask_out: Path) -> tuple:
+    """
+    Augmentation : flip horizontal (miroir gauche/droite) de l'image annotée
+    ET de chacun de ses masques de catégorie. Écrit <stem>_hflip.<ext> dans
+    images\\<split> et <stem>_hflip__<cat>.png dans masks\\<split>.
+
+    Args:
+        bins : {catégorie: masque_binaire HxW 0/1}
+
+    Returns:
+        (nom_fichier_image_flippée, {catégorie: masque_binaire_flippé})
+    """
+    flip_name = f"{img_path.stem}_hflip{img_path.suffix}"
+    img_flip = Image.open(str(img_path)).transpose(Image.FLIP_LEFT_RIGHT)
+    img_flip.save(str(img_out / flip_name))
+    flip_bins = {}
+    for cat, mask_bin in bins.items():
+        fb = np.fliplr(mask_bin).copy()
+        Image.fromarray((fb * 255).astype(np.uint8), mode="L").save(
+            str(mask_out / f"{img_path.stem}_hflip__{cat}.png"))
+        flip_bins[cat] = fb
+    return flip_name, flip_bins
+
+
 # ── Construction ─────────────────────────────────────────────────────────────
 
 def collect_entries() -> list[tuple[Path, dict]]:
@@ -104,7 +131,8 @@ def collect_entries() -> list[tuple[Path, dict]]:
     return entries
 
 
-def build_split_json(entries: list[tuple[Path, dict]], split: str) -> dict:
+def build_split_json(entries: list[tuple[Path, dict]], split: str,
+                     augment: bool = False) -> dict:
     img_out  = IMAGES_DIR / split
     mask_out = MASKS_DIR / split
     img_out.mkdir(parents=True, exist_ok=True)
@@ -123,41 +151,65 @@ def build_split_json(entries: list[tuple[Path, dict]], split: str) -> dict:
     }
 
     ann_id = 1
-    for image_id, (img_path, cat_masks) in enumerate(entries, start=1):
+    image_id = 0
+    flipped = 0
+    for img_path, cat_masks in entries:
         img = Image.open(str(img_path))
         w, h = img.size
 
-        anns = []
+        bins = {}
         for cat, mp in cat_masks.items():
             mask = Image.open(str(mp)).convert("L")
             if mask.size != (w, h):
                 mask = mask.resize((w, h), Image.NEAREST)
             mask_bin = (np.array(mask) > 127).astype(np.uint8)
-            ann = mask_to_annotation(mask_bin, ann_id, image_id, CAT_ID[cat])
-            if ann is not None:
-                anns.append((ann, mp))
-                ann_id += 1
+            if mask_bin.any():
+                bins[cat] = (mask_bin, mp)
 
-        if not anns:
+        if not bins:
             print(f"[build_coco] Aucun masque non vide pour {img_path.name} — ignoré")
             continue
 
+        # Image originale
+        image_id += 1
         shutil.copy2(str(img_path), str(img_out / img_path.name))    # ADR-007
-        for ann, mp in anns:
-            shutil.copy2(str(mp), str(mask_out / mp.name))
-            coco["annotations"].append(ann)
-
         coco["images"].append({
             "id": image_id,
             "file_name": img_path.name,
             "width": w,
             "height": h,
         })
+        for cat, (mask_bin, mp) in bins.items():
+            shutil.copy2(str(mp), str(mask_out / mp.name))
+            coco["annotations"].append(
+                mask_to_annotation(mask_bin, ann_id, image_id, CAT_ID[cat]))
+            ann_id += 1
 
+        # Augmentation : flip horizontal (image + masques, gauche/droite inversés)
+        if augment:
+            image_id += 1
+            flip_name, flip_bins = augment_hflip(
+                img_path, {c: b for c, (b, _mp) in bins.items()},
+                img_out, mask_out)
+            coco["images"].append({
+                "id": image_id,
+                "file_name": flip_name,
+                "width": w,
+                "height": h,
+            })
+            for cat, fb in flip_bins.items():
+                coco["annotations"].append(
+                    mask_to_annotation(fb, ann_id, image_id, CAT_ID[cat]))
+                ann_id += 1
+            flipped += 1
+
+    if flipped:
+        print(f"[build_coco] {split} : {flipped} flips horizontaux ajoutés")
     return coco
 
 
-def main(val_ratio: float, split_seed: int) -> None:
+def main(val_ratio: float, split_seed: int,
+         no_augment: bool = False, augment_val: bool = False) -> None:
     entries = collect_entries()
     if not entries:
         raise SystemExit(
@@ -176,7 +228,10 @@ def main(val_ratio: float, split_seed: int) -> None:
 
     ANNOT_DIR.mkdir(parents=True, exist_ok=True)
     for split, split_entries in (("train", train_entries), ("val", val_entries)):
-        coco = build_split_json(split_entries, split)
+        # Flip horizontal sur le train uniquement par défaut (le val reste
+        # non augmenté pour une métrique IoU honnête) — --augment-val pour forcer.
+        do_aug = (not no_augment) and (split == "train" or augment_val)
+        coco = build_split_json(split_entries, split, augment=do_aug)
         out = ANNOT_DIR / f"instances_{split}.json"
         out.write_text(json.dumps(coco), encoding="utf-8")
         print(f"[build_coco] {out} : {len(coco['images'])} images, "
@@ -189,5 +244,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="BodySegNet — masques PNG → COCO JSON")
     parser.add_argument("--val-ratio",  type=float, default=0.1)
     parser.add_argument("--split-seed", type=int, default=1337)
+    parser.add_argument("--no-augment", action="store_true",
+                        help="Désactive l'augmentation par flip horizontal")
+    parser.add_argument("--augment-val", action="store_true",
+                        help="Applique aussi le flip horizontal au split val")
     args = parser.parse_args()
-    main(args.val_ratio, args.split_seed)
+    main(args.val_ratio, args.split_seed, args.no_augment, args.augment_val)
