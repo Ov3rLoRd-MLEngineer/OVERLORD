@@ -9,6 +9,7 @@ FIX V1.49s : safe_json_parse() V2 -- extraction JSON robuste par parsing de pare
 import json
 import logging
 import os
+import re
 import time
 from pathlib import Path
 
@@ -20,6 +21,10 @@ GROK_URL             = "https://api.x.ai/v1/chat/completions"
 GROK_MODEL           = "grok-4-fast"
 DEFAULT_MODEL        = "claude-sonnet-4-6"
 DEFAULT_OLLAMA_MODEL = "mistral"
+# Sequence de modeles Ollama essayes dans l'ordre par fallback_llm()
+# (serveur Ollama sur RTX 2070 via launch_ollama.bat CUDA_VISIBLE_DEVICES=1)
+OLLAMA_MODEL_SEQUENCE = ["mistral", "qwen2.5:7b", "deepseek-r1:7b"]
+OLLAMA_TIMEOUT_S      = 30   # timeout PAR modele de la sequence
 
 
 def get_api_key(env_file: Path = None) -> str:
@@ -218,9 +223,18 @@ def _call_claude(prompt: str, system: str = "",
     raise RuntimeError(f"Claude HTTP {resp.status_code} : {resp.text[:200]}")
 
 
+def _strip_think(text: str) -> str:
+    """Retire les blocs <think>...</think> (deepseek-r1) de la reponse —
+    sinon ils polluent safe_json_parse() et les prompts en aval."""
+    if text and "<think>" in text:
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return text.strip() if text else ""
+
+
 def _call_ollama(prompt: str, system: str = "",
                  model: str = None,
-                 max_tokens: int = 1000) -> str:
+                 max_tokens: int = 1000,
+                 timeout: int = OLLAMA_TIMEOUT_S) -> str:
     import requests
     ollama_model = _get_ollama_model()
     if model and "claude" not in model.lower() and "/" not in model:
@@ -235,9 +249,9 @@ def _call_ollama(prompt: str, system: str = "",
             json={"model": ollama_model, "messages": messages,
                   "stream": False,
                   "options": {"num_predict": max_tokens}},
-            timeout=120)
+            timeout=timeout)
         if resp.status_code == 200:
-            return resp.json().get("message", {}).get("content", "")
+            return _strip_think(resp.json().get("message", {}).get("content", ""))
     except Exception:
         pass
     full_prompt = f"{system}\n\n{prompt}" if system else prompt
@@ -246,10 +260,42 @@ def _call_ollama(prompt: str, system: str = "",
         json={"model": ollama_model, "prompt": full_prompt,
               "stream": False,
               "options": {"num_predict": max_tokens}},
-        timeout=120)
+        timeout=timeout)
     if resp.status_code == 200:
-        return resp.json().get("response", "")
+        return _strip_think(resp.json().get("response", ""))
     raise RuntimeError(f"Ollama HTTP {resp.status_code}")
+
+
+def _call_ollama_sequence(prompt: str, system: str = "",
+                          model: str = None,
+                          max_tokens: int = 1000,
+                          logger: logging.Logger = None) -> str:
+    """
+    Essaie les modeles Ollama en SEQUENCE avec OLLAMA_TIMEOUT_S par modele :
+    mistral -> qwen2.5:7b -> deepseek-r1:7b (OLLAMA_MODEL_SEQUENCE).
+    Si `model` force un modele Ollama valide, il passe en tete de sequence ;
+    OV_OLLAMA_MODEL (env/.env) est aussi insere en tete s'il differe.
+    Retourne la premiere reponse non vide, "" si tous echouent.
+    """
+    _log = logger or log
+    sequence = []
+    if model and "claude" not in model.lower() and "/" not in model:
+        sequence.append(model)
+    for m in [_get_ollama_model()] + OLLAMA_MODEL_SEQUENCE:
+        if m and m not in sequence:
+            sequence.append(m)
+    for m in sequence:
+        try:
+            result = _call_ollama(prompt, system=system, model=m,
+                                  max_tokens=max_tokens,
+                                  timeout=OLLAMA_TIMEOUT_S)
+            if result:
+                _log.debug(f"[LLM] Ollama/{m} OK ({len(result)} chars)")
+                return result
+            _log.warning(f"[LLM] Ollama/{m} reponse vide -- modele suivant")
+        except Exception as e:
+            _log.warning(f"[LLM] Ollama/{m} echoue : {str(e)[:100]} -- modele suivant")
+    return ""
 
 
 def is_ollama_available(model: str = None) -> bool:
@@ -287,27 +333,19 @@ def fallback_llm(prompt: str, system: str = "",
             return result
         except Exception as e:
             _log.warning(f"[LLM] Grok echoue : {str(e)[:120]} -- fallback Ollama")
-            ollama_model = _get_ollama_model()
-            try:
-                result = _call_ollama(prompt, system=system,
-                                      model=ollama_model, max_tokens=max_tokens)
-                _log.info(f"[LLM] Fallback Ollama/{ollama_model} OK ({len(result)} chars)")
+            result = _call_ollama_sequence(prompt, system=system,
+                                           max_tokens=max_tokens, logger=_log)
+            if result:
                 return result
-            except Exception as e2:
-                _log.error(f"[LLM] Ollama aussi indisponible : {e2}")
-                return ""
+            _log.error("[LLM] Sequence Ollama epuisee apres Grok")
+            return ""
 
     if llm_mode == "offline":
-        ollama_model = _get_ollama_model()
-        try:
-            result = _call_ollama(prompt, system=system,
-                                   model=ollama_model,
-                                   max_tokens=max_tokens)
-            _log.debug(f"[LLM] Ollama/{ollama_model} OK ({len(result)} chars)")
-            return result
-        except Exception as e:
-            _log.error(f"[LLM] Ollama indisponible en mode offline : {e}")
-            return ""
+        result = _call_ollama_sequence(prompt, system=system,
+                                       max_tokens=max_tokens, logger=_log)
+        if not result:
+            _log.error("[LLM] Sequence Ollama epuisee en mode offline")
+        return result
 
     key = get_api_key()
     if key:
@@ -328,21 +366,15 @@ def fallback_llm(prompt: str, system: str = "",
         _log.error("[LLM] Claude indisponible et mode=online -- aucun fallback")
         return ""
 
-    ollama_model = _get_ollama_model()
-    try:
-        if is_ollama_available():
-            result = _call_ollama(prompt, system=system,
-                                   model=ollama_model,
-                                   max_tokens=max_tokens)
-            _log.info(
-                f"[LLM] Fallback Ollama/{ollama_model} OK ({len(result)} chars)")
+    if is_ollama_available():
+        result = _call_ollama_sequence(prompt, system=system,
+                                       max_tokens=max_tokens, logger=_log)
+        if result:
+            _log.info(f"[LLM] Fallback Ollama OK ({len(result)} chars)")
             return result
-        else:
-            _log.warning(
-                f"[LLM] Ollama : modele '{ollama_model}' non disponible -- "
-                f"lance : ollama pull {ollama_model}")
-    except Exception as e:
-        _log.error(f"[LLM] Ollama indisponible : {e}")
+        _log.error("[LLM] Sequence Ollama epuisee")
+    else:
+        _log.warning("[LLM] Serveur Ollama injoignable sur " + OLLAMA_URL)
     return ""
 
 
