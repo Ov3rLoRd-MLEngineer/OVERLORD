@@ -1,0 +1,15 @@
+# wildcards\backgrounds.txt — fonds variés (bokeh fréquent en portrait)
+pure white background
+simple gray studio background
+cherry blossom trees, bokeh
+classroom window, daylight
+city lights bokeh, night
+sunset sky gradient
+abstract pastel gradient
+library interior, blurred
+rainy window, droplets
+bedroom, soft lamp light
+rooftop fence, blue sky
+stage spotlight, dark background
+flower field, shallow depth of field
+snowfall, winter street blur

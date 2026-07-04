@@ -1,0 +1,19 @@
+# wildcards\expressions.txt — expressions (variation formes yeux/bouche/sourcils)
+gentle smile
+angry scowl
+surprised wide eyes
+crying, tears in eyes
+laughing, open mouth
+smirking
+neutral expression
+pouting
+winking one eye
+embarrassed, blushing
+determined stare
+sleepy, half-closed eyes
+shocked expression
+yelling, mouth wide open
+confused, raised eyebrow
+smug grin
+worried frown
+biting lower lip

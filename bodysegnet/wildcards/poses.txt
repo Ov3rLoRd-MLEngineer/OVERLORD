@@ -1,0 +1,21 @@
+# wildcards\poses.txt — poses full body (variation position torse/bras/jambes)
+standing straight, arms at sides
+walking, mid-stride
+running, dynamic pose
+sitting on a bench, legs crossed
+jumping, both feet off the ground
+crouching, knees bent
+kicking, one leg raised
+arms crossed over chest
+arms raised above head
+leaning against a wall
+stretching, lunge pose
+climbing stairs
+martial arts stance
+sitting on the ground, legs extended
+dancing, arms spread
+about to sprint, starting position
+cartwheel, upside down
+hands on hips, confident pose
+reaching upward with one arm
+landing from a jump, knees flexed

@@ -1,0 +1,17 @@
+# wildcards\accessories.txt — accessoires mains/poignets (occlusions réalistes)
+bare hands
+white gloves
+fingerless black gloves
+silver ring on index finger
+gold bracelet
+leather wristwatch
+red nail polish
+bandaged fingers
+long leather gloves
+wrist sweatband
+charm bracelet
+lace gloves
+studded bracelet
+friendship bracelets
+smartwatch on wrist
+elbow-length satin gloves

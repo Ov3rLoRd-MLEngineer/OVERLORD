@@ -1,0 +1,23 @@
+# wildcards\gestures.txt — gestes de mains (variété de poses doigts/poignet)
+waving hand
+peace sign
+pointing forward
+open palm facing up
+making a fist
+thumbs up
+fingers interlocked
+snapping fingers
+holding a smartphone
+gripping a sword hilt
+holding a coffee cup
+typing on a keyboard
+adjusting glasses
+reaching toward camera
+cupping hands together
+spreading fingers wide
+holding an umbrella handle
+catching a small ball
+tying a ribbon
+writing with a pen
+counting on fingers
+hand on chin, thinking

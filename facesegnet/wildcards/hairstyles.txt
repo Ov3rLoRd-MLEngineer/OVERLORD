@@ -1,0 +1,19 @@
+# wildcards\hairstyles.txt — coiffures (variation visibilité hairline)
+long straight black hair
+twin tails, red hair
+short bob, brown hair
+high ponytail, blonde hair
+messy bun, silver hair
+braided hair, green eyes
+pixie cut, blue hair
+wavy shoulder-length hair
+hime cut, dark purple hair
+spiky orange hair
+side-swept bangs
+blunt bangs covering forehead
+curly pink hair
+undercut, white hair
+half-up half-down hairstyle
+drill twintails
+slicked-back hair, forehead exposed
+headband pushing hair back

@@ -1,0 +1,17 @@
+# wildcards\outfits.txt — tenues (la frontière manche/poignet est critique)
+white t-shirt, short sleeves
+school uniform blazer, long sleeves
+oversized hoodie, sleeves pushed up
+sleeveless tank top
+denim jacket, cuffed sleeves
+long flowing kimono sleeves
+business shirt, rolled-up sleeves
+winter sweater, long knit sleeves
+crop top, bare arms
+raincoat, wide sleeves
+sports jersey, short sleeves
+cardigan over blouse
+leather jacket, zipped cuffs
+summer dress, thin straps
+lab coat, buttoned cuffs
+turtleneck, tight sleeves

@@ -1,0 +1,13 @@
+# prompts_wildcards.txt — FaceSegNet
+# Un template par ligne. Tokens __nom__ résolus depuis wildcards\nom.txt.
+# Prompts en ANGLAIS (ADR-006). Cible : portrait 1024x1024, visage grand
+# dans le cadre, yeux/bouche/nez/sourcils/racine des cheveux bien définis.
+
+score_9, score_8_up, source_anime, 1girl, solo, portrait, close-up face, __angles__, __expressions__, __hairstyles__, __backgrounds__, detailed eyes, defined eyebrows, visible hairline, anime style
+score_9, score_8_up, source_anime, 1boy, solo, portrait, close-up face, __angles__, __expressions__, __hairstyles__, __backgrounds__, sharp facial features, clean lineart, anime style
+score_9, score_8_up, source_anime, 1girl, solo, face focus, __angles__, __expressions__, __hairstyles__, __backgrounds__, detailed iris, small nose, glossy lips, anime style
+score_9, score_8_up, source_anime, 1girl, solo, headshot, __angles__, __expressions__, __hairstyles__, __backgrounds__, forehead visible, hairline visible, expressive eyebrows, anime style
+score_9, score_8_up, source_anime, 1boy, solo, portrait, __angles__, __expressions__, __hairstyles__, __backgrounds__, open mouth visible teeth, detailed eyes, anime style
+score_9, score_8_up, source_anime, 1girl, solo, upper body portrait, __angles__, __expressions__, __hairstyles__, __backgrounds__, soft lighting on face, defined nose bridge, anime style
+score_9, score_8_up, source_anime, 1girl, solo, close-up face, hair pulled back, __angles__, __expressions__, __hairstyles__, __backgrounds__, full hairline exposed, anime style
+score_9, score_8_up, source_anime, 1boy, solo, headshot, __angles__, __expressions__, __hairstyles__, __backgrounds__, dramatic lighting, detailed facial features, anime style
