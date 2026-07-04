@@ -12,10 +12,15 @@
 # bascule en mode brush pur (annotation 100% manuelle).
 #
 # Contrôles :
+#   Molette             : zoom avant/arrière centré sur le curseur
+#   Ctrl+Molette        : taille de la pointe (cercle d'aperçu visible au curseur)
+#   Clic milieu (drag)  : pan (déplacement de la vue)
+#   Espace + drag       : pan (alternative stylet)
+#   Ctrl+Z              : annuler le dernier clic (masque + point SAM)
 #   Clic gauche         : mode POINT → point SAM positif  |  mode BRUSH → peindre
 #   Clic droit          : mode POINT → point SAM négatif  |  mode BRUSH → effacer
 #   B                   : bascule POINT / BRUSH
-#   + / -               : taille du brush
+#   + / -               : taille du brush (alternative clavier)
 #   U                   : annuler (10 niveaux)
 #   C                   : effacer le masque + points SAM
 #   I                   : inverser le masque
@@ -40,11 +45,13 @@ DEFAULT_IMAGES  = FOOTSEGNET_ROOT / "dataset" / "raw"
 DEFAULT_MASKS   = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
 SAM_CHECKPOINT  = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
 
-MAX_CANVAS_W = 820
-MAX_CANVAS_H = 1100
+MAX_CANVAS_W  = 820
+MAX_CANVAS_H  = 1100
 OVERLAY_COLOR = (255, 40, 40)   # rouge semi-transparent sur les zones masquées
 OVERLAY_ALPHA = 110
 UNDO_LEVELS   = 10
+ZOOM_MAX      = 8.0
+ZOOM_STEP     = 1.2
 
 # ── SAM (optionnel) ──────────────────────────────────────────────────────────
 _sam_predictor = None
@@ -97,12 +104,22 @@ class AnnotatorApp:
         # État image courante (initialisé par load_image)
         self.img_pil: Image.Image | None = None
         self.mask: np.ndarray | None = None       # uint8 HxW, 255=objet
-        self.scale = 1.0
         self.sam_points: list[tuple[int, int, int]] = []   # (x, y, label)
         self.sam_image_set = False
-        self.undo_stack: list[np.ndarray] = []
+        self.undo_stack: list[tuple[np.ndarray, list]] = []
         self._tk_img = None
         self._painting = False
+        self._overlay: Image.Image | None = None   # composition pleine résolution
+
+        # État de vue (zoom/pan)
+        self.zoom = 1.0
+        self.fit_zoom = 1.0
+        self.view_x = 0.0      # coin haut-gauche de la vue, en coordonnées image
+        self.view_y = 0.0
+        self.cw = MAX_CANVAS_W
+        self.ch = MAX_CANVAS_H
+        self._pan_anchor = None
+        self._space_down = False
 
         self.canvas = tk.Canvas(root, bg="#202020", highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
@@ -115,6 +132,13 @@ class AnnotatorApp:
         self.canvas.bind("<Button-3>",        self.on_right_click)
         self.canvas.bind("<B3-Motion>",       self.on_right_drag)
         self.canvas.bind("<ButtonRelease-3>", self.on_release)
+        self.canvas.bind("<Button-2>",        self.on_pan_start)
+        self.canvas.bind("<B2-Motion>",       self.on_pan_move)
+        self.canvas.bind("<ButtonRelease-2>", self.on_pan_end)
+        self.canvas.bind("<Motion>",          self.on_motion)
+        root.bind_all("<MouseWheel>",         self.on_wheel)
+        root.bind("<KeyPress-space>",         self.on_space_down)
+        root.bind("<KeyRelease-space>",       self.on_space_up)
         root.bind("<Key>", self.on_key)
 
         self.load_image(0)
@@ -126,7 +150,13 @@ class AnnotatorApp:
         path = self.image_paths[self.index]
         self.img_pil = Image.open(str(path)).convert("RGB")
         w, h = self.img_pil.size
-        self.scale = min(MAX_CANVAS_W / w, MAX_CANVAS_H / h, 1.0)
+        self.fit_zoom = min(MAX_CANVAS_W / w, MAX_CANVAS_H / h, 1.0)
+        self.zoom = self.fit_zoom
+        self.view_x = 0.0
+        self.view_y = 0.0
+        self.cw = max(1, int(w * self.fit_zoom))
+        self.ch = max(1, int(h * self.fit_zoom))
+        self.canvas.config(width=self.cw, height=self.ch)
 
         mask_path = self.mask_path()
         if mask_path.exists():
@@ -152,31 +182,61 @@ class AnnotatorApp:
         self.refresh_status()
         print(f"[annotate] Sauvegardé : {self.mask_path()}")
 
+    # ── Vue (zoom / pan) ─────────────────────────────────────────────────────
+
+    def canvas_to_image(self, ex: float, ey: float) -> tuple[int, int]:
+        return int(self.view_x + ex / self.zoom), int(self.view_y + ey / self.zoom)
+
+    def image_to_canvas(self, ix: float, iy: float) -> tuple[float, float]:
+        return (ix - self.view_x) * self.zoom, (iy - self.view_y) * self.zoom
+
+    def clamp_view(self):
+        w, h = self.img_pil.size
+        vw = self.cw / self.zoom
+        vh = self.ch / self.zoom
+        self.view_x = max(0.0, min(self.view_x, max(0.0, w - vw)))
+        self.view_y = max(0.0, min(self.view_y, max(0.0, h - vh)))
+
     # ── Affichage ────────────────────────────────────────────────────────────
 
-    def refresh(self, full: bool = False):
-        """Recompose image + overlay masque + points SAM sur le canvas."""
+    def compose_overlay(self):
+        """Recompose l'overlay pleine résolution (mis en cache pour le zoom/pan)."""
         w, h = self.img_pil.size
-        dw, dh = int(w * self.scale), int(h * self.scale)
-
         overlay = self.img_pil.copy()
-        color_layer = Image.new("RGB", (w, h), OVERLAY_COLOR)
-        alpha = Image.fromarray(
-            (self.mask.astype(np.uint16) * OVERLAY_ALPHA // 255).astype(np.uint8), mode="L"
-        )
-        overlay.paste(color_layer, (0, 0), alpha)
-        disp = overlay.resize((dw, dh), Image.BILINEAR)
+        if self.mask.any():
+            color_layer = Image.new("RGB", (w, h), OVERLAY_COLOR)
+            alpha = Image.fromarray(
+                (self.mask.astype(np.uint16) * OVERLAY_ALPHA // 255).astype(np.uint8),
+                mode="L",
+            )
+            overlay.paste(color_layer, (0, 0), alpha)
+        self._overlay = overlay
+
+    def refresh(self, full: bool = False):
+        """Recompose l'overlay puis redessine la vue courante."""
+        self.compose_overlay()
+        self.render_view()
+
+    def render_view(self):
+        """Dessine la portion visible de l'overlay selon zoom/pan."""
+        z = self.zoom
+        x2 = self.view_x + self.cw / z
+        y2 = self.view_y + self.ch / z
+        crop = self._overlay.crop((int(self.view_x), int(self.view_y),
+                                   int(round(x2)), int(round(y2))))
+        resample = Image.NEAREST if z >= 2.0 else Image.BILINEAR
+        disp = crop.resize((self.cw, self.ch), resample)
 
         self._tk_img = ImageTk.PhotoImage(disp)
         self.canvas.delete("all")
-        self.canvas.config(width=dw, height=dh)
         self.canvas.create_image(0, 0, anchor="nw", image=self._tk_img)
 
         for x, y, label in self.sam_points:
-            cx, cy = x * self.scale, y * self.scale
-            color = "#00ff00" if label == 1 else "#ff8800"
-            self.canvas.create_oval(cx - 5, cy - 5, cx + 5, cy + 5,
-                                    outline=color, width=2)
+            cx, cy = self.image_to_canvas(x, y)
+            if -10 <= cx <= self.cw + 10 and -10 <= cy <= self.ch + 10:
+                color = "#00ff00" if label == 1 else "#ff8800"
+                self.canvas.create_oval(cx - 5, cy - 5, cx + 5, cy + 5,
+                                        outline=color, width=2)
         self.refresh_status()
 
     def refresh_status(self):
@@ -186,20 +246,94 @@ class AnnotatorApp:
         self.status.config(text=(
             f"[{self.index + 1}/{len(self.image_paths)}] "
             f"{self.image_paths[self.index].name}  |  mode={self.mode.upper()}  "
-            f"brush={self.brush_size}px  |  masque={pct:.1f}%  |  {sam_txt}  |  {saved}   "
-            f"(B:mode  S:save  U:undo  C:clear  I:invert  N/P:nav  +/-:brush)"
+            f"pointe={self.brush_size}px  zoom={self.zoom * 100:.0f}%  |  "
+            f"masque={pct:.1f}%  |  {sam_txt}  |  {saved}   "
+            f"(Molette:zoom  Ctrl+Molette:pointe  ClicMilieu/Espace:pan  "
+            f"Ctrl+Z:annuler  B:mode  S:save  N/P:nav)"
         ))
+
+    # ── Aperçu de la pointe ──────────────────────────────────────────────────
+
+    def draw_brush_cursor(self, ex: float, ey: float):
+        """Cercle d'aperçu de la pointe à sa taille réelle (double contour
+        noir/blanc pour rester visible sur fond clair et foncé)."""
+        self.canvas.delete("brushcur")
+        r = max(1.0, self.brush_size * self.zoom)
+        self.canvas.create_oval(ex - r - 1, ey - r - 1, ex + r + 1, ey + r + 1,
+                                outline="#000000", width=1, tags="brushcur")
+        self.canvas.create_oval(ex - r, ey - r, ex + r, ey + r,
+                                outline="#ffffff", width=1, tags="brushcur")
+
+    def on_motion(self, event):
+        if self.mode == "brush" and not self._space_down:
+            self.draw_brush_cursor(event.x, event.y)
+        else:
+            self.canvas.delete("brushcur")
+
+    # ── Molette : zoom / taille de pointe ────────────────────────────────────
+
+    def on_wheel(self, event):
+        # Position du curseur relative au canvas (bind_all → coords widget focus)
+        ex = self.canvas.winfo_pointerx() - self.canvas.winfo_rootx()
+        ey = self.canvas.winfo_pointery() - self.canvas.winfo_rooty()
+        if not (0 <= ex < self.cw and 0 <= ey < self.ch):
+            return
+
+        if event.state & 0x0004:   # Ctrl → réglage de la pointe, aperçu immédiat
+            step = 2 if event.delta > 0 else -2
+            self.brush_size = max(2, min(200, self.brush_size + step))
+            self.draw_brush_cursor(ex, ey)
+            self.refresh_status()
+            return
+
+        # Zoom centré sur le curseur : le point image sous le curseur reste fixe
+        factor = ZOOM_STEP if event.delta > 0 else 1.0 / ZOOM_STEP
+        ix = self.view_x + ex / self.zoom
+        iy = self.view_y + ey / self.zoom
+        self.zoom = max(self.fit_zoom, min(ZOOM_MAX, self.zoom * factor))
+        self.view_x = ix - ex / self.zoom
+        self.view_y = iy - ey / self.zoom
+        self.clamp_view()
+        self.render_view()
+        if self.mode == "brush":
+            self.draw_brush_cursor(ex, ey)
+
+    # ── Pan (clic milieu ou Espace+drag) ─────────────────────────────────────
+
+    def on_pan_start(self, event):
+        self._pan_anchor = (event.x, event.y, self.view_x, self.view_y)
+
+    def on_pan_move(self, event):
+        if self._pan_anchor is None:
+            return
+        ax, ay, vx, vy = self._pan_anchor
+        self.view_x = vx - (event.x - ax) / self.zoom
+        self.view_y = vy - (event.y - ay) / self.zoom
+        self.clamp_view()
+        self.render_view()
+
+    def on_pan_end(self, _event):
+        self._pan_anchor = None
+
+    def on_space_down(self, _event):
+        self._space_down = True
+        self.canvas.delete("brushcur")
+
+    def on_space_up(self, _event):
+        self._space_down = False
+        self._pan_anchor = None
 
     # ── Undo ─────────────────────────────────────────────────────────────────
 
     def push_undo(self):
-        self.undo_stack.append(self.mask.copy())
+        self.undo_stack.append((self.mask.copy(), list(self.sam_points)))
         if len(self.undo_stack) > UNDO_LEVELS:
             self.undo_stack.pop(0)
 
     def undo(self):
+        """Annule le dernier clic : restaure le masque ET les points SAM."""
         if self.undo_stack:
-            self.mask = self.undo_stack.pop()
+            self.mask, self.sam_points = self.undo_stack.pop()
             self.dirty = True
             self.refresh()
 
@@ -219,16 +353,12 @@ class AnnotatorApp:
             point_coords=pts, point_labels=labels, multimask_output=True
         )
         best = masks[int(np.argmax(scores))]
-        self.push_undo()
         # Le résultat SAM remplace le masque courant — corrections au brush ensuite
         self.mask = best.astype(np.uint8) * 255
         self.dirty = True
         self.refresh()
 
     # ── Brush ────────────────────────────────────────────────────────────────
-
-    def canvas_to_image(self, ex: float, ey: float) -> tuple[int, int]:
-        return int(ex / self.scale), int(ey / self.scale)
 
     def paint(self, ex: float, ey: float, value: int):
         x, y = self.canvas_to_image(ex, ey)
@@ -243,7 +373,7 @@ class AnnotatorApp:
         self.mask[y0:y1, x0:x1][circle] = value
         self.dirty = True
         # Feedback immédiat léger pendant le drag (refresh complet au relâchement)
-        cr = r * self.scale
+        cr = r * self.zoom
         color = "#ff4040" if value else "#3060ff"
         self.canvas.create_oval(ex - cr, ey - cr, ex + cr, ey + cr,
                                 fill=color, outline="", stipple="gray50")
@@ -251,7 +381,11 @@ class AnnotatorApp:
     # ── Événements ───────────────────────────────────────────────────────────
 
     def on_left_click(self, event):
+        if self._space_down:                      # Espace+drag = pan
+            self.on_pan_start(event)
+            return
         if self.mode == "point" and SAM_AVAILABLE:
+            self.push_undo()                      # snapshot avant le clic (Ctrl+Z)
             x, y = self.canvas_to_image(event.x, event.y)
             self.sam_points.append((x, y, 1))
             self.run_sam()
@@ -261,7 +395,11 @@ class AnnotatorApp:
             self.paint(event.x, event.y, 255)
 
     def on_right_click(self, event):
+        if self._space_down:
+            self.on_pan_start(event)
+            return
         if self.mode == "point" and SAM_AVAILABLE:
+            self.push_undo()
             x, y = self.canvas_to_image(event.x, event.y)
             self.sam_points.append((x, y, 0))
             self.run_sam()
@@ -271,27 +409,38 @@ class AnnotatorApp:
             self.paint(event.x, event.y, 0)
 
     def on_left_drag(self, event):
+        if self._space_down and self._pan_anchor is not None:
+            self.on_pan_move(event)
+            return
         if self.mode == "brush" and self._painting:
             self.paint(event.x, event.y, 255)
 
     def on_right_drag(self, event):
+        if self._space_down and self._pan_anchor is not None:
+            self.on_pan_move(event)
+            return
         if self.mode == "brush" and self._painting:
             self.paint(event.x, event.y, 0)
 
     def on_release(self, _event):
+        self._pan_anchor = None
         if self._painting:
             self._painting = False
             self.refresh()
 
     def on_key(self, event):
         key = event.keysym.lower()
+        if key == "z" and (event.state & 0x0004):   # Ctrl+Z : annuler dernier clic
+            self.undo()
+            return
         if key == "b":
             self.mode = "brush" if self.mode == "point" else "point"
             if self.mode == "point" and not SAM_AVAILABLE:
                 self.mode = "brush"
+            self.canvas.delete("brushcur")
             self.refresh_status()
         elif key in ("plus", "equal", "kp_add"):
-            self.brush_size = min(150, self.brush_size + 4)
+            self.brush_size = min(200, self.brush_size + 4)
             self.refresh_status()
         elif key in ("minus", "kp_subtract"):
             self.brush_size = max(2, self.brush_size - 4)
