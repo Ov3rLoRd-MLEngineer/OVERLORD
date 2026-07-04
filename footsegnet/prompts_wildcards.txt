@@ -1,0 +1,13 @@
+# prompts_wildcards.txt — FootSegNet
+# Un template par ligne. Les tokens __nom__ sont résolus depuis wildcards\nom.txt.
+# Prompts en ANGLAIS uniquement (ADR-006). Format cible : full body 1024x1536,
+# pieds/chaussures TOUJOURS visibles et non coupés.
+
+score_9, score_8_up, source_anime, 1girl, solo, full body, __poses__, wearing __outfits__, __shoes__, __backgrounds__, feet fully visible, sharp focus on footwear, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, __poses__, wearing __outfits__, __shoes__, __backgrounds__, feet fully visible, detailed shoes, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body shot from low angle, __poses__, __outfits__, __shoes__, __backgrounds__, emphasis on feet and shoes, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body, side view, __poses__, __outfits__, __shoes__, __backgrounds__, both feet visible, clean footwear details, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, back view, __poses__, __outfits__, __shoes__, __backgrounds__, heels and soles visible, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body, three-quarter view, __poses__, __outfits__, __shoes__, __backgrounds__, dynamic lighting, feet in frame, anime style
+score_9, score_8_up, source_anime, 1girl, solo, full body, __poses__, __outfits__, barefoot, __backgrounds__, detailed bare feet, toes visible, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, __poses__, __outfits__, __shoes__, one shoe untied, __backgrounds__, feet close to camera, anime style

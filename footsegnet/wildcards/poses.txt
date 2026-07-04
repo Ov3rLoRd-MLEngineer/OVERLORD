@@ -1,0 +1,21 @@
+# wildcards\poses.txt — poses full body (variation position/angle des pieds)
+standing straight, arms at sides
+walking, mid-stride
+running, dynamic pose
+sitting on a bench, legs crossed
+jumping, both feet off the ground
+crouching, knees bent
+kicking, one leg raised
+standing on one foot, balancing
+leaning against a wall, one foot up
+stretching, lunge pose
+climbing stairs
+squatting down, tying shoelaces
+skipping, playful pose
+standing on tiptoes
+mid-kick martial arts pose
+sitting on the ground, legs extended forward
+dancing, feet apart
+about to sprint, starting position
+casually strolling, hands in pockets
+landing from a jump, knees flexed
