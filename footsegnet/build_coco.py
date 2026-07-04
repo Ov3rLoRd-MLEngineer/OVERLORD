@@ -88,6 +88,27 @@ def mask_to_annotation(mask_bin: np.ndarray, ann_id: int, image_id: int) -> dict
     }
 
 
+# ── Augmentation ─────────────────────────────────────────────────────────────
+
+def augment_hflip(img_path: Path, mask_bin: np.ndarray,
+                  img_out: Path, mask_out: Path) -> tuple:
+    """
+    Augmentation : flip horizontal (miroir gauche/droite) de l'image annotée
+    ET de son masque. Écrit <stem>_hflip.<ext> dans images\\<split> et
+    <stem>_hflip.png dans masks\\<split>.
+
+    Returns:
+        (nom_fichier_image_flippée, masque_binaire_flippé HxW 0/1)
+    """
+    flip_name = f"{img_path.stem}_hflip{img_path.suffix}"
+    img_flip = Image.open(str(img_path)).transpose(Image.FLIP_LEFT_RIGHT)
+    img_flip.save(str(img_out / flip_name))
+    flip_bin = np.fliplr(mask_bin).copy()
+    Image.fromarray((flip_bin * 255).astype(np.uint8), mode="L").save(
+        str(mask_out / f"{img_path.stem}_hflip.png"))
+    return flip_name, flip_bin
+
+
 # ── Construction ─────────────────────────────────────────────────────────────
 
 def collect_pairs() -> list[tuple[Path, Path]]:
@@ -103,8 +124,10 @@ def collect_pairs() -> list[tuple[Path, Path]]:
     return pairs
 
 
-def build_split_json(pairs: list[tuple[Path, Path]], split: str) -> dict:
-    """Copie images/masques du split et construit le JSON COCO correspondant."""
+def build_split_json(pairs: list[tuple[Path, Path]], split: str,
+                     augment: bool = False) -> dict:
+    """Copie images/masques du split et construit le JSON COCO correspondant.
+    Si augment=True, ajoute le flip horizontal de chaque paire au dataset."""
     img_out  = IMAGES_DIR / split
     mask_out = MASKS_DIR / split
     img_out.mkdir(parents=True, exist_ok=True)
@@ -123,8 +146,10 @@ def build_split_json(pairs: list[tuple[Path, Path]], split: str) -> dict:
     }
 
     ann_id = 1
+    image_id = 0
     skipped = 0
-    for image_id, (img_path, mask_path) in enumerate(pairs, start=1):
+    flipped = 0
+    for img_path, mask_path in pairs:
         img = Image.open(str(img_path))
         w, h = img.size
         mask = Image.open(str(mask_path)).convert("L")
@@ -132,10 +157,12 @@ def build_split_json(pairs: list[tuple[Path, Path]], split: str) -> dict:
             mask = mask.resize((w, h), Image.NEAREST)
         mask_bin = (np.array(mask) > 127).astype(np.uint8)
 
+        image_id += 1
         ann = mask_to_annotation(mask_bin, ann_id, image_id)
         if ann is None:
             print(f"[build_coco] Masque vide, ignoré : {mask_path.name}")
             skipped += 1
+            image_id -= 1
             continue
 
         shutil.copy2(str(img_path), str(img_out / img_path.name))    # ADR-007
@@ -150,12 +177,30 @@ def build_split_json(pairs: list[tuple[Path, Path]], split: str) -> dict:
         coco["annotations"].append(ann)
         ann_id += 1
 
+        # Augmentation : flip horizontal (image + masque, gauche/droite inversés)
+        if augment:
+            image_id += 1
+            flip_name, flip_bin = augment_hflip(img_path, mask_bin, img_out, mask_out)
+            coco["images"].append({
+                "id": image_id,
+                "file_name": flip_name,
+                "width": w,
+                "height": h,
+            })
+            coco["annotations"].append(
+                mask_to_annotation(flip_bin, ann_id, image_id))
+            ann_id += 1
+            flipped += 1
+
     if skipped:
         print(f"[build_coco] {split} : {skipped} masque(s) vide(s) ignoré(s)")
+    if flipped:
+        print(f"[build_coco] {split} : {flipped} flips horizontaux ajoutés")
     return coco
 
 
-def main(val_ratio: float, split_seed: int) -> None:
+def main(val_ratio: float, split_seed: int,
+         no_augment: bool = False, augment_val: bool = False) -> None:
     pairs = collect_pairs()
     if not pairs:
         raise SystemExit(
@@ -174,7 +219,10 @@ def main(val_ratio: float, split_seed: int) -> None:
 
     ANNOT_DIR.mkdir(parents=True, exist_ok=True)
     for split, split_pairs in (("train", train_pairs), ("val", val_pairs)):
-        coco = build_split_json(split_pairs, split)
+        # Flip horizontal sur le train uniquement par défaut (le val reste
+        # non augmenté pour une métrique IoU honnête) — --augment-val pour forcer.
+        do_aug = (not no_augment) and (split == "train" or augment_val)
+        coco = build_split_json(split_pairs, split, augment=do_aug)
         out = ANNOT_DIR / f"instances_{split}.json"
         out.write_text(json.dumps(coco), encoding="utf-8")
         print(f"[build_coco] {out} : {len(coco['images'])} images, "
@@ -189,5 +237,9 @@ if __name__ == "__main__":
                         help="Fraction validation (défaut: 0.1)")
     parser.add_argument("--split-seed", type=int, default=1337,
                         help="Seed du split (reproductible)")
+    parser.add_argument("--no-augment", action="store_true",
+                        help="Désactive l'augmentation par flip horizontal")
+    parser.add_argument("--augment-val", action="store_true",
+                        help="Applique aussi le flip horizontal au split val")
     args = parser.parse_args()
-    main(args.val_ratio, args.split_seed)
+    main(args.val_ratio, args.split_seed, args.no_augment, args.augment_val)
