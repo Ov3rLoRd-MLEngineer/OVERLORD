@@ -20,6 +20,10 @@ os.environ.setdefault("PYTHONUTF8", "1")
 
 OLLAMA_URL  = os.environ.get("OLLAMA_URL",  "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "mistral")
+# Séquence de modèles Ollama essayés dans l'ordre par fallback_llm()
+# (serveur Ollama sur RTX 2070 via launch_ollama.bat CUDA_VISIBLE_DEVICES=1)
+OLLAMA_MODELS = ["mistral", "qwen2.5:7b", "deepseek-r1:7b"]
+OLLAMA_TIMEOUT_S = 30   # timeout PAR modèle de la séquence
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 _log = logging.getLogger("overlord_utils")
@@ -40,35 +44,51 @@ def _get_api_key() -> str:
     return key
 
 
+def _strip_think(text: str) -> str:
+    """Retire les blocs <think>...</think> (deepseek-r1) de la réponse —
+    sinon ils polluent safe_json_parse() et les prompts en aval."""
+    if text and "<think>" in text:
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return text.strip() if text else ""
+
+
 def fallback_llm(
     prompt: str,
     system: str = "",
     model: str = None,
     max_tokens: int = 1500,
     logger=None,
-    timeout: int = 120,
+    timeout: int = OLLAMA_TIMEOUT_S,
 ) -> str:
     """
     Appelle un LLM avec fallback automatique :
-    1. Ollama (mistral local)
+    1. Ollama : mistral → qwen2.5:7b → deepseek-r1:7b en séquence,
+       `timeout` secondes PAR modèle (défaut 30s)
     2. API Anthropic (claude-sonnet-4-6)
     3. Chaîne vide si tout échoue
 
     Args:
         prompt    : prompt utilisateur
         system    : prompt système optionnel
-        model     : forcer un modèle Ollama spécifique
+        model     : forcer un modèle Ollama spécifique (essayé en premier,
+                    la séquence par défaut reste en secours)
         max_tokens: limite de tokens
         logger    : logger optionnel
-        timeout   : timeout en secondes
+        timeout   : timeout en secondes PAR modèle Ollama
 
     Returns:
         str : réponse du LLM ou "" en cas d'échec
     """
     log = logger or _log
-    _model = model or OLLAMA_MODEL
 
-    # ── Tentative 1 : Ollama ──────────────────────────────────────────
+    # ── Tentative 1 : séquence Ollama (30s par modèle) ────────────────
+    sequence = []
+    if model:
+        sequence.append(model)
+    for m in [OLLAMA_MODEL] + OLLAMA_MODELS:
+        if m and m not in sequence:
+            sequence.append(m)
+
     try:
         import requests
         messages = []
@@ -76,25 +96,31 @@ def fallback_llm(
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
-        resp = requests.post(
-            f"{OLLAMA_URL}/api/chat",
-            json={
-                "model":    _model,
-                "messages": messages,
-                "stream":   False,
-                "options":  {"num_predict": max_tokens},
-            },
-            timeout=timeout,
-        )
-        if resp.status_code == 200:
-            data = resp.json()
-            text = data.get("message", {}).get("content", "").strip()
-            if text:
-                log.debug(f"[LLM] Ollama/{_model} OK ({len(text)} chars)")
-                return text
-            log.warning("[LLM] Ollama réponse vide")
-        else:
-            log.warning(f"[LLM] Ollama HTTP {resp.status_code}")
+        for _model in sequence:
+            try:
+                resp = requests.post(
+                    f"{OLLAMA_URL}/api/chat",
+                    json={
+                        "model":    _model,
+                        "messages": messages,
+                        "stream":   False,
+                        "options":  {"num_predict": max_tokens},
+                    },
+                    timeout=timeout,
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = _strip_think(
+                        data.get("message", {}).get("content", ""))
+                    if text:
+                        log.debug(f"[LLM] Ollama/{_model} OK ({len(text)} chars)")
+                        return text
+                    log.warning(f"[LLM] Ollama/{_model} réponse vide — modèle suivant")
+                else:
+                    log.warning(f"[LLM] Ollama/{_model} HTTP {resp.status_code} — modèle suivant")
+            except Exception as e:
+                log.warning(f"[LLM] Ollama/{_model} : {str(e)[:100]} — modèle suivant")
+        log.warning("[LLM] Séquence Ollama épuisée")
     except Exception as e:
         log.warning(f"[LLM] Ollama indisponible : {e}")
 
