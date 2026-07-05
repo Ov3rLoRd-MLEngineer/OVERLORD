@@ -8,6 +8,8 @@ overlord_utils centralise, context_bus connecte.
 import json
 import logging
 import os
+import subprocess
+import sys
 from pathlib import Path
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
@@ -28,14 +30,31 @@ except ImportError:
     GTTS_OK = False
 
 try:
+    import importlib.util as _importlib_util
+    # Coqui (torch + TTS.api) n'est PAS importe ici : un access violation Windows
+    # a ete observe de maniere reproductible quand un appel reseau (fallback_llm/
+    # requests, deja importe par ce process pour DialogueAdapter) precede le
+    # chargement du modele XTTS-v2 dans le meme process. La synthese tourne donc
+    # dans un subprocess isole (agents/_coqui_tts_worker.py, cf. CoquiTTSSynthesizer) :
+    # un crash natif y reste confine et se traduit par un code de sortie non-zero.
+    COQUI_OK = (_importlib_util.find_spec("TTS") is not None
+                and _importlib_util.find_spec("torch") is not None)
+except Exception:
+    COQUI_OK = False
+
+try:
     from agents.context_bus import get_bus
     BUS_OK = True
 except ImportError:
     BUS_OK = False
 
-VOICE_DIR    = Path("workspace/voice_synthesis")
-CLAUDE_MODEL = "claude-sonnet-4-6"
-log          = logging.getLogger("voice_synthesis")
+VOICE_DIR       = Path("workspace/voice_synthesis")
+VOICE_REFS_DIR  = Path("workspace/voice_refs")
+CLAUDE_MODEL    = "claude-sonnet-4-6"
+COQUI_MODEL_NAME = "tts_models/multilingual/multi-dataset/xtts_v2"
+# xtts_v2 -> codes langue courts (sous-ensemble supporte par le modele)
+COQUI_LANGUAGE_MAP = {"fr": "fr", "ja": "ja", "en": "en"}
+log             = logging.getLogger("voice_synthesis")
 
 
 def _llm(prompt: str, system: str = "", max_tokens: int = 300) -> str:
@@ -141,11 +160,88 @@ class ElevenLabsSynthesizer:
         return False
 
 
+def _select_coqui_device() -> str:
+    """
+    RTX 5080 (cuda:0) sert ComfyUI -- l'eviter pour ne pas se battre sur la VRAM.
+    RTX 2070 (cuda:1) est la carte secondaire quasi inactive (meme convention
+    que le pinning CUDA_VISIBLE_DEVICES=1 utilise pour Ollama). Detection via
+    nvidia-smi (le process principal n'importe pas torch, cf. worker isole).
+    """
+    try:
+        result = subprocess.run(["nvidia-smi", "-L"], capture_output=True,
+                                 text=True, timeout=10)
+        if result.returncode == 0:
+            gpu_count = len([l for l in result.stdout.strip().splitlines() if l.strip()])
+            if gpu_count > 1:
+                return "cuda:1"
+            if gpu_count == 1:
+                return "cuda:0"
+    except Exception:
+        pass
+    return "cpu"
+
+
+class CoquiTTSSynthesizer:
+    """
+    Lance agents/_coqui_tts_worker.py dans un subprocess isole. Le checkpoint
+    XTTS-v2 (~2 Go) est donc recharge a chaque appel (cout ~3-5s) -- accepte en
+    echange de l'isolation (cf. commentaire COQUI_OK plus haut) : un crash
+    natif dans le worker ne fait jamais tomber le pipeline appelant.
+    """
+
+    _WORKER_TIMEOUT_S = 120
+
+    def __init__(self, logger: logging.Logger = None):
+        self.log = logger or log
+
+    def _resolve_speaker_wav(self, character: str) -> Optional[str]:
+        candidate = VOICE_REFS_DIR / f"{character}.wav"
+        if candidate.exists():
+            return str(candidate)
+        default_ref = VOICE_REFS_DIR / "default.wav"
+        if default_ref.exists():
+            return str(default_ref)
+        return None
+
+    def synthesize(self, text: str, output_path: str,
+                    character: str = "default", profile: str = "default") -> bool:
+        if not COQUI_OK:
+            self.log.warning("[VOICE] Coqui TTS non installe -- pip install coqui-tts")
+            return False
+        speaker_wav = self._resolve_speaker_wav(character)
+        if speaker_wav is None:
+            self.log.warning(f"[VOICE] Coqui : aucune reference vocale pour '{character}' "
+                              f"(attendu : {VOICE_REFS_DIR}/{character}.wav ou default.wav)")
+            return False
+        p        = VOICE_PROFILES.get(profile, VOICE_PROFILES["default"])
+        language = COQUI_LANGUAGE_MAP.get(p["lang"], "fr")
+        device   = _select_coqui_device()
+        worker   = str(Path(__file__).resolve().parent / "_coqui_tts_worker.py")
+        try:
+            result = subprocess.run(
+                [sys.executable, worker, output_path, speaker_wav, language, device],
+                input=text, capture_output=True, text=True, encoding="utf-8",
+                env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+                timeout=self._WORKER_TIMEOUT_S,
+            )
+            if result.returncode == 0 and Path(output_path).exists():
+                self.log.info(f"[VOICE] Coqui XTTS-v2 OK (worker isole, {device}) : {output_path}")
+                return True
+            self.log.error(f"[VOICE] Coqui worker echec (code {result.returncode}) : "
+                            f"{result.stderr[-500:]}")
+        except subprocess.TimeoutExpired:
+            self.log.error(f"[VOICE] Coqui worker timeout ({self._WORKER_TIMEOUT_S}s)")
+        except Exception as e:
+            self.log.error(f"[VOICE] Coqui erreur : {e}")
+        return False
+
+
 class VoiceSynthesisV140:
 
     def __init__(self, logger: logging.Logger = None):
         self.log        = logger or log
         self.adapter    = DialogueAdapter()
+        self.coqui      = CoquiTTSSynthesizer(logger=self.log)
         self.gtts       = GTTSSynthesizer(logger=self.log)
         self.elevenlabs = ElevenLabsSynthesizer(logger=self.log)
         VOICE_DIR.mkdir(parents=True, exist_ok=True)
@@ -160,6 +256,8 @@ class VoiceSynthesisV140:
         success  = False
         if prefer_quality:
             success = self.elevenlabs.synthesize(adapted, out_path, line.character)
+        if not success:
+            success = self.coqui.synthesize(adapted, out_path, line.character, line.profile)
         if not success:
             success = self.gtts.synthesize(adapted, out_path, line.profile)
         if success:
@@ -201,11 +299,12 @@ class VoiceSynthesisV140:
 
 
 if __name__ == "__main__":
-    import sys, io
+    import io
     if hasattr(sys.stdout, "buffer"):
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     logging.basicConfig(level=logging.INFO)
     vs = VoiceSynthesisV140()
     print(f"gTTS disponible       : {GTTS_OK}")
+    print(f"Coqui TTS disponible  : {COQUI_OK}")
     print(f"ElevenLabs disponible : {bool(vs.elevenlabs._api_key)}")
     print("VoiceSynthesisV140 OK")

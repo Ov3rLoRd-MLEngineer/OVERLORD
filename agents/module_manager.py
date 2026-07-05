@@ -171,7 +171,7 @@ class ModuleManager:
             "narrative_memory": ["networkx", "chromadb"],
             "ray_cluster":      ["ray"],
             "sourcing":         ["feedparser", "pytrends"],
-            "postprod":         ["gTTS", "pydub"],
+            "postprod":         ["gTTS", "pydub", "coqui-tts"],
             "agent_3d_modeler": ["trimesh", "numpy"],
             "cost_tracker":     [],
         }
