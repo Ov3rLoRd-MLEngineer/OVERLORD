@@ -90,6 +90,7 @@ def generate_foot_mask(
     verbose: bool = False,
     pipeline_convention: bool = True,
     feather_px: int = FEATHER_PX,
+    refine: bool = True,
 ) -> str | None:
     """
     Segmente les pieds/chaussures d'une frame avec le SAM fine-tuné.
@@ -106,6 +107,12 @@ def generate_foot_mask(
         pipeline_convention : True (défaut) → NOIR=régénérer, BLANC=préserver ;
                               False → BLANC=objet (convention ML/dataset)
         feather_px  : rayon du flou gaussien de bord (0 = masque net)
+        refine      : True (défaut) → second appel predictor.predict() en
+                      réinjectant les logits du 1er passage comme mask_input
+                      (même box), pour laisser SAM corriger/étendre sa propre
+                      sortie (usage natif de l'entrée mask_input du
+                      mask_decoder, pas un hack) ; False → un seul passage
+                      (comportement historique)
 
     Returns:
         Chemin du masque PNG généré, ou None si échec.
@@ -145,9 +152,24 @@ def generate_foot_mask(
             masks, scores, logits = predictor.predict(
                 box=box, multimask_output=False, return_logits=True
             )
+            if refine:
+                # Raffinement : on réinjecte les logits du 1er passage comme
+                # mask_input du 2e, avec la même box — SAM utilise alors sa
+                # propre sortie comme point de départ pour corriger/étendre
+                # le masque, au lieu de repartir de zéro.
+                masks, scores, logits = predictor.predict(
+                    box=box, mask_input=logits, multimask_output=False,
+                    return_logits=True,
+                )
         # Seuil sur la probabilité (logits → sigmoïde) plutôt que le seuil
-        # binaire par défaut du predictor, pour exposer `threshold`
-        prob = 1.0 / (1.0 + np.exp(-logits[0].astype(np.float64)))
+        # binaire par défaut du predictor, pour exposer `threshold`.
+        # `masks[0]` (pas `logits[0]`) : predictor.predict(return_logits=True)
+        # renvoie dans `masks` les logits déjà remis à l'échelle de l'image
+        # d'origine (postprocess_masks) ; `logits` est la sortie brute basse
+        # résolution (256x256) du mask_decoder, non upscalée -- la seuiller
+        # directement produirait un masque 256x256 au lieu de la résolution
+        # de l'image source.
+        prob = 1.0 / (1.0 + np.exp(-masks[0].astype(np.float64)))
         obj = (prob >= threshold).astype(np.uint8)
     except Exception as e:
         print(f"[footsegnet] Erreur inférence : {e}")
@@ -159,6 +181,11 @@ def generate_foot_mask(
     else:
         out_arr = (obj * 255).astype(np.uint8)
 
+    if out_arr.shape != (ih, iw):
+        print(f"[footsegnet] Erreur : masque {out_arr.shape[::-1]} != "
+              f"image source {(iw, ih)} — inférence annulée")
+        return None
+
     mask_img = Image.fromarray(out_arr, mode="L")
     if feather_px > 0:
         mask_img = mask_img.filter(ImageFilter.GaussianBlur(feather_px))
@@ -168,8 +195,10 @@ def generate_foot_mask(
 
     if verbose:
         pct = float(obj.sum()) / obj.size * 100
+        refine_txt = "refine=on" if refine else "refine=off"
         print(f"[footsegnet] Masque : {pct:.1f}% pied/chaussure — "
-              f"score SAM={float(scores[0]):.3f} — {time.time() - t0:.2f}s")
+              f"score SAM={float(scores[0]):.3f} — {refine_txt} — "
+              f"{time.time() - t0:.2f}s")
         print(f"[footsegnet] → {final_path}")
 
     return final_path
@@ -191,6 +220,9 @@ if __name__ == "__main__":
                         help="Convention ML (BLANC=objet) au lieu de la convention pipeline")
     parser.add_argument("--feather",   type=int, default=FEATHER_PX,
                         help=f"Flou gaussien de bord en px (défaut: {FEATHER_PX}, 0=net)")
+    parser.add_argument("--refine", action=argparse.BooleanOptionalAction, default=True,
+                        help="Raffinement itératif : réinjecte les logits du 1er passage "
+                             "comme mask_input du 2e (défaut: activé ; --no-refine pour désactiver)")
     args = parser.parse_args()
 
     box = None
@@ -210,5 +242,6 @@ if __name__ == "__main__":
         verbose=True,
         pipeline_convention=not args.raw,
         feather_px=args.feather,
+        refine=args.refine,
     )
     print(f"\nMasque FootSegNet : {result if result else 'ÉCHEC'}")

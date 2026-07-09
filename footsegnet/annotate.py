@@ -41,8 +41,9 @@ from PIL import Image, ImageTk
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
-DEFAULT_IMAGES  = FOOTSEGNET_ROOT / "dataset" / "raw"
-DEFAULT_MASKS   = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
+DEFAULT_IMAGES   = FOOTSEGNET_ROOT / "dataset" / "raw"
+DEFAULT_MASKS    = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
+DEFAULT_PREMASKS = FOOTSEGNET_ROOT / "dataset" / "premasks"
 SAM_CHECKPOINT  = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
 
 MAX_CANVAS_W  = 820
@@ -82,11 +83,13 @@ def get_sam_predictor():
 # ── Application ──────────────────────────────────────────────────────────────
 
 class AnnotatorApp:
-    def __init__(self, root: tk.Tk, images_dir: Path, masks_dir: Path):
+    def __init__(self, root: tk.Tk, images_dir: Path, masks_dir: Path,
+                 premasks_dir: Path = DEFAULT_PREMASKS):
         self.root = root
         self.images_dir = images_dir
         self.masks_dir = masks_dir
         self.masks_dir.mkdir(parents=True, exist_ok=True)
+        self.premasks_dir = premasks_dir
 
         exts = {".png", ".jpg", ".jpeg", ".webp"}
         self.image_paths = sorted(
@@ -159,11 +162,22 @@ class AnnotatorApp:
         self.canvas.config(width=self.cw, height=self.ch)
 
         mask_path = self.mask_path()
+        premask_path = self.premask_path()
         if mask_path.exists():
             m = Image.open(str(mask_path)).convert("L")
             if m.size != (w, h):
                 m = m.resize((w, h), Image.NEAREST)
             self.mask = (np.array(m) > 127).astype(np.uint8) * 255
+        elif premask_path.exists():
+            # Pas encore de masque annoté à la main -- pré-remplissage depuis
+            # dataset/premasks/ (batch_premask.py) au lieu d'un canvas vide.
+            # Reste éditable normalement (stylet + flood fill) ; sauvegarder
+            # (S) l'écrit dans masks_raw/, jamais dans premasks/.
+            m = Image.open(str(premask_path)).convert("L")
+            if m.size != (w, h):
+                m = m.resize((w, h), Image.NEAREST)
+            self.mask = (np.array(m) > 127).astype(np.uint8) * 255
+            print(f"[annotate] Pré-masque chargé : {premask_path.name}")
         else:
             self.mask = np.zeros((h, w), dtype=np.uint8)
 
@@ -175,6 +189,9 @@ class AnnotatorApp:
 
     def mask_path(self) -> Path:
         return self.masks_dir / f"{self.image_paths[self.index].stem}.png"
+
+    def premask_path(self) -> Path:
+        return self.premasks_dir / f"{self.image_paths[self.index].stem}.png"
 
     def save_mask(self):
         Image.fromarray(self.mask, mode="L").save(str(self.mask_path()))
@@ -480,9 +497,11 @@ if __name__ == "__main__":
                         help="Dossier des images à annoter")
     parser.add_argument("--masks",  default=str(DEFAULT_MASKS),
                         help="Dossier de sortie des masques PNG")
+    parser.add_argument("--premasks", default=str(DEFAULT_PREMASKS),
+                        help="Dossier des pré-masques (batch_premask.py) pour pré-remplissage")
     args = parser.parse_args()
 
     root = tk.Tk()
     root.title("FootSegNet Annotator — Ov3rLoRd")
-    app = AnnotatorApp(root, Path(args.images), Path(args.masks))
+    app = AnnotatorApp(root, Path(args.images), Path(args.masks), Path(args.premasks))
     root.mainloop()
