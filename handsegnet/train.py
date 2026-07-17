@@ -207,10 +207,13 @@ def train(args) -> None:
     val_ds   = SegCocoDataset("val",   jitter=False)
     print(f"[{PROJECT}] train={len(train_ds)}  val={len(val_ds)} (annotations)")
 
+    # num_workers>0 : parallélise lecture PNG/décodage RLE/resize sur CPU
+    # pendant que le GPU calcule (i7-8700K, 6 cœurs physiques/12 threads) ;
+    # nécessite le garde if __name__ == "__main__" pour le spawn Windows.
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True,
-                              num_workers=0, drop_last=False)
+                              num_workers=6, pin_memory=True, drop_last=False)
     val_loader   = DataLoader(val_ds, batch_size=args.batch_size, shuffle=False,
-                              num_workers=0)
+                              num_workers=4, pin_memory=True)
 
     optimizer = torch.optim.AdamW(sam.mask_decoder.parameters(),
                                   lr=args.lr, weight_decay=args.weight_decay)
