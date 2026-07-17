@@ -127,7 +127,11 @@ def generate_part_mask(
             masks, scores, logits = predictor.predict(
                 box=box, multimask_output=False, return_logits=True
             )
-        prob = 1.0 / (1.0 + np.exp(-logits[0].astype(np.float64)))
+        # `masks[0]` (pas `logits[0]`) : predictor.predict(return_logits=True)
+        # renvoie dans `masks` les logits déjà remis à l'échelle de l'image
+        # d'origine (postprocess_masks) ; `logits` est la sortie brute basse
+        # résolution (256x256) du mask_decoder, non upscalée.
+        prob = 1.0 / (1.0 + np.exp(-masks[0].astype(np.float64)))
         obj = (prob >= threshold).astype(np.uint8)
     except Exception as e:
         print(f"[{PROJECT}] Erreur inférence : {e}")
@@ -137,6 +141,11 @@ def generate_part_mask(
         out_arr = np.where(obj > 0, 0, 255).astype(np.uint8)
     else:
         out_arr = (obj * 255).astype(np.uint8)
+
+    if out_arr.shape != (ih, iw):
+        print(f"[{PROJECT}] Erreur : masque {out_arr.shape[::-1]} != "
+              f"image source {(iw, ih)} — inférence annulée")
+        return None
 
     mask_img = Image.fromarray(out_arr, mode="L")
     if feather_px > 0:
@@ -149,7 +158,7 @@ def generate_part_mask(
     if verbose:
         pct = float(obj.sum()) / obj.size * 100
         print(f"[{PROJECT}] Masque : {pct:.1f}% objet — score={float(scores[0]):.3f} "
-              f"— {time.time() - t0:.2f}s → {final_path}")
+              f"— {time.time() - t0:.2f}s -> {final_path}")
 
     return final_path
 

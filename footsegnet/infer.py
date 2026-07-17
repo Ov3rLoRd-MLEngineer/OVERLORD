@@ -166,9 +166,11 @@ def generate_foot_mask(
         # `masks[0]` (pas `logits[0]`) : predictor.predict(return_logits=True)
         # renvoie dans `masks` les logits déjà remis à l'échelle de l'image
         # d'origine (postprocess_masks) ; `logits` est la sortie brute basse
+
         # résolution (256x256) du mask_decoder, non upscalée -- la seuiller
         # directement produirait un masque 256x256 au lieu de la résolution
         # de l'image source.
+
         prob = 1.0 / (1.0 + np.exp(-masks[0].astype(np.float64)))
         obj = (prob >= threshold).astype(np.uint8)
     except Exception as e:
@@ -199,7 +201,7 @@ def generate_foot_mask(
         print(f"[footsegnet] Masque : {pct:.1f}% pied/chaussure — "
               f"score SAM={float(scores[0]):.3f} — {refine_txt} — "
               f"{time.time() - t0:.2f}s")
-        print(f"[footsegnet] → {final_path}")
+        print(f"[footsegnet] -> {final_path}")
 
     return final_path
 

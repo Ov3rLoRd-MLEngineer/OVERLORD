@@ -872,3 +872,98 @@ Le probleme : llama3 enveloppe souvent le JSON dans du texte conversationnel.
 [2026-06-24 02:41:26] [INFO] ── [FIND_REPLACE] agents/director.py
 [2026-06-24 02:41:26] [INFO]   Backup → workspace\patch_backups\director.py.20260624_024126.bak
 [2026-06-24 02:41:26] [OK  ]   ✓ FIND_REPLACE appliqué dans agents/director.py
+[2026-06-25 18:56:30] [INFO] Format bundle détecté : unknown
+[2026-06-25 18:56:30] [ERR ] Format de bundle non reconnu.
+[2026-06-25 18:56:30] [ERR ] Formats supportés :
+[2026-06-25 18:56:30] [ERR ]   A) ==== FILE: f.py ==== / ==== FIND ==== / ==== REPLACE ==== / ==== END ====
+[2026-06-25 18:56:30] [ERR ]   B) [ACTION: UPDATE | FILE: f.py] / [CONTENU:] / [EXPLICATION:]
+[2026-06-25 18:56:30] [WARN] Aucun patch trouvé. Vérifier le format du bundle.
+[2026-06-25 18:58:21] [INFO] Format bundle détecté : unknown
+[2026-06-25 18:58:21] [ERR ] Format de bundle non reconnu.
+[2026-06-25 18:58:21] [ERR ] Formats supportés :
+[2026-06-25 18:58:21] [ERR ]   A) ==== FILE: f.py ==== / ==== FIND ==== / ==== REPLACE ==== / ==== END ====
+[2026-06-25 18:58:21] [ERR ]   B) [ACTION: UPDATE | FILE: f.py] / [CONTENU:] / [EXPLICATION:]
+[2026-06-25 18:58:21] [WARN] Aucun patch trouvé. Vérifier le format du bundle.
+[2026-06-25 19:00:00] [INFO] Format bundle détecté : find_replace
+[2026-06-25 19:00:00] [INFO] 3 patch(es) détecté(s)
+[2026-06-25 19:00:00] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-25 19:00:00] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260625_190000.bak
+[2026-06-25 19:00:00] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-25 19:00:00] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-25 19:00:00] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260625_190000.bak
+[2026-06-25 19:00:00] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-25 19:00:00] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-25 19:00:00] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260625_190000.bak
+[2026-06-25 19:00:00] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-25 20:13:02] [INFO] Format bundle détecté : find_replace
+[2026-06-25 20:13:02] [INFO] 2 patch(es) détecté(s)
+[2026-06-25 20:13:02] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-25 20:13:02] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260625_201302.bak
+[2026-06-25 20:13:02] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-25 20:13:02] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-25 20:13:02] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260625_201302.bak
+[2026-06-25 20:13:02] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 19:07:12] [INFO] Format bundle détecté : find_replace
+[2026-06-27 19:07:12] [INFO] 2 patch(es) détecté(s)
+[2026-06-27 19:07:12] [INFO] ── [FIND_REPLACE] agents\skeleton_remapper.py
+[2026-06-27 19:07:12] [INFO]   Backup → workspace\patch_backups\skeleton_remapper.py.20260627_190712.bak
+[2026-06-27 19:07:12] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\skeleton_remapper.py
+[2026-06-27 19:07:12] [INFO] ── [FIND_REPLACE] agents\lineart_remapper.py
+[2026-06-27 19:07:12] [INFO]   Backup → workspace\patch_backups\lineart_remapper.py.20260627_190712.bak
+[2026-06-27 19:07:12] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\lineart_remapper.py
+[2026-06-27 19:27:20] [INFO] Format bundle détecté : find_replace
+[2026-06-27 19:27:20] [INFO] 5 patch(es) détecté(s)
+[2026-06-27 19:27:20] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 19:27:20] [ERR ]   Texte FIND non trouvé dans agents\batch_controlnet.py
+[2026-06-27 19:27:20] [ERR ]   Début FIND attendu : '                # Copie squelette dans ComfyUI/input\n                skel_filena'
+[2026-06-27 19:27:20] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 19:27:20] [ERR ]   Texte FIND non trouvé dans agents\batch_controlnet.py
+[2026-06-27 19:27:20] [ERR ]   Début FIND attendu : '                    if ipa_src and os.path.exists(ipa_src):\n                    '
+[2026-06-27 19:27:20] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 19:27:20] [ERR ]   Texte FIND non trouvé dans agents\batch_controlnet.py
+[2026-06-27 19:27:20] [ERR ]   Début FIND attendu : 'IPA_WEIGHT_TYPE= "original"  # ✅ Corrigé depuis "linear"'
+[2026-06-27 19:27:20] [INFO] ── [FIND_REPLACE] agents\skeleton_remapper.py
+[2026-06-27 19:27:20] [ERR ]   Texte FIND non trouvé dans agents\skeleton_remapper.py
+[2026-06-27 19:27:20] [ERR ]   Début FIND attendu : '    img = Image.open(skeleton_path).convert("RGBA")\n    arr = np.array(img)\n\n   '
+[2026-06-27 19:27:20] [INFO] ── [FIND_REPLACE] agents\lineart_remapper.py
+[2026-06-27 19:27:20] [ERR ]   Texte FIND non trouvé dans agents\lineart_remapper.py
+[2026-06-27 19:27:20] [ERR ]   Début FIND attendu : '    img = Image.open(lineart_path).convert("RGB")\n    arr = np.array(img)\n\n    #'
+[2026-06-27 21:32:08] [INFO] Format bundle détecté : find_replace
+[2026-06-27 21:32:08] [INFO] 1 patch(es) détecté(s)
+[2026-06-27 21:32:08] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 21:32:08] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_213208.bak
+[2026-06-27 21:32:08] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO] Format bundle détecté : find_replace
+[2026-06-27 22:20:03] [INFO] 6 patch(es) détecté(s)
+[2026-06-27 22:20:03] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_222003.bak
+[2026-06-27 22:20:03] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_222003.bak
+[2026-06-27 22:20:03] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_222003.bak
+[2026-06-27 22:20:03] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_222003.bak
+[2026-06-27 22:20:03] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:20:03] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:20:04] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_222004.bak
+[2026-06-27 22:20:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:20:04] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:20:04] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_222004.bak
+[2026-06-27 22:20:04] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO] Format bundle détecté : find_replace
+[2026-06-27 22:59:55] [INFO] 4 patch(es) détecté(s)
+[2026-06-27 22:59:55] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_225955.bak
+[2026-06-27 22:59:55] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_225955.bak
+[2026-06-27 22:59:55] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_225955.bak
+[2026-06-27 22:59:55] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO] ── [FIND_REPLACE] agents\batch_controlnet.py
+[2026-06-27 22:59:55] [INFO]   Backup → workspace\patch_backups\batch_controlnet.py.20260627_225955.bak
+[2026-06-27 22:59:55] [OK  ]   ✓ FIND_REPLACE appliqué dans agents\batch_controlnet.py

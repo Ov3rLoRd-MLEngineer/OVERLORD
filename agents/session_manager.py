@@ -1,268 +1,364 @@
-"""
-agents/session_manager.py — Gestionnaire de Sessions Multi-Séries V1.47
-Gère plusieurs séries en parallèle, priorise les jobs GPU, reprend après crash.
-
-Usage :
-    from agents.session_manager import SessionManager
-    mgr = SessionManager()
-    sid = mgr.create_session("Dragon Ball Ov3rLoRd", media_type="anime", priority=1)
-    mgr.queue_episode(sid, episode=1, universe="Dragon Ball Super Broly")
-    mgr.start_scheduler()
-"""
+# session_manager.py — Ov3rLoRd Pipeline
+# Gestion état de session : seed, IPAdapter source, SSIM, statut, rollback
+# Format A compatible — py -3.12
 
 import json
-import logging
-import threading
-import time
-import subprocess
-import sys
 from pathlib import Path
 from datetime import datetime
-from enum import Enum
 
-log = logging.getLogger("session_manager")
-SESSIONS_DIR = Path("workspace/sessions")
-
-class SessionStatus(Enum):
-    IDLE      = "idle"
-    QUEUED    = "queued"
-    RUNNING   = "running"
-    PAUSED    = "paused"
-    COMPLETED = "completed"
-    FAILED    = "failed"
-
-class EpisodeStatus(Enum):
-    PENDING   = "pending"
-    RUNNING   = "running"
-    DONE      = "done"
-    FAILED    = "failed"
-    SKIPPED   = "skipped"
+SESSION_STATE_VERSION = "1.0"
 
 
-class Session:
-    def __init__(self, session_id: str, series: str, media_type: str = "anime",
-                 priority: int = 5):
-        self.id        = session_id
-        self.series    = series
-        self.media_type= media_type
-        self.priority  = priority  # 1=haute, 10=basse
-        self.status    = SessionStatus.IDLE
-        self.episodes  = []
-        self.created   = datetime.now().isoformat()
-        self.stats     = {"completed":0,"failed":0,"total_duration_s":0}
+# ─────────────────────────────────────────────
+#  INIT / LOAD / SAVE
+# ─────────────────────────────────────────────
 
-    def to_dict(self) -> dict:
+def load_session(path: str) -> dict | None:
+    """Charge une session existante depuis son fichier JSON."""
+    p = Path(path)
+    if p.exists():
+        with open(p, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return None
+
+
+def save_session(state: dict, path: str) -> None:
+    """Sauvegarde la session sur disque (écrasement atomique)."""
+    tmp = str(path) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
+    Path(tmp).replace(path)
+
+
+def create_session(
+    output_dir: str,
+    global_anchor: str,
+    shots_config: list[dict],
+    session_path: str | None = None,
+) -> dict:
+    """
+    Crée une nouvelle session.
+
+    shots_config exemple :
+        [{"shot_id": 1, "frame_start": 0, "frame_end": 143,
+          "seed": -1, "ipadapter_source": None}, ...]
+    """
+    state = {
+        "version": SESSION_STATE_VERSION,
+        "created_at": datetime.now().isoformat(),
+        "global_anchor": str(global_anchor),
+        "output_dir": str(output_dir),
+        "shots": [],
+    }
+
+    for s in shots_config:
+        state["shots"].append({
+            "shot_id":          s["shot_id"],
+            "seed":             s.get("seed", -1),
+            "ipadapter_source": s.get("ipadapter_source") or str(global_anchor),
+            "frame_start":      s["frame_start"],
+            "frame_end":        s["frame_end"],
+            "status":           "pending",   # pending / running / done / failed
+            "rollback_point":   None,        # frame_id de la dernière frame validée
+            "keyframe_anchor":  None,        # keyframe maître validée humainement
+            "frames":           [],
+        })
+
+    if session_path:
+        save_session(state, session_path)
+
+    return state
+
+
+# ─────────────────────────────────────────────
+#  ACCESSEURS
+# ─────────────────────────────────────────────
+
+def get_shot(state: dict, shot_id: int) -> dict | None:
+    for s in state["shots"]:
+        if s["shot_id"] == shot_id:
+            return s
+    return None
+
+
+def get_shot_for_frame(state: dict, frame_id: int) -> dict | None:
+    for s in state["shots"]:
+        if s["frame_start"] <= frame_id <= s["frame_end"]:
+            return s
+    return None
+
+
+# ─────────────────────────────────────────────
+#  MISE À JOUR FRAME
+# ─────────────────────────────────────────────
+
+def update_frame(
+    state: dict,
+    shot_id: int,
+    frame_id: int,
+    status: str,
+    ssim_score: float | None = None,
+    drift_flag: bool = False,
+    seed: int | None = None,
+    ipadapter_source: str | None = None,
+) -> None:
+    """
+    status : generated | validated | rejected | reprendre
+    En cas de status == 'validated', met à jour rollback_point du shot.
+    """
+    shot = get_shot(state, shot_id)
+    if shot is None:
+        return
+
+    # Mise à jour si la frame existe déjà
+    for f in shot["frames"]:
+        if f["frame_id"] == frame_id:
+            f["status"]     = status
+            f["drift_flag"] = drift_flag
+            if ssim_score is not None:
+                f["ssim_score"] = ssim_score
+            if seed is not None:
+                f["seed"] = seed
+            if ipadapter_source is not None:
+                f["ipadapter_source"] = ipadapter_source
+            f["updated_at"] = datetime.now().isoformat()
+            if status == "validated":
+                shot["rollback_point"] = frame_id
+            return
+
+    # Nouvelle entrée
+    entry = {
+        "frame_id":        frame_id,
+        "status":          status,
+        "ssim_score":      ssim_score,
+        "drift_flag":      drift_flag,
+        "seed":            seed,
+        "ipadapter_source": ipadapter_source,
+        "generated_at":    datetime.now().isoformat(),
+    }
+    shot["frames"].append(entry)
+    if status == "validated":
+        shot["rollback_point"] = frame_id
+
+
+# ─────────────────────────────────────────────
+#  ROLLBACK & REPRISE
+# ─────────────────────────────────────────────
+
+def get_rollback_frame(state: dict, shot_id: int) -> int | None:
+    """Retourne le frame_id du dernier point de rollback validé pour ce shot."""
+    shot = get_shot(state, shot_id)
+    if shot is None:
+        return None
+    return shot["rollback_point"]
+
+
+def get_resume_frame(state: dict, shot_id: int) -> int:
+    """
+    Retourne le frame_id depuis lequel reprendre la génération.
+    = rollback_point + 1, ou frame_start si aucun point validé.
+    """
+    shot = get_shot(state, shot_id)
+    if shot is None:
+        return 0
+    rb = shot["rollback_point"]
+    if rb is None:
+        return shot["frame_start"]
+    return rb + 1
+
+
+def mark_shot_for_resume(state: dict, shot_id: int, from_frame: int | None = None) -> None:
+    """
+    Marque un shot pour reprise depuis from_frame
+    (ou depuis rollback_point si from_frame=None).
+    Réinitialise les frames >= from_frame à status 'reprendre'.
+    """
+    shot = get_shot(state, shot_id)
+    if shot is None:
+        return
+
+    start = from_frame if from_frame is not None else get_resume_frame(state, shot_id)
+    shot["status"] = "pending"
+
+    for f in shot["frames"]:
+        if f["frame_id"] >= start:
+            f["status"] = "reprendre"
+            f["drift_flag"] = True
+
+
+def rollback_shot(state: dict, shot_id: int, to_frame: int) -> None:
+    """
+    Rollback dur : supprime toutes les entrées de frame > to_frame pour ce shot.
+    Met à jour rollback_point = to_frame.
+    """
+    shot = get_shot(state, shot_id)
+    if shot is None:
+        return
+    shot["frames"] = [f for f in shot["frames"] if f["frame_id"] <= to_frame]
+    shot["rollback_point"] = to_frame
+    shot["status"] = "pending"
+
+
+# ─────────────────────────────────────────────
+#  IPADAPTER SOURCE LOGIC
+# ─────────────────────────────────────────────
+
+def get_ipadapter_source(
+    state: dict,
+    shot_id: int,
+    frame_id: int,
+    mode: str = "rolling",       # "fixed" | "rolling" | "hybrid"
+    hybrid_prev_weight: float = 0.70,
+) -> dict:
+    """
+    Retourne la source IPAdapter à utiliser pour frame_id.
+
+    Retourne un dict :
+        {
+          "mode": "fixed" | "rolling" | "hybrid",
+          "primary": path_str,          # ancre globale ou frame N-1 validée
+          "secondary": path_str | None, # pour hybrid : ancre globale
+          "primary_weight": float,
+          "secondary_weight": float,
+        }
+    """
+    global_anchor = state["global_anchor"]
+    shot = get_shot(state, shot_id)
+
+    if mode == "fixed" or shot is None:
         return {
-            "id": self.id, "series": self.series,
-            "media_type": self.media_type, "priority": self.priority,
-            "status": self.status.value,
-            "episodes": self.episodes,
-            "created": self.created, "stats": self.stats,
+            "mode": "fixed",
+            "primary": global_anchor,
+            "secondary": None,
+            "primary_weight": 1.0,
+            "secondary_weight": 0.0,
         }
 
+    # Cherche la dernière frame validée < frame_id
+    validated = [
+        f for f in shot["frames"]
+        if f["status"] == "validated" and f["frame_id"] < frame_id
+    ]
 
-class SessionManager:
-    """Gère plusieurs sessions de production en parallèle."""
+    if not validated:
+        # Pas encore de frame validée → ancre globale
+        return {
+            "mode": "fixed",
+            "primary": global_anchor,
+            "secondary": None,
+            "primary_weight": 1.0,
+            "secondary_weight": 0.0,
+        }
 
-    def __init__(self, max_concurrent: int = 1, logger: logging.Logger = None):
-        self.log            = logger or log
-        self.max_concurrent = max_concurrent
-        self._sessions      = {}
-        self._lock          = threading.Lock()
-        self._scheduler_thr = None
-        self._running       = False
-        SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
-        self._load_sessions()
+    last_validated = max(validated, key=lambda x: x["frame_id"])
+    output_dir = state["output_dir"]
+    prev_path = str(
+        Path(output_dir) / f"frame_{last_validated['frame_id']:04d}_00001_.png"
+    )
 
-    def _load_sessions(self):
-        for f in SESSIONS_DIR.glob("*.json"):
-            try:
-                data = json.loads(f.read_text(encoding="utf-8"))
-                sid  = data["id"]
-                s    = Session(sid, data["series"], data.get("media_type","anime"),
-                               data.get("priority",5))
-                s.status   = SessionStatus(data.get("status","idle"))
-                s.episodes = data.get("episodes",[])
-                s.stats    = data.get("stats",{})
-                self._sessions[sid] = s
-                # Remettre en queue les sessions interrompues
-                if s.status == SessionStatus.RUNNING:
-                    s.status = SessionStatus.QUEUED
-            except Exception:
-                pass
-        self.log.info(f"[SESSION] {len(self._sessions)} sessions chargées")
+    # Vérification existence fichier
+    if not Path(prev_path).exists():
+        prev_path = global_anchor
 
-    def _save_session(self, s: Session):
-        path = SESSIONS_DIR / f"{s.id}.json"
-        path.write_text(json.dumps(s.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8")
+    if mode == "rolling":
+        return {
+            "mode": "rolling",
+            "primary": prev_path,
+            "secondary": None,
+            "primary_weight": 1.0,
+            "secondary_weight": 0.0,
+        }
 
-    def create_session(self, series: str, media_type: str = "anime",
-                       priority: int = 5) -> str:
-        """Crée une nouvelle session de production."""
-        import hashlib
-        sid = f"sess_{hashlib.md5(f'{series}{datetime.now()}'.encode()).hexdigest()[:8]}"
-        with self._lock:
-            s = Session(sid, series, media_type, priority)
-            self._sessions[sid] = s
-            self._save_session(s)
-        self.log.info(f"[SESSION] ✓ Créée : {series} ({sid})")
-        return sid
+    # mode == "hybrid"
+    return {
+        "mode": "hybrid",
+        "primary": prev_path,
+        "secondary": global_anchor,
+        "primary_weight": hybrid_prev_weight,
+        "secondary_weight": round(1.0 - hybrid_prev_weight, 2),
+    }
 
-    def queue_episode(self, session_id: str, episode: int,
-                      universe: str = "", extra_args: dict = None) -> bool:
-        """Ajoute un épisode à la file d'attente d'une session."""
-        with self._lock:
-            if session_id not in self._sessions:
-                return False
-            s = self._sessions[session_id]
-            ep_data = {
-                "episode":    episode,
-                "universe":   universe,
-                "extra_args": extra_args or {},
-                "status":     EpisodeStatus.PENDING.value,
-                "queued_at":  datetime.now().isoformat(),
-                "run_id":     None,
-                "duration_s": None,
-            }
-            s.episodes.append(ep_data)
-            if s.status == SessionStatus.IDLE:
-                s.status = SessionStatus.QUEUED
-            self._save_session(s)
-        self.log.info(f"[SESSION] Épisode {episode} ajouté à {session_id}")
-        return True
 
-    def pause_session(self, session_id: str):
-        with self._lock:
-            if session_id in self._sessions:
-                self._sessions[session_id].status = SessionStatus.PAUSED
-                self._save_session(self._sessions[session_id])
+# ─────────────────────────────────────────────
+#  KEYFRAME PRE-VALIDATION (3 frames test)
+# ─────────────────────────────────────────────
 
-    def resume_session(self, session_id: str):
-        with self._lock:
-            if session_id in self._sessions:
-                s = self._sessions[session_id]
-                if s.status == SessionStatus.PAUSED:
-                    s.status = SessionStatus.QUEUED
-                    self._save_session(s)
+def get_prevalidation_frames(state: dict, shot_id: int) -> list[int]:
+    """
+    Retourne les 3 frame_ids à générer en pré-validation avant batch complet :
+    début, milieu, fin du shot.
+    """
+    shot = get_shot(state, shot_id)
+    if shot is None:
+        return []
+    s = shot["frame_start"]
+    e = shot["frame_end"]
+    mid = (s + e) // 2
+    return [s, mid, e]
 
-    def get_queue(self) -> list:
-        """Retourne la file triée par priorité."""
-        with self._lock:
-            queued = [s for s in self._sessions.values()
-                      if s.status == SessionStatus.QUEUED]
-            return sorted(queued, key=lambda s: s.priority)
 
-    def start_scheduler(self, check_interval: int = 30):
-        """Lance le scheduler en arrière-plan."""
-        if self._scheduler_thr and self._scheduler_thr.is_alive():
-            return
-        self._running = True
-        self._scheduler_thr = threading.Thread(
-            target=self._scheduler_loop,
-            args=(check_interval,), daemon=True
+def prevalidation_passed(state: dict, shot_id: int) -> bool:
+    """True si les 3 frames de pré-validation sont toutes validées."""
+    targets = set(get_prevalidation_frames(state, shot_id))
+    shot = get_shot(state, shot_id)
+    if not shot:
+        return False
+    validated_ids = {
+        f["frame_id"] for f in shot["frames"]
+        if f["status"] == "validated"
+    }
+    return targets.issubset(validated_ids)
+
+
+# ─────────────────────────────────────────────
+#  RAPPORT SESSION
+# ─────────────────────────────────────────────
+
+def session_report(state: dict) -> str:
+    lines = [
+        f"=== SESSION Ov3rLoRd — {state.get('created_at', '?')} ===",
+        f"Ancre globale : {state['global_anchor']}",
+        "",
+    ]
+    for shot in state["shots"]:
+        total = shot["frame_end"] - shot["frame_start"] + 1
+        done  = sum(1 for f in shot["frames"] if f["status"] == "validated")
+        drift = sum(1 for f in shot["frames"] if f.get("drift_flag"))
+        rb    = shot["rollback_point"]
+        lines.append(
+            f"Shot {shot['shot_id']:02d} | frames {shot['frame_start']:04d}→{shot['frame_end']:04d}"
+            f" | validées {done}/{total}"
+            f" | drift {drift}"
+            f" | rollback frame {rb if rb is not None else 'N/A'}"
+            f" | status : {shot['status']}"
         )
-        self._scheduler_thr.start()
-        self.log.info(f"[SESSION] Scheduler démarré (intervalle {check_interval}s)")
-
-    def stop_scheduler(self):
-        self._running = False
-
-    def _scheduler_loop(self, interval: int):
-        while self._running:
-            running_count = sum(1 for s in self._sessions.values()
-                                if s.status == SessionStatus.RUNNING)
-            if running_count < self.max_concurrent:
-                queue = self.get_queue()
-                for session in queue:
-                    if running_count >= self.max_concurrent:
-                        break
-                    self._run_next_episode(session)
-                    running_count += 1
-            time.sleep(interval)
-
-    def _run_next_episode(self, session: Session):
-        """Lance le prochain épisode en attente d'une session."""
-        pending = [ep for ep in session.episodes
-                   if ep["status"] == EpisodeStatus.PENDING.value]
-        if not pending:
-            session.status = SessionStatus.COMPLETED
-            self._save_session(session)
-            return
-
-        ep = pending[0]
-
-        def _execute():
-            ep["status"]   = EpisodeStatus.RUNNING.value
-            ep["started_at"]= datetime.now().isoformat()
-            session.status = SessionStatus.RUNNING
-            self._save_session(session)
-
-            start = time.time()
-            try:
-                cmd = [
-                    sys.executable, "maestro.py",
-                    "--media-type", session.media_type,
-                    "--universe",   ep.get("universe",""),
-                ]
-                result = subprocess.run(cmd, capture_output=True, timeout=1800)
-                duration = int(time.time() - start)
-
-                if result.returncode == 0:
-                    ep["status"]     = EpisodeStatus.DONE.value
-                    ep["duration_s"] = duration
-                    session.stats["completed"] = session.stats.get("completed",0) + 1
-                    session.stats["total_duration_s"] = session.stats.get("total_duration_s",0) + duration
-                    self.log.info(f"[SESSION] ✓ Ep.{ep['episode']} terminé ({duration}s)")
-                else:
-                    ep["status"] = EpisodeStatus.FAILED.value
-                    session.stats["failed"] = session.stats.get("failed",0) + 1
-                    self.log.error(f"[SESSION] ✗ Ep.{ep['episode']} échoué")
-
-            except subprocess.TimeoutExpired:
-                ep["status"] = EpisodeStatus.FAILED.value
-                self.log.error(f"[SESSION] Timeout Ep.{ep['episode']}")
-            except Exception as e:
-                ep["status"] = EpisodeStatus.FAILED.value
-                self.log.error(f"[SESSION] Exception : {e}")
-            finally:
-                remaining = [e for e in session.episodes
-                             if e["status"] == EpisodeStatus.PENDING.value]
-                session.status = SessionStatus.QUEUED if remaining else SessionStatus.COMPLETED
-                self._save_session(session)
-
-        threading.Thread(target=_execute, daemon=True).start()
-
-    def status_report(self) -> dict:
-        with self._lock:
-            return {
-                "sessions": len(self._sessions),
-                "running":  sum(1 for s in self._sessions.values() if s.status==SessionStatus.RUNNING),
-                "queued":   sum(1 for s in self._sessions.values() if s.status==SessionStatus.QUEUED),
-                "completed":sum(1 for s in self._sessions.values() if s.status==SessionStatus.COMPLETED),
-                "details":  [s.to_dict() for s in sorted(
-                    self._sessions.values(), key=lambda x:x.priority)]
-            }
-
-    def print_status(self):
-        report = self.status_report()
-        print(f"\n{'═'*55}")
-        print(f"  Ov3rLoRd Session Manager V1.47")
-        print(f"  Sessions: {report['sessions']} | Running: {report['running']} | Queued: {report['queued']}")
-        print(f"{'─'*55}")
-        for s in report["details"]:
-            ep_done    = sum(1 for ep in s["episodes"] if ep["status"]=="done")
-            ep_total   = len(s["episodes"])
-            status_col = {"running":"✓","queued":"○","completed":"✓✓","failed":"✗","idle":"·","paused":"⏸"}.get(s["status"],"?")
-            print(f"  {status_col} [{s['priority']}] {s['series'][:30]:<30} {ep_done}/{ep_total} eps")
-        print(f"{'═'*55}\n")
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    mgr = SessionManager(max_concurrent=1)
-    sid1 = mgr.create_session("Dragon Ball Ov3rLoRd", "anime", priority=1)
-    sid2 = mgr.create_session("One Piece Arc Wano",   "anime", priority=2)
-    mgr.queue_episode(sid1, 1, "Dragon Ball Super Broly")
-    mgr.queue_episode(sid1, 2, "Dragon Ball Super Broly")
-    mgr.queue_episode(sid2, 1, "One Piece Wano Kuni")
-    mgr.print_status()
+    # Test rapide
+    from agents.session_manager import create_session, update_frame, session_report, get_ipadapter_source
+
+    SHOTS = [
+        {"shot_id": 1, "frame_start": 0,   "frame_end": 143,  "seed": -1},
+        {"shot_id": 2, "frame_start": 144,  "frame_end": 287,  "seed": -1},
+        {"shot_id": 3, "frame_start": 288,  "frame_end": 431,  "seed": -1},
+        {"shot_id": 4, "frame_start": 432,  "frame_end": 623,  "seed": -1},
+        {"shot_id": 5, "frame_start": 624,  "frame_end": 815,  "seed": -1},
+        {"shot_id": 6, "frame_start": 816,  "frame_end": 1007, "seed": -1},
+    ]
+
+    state = create_session(
+        output_dir=r"D:\Ov3rLoRd AI\ComfyUI\output\asuka_run",
+        global_anchor=r"D:\OVERLORD\DEMO\frame_0000_00001_.png",
+        shots_config=SHOTS,
+        session_path=r"D:\OVERLORD\DEMO\session_state.json",
+    )
+
+    update_frame(state, 1, 0,  "validated", ssim_score=1.0, seed=42)
+    update_frame(state, 1, 1,  "validated", ssim_score=0.82, seed=42)
+    update_frame(state, 1, 72, "validated", ssim_score=0.76, seed=42)
+
+    print(session_report(state))
+    ipa = get_ipadapter_source(state, 1, 5, mode="rolling")
+    print(f"IPAdapter pour frame 5 : {ipa}")

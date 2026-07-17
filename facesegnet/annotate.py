@@ -14,8 +14,10 @@
 #   Ctrl+Z              : annuler le dernier clic (masque + point SAM)
 #   1..5                : catégorie active (eyes/mouth/nose/eyebrows/hairline)
 #   Clic gauche         : mode POINT → point SAM positif  |  mode BRUSH → peindre
+#                         |  mode FILL → remplir la zone fermée sous le clic
 #   Clic droit          : mode POINT → point SAM négatif  |  mode BRUSH → effacer
 #   B                   : bascule POINT / BRUSH
+#   F                   : mode FILL (remplissage d'un contour fermé tracé au brush)
 #   + / -               : taille du brush (alternative clavier)
 #   U                   : annuler (10 niveaux)   C : effacer catégorie active
 #   I                   : inverser catégorie active
@@ -30,8 +32,10 @@ import argparse
 import tkinter as tk
 from pathlib import Path
 
+import cv2
 import numpy as np
 from PIL import Image, ImageTk
+from scipy.ndimage import binary_fill_holes
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 PROJECT_ROOT   = Path(r"D:\OVERLORD\facesegnet")
@@ -48,13 +52,12 @@ CATEGORIES = [
     ("hairline", (200, 80, 255)),
 ]
 
-MAX_CANVAS_W  = 900
-MAX_CANVAS_H  = 900
 OVERLAY_ALPHA = 110
 UNDO_LEVELS   = 10
 DEFAULT_BRUSH = 8      # traits fins (sourcils, contour des yeux)
 ZOOM_MAX      = 8.0
 ZOOM_STEP     = 1.2
+FILL_LEAK_RATIO = 0.5   # si floodFill remplit plus que ça, on suppose une fuite
 
 # ── SAM (optionnel) ──────────────────────────────────────────────────────────
 _sam_predictor = None
@@ -118,8 +121,8 @@ class AnnotatorApp:
         self.fit_zoom = 1.0
         self.view_x = 0.0
         self.view_y = 0.0
-        self.cw = MAX_CANVAS_W
-        self.ch = MAX_CANVAS_H
+        self.cw = 1
+        self.ch = 1
         self._pan_anchor = None
         self._space_down = False
 
@@ -128,6 +131,13 @@ class AnnotatorApp:
         self.status = tk.Label(root, anchor="w", font=("Consolas", 10))
         self.status.pack(fill="x")
 
+        try:
+            root.state("zoomed")   # démarre en plein écran (Windows)
+        except tk.TclError:
+            pass
+        root.update_idletasks()
+
+        self.canvas.bind("<Configure>",       self.on_canvas_resize)
         self.canvas.bind("<Button-1>",        self.on_left_click)
         self.canvas.bind("<B1-Motion>",       self.on_left_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_release)
@@ -166,13 +176,13 @@ class AnnotatorApp:
         path = self.image_paths[self.index]
         self.img_pil = Image.open(str(path)).convert("RGB")
         w, h = self.img_pil.size
-        self.fit_zoom = min(MAX_CANVAS_W / w, MAX_CANVAS_H / h, 1.0)
+        self.cw = max(1, self.canvas.winfo_width())
+        self.ch = max(1, self.canvas.winfo_height())
+        self.fit_zoom = min(self.cw / w, self.ch / h)
         self.zoom = self.fit_zoom
         self.view_x = 0.0
         self.view_y = 0.0
-        self.cw = max(1, int(w * self.fit_zoom))
-        self.ch = max(1, int(h * self.fit_zoom))
-        self.canvas.config(width=self.cw, height=self.ch)
+        self.clamp_view()   # centre l'image si son ratio ne remplit pas le canvas
 
         self.masks = {}
         for cat, _color in CATEGORIES:
@@ -208,12 +218,34 @@ class AnnotatorApp:
     def image_to_canvas(self, ix: float, iy: float) -> tuple[float, float]:
         return (ix - self.view_x) * self.zoom, (iy - self.view_y) * self.zoom
 
+    def on_canvas_resize(self, event):
+        """Suit la taille réelle du canvas (fenêtre redimensionnée/maximisée)
+        pour que le zoom remplisse tout l'espace disponible, pas une zone figée."""
+        if self.img_pil is None or event.width < 2 or event.height < 2:
+            return
+        was_fit = abs(self.zoom - self.fit_zoom) < 1e-6
+        self.cw, self.ch = event.width, event.height
+        w, h = self.img_pil.size
+        self.fit_zoom = min(self.cw / w, self.ch / h)
+        if was_fit:
+            self.zoom = self.fit_zoom
+        self.clamp_view()
+        self.render_view()
+
     def clamp_view(self):
         w, h = self.img_pil.size
         vw = self.cw / self.zoom
         vh = self.ch / self.zoom
-        self.view_x = max(0.0, min(self.view_x, max(0.0, w - vw)))
-        self.view_y = max(0.0, min(self.view_y, max(0.0, h - vh)))
+        # Si la vue est plus large/haute que l'image (dézoomé ou ratio différent
+        # du canvas), on centre au lieu d'ancrer en haut-gauche.
+        if vw >= w:
+            self.view_x = -(vw - w) / 2.0
+        else:
+            self.view_x = max(0.0, min(self.view_x, w - vw))
+        if vh >= h:
+            self.view_y = -(vh - h) / 2.0
+        else:
+            self.view_y = max(0.0, min(self.view_y, h - vh))
 
     # ── Affichage ────────────────────────────────────────────────────────────
 
@@ -404,6 +436,37 @@ class AnnotatorApp:
         self.canvas.create_oval(ex - cr, ey - cr, ex + cr, ey + cr,
                                 fill=color, outline="", stipple="gray50")
 
+    # ── Flood fill (catégorie active) ─────────────────────────────────────────
+
+    def flood_fill_at(self, ex: float, ey: float):
+        """Remplit la zone entourée par un contour fermé tracé au brush, dans
+        le masque de la catégorie active. cv2.floodFill part du point cliqué
+        et se propage sur les pixels à 0, borné par le tracé à 255. Si le
+        tracé a une fuite (trou d'1px issu de la connectivité 4 de
+        floodFill), le remplissage déborde sur une trop grande portion de
+        l'image : on retente alors avec scipy.ndimage.binary_fill_holes, qui
+        comble les trous fermés du masque sans dépendre d'un point de départ."""
+        x, y = self.canvas_to_image(ex, ey)
+        mask = self.active_mask()
+        h, w = mask.shape
+        if not (0 <= x < w and 0 <= y < h) or mask[y, x] == 255:
+            return
+
+        self.push_undo()
+
+        filled = mask.copy()
+        ff_mask = np.zeros((h + 2, w + 2), dtype=np.uint8)
+        cv2.floodFill(filled, ff_mask, (x, y), 255, loDiff=0, upDiff=0)
+        leaked = (filled > mask).sum() > FILL_LEAK_RATIO * mask.size
+
+        if leaked:
+            mask[:] = binary_fill_holes(mask > 0).astype(np.uint8) * 255
+        else:
+            mask[:] = filled
+
+        self.dirty = True
+        self.refresh()
+
     # ── Événements ───────────────────────────────────────────────────────────
 
     def on_left_click(self, event):
@@ -415,6 +478,8 @@ class AnnotatorApp:
             x, y = self.canvas_to_image(event.x, event.y)
             self.sam_points.append((x, y, 1))
             self.run_sam()
+        elif self.mode == "fill":
+            self.flood_fill_at(event.x, event.y)
         else:
             self._painting = True
             self.push_undo()
@@ -429,6 +494,8 @@ class AnnotatorApp:
             x, y = self.canvas_to_image(event.x, event.y)
             self.sam_points.append((x, y, 0))
             self.run_sam()
+        elif self.mode == "fill":
+            return
         else:
             self._painting = True
             self.push_undo()
@@ -466,9 +533,14 @@ class AnnotatorApp:
                 self.sam_points = []       # points SAM liés à une seule catégorie
                 self.refresh()
         elif key == "b":
-            self.mode = "brush" if self.mode == "point" else "point"
-            if self.mode == "point" and not SAM_AVAILABLE:
+            if self.mode != "brush":
                 self.mode = "brush"
+            else:
+                self.mode = "point" if SAM_AVAILABLE else "brush"
+            self.canvas.delete("brushcur")
+            self.refresh_status()
+        elif key == "f":
+            self.mode = "fill"
             self.canvas.delete("brushcur")
             self.refresh_status()
         elif key in ("plus", "equal", "kp_add"):

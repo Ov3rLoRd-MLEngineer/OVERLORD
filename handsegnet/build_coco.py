@@ -32,6 +32,9 @@ CATEGORIES = [
 ]
 CAT_ID = {c["name"]: c["id"] for c in CATEGORIES}
 
+# (angle degrés, tag fichier) — rotation additionnelle, incliné gauche/droit
+ROTATION_ANGLES = [(-15, "rotL15"), (15, "rotR15")]
+
 
 # ── RLE COCO (non compressé, ordre colonne / Fortran) ────────────────────────
 
@@ -96,7 +99,7 @@ def augment_hflip(img_path: Path, bins: dict,
         bins : {catégorie: masque_binaire HxW 0/1}
 
     Returns:
-        (nom_fichier_image_flippée, {catégorie: masque_binaire_flippé})
+        (nom_fichier_image_flippée, {catégorie: masque_binaire_flippé}, image PIL flippée)
     """
     flip_name = f"{img_path.stem}_hflip{img_path.suffix}"
     img_flip = Image.open(str(img_path)).transpose(Image.FLIP_LEFT_RIGHT)
@@ -107,7 +110,37 @@ def augment_hflip(img_path: Path, bins: dict,
         Image.fromarray((fb * 255).astype(np.uint8), mode="L").save(
             str(mask_out / f"{img_path.stem}_hflip__{cat}.png"))
         flip_bins[cat] = fb
-    return flip_name, flip_bins
+    return flip_name, flip_bins, img_flip
+
+
+def augment_rotate(img: Image.Image, bins: dict, angle: float,
+                   stem: str, tag: str, ext: str,
+                   img_out: Path, mask_out: Path) -> tuple:
+    """
+    Augmentation : rotation de `angle`° autour du centre (canevas inchangé,
+    coins découverts remplis en noir/fond) de l'image ET de chacun de ses
+    masques de catégorie. Écrit <stem>_<tag>.<ext> dans images\\<split> et
+    <stem>_<tag>__<cat>.png dans masks\\<split>. Image en bilinéaire, masques
+    en plus-proche-voisin (restent binaires).
+
+    Args:
+        bins : {catégorie: masque_binaire HxW 0/1}
+
+    Returns:
+        (nom_fichier_image_pivotée, {catégorie: masque_binaire_pivoté})
+    """
+    name = f"{stem}_{tag}{ext}"
+    img_rot = img.rotate(angle, resample=Image.BILINEAR)
+    img_rot.save(str(img_out / name))
+    rot_bins = {}
+    for cat, mask_bin in bins.items():
+        mask_img = Image.fromarray((mask_bin * 255).astype(np.uint8), mode="L")
+        mask_rot = mask_img.rotate(angle, resample=Image.NEAREST, fillcolor=0)
+        rb = (np.array(mask_rot) > 127).astype(np.uint8)
+        Image.fromarray((rb * 255).astype(np.uint8), mode="L").save(
+            str(mask_out / f"{stem}_{tag}__{cat}.png"))
+        rot_bins[cat] = rb
+    return name, rot_bins
 
 
 # ── Construction ─────────────────────────────────────────────────────────────
@@ -151,6 +184,7 @@ def build_split_json(entries: list[tuple[Path, dict]], split: str,
     ann_id = 1
     image_id = 0
     flipped = 0
+    rotated = 0
     for img_path, cat_masks in entries:
         img = Image.open(str(img_path))
         w, h = img.size
@@ -183,12 +217,14 @@ def build_split_json(entries: list[tuple[Path, dict]], split: str,
                 mask_to_annotation(mask_bin, ann_id, image_id, CAT_ID[cat]))
             ann_id += 1
 
-        # Augmentation : flip horizontal (image + masques, gauche/droite inversés)
+        # Augmentation : flip horizontal + rotation ±15° (seules ou combinées)
+        # → jusqu'à 6 variantes par image (recto/verso × normal/incliné G/D).
         if augment:
+            base_bins = {c: b for c, (b, _mp) in bins.items()}
+
             image_id += 1
-            flip_name, flip_bins = augment_hflip(
-                img_path, {c: b for c, (b, _mp) in bins.items()},
-                img_out, mask_out)
+            flip_name, flip_bins, img_flip = augment_hflip(
+                img_path, base_bins, img_out, mask_out)
             coco["images"].append({
                 "id": image_id,
                 "file_name": flip_name,
@@ -201,8 +237,31 @@ def build_split_json(entries: list[tuple[Path, dict]], split: str,
                 ann_id += 1
             flipped += 1
 
+            for base_img, base, base_tag in (
+                (img, base_bins, ""), (img_flip, flip_bins, "hflip_"),
+            ):
+                for angle, tag in ROTATION_ANGLES:
+                    image_id += 1
+                    rot_name, rot_bins = augment_rotate(
+                        base_img, base, angle, img_path.stem,
+                        f"{base_tag}{tag}", img_path.suffix, img_out, mask_out)
+                    coco["images"].append({
+                        "id": image_id,
+                        "file_name": rot_name,
+                        "width": w,
+                        "height": h,
+                    })
+                    for cat, rb in rot_bins.items():
+                        ann = mask_to_annotation(rb, ann_id, image_id, CAT_ID[cat])
+                        if ann is not None:
+                            coco["annotations"].append(ann)
+                        ann_id += 1
+                    rotated += 1
+
     if flipped:
         print(f"[build_coco] {split} : {flipped} flips horizontaux ajoutés")
+    if rotated:
+        print(f"[build_coco] {split} : {rotated} rotations ±15° ajoutées")
     return coco
 
 

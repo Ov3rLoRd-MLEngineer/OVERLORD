@@ -228,7 +228,7 @@ def generate_batch(count: int, start_index: int, base_seed: int, dry_run: bool) 
         }
         save_manifest(manifest)
         done += 1
-        print(f"[{PROJECT}]   OK → {dest_path}")
+        print(f"[{PROJECT}]   OK -> {dest_path}")
 
     return done
 

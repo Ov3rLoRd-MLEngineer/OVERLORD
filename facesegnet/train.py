@@ -133,21 +133,31 @@ def forward_batch(sam, batch, device, use_bf16):
         image_embeddings = sam.image_encoder(images)
         sparse_emb, dense_emb = sam.prompt_encoder(points=None, boxes=boxes, masks=None)
 
+    # mask_decoder.predict_masks() de segment_anything suppose une image
+    # unique (batch=1) répétée pour N prompts (repeat_interleave sur
+    # tokens.shape[0]), pas un batch de N images distinctes avec un prompt
+    # chacune — passer directement des tenseurs de batch B lève un mismatch
+    # de taille (B*B vs B). On boucle donc par échantillon pour le décodeur
+    # (léger, 4M params) sans toucher au package installé.
+    logits_list = []
     with autocast_ctx:
-        low_res_logits, _iou = sam.mask_decoder(
-            image_embeddings=image_embeddings,
-            image_pe=sam.prompt_encoder.get_dense_pe(),
-            sparse_prompt_embeddings=sparse_emb,
-            dense_prompt_embeddings=dense_emb,
-            multimask_output=False,
-        )
+        for i in range(images.shape[0]):
+            low_res_logits, _iou = sam.mask_decoder(
+                image_embeddings=image_embeddings[i:i + 1],
+                image_pe=sam.prompt_encoder.get_dense_pe(),
+                sparse_prompt_embeddings=sparse_emb[i:i + 1],
+                dense_prompt_embeddings=dense_emb[i:i + 1],
+                multimask_output=False,
+            )
+            logits_list.append(low_res_logits)
+    low_res_logits = torch.cat(logits_list, dim=0)
     return low_res_logits.float()
 
 
 def downsample_targets(batch, device):
     gt = F.interpolate(batch["mask"].to(device), size=(LOWRES_SIZE, LOWRES_SIZE),
                        mode="nearest")
-    valid = F.interpolate(batch["valid"].unsqueeze(1).to(device),
+    valid = F.interpolate(batch["valid"].to(device),
                           size=(LOWRES_SIZE, LOWRES_SIZE), mode="nearest")
     return gt, valid
 

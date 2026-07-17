@@ -12220,7 +12220,7 @@
     },
     {
       "id": 8,
-      "type": "AILab_QwenVL_PromptEnhancer",
+      "type": "Qwen3-VL-4B-Instruct-Abliterated",
       "pos": [
         2570,
         70
