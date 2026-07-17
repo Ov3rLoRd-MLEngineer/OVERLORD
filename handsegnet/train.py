@@ -1,10 +1,10 @@
 # train.py — HandSegNet (Ov3rLoRd Pipeline)
-# Fine-tuning SAM ViT-B sur le dataset COCO mains/doigts/poignets.
+# Fine-tuning SAM ViT-B sur le dataset COCO mains (mono-classe pour l'instant).
 # Même stratégie que footsegnet\train_sam.py (RTX 5080 16GB) :
 #   encodeurs GELÉS (no_grad + bf16), seul le mask_decoder est entraîné,
 #   prompt = bbox GT avec jitter, loss BCE+Dice en 256x256 sur région valide.
 # L'entraînement est agnostique à la classe : chaque annotation COCO
-# (une par catégorie et par image) est un échantillon indépendant.
+# (une par image pour l'instant) est un échantillon indépendant.
 #
 # Usage :
 #   py -3.12 train.py
