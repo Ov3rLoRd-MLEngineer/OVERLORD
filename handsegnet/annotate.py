@@ -1,10 +1,17 @@
 # annotate.py — HandSegNet (Ov3rLoRd Pipeline)
-# Interface d'annotation multi-classes (tkinter) : pré-remplissage SAM par
-# points + correction au stylet/souris. Même architecture que
-# footsegnet\annotate.py, étendue à N catégories.
+# Interface d'annotation légère (tkinter) pour créer les masques de mains.
+# Mono-classe pour l'instant (une seule catégorie "hand", pas de distinction
+# poignet/main/doigts) — même architecture que footsegnet\annotate.py.
 #
-# Un masque PNG PAR CATÉGORIE : dataset\masks_raw\<stem>__<catégorie>.png
-# (BLANC=objet, NOIR=fond). Le stylet Windows Ink est vu comme la souris.
+# Flux : pré-remplissage SAM (clics de points) → correction au stylet/souris
+#        (brush) → export masque PNG (BLANC=main, NOIR=fond).
+#
+# Le stylet Windows Ink est vu par tkinter comme la souris — un stylet sur
+# écran/tablette fonctionne donc directement pour peindre (sans pression).
+#
+# SAM local via segment-anything + torch (checkpoint sam_vit_b_01ec64.pth de
+# l'installation ComfyUI). Si torch/segment-anything sont absents, l'outil
+# bascule en mode brush pur (annotation 100% manuelle).
 #
 # Contrôles :
 #   Molette             : zoom avant/arrière centré sur le curseur
@@ -12,20 +19,20 @@
 #   Clic milieu (drag)  : pan (déplacement de la vue)
 #   Espace + drag       : pan (alternative stylet)
 #   Ctrl+Z              : annuler le dernier clic (masque + point SAM)
-#   1 / 2 / 3           : catégorie active (hand / fingers / wrist)
 #   Clic gauche         : mode POINT → point SAM positif  |  mode BRUSH → peindre
 #   Clic droit          : mode POINT → point SAM négatif  |  mode BRUSH → effacer
 #   B                   : bascule POINT / BRUSH
 #   + / -               : taille du brush (alternative clavier)
-#   U                   : annuler (10 niveaux)   C : effacer catégorie active
-#   I                   : inverser catégorie active
-#   S                   : sauvegarder tous les masques
-#   N / P               : image suivante / précédente (sauvegarde auto)
+#   U                   : annuler (10 niveaux)
+#   C                   : effacer le masque + points SAM
+#   I                   : inverser le masque
+#   S                   : sauvegarder le masque PNG
+#   N / P               : image suivante / précédente (sauvegarde auto si modifié)
 #   Échap               : quitter
 #
 # Usage :
 #   py -3.12 annotate.py
-#   py -3.12 annotate.py --images D:\OVERLORD\handsegnet\dataset\raw
+#   py -3.12 annotate.py --images D:\OVERLORD\handsegnet\dataset\raw --masks D:\OVERLORD\handsegnet\dataset\masks_raw
 
 import argparse
 import tkinter as tk
@@ -40,15 +47,9 @@ DEFAULT_IMAGES = PROJECT_ROOT / "dataset" / "raw"
 DEFAULT_MASKS  = PROJECT_ROOT / "dataset" / "masks_raw"
 SAM_CHECKPOINT = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
 
-# (nom, couleur overlay RGB) — l'ordre définit les touches 1..N
-CATEGORIES = [
-    ("hand",    (255, 60, 60)),
-    ("fingers", (60, 200, 255)),
-    ("wrist",   (255, 220, 60)),
-]
-
 MAX_CANVAS_W  = 820
 MAX_CANVAS_H  = 1100
+OVERLAY_COLOR = (255, 60, 60)   # rouge semi-transparent sur les zones masquées
 OVERLAY_ALPHA = 110
 UNDO_LEVELS   = 10
 DEFAULT_BRUSH = 16
@@ -69,6 +70,7 @@ except ImportError:
 
 
 def get_sam_predictor():
+    """Charge SAM ViT-B une seule fois (lazy)."""
     global _sam_predictor
     if _sam_predictor is None and SAM_AVAILABLE:
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -98,16 +100,16 @@ class AnnotatorApp:
             raise SystemExit(f"[annotate] Aucune image dans {images_dir}")
 
         self.index = 0
-        self.cat_idx = 0
         self.mode = "point" if SAM_AVAILABLE else "brush"
         self.brush_size = DEFAULT_BRUSH
         self.dirty = False
 
+        # État image courante (initialisé par load_image)
         self.img_pil: Image.Image | None = None
-        self.masks: dict[str, np.ndarray] = {}     # nom → uint8 HxW (255=objet)
-        self.sam_points: list[tuple[int, int, int]] = []
+        self.mask: np.ndarray | None = None       # uint8 HxW, 255=objet
+        self.sam_points: list[tuple[int, int, int]] = []   # (x, y, label)
         self.sam_image_set = False
-        self.undo_stack: list[tuple[str, np.ndarray, list]] = []
+        self.undo_stack: list[tuple[np.ndarray, list]] = []
         self._tk_img = None
         self._painting = False
         self._overlay: Image.Image | None = None   # composition pleine résolution
@@ -115,7 +117,7 @@ class AnnotatorApp:
         # État de vue (zoom/pan)
         self.zoom = 1.0
         self.fit_zoom = 1.0
-        self.view_x = 0.0
+        self.view_x = 0.0      # coin haut-gauche de la vue, en coordonnées image
         self.view_y = 0.0
         self.cw = MAX_CANVAS_W
         self.ch = MAX_CANVAS_H
@@ -144,20 +146,6 @@ class AnnotatorApp:
 
         self.load_image(0)
 
-    # ── Catégories ────────────────────────────────────────────────────────────
-
-    def cat_name(self) -> str:
-        return CATEGORIES[self.cat_idx][0]
-
-    def cat_color(self) -> tuple:
-        return CATEGORIES[self.cat_idx][1]
-
-    def active_mask(self) -> np.ndarray:
-        return self.masks[self.cat_name()]
-
-    def mask_path(self, cat: str) -> Path:
-        return self.masks_dir / f"{self.image_paths[self.index].stem}__{cat}.png"
-
     # ── Navigation / chargement ──────────────────────────────────────────────
 
     def load_image(self, index: int):
@@ -173,16 +161,14 @@ class AnnotatorApp:
         self.ch = max(1, int(h * self.fit_zoom))
         self.canvas.config(width=self.cw, height=self.ch)
 
-        self.masks = {}
-        for cat, _color in CATEGORIES:
-            mp = self.mask_path(cat)
-            if mp.exists():
-                m = Image.open(str(mp)).convert("L")
-                if m.size != (w, h):
-                    m = m.resize((w, h), Image.NEAREST)
-                self.masks[cat] = (np.array(m) > 127).astype(np.uint8) * 255
-            else:
-                self.masks[cat] = np.zeros((h, w), dtype=np.uint8)
+        mask_path = self.mask_path()
+        if mask_path.exists():
+            m = Image.open(str(mask_path)).convert("L")
+            if m.size != (w, h):
+                m = m.resize((w, h), Image.NEAREST)
+            self.mask = (np.array(m) > 127).astype(np.uint8) * 255
+        else:
+            self.mask = np.zeros((h, w), dtype=np.uint8)
 
         self.sam_points = []
         self.sam_image_set = False
@@ -190,14 +176,14 @@ class AnnotatorApp:
         self.dirty = False
         self.refresh(full=True)
 
-    def save_masks(self):
-        for cat, _color in CATEGORIES:
-            arr = self.masks[cat]
-            if arr.any() or self.mask_path(cat).exists():
-                Image.fromarray(arr, mode="L").save(str(self.mask_path(cat)))
+    def mask_path(self) -> Path:
+        return self.masks_dir / f"{self.image_paths[self.index].stem}.png"
+
+    def save_mask(self):
+        Image.fromarray(self.mask, mode="L").save(str(self.mask_path()))
         self.dirty = False
         self.refresh_status()
-        print(f"[annotate] Sauvegardé : {self.image_paths[self.index].stem}__<cat>.png")
+        print(f"[annotate] Sauvegardé : {self.mask_path()}")
 
     # ── Vue (zoom / pan) ─────────────────────────────────────────────────────
 
@@ -220,19 +206,17 @@ class AnnotatorApp:
         """Recompose l'overlay pleine résolution (mis en cache pour le zoom/pan)."""
         w, h = self.img_pil.size
         overlay = self.img_pil.copy()
-        for cat, color in CATEGORIES:
-            arr = self.masks[cat]
-            if not arr.any():
-                continue
-            color_layer = Image.new("RGB", (w, h), color)
+        if self.mask.any():
+            color_layer = Image.new("RGB", (w, h), OVERLAY_COLOR)
             alpha = Image.fromarray(
-                (arr.astype(np.uint16) * OVERLAY_ALPHA // 255).astype(np.uint8),
+                (self.mask.astype(np.uint16) * OVERLAY_ALPHA // 255).astype(np.uint8),
                 mode="L",
             )
             overlay.paste(color_layer, (0, 0), alpha)
         self._overlay = overlay
 
     def refresh(self, full: bool = False):
+        """Recompose l'overlay puis redessine la vue courante."""
         self.compose_overlay()
         self.render_view()
 
@@ -259,34 +243,29 @@ class AnnotatorApp:
         self.refresh_status()
 
     def refresh_status(self):
-        cats_txt = "  ".join(
-            f"[{i + 1}:{name}{'*' if i == self.cat_idx else ''}]"
-            for i, (name, _c) in enumerate(CATEGORIES)
-        )
-        pct = float((self.active_mask() > 0).sum()) / self.active_mask().size * 100
+        pct = float((self.mask > 0).sum()) / self.mask.size * 100
         sam_txt = "SAM:on" if SAM_AVAILABLE else "SAM:off"
         saved = "modifié*" if self.dirty else "sauvegardé"
         self.status.config(text=(
             f"[{self.index + 1}/{len(self.image_paths)}] "
-            f"{self.image_paths[self.index].name}  {cats_txt}  "
-            f"mode={self.mode.upper()} pointe={self.brush_size}px "
-            f"zoom={self.zoom * 100:.0f}%  "
-            f"masque({self.cat_name()})={pct:.1f}%  {sam_txt}  {saved}"
+            f"{self.image_paths[self.index].name}  |  mode={self.mode.upper()}  "
+            f"pointe={self.brush_size}px  zoom={self.zoom * 100:.0f}%  |  "
+            f"masque(hand)={pct:.1f}%  |  {sam_txt}  |  {saved}   "
+            f"(Molette:zoom  Ctrl+Molette:pointe  ClicMilieu/Espace:pan  "
+            f"Ctrl+Z:annuler  B:mode  S:save  N/P:nav)"
         ))
 
     # ── Aperçu de la pointe ──────────────────────────────────────────────────
 
     def draw_brush_cursor(self, ex: float, ey: float):
-        """Cercle d'aperçu de la pointe à sa taille réelle, couleur de la
-        catégorie active + contour noir pour rester visible partout."""
+        """Cercle d'aperçu de la pointe à sa taille réelle (double contour
+        noir/blanc pour rester visible sur fond clair et foncé)."""
         self.canvas.delete("brushcur")
         r = max(1.0, self.brush_size * self.zoom)
-        rgb = self.cat_color()
-        color = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
         self.canvas.create_oval(ex - r - 1, ey - r - 1, ex + r + 1, ey + r + 1,
                                 outline="#000000", width=1, tags="brushcur")
         self.canvas.create_oval(ex - r, ey - r, ex + r, ey + r,
-                                outline=color, width=1, tags="brushcur")
+                                outline="#ffffff", width=1, tags="brushcur")
 
     def on_motion(self, event):
         if self.mode == "brush" and not self._space_down:
@@ -297,6 +276,7 @@ class AnnotatorApp:
     # ── Molette : zoom / taille de pointe ────────────────────────────────────
 
     def on_wheel(self, event):
+        # Position du curseur relative au canvas (bind_all → coords widget focus)
         ex = self.canvas.winfo_pointerx() - self.canvas.winfo_rootx()
         ey = self.canvas.winfo_pointery() - self.canvas.winfo_rooty()
         if not (0 <= ex < self.cw and 0 <= ey < self.ch):
@@ -309,6 +289,7 @@ class AnnotatorApp:
             self.refresh_status()
             return
 
+        # Zoom centré sur le curseur : le point image sous le curseur reste fixe
         factor = ZOOM_STEP if event.delta > 0 else 1.0 / ZOOM_STEP
         ix = self.view_x + ex / self.zoom
         iy = self.view_y + ey / self.zoom
@@ -348,21 +329,18 @@ class AnnotatorApp:
     # ── Undo ─────────────────────────────────────────────────────────────────
 
     def push_undo(self):
-        self.undo_stack.append(
-            (self.cat_name(), self.active_mask().copy(), list(self.sam_points)))
+        self.undo_stack.append((self.mask.copy(), list(self.sam_points)))
         if len(self.undo_stack) > UNDO_LEVELS:
             self.undo_stack.pop(0)
 
     def undo(self):
         """Annule le dernier clic : restaure le masque ET les points SAM."""
         if self.undo_stack:
-            cat, m, pts = self.undo_stack.pop()
-            self.masks[cat] = m
-            self.sam_points = pts
+            self.mask, self.sam_points = self.undo_stack.pop()
             self.dirty = True
             self.refresh()
 
-    # ── SAM prefill (appliqué à la catégorie active) ─────────────────────────
+    # ── SAM prefill ──────────────────────────────────────────────────────────
 
     def run_sam(self):
         predictor = get_sam_predictor()
@@ -378,7 +356,8 @@ class AnnotatorApp:
             point_coords=pts, point_labels=labels, multimask_output=True
         )
         best = masks[int(np.argmax(scores))]
-        self.masks[self.cat_name()] = best.astype(np.uint8) * 255
+        # Le résultat SAM remplace le masque courant — corrections au brush ensuite
+        self.mask = best.astype(np.uint8) * 255
         self.dirty = True
         self.refresh()
 
@@ -386,8 +365,7 @@ class AnnotatorApp:
 
     def paint(self, ex: float, ey: float, value: int):
         x, y = self.canvas_to_image(ex, ey)
-        mask = self.active_mask()
-        h, w = mask.shape
+        h, w = self.mask.shape
         r = self.brush_size
         x0, x1 = max(0, x - r), min(w, x + r + 1)
         y0, y1 = max(0, y - r), min(h, y + r + 1)
@@ -395,11 +373,11 @@ class AnnotatorApp:
             return
         yy, xx = np.ogrid[y0:y1, x0:x1]
         circle = (xx - x) ** 2 + (yy - y) ** 2 <= r * r
-        mask[y0:y1, x0:x1][circle] = value
+        self.mask[y0:y1, x0:x1][circle] = value
         self.dirty = True
+        # Feedback immédiat léger pendant le drag (refresh complet au relâchement)
         cr = r * self.zoom
-        rgb = self.cat_color()
-        color = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}" if value else "#3060ff"
+        color = "#ff4040" if value else "#3060ff"
         self.canvas.create_oval(ex - cr, ey - cr, ex + cr, ey + cr,
                                 fill=color, outline="", stipple="gray50")
 
@@ -458,13 +436,7 @@ class AnnotatorApp:
         if key == "z" and (event.state & 0x0004):   # Ctrl+Z : annuler dernier clic
             self.undo()
             return
-        if key.isdigit() and key != "0":
-            idx = int(key) - 1
-            if idx < len(CATEGORIES):
-                self.cat_idx = idx
-                self.sam_points = []       # points SAM liés à une seule catégorie
-                self.refresh()
-        elif key == "b":
+        if key == "b":
             self.mode = "brush" if self.mode == "point" else "point"
             if self.mode == "point" and not SAM_AVAILABLE:
                 self.mode = "brush"
@@ -480,35 +452,37 @@ class AnnotatorApp:
             self.undo()
         elif key == "c":
             self.push_undo()
-            self.active_mask()[:] = 0
+            self.mask[:] = 0
             self.sam_points = []
             self.dirty = True
             self.refresh()
         elif key == "i":
             self.push_undo()
-            self.masks[self.cat_name()] = 255 - self.active_mask()
+            self.mask = 255 - self.mask
             self.dirty = True
             self.refresh()
         elif key == "s":
-            self.save_masks()
+            self.save_mask()
         elif key == "n":
             if self.dirty:
-                self.save_masks()
+                self.save_mask()
             self.load_image(self.index + 1)
         elif key == "p":
             if self.dirty:
-                self.save_masks()
+                self.save_mask()
             self.load_image(self.index - 1)
         elif key == "escape":
             if self.dirty:
-                self.save_masks()
+                self.save_mask()
             self.root.destroy()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="HandSegNet — annotation multi-classes")
-    parser.add_argument("--images", default=str(DEFAULT_IMAGES))
-    parser.add_argument("--masks",  default=str(DEFAULT_MASKS))
+    parser = argparse.ArgumentParser(description="HandSegNet — annotation masques mains")
+    parser.add_argument("--images", default=str(DEFAULT_IMAGES),
+                        help="Dossier des images à annoter")
+    parser.add_argument("--masks",  default=str(DEFAULT_MASKS),
+                        help="Dossier de sortie des masques PNG")
     args = parser.parse_args()
 
     root = tk.Tk()
