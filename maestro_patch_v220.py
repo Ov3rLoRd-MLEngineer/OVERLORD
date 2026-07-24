@@ -1,8 +1,30 @@
-# maestro_patch_v220.py -- version corrigee
-# Ov3rLoRd -- Ov3rLoRd
-# maestro.py est a la RACINE D:/OVERLORD/ (pas dans agents/)
-# Usage : python maestro_patch_v220.py  (depuis D:/OVERLORD/)
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
+"""
+maestro_patch_v220.py -- Ov3rLoRd
 
+Patch maestro.py (a la racine, pas dans agents/) pour ajouter le bloc V2.20
+Quality Control : cree une sauvegarde de maestro.py dans workspace/archive/
+puis injecte block_quality_control() (CLIP coherence + inpaint auto +
+pacing manifest) directement dans le fichier.
+
+ATTENTION -- bug connu (trouve le 2026-07-25, pas encore corrige) :
+le patch insere block_quality_control() en dehors de toute classe (donc
+`self` n'y a pas de sens) et ajoute une ligne `self._no_qc = ...` au
+niveau module sous `if __name__ == "__main__":`, ce qui provoque un
+NameError si maestro.py est lance apres le patch. Les imports
+CLIP_QC_OK / INPAINT_QC_OK / PACING_QC_OK reference dans la methode ne
+sont pas non plus injectes par ce script. A corriger avant utilisation.
+
+Usage : python maestro_patch_v220.py  (depuis D:/OVERLORD/)
+"""
 
 import sys
 import ast

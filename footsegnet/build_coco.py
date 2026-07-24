@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 # build_coco.py — FootSegNet (Ov3rLoRd Pipeline)
 # Construit le dataset au format COCO à partir des paires image/masque annotées :
 #   dataset\raw\*.png + dataset\masks_raw\*.png
@@ -284,7 +293,7 @@ def main(val_ratio: float, split_seed: int,
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="FootSegNet — masques PNG → COCO JSON")
+    parser = argparse.ArgumentParser(description="FootSegNet — masques PNG -> COCO JSON")
     parser.add_argument("--val-ratio",  type=float, default=0.1,
                         help="Fraction validation (défaut: 0.1)")
     parser.add_argument("--split-seed", type=int, default=1337,

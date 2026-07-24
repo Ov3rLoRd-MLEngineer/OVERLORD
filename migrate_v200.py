@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 """
 migrate_v200.py — Migration vers l'architecture V2.0
 Restructure D:\\OVERLORD\\ selon le plan Seiri/Seiton du document Gantt/PERT/5S.
@@ -10,7 +19,7 @@ Nouvelle structure :
   infra/         → Infrastructure (agent_registry, session_reporter, overlord_utils, grok_client, schema_validator)
   transmedia/    → Publication (transmedia_publisher, api_server)
   ui/            → Interfaces (overlord_launcher, overlord_auditor)
-  tests/         → Tests (test_suite_v170, test_pipeline)
+  tests/         → Tests (test_suite, test_pipeline)
   maestro.py     → Racine (toujours)
 
 Usage :
@@ -97,7 +106,7 @@ ROOT_FILES = {
 }
 
 # Tests dans leur propre dossier
-TEST_FILES = {"test_suite_v170", "test_pipeline", "test_integration"}
+TEST_FILES = {"test_suite", "test_pipeline", "test_integration"}
 
 BACKUP_DIR = Path("workspace/migration_backup")
 NEW_ROOT   = Path(".")

@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 # build_coco.py — BodySegNet (Ov3rLoRd Pipeline)
 # Masques PNG multi-classes → COCO JSON (RLE non compressé) + split train/val.
 # Même architecture que handsegnet\build_coco.py, avec les 4 catégories corps.
@@ -300,7 +309,7 @@ def main(val_ratio: float, split_seed: int,
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="BodySegNet — masques PNG → COCO JSON")
+    parser = argparse.ArgumentParser(description="BodySegNet — masques PNG -> COCO JSON")
     parser.add_argument("--val-ratio",  type=float, default=0.1)
     parser.add_argument("--split-seed", type=int, default=1337)
     parser.add_argument("--no-augment", action="store_true",

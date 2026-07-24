@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 """
 overlord_launcher.py — Ov3rLoRd Command Launcher V1.70
 Fenêtre tkinter séparée avec boutons de commandes préconfigurés.
@@ -65,10 +74,10 @@ DEFAULT_BUTTONS = [
      "python agents/config_manager.py",
      "agents", "info"),
     ("tests_quick",      "✓ Tests Rapides",
-     "python test_suite_v170.py --quick",
+     "python test_suite.py --quick",
      "tests", "ok"),
     ("tests_full",       "✓✓ Tests Complets",
-     "python test_suite_v170.py",
+     "python test_suite.py",
      "tests", "ok"),
     ("tests_pipeline",   "✓ Pipeline Test",
      "python test_pipeline.py --quick",

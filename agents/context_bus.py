@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 """
 agents/context_bus.py -- Context Bus Ov3rLoRd V1.49o
 Bus de communication inter-agents. Singleton thread-safe.
@@ -115,7 +124,7 @@ class ContextBus:
                 if v.get("agent_id","") != agent}
 
     def get_attention_map(self) -> list[dict]:
-        """Pour v110_graph_ui : carte d'attention des agents."""
+        """Pour graph_ui : carte d'attention des agents."""
         snap = self.snapshot()
         agents = {}
         for entry in snap.values():

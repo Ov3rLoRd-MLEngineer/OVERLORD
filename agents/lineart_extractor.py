@@ -1,3 +1,41 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
+"""
+lineart_extractor.py -- Ov3rLoRd Pipeline
+
+Extrait les cartes lineart (contours/traits) depuis des frames video Kling
+via le preprocesseur ComfyUI LineartStandardPreprocessor (pas de modele
+SDXL, juste le preprocesseur) -- alimente ensuite lineart_remapper.py pour
+un remapping vers la resolution finale 1344x768.
+
+Sortie : 910x512 (meme resolution que les squelettes DWPose avant
+remapping), ecrite dans DEMO/frames/lineart_910x512/.
+
+Necessite ComfyUI demarre sur http://127.0.0.1:8188 (sauf --dry-run).
+
+Options :
+  --source PATH    Dossier des frames source Kling (defaut: DEMO/frames/video_frames)
+  --output PATH    Dossier de sortie lineart (defaut: DEMO/frames/lineart_910x512)
+  --start N        Index de la premiere frame a traiter (defaut: 0)
+  --end N          Index de la derniere frame incluse (defaut: toutes)
+  --skip-existing  Ignore les frames deja extraites (defaut: active)
+  --sigma FLOAT    Gaussian sigma du preprocesseur LineartStandard (defaut: 6.0)
+  --threshold INT  Intensity threshold du preprocesseur (defaut: 8)
+  --dry-run        Simulation sans appel ComfyUI
+
+Usage :
+  py -3.12 agents/lineart_extractor.py
+  py -3.12 agents/lineart_extractor.py --start 100 --end 200
+  py -3.12 agents/lineart_extractor.py --dry-run
+"""
+
 import os
 import sys
 import argparse
@@ -7,15 +45,6 @@ import json
 import time
 import shutil
 from PIL import Image
-
-# ============================================================
-#   Ov3rLoRd — Lineart Extractor V1.1
-#   Extrait les cartes lineart depuis les frames Kling
-#   Preprocesseur : LineartStandardPreprocessor via ComfyUI API
-#   Output : DEMO/frames/lineart_910x512/ (910x512 — même résolution que DWPose)
-#   Remapping vers 1344x768 : lineart_remapper.py batch
-#   Ov3rLoRd
-# ============================================================
 
 COMFYUI_URL = "http://127.0.0.1:8188"
 COMFYUI_INPUT = r"D:\Ov3rLoRd AI\ComfyUI\input"
@@ -32,10 +61,9 @@ TARGET_H = 512
 
 
 def print_banner():
-    print("╔══════════════════════════════════════════════════════════════╗")
-    print("║   Ov3rLoRd — Lineart Extractor V1.1                         ║")
-    print("║   Ov3rLoRd                                        ║")
-    print("╚══════════════════════════════════════════════════════════════╝")
+    print("=" * 66)
+    print("  Ov3rLoRd -- Lineart Extractor V1.1")
+    print("=" * 66)
 
 
 def check_comfyui():
@@ -222,7 +250,7 @@ def main():
 
     print(f"  Source      : {args.source}")
     print(f"  Output      : {args.output}")
-    print(f"  Frames      : {args.start} → {end_idx} ({len(frames_to_process)} frames)")
+    print(f"  Frames      : {args.start} -> {end_idx} ({len(frames_to_process)} frames)")
     print(f"  Résolution  : {TARGET_W}x{TARGET_H}")
     print(f"  Sigma       : {args.sigma} / Threshold : {args.threshold}")
     print(f"  Skip exist. : {args.skip_existing}")
@@ -245,7 +273,7 @@ def main():
             continue
 
         if args.dry_run:
-            print(f"  [DRY] {frame_num:04d} → {frame_name}")
+            print(f"  [DRY] {frame_num:04d} -> {frame_name}")
             ok += 1
             continue
 
@@ -265,14 +293,14 @@ def main():
         prompt_id = submit_workflow(workflow)
 
         if not prompt_id:
-            print(f"  [{frame_num:04d}] ❌ Submit échoué")
+            print(f"  [{frame_num:04d}] [ERR] Submit echoue")
             err += 1
             continue
 
         # Attente
         history = wait_for_completion(prompt_id, timeout=60)
         if not history:
-            print(f"  [{frame_num:04d}] ❌ Timeout")
+            print(f"  [{frame_num:04d}] [ERR] Timeout")
             err += 1
             continue
 
@@ -284,19 +312,19 @@ def main():
 
         if src and os.path.exists(src):
             resize_and_save(src, dest_path)
-            print(f"  [{frame_num:04d}] ✅ → {frame_name}")
+            print(f"  [{frame_num:04d}] [OK] -> {frame_name}")
             ok += 1
         else:
-            print(f"  [{frame_num:04d}] ❌ Fichier introuvable en sortie ComfyUI")
+            print(f"  [{frame_num:04d}] [ERR] Fichier introuvable en sortie ComfyUI")
             err += 1
 
     print("")
-    print("══════════════════════════════════════════════════════════════")
-    print(f"  ✅ Extraites     : {ok}")
-    print(f"  ⏭  Skippées      : {skip}")
-    print(f"  ❌ Erreurs       : {err}")
-    print(f"  📁 Output        : {args.output}")
-    print("══════════════════════════════════════════════════════════════")
+    print("=" * 66)
+    print(f"  Extraites : {ok}")
+    print(f"  Skippees  : {skip}")
+    print(f"  Erreurs   : {err}")
+    print(f"  Output    : {args.output}")
+    print("=" * 66)
 
 
 if __name__ == "__main__":

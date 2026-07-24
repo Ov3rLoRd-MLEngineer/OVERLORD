@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 """
 build_exe.py -- Compilation EXE PyInstaller Ov3rLoRd V1.49q
 Genere 2 EXE : MaestroProduction | MaintenanceHub
@@ -41,9 +50,9 @@ BUILDS = [
             "agents.watchdog",
             "agents.checkpoint_manager",
             "agents.pipeline_conscience",
-            "agents.v130_emotion_engine",
-            "agents.v130_world_model",
-            "agents.v130_generative_world",
+            "agents.emotion_engine",
+            "agents.world_model",
+            "agents.generative_world",
             "agents.roles_registry",
             "agents.cost_tracker",
             "agents.narrative_memory",
