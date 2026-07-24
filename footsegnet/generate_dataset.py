@@ -62,6 +62,15 @@ POLL_TIMEOUT  = 300
 
 WILDCARD_RE = re.compile(r"__([a-zA-Z0-9_]+)__")
 
+# Cohérence genre/vêtements : __outfits__/__shoes__ ne piochent plus dans un
+# pool global unique (risque de collision non voulue, ex. jupe+talons sur un
+# template "1boy" par pur hasard). Résolution consciente : pool genré du
+# template (feminine/masculine) + pool neutral, avec une petite probabilité
+# EXPLICITE de piocher dans le pool cross (association délibérément
+# cross-gender, assumée et documentée — pas une interdiction stricte).
+GENDERED_CATEGORIES = {"outfits", "shoes"}
+CROSS_PROBABILITY = 0.12
+
 
 # ── Wildcards ────────────────────────────────────────────────────────────────
 
@@ -95,13 +104,46 @@ def load_wildcard(name: str) -> list[str]:
 _wildcard_cache: dict[str, list[str]] = {}
 
 
+def _cached_wildcard(name: str) -> list[str]:
+    if name not in _wildcard_cache:
+        _wildcard_cache[name] = load_wildcard(name)
+    return _wildcard_cache[name]
+
+
+def _detect_gender(template: str) -> str:
+    """Genre du template d'après le tag de sujet — 'neutral' si ni 1girl ni 1boy."""
+    if "1girl" in template:
+        return "feminine"
+    if "1boy" in template:
+        return "masculine"
+    return "neutral"
+
+
+def _pick_gendered(category: str, gender: str, rng: random.Random) -> str:
+    """Pioche __outfits__/__shoes__ dans le pool genré du template + neutral,
+    avec CROSS_PROBABILITY de chance de piocher dans <category>_cross à la
+    place (association cross-gender délibérée et documentée)."""
+    if rng.random() < CROSS_PROBABILITY:
+        cross_pool = _cached_wildcard(f"{category}_cross")
+        if cross_pool:
+            return rng.choice(cross_pool)
+
+    pool = list(_cached_wildcard(f"{category}_neutral"))
+    if gender != "neutral":
+        pool += _cached_wildcard(f"{category}_{gender}")
+    return rng.choice(pool) if pool else f"__{category}__"
+
+
 def resolve_prompt(template: str, rng: random.Random) -> str:
-    """Remplace chaque token __nom__ par une valeur aléatoire de wildcards\\nom.txt."""
+    """Remplace chaque token __nom__ par une valeur aléatoire de wildcards\\nom.txt.
+    __outfits__/__shoes__ suivent la résolution genrée (cf. _pick_gendered)."""
+    gender = _detect_gender(template)
+
     def _sub(m: "re.Match") -> str:
         name = m.group(1)
-        if name not in _wildcard_cache:
-            _wildcard_cache[name] = load_wildcard(name)
-        values = _wildcard_cache[name]
+        if name in GENDERED_CATEGORIES:
+            return _pick_gendered(name, gender, rng)
+        values = _cached_wildcard(name)
         return rng.choice(values) if values else m.group(0)
     return WILDCARD_RE.sub(_sub, template)
 

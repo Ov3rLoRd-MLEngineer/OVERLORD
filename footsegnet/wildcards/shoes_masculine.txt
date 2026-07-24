@@ -1,0 +1,27 @@
+# wildcards\shoes_masculine.txt — chaussures à connotation masculine,
+# piochées pour les templates "1boy". Cf. footsegnet/README.md "Cohérence
+# genre/vêtements" — pas d'exclusivité stricte, voir shoes_cross.txt.
+black dress shoes, polished leather
+tan work boots with laces
+brown oxford dress shoes
+rugged leather work boots
+classic black chukka boots
+dark brown monk strap shoes
+heavy-duty steel-toe boots
+black high-top basketball sneakers
+suede desert boots, tan color
+classic penny loafers
+military-style lace-up boots
+brown leather boat shoes
+black and gray running sneakers, bulky sole
+dark denim-colored skate shoes
+weathered brown hiking boots
+formal black lace-up shoes
+rugged trail boots, mud-splattered
+classic canvas high-tops, dark navy
+leather biker boots with buckles
+slip-on driving shoes
+heavy winter snow boots, dark color
+broken-in leather work boots
+classic wingtip dress shoes
+black tactical boots

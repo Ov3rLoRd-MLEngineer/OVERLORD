@@ -24,6 +24,32 @@ FOOT_KEYPOINT_INDICES = {"RAnkle": 10, "LAnkle": 13}
 log = logging.getLogger("pose_generator")
 
 
+def _largest_person_index(people: list, min_confidence: float = 0.1) -> int | None:
+    """
+    Index de la personne dont la boite englobante globale (tous keypoints
+    fiables confondus) a la plus grande aire — heuristique "sujet principal" :
+    un personnage secondaire minuscule en arriere-plan produit une boite bien
+    plus petite que le personnage au premier plan.
+
+    Retourne None si aucune personne n'a au moins 2 keypoints fiables.
+    """
+    best_idx, best_area = None, -1.0
+    for idx, person in enumerate(people):
+        pk = person.get("pose_keypoints_2d", [])
+        pts = []
+        for k in range(len(pk) // 3):
+            x, y, conf = pk[k * 3], pk[k * 3 + 1], pk[k * 3 + 2]
+            if conf >= min_confidence and (x, y) != (0.0, 0.0):
+                pts.append((x, y))
+        if len(pts) < 2:
+            continue
+        xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+        area = (max(xs) - min(xs)) * (max(ys) - min(ys))
+        if area > best_area:
+            best_area, best_idx = area, idx
+    return best_idx
+
+
 def extract_foot_bbox(
     openpose_dict: dict,
     img_width: int | None = None,
@@ -31,7 +57,9 @@ def extract_foot_bbox(
     margin: float = 0.05,
     foot_extension: float = 0.12,
     min_confidence: float = 0.1,
-    person_index: int = 0,
+    person_index: int | str = 0,
+    margin_top_px: int | None = None,
+    margin_side_px: int | None = None,
 ) -> tuple[int, int, int, int] | None:
     """
     Derive une bbox (x, y, w, h) en pixels autour des chevilles a partir d'un
@@ -66,14 +94,35 @@ def extract_foot_bbox(
                            la chaussure
         min_confidence  : confiance minimale pour retenir un keypoint cheville
         person_index    : index de la personne dans people[] (defaut : 0,
-                           premiere/seule personne detectee)
+                           premiere/seule personne detectee), ou la chaine
+                           "largest" pour selectionner la personne avec la
+                           plus grande boite englobante globale (sujet
+                           principal probable quand des personnages
+                           secondaires/mascottes sont detectes en fond)
+        margin_top_px   : marge HAUTE en pixels absolus, remplace
+                           img_height * margin pour le haut uniquement quand
+                           fournie (None = comportement historique). Utile
+                           quand la bbox doit couvrir bien au-dessus de la
+                           cheville, ex. bottes hautes remontant au
+                           mollet/genou -- la marge relative par defaut
+                           (~5% de la hauteur image) est calibree pour des
+                           chaussures basses.
+        margin_side_px  : marge LATERALE (gauche/droite) en pixels absolus,
+                           remplace img_width * margin quand fournie (None =
+                           comportement historique). Utile pour les poses
+                           accroupies/jambe repliee ou la botte s'etale bien
+                           plus large que l'ecart entre chevilles.
 
     Returns:
         (x, y, w, h) en pixels absolus, ou None si aucune cheville fiable
         n'a ete detectee (personne absente, chevilles occluses, etc.)
     """
     people = openpose_dict.get("people", [])
-    if person_index >= len(people):
+    if person_index == "largest":
+        person_index = _largest_person_index(people, min_confidence)
+        if person_index is None:
+            return None
+    if not isinstance(person_index, int) or person_index >= len(people):
         return None
     pk = people[person_index].get("pose_keypoints_2d", [])
     if len(pk) < (max(FOOT_KEYPOINT_INDICES.values()) + 1) * 3:
@@ -106,8 +155,8 @@ def extract_foot_bbox(
     x0, x1 = min(xs), max(xs)
     y0, y1 = min(ys), max(ys)
 
-    mx = img_width * margin
-    my_top = img_height * margin
+    mx = float(margin_side_px) if margin_side_px is not None else img_width * margin
+    my_top = float(margin_top_px) if margin_top_px is not None else img_height * margin
     my_bottom = img_height * foot_extension
 
     x = max(0.0, x0 - mx)

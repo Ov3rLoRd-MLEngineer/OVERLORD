@@ -1,4 +1,5 @@
 # wildcards\backgrounds.txt — fonds variés (le modèle doit segmenter sur tout type de fond)
+# Variété x4 (v2, préparation dataset Control-LoRA) : 21 -> 85 entrées.
 pure white background
 city street at night, neon lights
 school hallway, bright daylight
@@ -19,3 +20,68 @@ mountain trail, rocky ground
 shopping mall, tiled floor
 riverside walkway, evening
 abstract gradient background, pastel colors
+subway platform, fluorescent lighting
+cherry blossom park, petals falling
+narrow alleyway, graffiti walls
+rooftop garden, city skyline behind
+library interior, tall bookshelves
+classroom, desks and chalkboard
+arcade interior, neon signs
+bridge overlooking a river
+countryside road, wheat fields
+parking garage, concrete pillars
+office lobby, glass walls
+temple courtyard, stone lanterns
+festival street, lanterns and stalls
+harbor pier, boats in background
+desert landscape, dunes and heat haze
+ice rink, cold blue lighting
+greenhouse interior, plants everywhere
+university campus, autumn leaves
+back alley diner, neon sign glow
+rooftop pool, city lights at dusk
+suburban front yard, picket fence
+farmers market, stalls and crowd blur
+airport terminal, departure boards
+hotel lobby, marble floor
+underground parking lot, dim lighting
+cafe terrace, string lights
+public bath entrance, wooden facade
+zen garden, raked gravel and rocks
+carnival midway, ferris wheel lights
+industrial warehouse interior, exposed beams
+rice paddy field, misty morning
+mountain summit, panoramic clouds
+downtown crosswalk, rush hour blur
+riverside cherry blossoms at night
+laundromat interior, fluorescent lights
+vending machine row, back street
+rooftop helipad, city below
+convenience store parking lot, night
+public park playground, empty at dusk
+studio backdrop, colored gel lighting
+train interior, empty seats
+onsen exterior, steam rising
+shrine steps, stone torii gate
+abandoned factory floor, dust in light beams
+skyscraper observation deck
+rain-soaked rooftop, city glow below
+quiet suburban street at dawn
+botanical garden greenhouse
+seaside boardwalk, sunset colors
+frozen lake, distant mountains
+busy food court, blurred crowd
+graffiti-covered underpass
+vineyard rows, golden hour
+mountain cabin porch, snow around
+subway staircase, tiled walls
+open-air market alley, hanging lanterns
+riverside jogging path, morning mist
+empty stadium bleachers
+rooftop bar, string lights and skyline
+countryside barn interior
+plain pastel gradient studio background
+concrete plaza, modern architecture
+dockside warehouse, shipping containers
+mountain lake shore, calm water
+narrow stone staircase, old town

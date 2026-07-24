@@ -1,0 +1,17 @@
+# wildcards\shoes_cross.txt — associations délibérément "cross-gender" (ex.
+# homme en talons hauts), tirées avec une petite probabilité EXPLICITE
+# (CROSS_PROBABILITY dans generate_dataset.py) plutôt que par collision
+# accidentelle entre deux pools indépendants. Cf. footsegnet/README.md
+# "Cohérence genre/vêtements" pour l'objectif.
+man wearing red high heel pumps, confident stride
+woman in heavy steel-toe work boots
+man in glittery platform heels, deliberate style choice
+woman in classic men's oxford dress shoes
+man wearing knee-high stiletto boots
+woman in rugged combat boots, oversized fit
+man in pastel pink ballet flats
+woman in men's heavy work boots, muddy
+man wearing strappy gold sandals
+woman in men's black tactical boots
+man in mary jane shoes with white socks
+woman in classic men's wingtip dress shoes

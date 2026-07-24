@@ -1,4 +1,5 @@
 # wildcards\poses.txt — poses full body (variation position/angle des pieds)
+# Variété x4 (v2, préparation dataset Control-LoRA) : 21 -> 84 entrées.
 standing straight, arms at sides
 walking, mid-stride
 running, dynamic pose
@@ -19,3 +20,68 @@ dancing, feet apart
 about to sprint, starting position
 casually strolling, hands in pockets
 landing from a jump, knees flexed
+standing with feet shoulder-width apart, hands on hips
+walking up an escalator
+jogging in place, warming up
+sitting cross-legged on the floor
+kneeling on one knee
+hopping on one foot
+standing pigeon-toed, shy pose
+striding confidently, long steps
+tiptoeing quietly
+standing at attention, heels together
+sliding into a stop, skidding pose
+vaulting over a low railing
+leaping across a gap
+standing with legs crossed at the ankles
+sitting on the edge of a table, legs dangling
+crouched in a sprinter's starting block
+walking backward, looking over shoulder
+spinning on one foot, arms out
+standing in a wide combat stance
+balancing on a curb, arms out for balance
+stepping over a puddle
+climbing over a fence
+sitting on a low wall, feet swinging
+standing with one knee bent, foot resting on a step
+power walking, brisk pace
+strutting on a catwalk
+standing pose with weight shifted onto one hip
+kneeling to pick something off the ground
+hopping over a small obstacle
+standing in first position, ballet-inspired
+mid-cartwheel, legs in the air
+doing a high kick, martial arts
+standing with feet in a wide stance, arms crossed
+tip-toe reaching for something overhead
+walking a tightrope pose, arms balancing
+sliding across the floor in socks
+standing casually with ankles crossed
+crouched ready to pounce
+sitting on stairs, one step down
+standing in a yoga tree pose, one foot on opposite knee
+squatting to inspect the ground
+running up a hill, leaning forward
+standing pose, foot tapping impatiently
+kneeling in prayer-like pose
+standing with one foot on a skateboard
+walking through shallow water, splashing
+standing with legs planted wide, victory pose
+sitting sideways on a chair, legs over the armrest
+standing with one leg kicked back playfully
+crouching behind cover, tense pose
+mid-jump rope, feet together
+standing at ease, one foot slightly forward
+walking a dog, leash in hand
+standing in a puddle, reflection visible
+climbing a ladder
+sitting on the floor, knees hugged to chest
+standing with arms raised in celebration, feet planted
+stepping off a curb
+standing in a fighting stance, fists raised
+gliding on inline skates
+standing with feet turned outward, relaxed pose
+mid-leap over a small stream
+crouched low, sneaking pose
+standing with one foot propped on a low box
+walking briskly downhill

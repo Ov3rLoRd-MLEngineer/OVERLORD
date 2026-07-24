@@ -1,0 +1,27 @@
+# wildcards\outfits_feminine.txt — tenues à connotation féminine, piochées
+# pour les templates "1girl". Cf. footsegnet/README.md "Cohérence
+# genre/vêtements" — pas d'exclusivité stricte, voir outfits_cross.txt.
+school uniform with pleated skirt
+black leggings and oversized hoodie
+long flowing dress
+sundress, knee-length
+tight biker shorts and crop top
+winter coat and wool tights
+plaid skirt and knee-high socks
+denim shorts and loose blouse
+women's kimono with obi sash
+lolita-style dress with lace trim
+gothic lolita dress and thigh-high socks
+cheerleader uniform, pleated skirt
+business suit with pencil skirt
+off-shoulder top and flared skirt
+frilly apron dress, maid-style
+floral summer dress, short sleeves
+turtleneck sweater and pleated skirt
+crop top and high-waisted jeans
+ballet leotard and wrap skirt
+yukata with floral pattern, obi tied in a bow
+sailor-style school uniform, short skirt
+knit sweater dress, thigh-length
+tennis skirt and sleeveless top
+wedding dress, long flowing train

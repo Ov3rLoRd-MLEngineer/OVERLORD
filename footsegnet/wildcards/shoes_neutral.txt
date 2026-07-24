@@ -1,0 +1,42 @@
+# wildcards\shoes_neutral.txt — chaussures unisexes (piochées quel que soit
+# le genre du template). Cf. footsegnet/README.md "Cohérence genre/vêtements".
+nike air jordan 1 high-top sneakers, red black white colorway
+white low-top canvas sneakers
+black leather combat boots
+brown hiking boots
+white and blue running shoes
+black school loafers with white socks
+traditional japanese geta sandals
+brown leather sandals
+yellow rain boots
+green converse-style sneakers
+white nurse-style shoes
+purple and black skate shoes
+gray slip-on sneakers
+black and white checkered slip-ons
+navy blue boat shoes
+neon green trail running shoes
+classic white tennis shoes
+black rubber rain boots
+tan desert boots
+orange and black basketball sneakers
+woven straw sandals
+black high-top skate sneakers
+waterproof hiking sandals
+plain black flip-flops
+teal and gray running shoes
+steel-toe work boots
+classic black and white saddle shoes
+bright yellow rubber boots
+minimalist white leather sneakers
+camo-pattern combat boots
+retro striped tennis shoes
+all-terrain trekking boots
+slip-resistant kitchen work shoes
+classic canvas high-tops, faded denim blue
+reflective jogging sneakers
+wooden clog-style sandals
+insulated snow boots
+bright red skateboarding shoes
+simple black gym sneakers
+rubber-soled deck shoes
