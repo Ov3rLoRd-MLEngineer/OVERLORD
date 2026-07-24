@@ -23,8 +23,8 @@ anime dataset to fix that, while keeping the rest of SAM (image encoder,
 prompt encoder) frozen and untouched.
 
 It was built as a component of a personal anime image/video generation
-pipeline ([Ov3rLoRd](https://github.com/g915tlk-design/OVERLORD), *Onibaku
-Gumi*), to drive targeted inpainting of feet/shoes without disturbing the
+pipeline ([Ov3rLoRd](https://github.com/g915tlk-design/OVERLORD)), to drive
+targeted inpainting of feet/shoes without disturbing the
 rest of a frame — but the model itself is a plain SAM checkpoint with no
 pipeline-specific code baked in, and works standalone for anyone who needs
 foot/shoe masks on anime-style images (dataset curation, cutout tools,
@@ -139,7 +139,7 @@ Other things to know:
 
 ## License
 
-Apache 2.0. Attribution appreciated: *FootSegNet by Onibaku Gumi / Jérémy
+Apache 2.0. Attribution appreciated: *FootSegNet by Ov3rLoRd / Jérémy
 Gourlain*.
 
 ## Support this project
@@ -153,4 +153,4 @@ If FootSegNet is useful to you, consider supporting further development:
 
 Built on [Segment Anything](https://github.com/facebookresearch/segment-anything)
 (Meta AI, Apache 2.0). Part of the [Ov3rLoRd](https://github.com/g915tlk-design/OVERLORD)
-pipeline (Onibaku Gumi).
+pipeline.

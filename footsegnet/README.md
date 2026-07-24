@@ -137,7 +137,7 @@ Modèle publiable sur HuggingFace (pas Civitai — plateforme pensée pour les
 checkpoints Stable Diffusion, pas pour un utilitaire de segmentation).
 Matériel de publication préparé dans `huggingface/` : model card, checkpoint
 converti en `.safetensors`, script d'inférence standalone. Licence Apache 2.0
-+ attribution *FootSegNet by Onibaku Gumi / Jérémy Gourlain*. À relire avant
++ attribution *FootSegNet by Ov3rLoRd / Jérémy Gourlain*. À relire avant
 mise en ligne effective (rien n'est publié automatiquement).
 
 ## Support ce projet
