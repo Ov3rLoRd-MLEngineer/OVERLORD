@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+
+# Checkpoints (.pth 375MB each, .safetensors conversion output) — go to
+# HuggingFace Hub, never to this git repo.
+huggingface/*.safetensors
+huggingface/*.pth

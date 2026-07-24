@@ -45,6 +45,12 @@ try:
 except ImportError:
     BUS_OK = False
 
+try:
+    from agents.music_synthesis import is_non_commercial_track
+    MUSIC_LICENSE_OK = True
+except ImportError:
+    MUSIC_LICENSE_OK = False
+
 PUBLISH_DIR  = Path("workspace/publish")
 REPORTS_DIR  = Path("workspace/reports")
 
@@ -201,12 +207,48 @@ def generate_description(script: dict, platform: str = "youtube",
     return {"description": desc[:spec["description_max"]], "hashtags": ANIME_HASHTAGS}
 
 
+def check_music_license(audio_path: Path | None, monetized: bool,
+                         logger=None) -> tuple[bool, str]:
+    """
+    Vérifie le flag non-commercial d'une piste MusicGen avant une mise en ligne
+    monétisée (cf. DOCS/ADR_MUSIC.md / ADR-012). Retourne (autorisé, raison).
+
+    - Publication non-monétisée : toujours autorisée, aucune vérification.
+    - Pas de piste audio jointe : autorisé (rien à bloquer).
+    - Piste jointe + monétisation demandée : bloque si le sidecar de licence
+      indique `non_commercial=True` (ou si le statut de licence est inconnu --
+      fail-safe, on ne prend pas le risque).
+    """
+    log = logger or logging.getLogger("publisher")
+    if not monetized or not audio_path:
+        return True, "ok"
+
+    if not MUSIC_LICENSE_OK:
+        log.warning("[PUBLISH] agents.music_synthesis indisponible -- statut de licence "
+                    "audio inconnu, publication monétisée bloquée par prudence")
+        return False, "music_license_check_unavailable"
+
+    if is_non_commercial_track(audio_path):
+        log.error(
+            f"[PUBLISH] BLOQUÉ — piste audio non-commerciale (MusicGen/CC-BY-NC 4.0) "
+            f"détectée sur une publication monétisée : {audio_path}"
+        )
+        return False, "non_commercial_music_track"
+
+    return True, "ok"
+
+
 def export_for_platform(video_path: Path, images: list[Path],
                          script: dict, platform: str = "youtube",
-                         logger=None) -> dict:
+                         logger=None, audio_path: Path = None,
+                         monetized: bool = False) -> dict:
     """Export complet pour une plateforme."""
     log  = logger or logging.getLogger("publisher")
     spec = PLATFORM_SPECS.get(platform, PLATFORM_SPECS["youtube"])
+
+    allowed, reason = check_music_license(audio_path, monetized, logger=log)
+    if not allowed:
+        return {"error": reason, "platform": platform, "blocked": True}
 
     out_dir = PUBLISH_DIR / platform / datetime.now().strftime("%Y%m%d_%H%M%S")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -266,19 +308,25 @@ def export_for_platform(video_path: Path, images: list[Path],
 
 
 def run_publisher(run_id: str = None, platforms: list = None,
-                  min_score: float = 75.0, logger=None) -> dict:
+                  min_score: float = 75.0, logger=None,
+                  monetized: bool = False) -> dict:
     """
     Point d'entrée principal.
     Récupère le run le plus récent, exporte vers toutes les plateformes.
+
+    `monetized=True` active la vérification de licence audio (ADR-012) : toute
+    piste MusicGen (non-commerciale) jointe à ce run bloque l'export pour
+    chaque plateforme concernée.
     """
     log       = logger or logging.getLogger("publisher")
     platforms = platforms or ["youtube", "tiktok", "instagram"]
 
-    log.info(f"[PUBLISH] Démarrage — plateformes={platforms}")
+    log.info(f"[PUBLISH] Démarrage — plateformes={platforms} — monétisé={monetized}")
 
     # Trouver l'archive et la vidéo du run
     archive_root = Path("workspace/archive")
     exports_dir  = Path("workspace/exports")
+    music_dir    = Path("workspace/music_synthesis")
 
     # Trouver le run_id le plus récent si non spécifié
     if not run_id:
@@ -293,6 +341,13 @@ def run_publisher(run_id: str = None, platforms: list = None,
         videos = sorted(exports_dir.glob("*.mp4"), key=lambda p: p.stat().st_mtime, reverse=True)
         if videos:
             video_path = videos[0]
+
+    # Trouver une éventuelle piste MusicGen la plus récente associée au run
+    audio_path = None
+    if music_dir.exists():
+        tracks = sorted(music_dir.glob("*.wav"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if tracks:
+            audio_path = tracks[0]
 
     # Charger le script du dernier run
     script = {}
@@ -317,7 +372,8 @@ def run_publisher(run_id: str = None, platforms: list = None,
     results = {}
     for platform in platforms:
         try:
-            r = export_for_platform(video_path, images, script, platform, logger=log)
+            r = export_for_platform(video_path, images, script, platform, logger=log,
+                                     audio_path=audio_path, monetized=monetized)
             results[platform] = r
         except Exception as e:
             log.error(f"[PUBLISH] {platform} erreur : {e}")
@@ -333,11 +389,13 @@ if __name__ == "__main__":
     parser.add_argument("--platforms", nargs="+", default=["youtube", "tiktok", "instagram"])
     parser.add_argument("--run-id",    type=str, default=None)
     parser.add_argument("--min-score", type=float, default=75.0)
+    parser.add_argument("--monetized", action="store_true",
+                        help="Active la vérification de licence audio ADR-012 avant export")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s [%(levelname)s] %(message)s")
 
     results = run_publisher(run_id=args.run_id, platforms=args.platforms,
-                             min_score=args.min_score)
+                             min_score=args.min_score, monetized=args.monetized)
     print(json.dumps(results, indent=2, ensure_ascii=False, default=str))

@@ -45,6 +45,7 @@ AGENT_PRIORITIES = {
     "prompt_engineer":2,
     "dream_mode":     3,
     "postprod":       3,
+    "music_synthesis":3,   # MusicGen — ADR-012, jamais concurrent de ComfyUI
     "auto_sourcing":  5,
     "narrative":      6,
     "lora_trainer":   8,   # très gourmand, toujours en dernier
@@ -57,6 +58,7 @@ VRAM_ESTIMATES = {
     "lora_trainer":   8.0,  # entraînement kohya_ss
     "dream_mode":     5.5,
     "postprod":       1.0,
+    "music_synthesis":4.0,  # MusicGen small (~300M, fp16 ~4Go — ADR-012
     "auto_sourcing":  0.5,
     "default":        2.0,
 }
