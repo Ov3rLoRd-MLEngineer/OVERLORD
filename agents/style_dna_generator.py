@@ -1,6 +1,6 @@
 """
 style_dna_generator.py V1.0 -- Generateur de Style DNA (Run 0b)
-Studio Onibaku Gumi 鬼爆組
+Studio Ov3rLoRd
 Genere une image de reference de style pur (palette, trait, lumiere)
 via ComfyUI. Verrouille le Style DNA pour tous les shots du run.
 Sortie : workspace/style/style_dna_{run_id}.png

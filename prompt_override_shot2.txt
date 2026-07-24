@@ -2,7 +2,7 @@
 # Ov3rLoRd — prompt_override_shot2.txt
 # Shot 2 — Gros plan visage, concentration, vitesse floue en BG
 # 144 images / 6 secondes / 24fps
-# Onibaku Gumi 鬼爆組 — V2.22
+# Ov3rLoRd — V2.22
 # ============================================================
 
 negative: multiple girls, 2girls, 3girls, other characters, background, scenery, landscape, city, crowd, audience, extra person, blurry background, depth of field, bad anatomy, deformed, mutated, extra limbs, extra arms, extra legs, bad hands, malformed hands, fused fingers, too many fingers, missing fingers, ugly, disfigured, low quality, worst quality, lowres, blurry, out of focus, jpeg artifacts, grainy, wrong clothing, casual clothes, dress, skirt, jacket, non-canon outfit, text, watermark, signature, logo, extra hair, bad hair, extra twintails, poorly drawn face, bad eyes, heterochromia, nude, naked, nsfw, exposed skin, bad proportions, missing body parts, floating limbs, disconnected limbs, poorly drawn hands, cloned face, duplicate, error, cropped

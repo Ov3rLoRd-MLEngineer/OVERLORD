@@ -1,6 +1,6 @@
 r"""
 Ov3rLoRd - grok_prompt_generator.py V1.0
-Studio Onibaku Gumi 鬼爆組
+Studio Ov3rLoRd
 
 Agent de generation automatique de prompts via API xAI (Grok).
 Remplace le workflow manuel : question Grok -> copier-coller -> fichier.
@@ -270,7 +270,7 @@ def generate_override_file(shot_num: int, phases: list,
         f"# {SHOTS_CONFIG[shot_num]['action'].title()}",
         f"# {total_images} images / 6 secondes / 24fps",
         f"# Genere par grok_prompt_generator.py V1.0 — {datetime.now().strftime('%Y-%m-%d %H:%M')}",
-        "# Onibaku Gumi 鬼爆組",
+        "# Ov3rLoRd",
         "# ============================================================",
         "",
         f"negative: {NEGATIVE_PROMPT}",

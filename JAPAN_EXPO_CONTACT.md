@@ -1,5 +1,5 @@
 # STRATÉGIE JAPAN EXPO 2026 — Plan de Contact SEFA
-## Onibaku Gumi × Japan Expo — 9-12 juillet 2026
+## Ov3rLoRd × Japan Expo — 9-12 juillet 2026
 
 ---
 
@@ -17,7 +17,7 @@ Mais parfaitement timing pour :
 
 ---
 
-## CE QUI REND JAPAN EXPO PERTINENT POUR ONIBAKU GUMI
+## CE QUI REND JAPAN EXPO PERTINENT POUR OV3RLORD
 
 Les univers de la démo (Evangelion, Gundam, Hatsune Miku) sont exactement
 ce que Japan Expo cible. Le public est exactement celui qui comprendra
@@ -32,7 +32,7 @@ ce qu'un pipeline IA anime autonome représente.
 
 Points à mentionner :
 - Ton expérience de travail avec eux (gestion boutique officielle)
-- Le projet Onibaku Gumi et le pipeline IA
+- Le projet Ov3rLoRd et le pipeline IA
 - La démo en cours de production (Evangelion/Gundam/Miku)
 - Intérêt pour un espace "démo tech" ou "AI animation" en 2027
 
@@ -42,7 +42,7 @@ Points à mentionner :
 Objectifs sur place :
 - Montrer la démo aux contacts SEFA en présentiel
 - Identifier les studios japonais et créateurs à approcher
-- Documenter la visite pour le contenu Onibaku Gumi (YouTube/TikTok)
+- Documenter la visite pour le contenu Ov3rLoRd (YouTube/TikTok)
 - Prendre des photos/vidéos du public réagissant à la démo
 
 **Format démo tablette :**
@@ -51,7 +51,7 @@ Objectifs sur place :
 - Pas besoin de 55" — l'intimité d'une tablette crée un effet "magie personnelle"
 
 ### NIVEAU 3 — 2027
-**Stand Onibaku Gumi** avec démo interactive live.
+**Stand Ov3rLoRd** avec démo interactive live.
 - Public entre des prompts → pipeline génère en temps réel
 - "Générez votre propre scène anime" comme attraction
 - Partenariat potentiel avec ASUS ROG sur le stand
@@ -63,14 +63,14 @@ Objectifs sur place :
 À adapter selon ta relation avec eux.
 
 ```
-Objet : Onibaku Gumi — Pipeline IA Anime — Japan Expo 2027
+Objet : Ov3rLoRd — Pipeline IA Anime — Japan Expo 2027
 
 [Prénom],
 
 [Rappel bref de ton expérience avec SEFA / la boutique]
 
 Je travaille depuis plusieurs mois sur un projet qui me tient à cœur
-et que je pense pertinent pour Japan Expo : Onibaku Gumi (鬼爆組),
+et que je pense pertinent pour Japan Expo : Ov3rLoRd,
 le premier pipeline de production anime IA autonome développé en France.
 
 Le système génère des contenus animés complets de manière autonome —
@@ -87,7 +87,7 @@ mais je voulais te contacter en amont pour explorer les possibilités 2027.
 
 ## STUDIOS JAPONAIS À CIBLER SUR PLACE
 
-Présents régulièrement à Japan Expo, pertinents pour Onibaku Gumi :
+Présents régulièrement à Japan Expo, pertinents pour Ov3rLoRd :
 - **Khara** (studio Evangelion) — si présent cette année
 - **Sunrise/Bandai Namco** (Gundam)
 - **Crypton Future Media** (Hatsune Miku)

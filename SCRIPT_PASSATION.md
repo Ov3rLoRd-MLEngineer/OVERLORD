@@ -6,7 +6,7 @@ Copier-coller exactement ce texte pour reprendre sans perdre de contexte :
 
 **Contexte projet Ov3rLoRd — Passation session 15-21 juin 2026**
 
-Je suis Jérémy Gourlain, Le Havre. On reprend le projet Ov3rLoRd (pipeline IA anime autonome, studio Onibaku Gumi 鬼爆組).
+Je suis Jérémy Gourlain, Le Havre. On reprend le projet Ov3rLoRd (pipeline IA anime autonome, studio Ov3rLoRd).
 
 **État actuel :**
 - Pack déployé : OVERLORD_V170_DEPLOY.zip — 70 fichiers | 52 agents Python
@@ -53,4 +53,4 @@ Fichier de contexte complet : CONTEXTE_SESSION_SUIVANTE.md dans le pack.
 *Score évaluation : 97/100 — Expert Confirmé+*
 *Valeur projet : 45 000 - 70 000€ HT*
 *"Ov3rLoRd Was Here. Sur une poutre des docks du Havre."*
-*🔥 鬼爆組*
+*🔥*

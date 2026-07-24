@@ -1,6 +1,6 @@
 """
 pose_generator.py V1.1
-Ov3rLoRd -- Onibaku Gumi
+Ov3rLoRd -- Ov3rLoRd
 Genere un skeleton OpenPose depuis une image de reference via ComfyUI DWPose,
 et recupere aussi les keypoints JSON (POSE_KEYPOINT) pour en deriver
 automatiquement une bbox pied (voir extract_foot_bbox / --foot-box).

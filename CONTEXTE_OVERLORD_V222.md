@@ -1,6 +1,6 @@
 # CONTEXTE_OVERLORD.md
 ## Cerveau de démarrage — Pipeline IA Anime Ov3rLoRd V2.22
-### Studio Onibaku Gumi 鬼爆組
+### Studio Ov3rLoRd
 **Généré le : 24 juin 2026 — Fin de session**
 **Auteur :** Claude Sonnet 4.6 (instance précédente)
 **Destinataire :** Nouvelle instance Claude — reprendre immédiatement sans questions superflues
@@ -362,7 +362,7 @@ Format : un prompt par ligne, tags Booru-style SDXL."
 
 ---
 
-*Ov3rLoRd V2.22 — Onibaku Gumi 鬼爆組*
+*Ov3rLoRd V2.22*
 *"La connaissance est binaire, pas incertaine."*
 *Japan Expo 2026. 🔥*
 *J-15. On est larges.*

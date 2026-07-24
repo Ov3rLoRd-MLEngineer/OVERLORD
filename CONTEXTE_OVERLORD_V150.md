@@ -439,7 +439,7 @@ python maestro.py --media-type anime --universe "..."
 **Checkpoint modèle :** fabricatedXL_v70.safetensors  
 **LoRas :** 3x ponyXL nochekaiser (Asuka, Mari, Rei)  
 **VAE actif :** taesdxl (léger) · sdxl_vae.safetensors corrompu à re-DL  
-**Objectif :** Production anime IA autonome · plateforme Onibaku Gumi
+**Objectif :** Production anime IA autonome · plateforme Ov3rLoRd
 
 ---
 

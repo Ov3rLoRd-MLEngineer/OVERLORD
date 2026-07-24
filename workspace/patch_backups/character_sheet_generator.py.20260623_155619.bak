@@ -1,6 +1,6 @@
 """
 character_sheet_generator.py V1.2 -- Generateur de Bible Visuelle Personnages
-Studio Onibaku Gumi 鬼爆組
+Studio Ov3rLoRd
 V1.2 :
   - Prompts studio corrects (1girl, nom, no background, naked pour passe production)
   - 9 poses : face, profil, dos, trois-quarts x2, dessus + 3 expressions

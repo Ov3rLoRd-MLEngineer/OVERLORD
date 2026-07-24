@@ -1,6 +1,6 @@
 """
 inpaint_queue.py V1.0
-Ov3rLoRd — Onibaku Gumi 鬼爆組
+Ov3rLoRd
 Queue d'inpainting automatique sur frames rejetées par clip_validator.
 Stratégie : masque automatique par seuil de différence + re-génération via ComfyUI.
 Intégration : appelé par maestro.py si clip_validator retourne des REJECT.

@@ -1,5 +1,5 @@
 # maestro_patch_v220.py -- version corrigee
-# Ov3rLoRd -- Onibaku Gumi
+# Ov3rLoRd -- Ov3rLoRd
 # maestro.py est a la RACINE D:/OVERLORD/ (pas dans agents/)
 # Usage : python maestro_patch_v220.py  (depuis D:/OVERLORD/)
 
@@ -276,7 +276,7 @@ def patch_maestro():
 if __name__ == "__main__":
     print("=" * 60)
     print("  Ov3rLoRd -- Patch maestro.py -> V2.20")
-    print("  Onibaku Gumi")
+    print("  Ov3rLoRd")
     print("=" * 60)
     patch_maestro()
     print("\n[PATCH] Termine.")

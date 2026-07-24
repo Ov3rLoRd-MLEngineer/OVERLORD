@@ -1,7 +1,7 @@
 """
 demo_pipeline.py — Pipeline Vidéo de Démonstration V1.70
-Produit la démo "Onibaku Gumi" en 2 minutes :
-  - Opening  : 15s — titre + logo Onibaku Gumi
+Produit la démo "Ov3rLoRd" en 2 minutes :
+  - Opening  : 15s — titre + logo Ov3rLoRd
   - Scène 1  : 30s — Evangelion (Asuka vs Angel)
   - Scène 2  : 30s — Gundam (mecha battle urban)
   - Scène 3  : 30s — Hatsune Miku (concert holographique)
@@ -50,8 +50,8 @@ ENDING_SECS   = 15
 # ── Structure de la démo ─────────────────────────────────────────────
 
 DEMO_STRUCTURE = {
-    "title":       "Onibaku Gumi — AI Anime Production Demo",
-    "subtitle":    "鬼爆組 | Powered by Ov3rLoRd V1.70 | ROG Hardware",
+    "title":       "Ov3rLoRd — AI Anime Production Demo",
+    "subtitle":    " | Powered by Ov3rLoRd V1.70 | ROG Hardware",
     "total_secs":  OPENING_SECS + 3*SCENE_SECS + ENDING_SECS,  # 120s
 
     "opening": {
@@ -62,13 +62,13 @@ DEMO_STRUCTURE = {
         "positive":  (
             "masterpiece, best quality, absurdres, "
             "dark background, glowing text, Japanese calligraphy style, "
-            "鬼爆組, neon purple glow, cyberpunk aesthetic, "
+            ", neon purple glow, cyberpunk aesthetic, "
             "anime production studio logo, epic cinematic"
         ),
         "negative":  "bad quality, character, people, low resolution",
         "lora":      None,  # pas de LoRa pour l'opening
         "style":     "dark, minimalist, title card",
-        "text_overlay": ["ONIBAKU GUMI", "鬼爆組", "AI Anime Production", "Powered by Ov3rLoRd V1.70"],
+        "text_overlay": ["OV3RLORD", "", "AI Anime Production", "Powered by Ov3rLoRd V1.70"],
     },
 
     "scenes": [
@@ -187,12 +187,12 @@ DEMO_STRUCTURE = {
         "negative": "bad quality, characters, low resolution",
         "lora":     None,
         "text_overlay": [
-            "ONIBAKU GUMI",
-            "鬼爆組",
+            "OV3RLORD",
+            "",
             "Produced by Ov3rLoRd AI Pipeline V1.70",
             "Hardware: ASUS ROG",
             "Pipeline: Ov3rLoRd | ComfyUI | Ollama",
-            "© 2026 Onibaku Gumi"
+            "© 2026 Ov3rLoRd"
         ],
     },
 }
@@ -284,7 +284,7 @@ def assemble_video(renders_dir: Path = RENDER_DIR,
 
     if output_path is None:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_path = EXPORT_DIR / f"onibaku_demo_{ts}.mp4"
+        output_path = EXPORT_DIR / f"ov3rlord_demo_{ts}.mp4"
 
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     COMPOSE_DIR.mkdir(parents=True, exist_ok=True)

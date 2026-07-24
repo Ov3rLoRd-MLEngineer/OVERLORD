@@ -1,5 +1,5 @@
 # Ov3rLoRd Pipeline V1.70 — Pack de Déploiement
-## Onibaku Gumi — AI Anime Production
+## Ov3rLoRd — AI Anime Production
 
 **Date :** 20/06/2026  
 **Statut :** Prêt au déploiement post-RTX 5080
@@ -118,5 +118,5 @@ python agents\transmedia_publisher.py --platforms youtube tiktok
 
 ---
 
-*Ov3rLoRd V1.70 — Onibaku Gumi 鬼爆組*  
+*Ov3rLoRd V1.70*  
 *"L'usine pense. L'usine apprend. L'usine publie."*

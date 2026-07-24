@@ -3,7 +3,7 @@
 # Depart Course Et Acceleration Depuis La Ligne De Depart Jusqu'Au Plein Sprint
 # 144 images / 6 secondes / 24fps
 # Genere par grok_prompt_generator.py V1.0 — 2026-06-24 02:55
-# Onibaku Gumi 鬼爆組
+# Ov3rLoRd
 # ============================================================
 
 negative: multiple girls, 2girls, 3girls, other characters, background, scenery, landscape, city, crowd, audience, extra person, blurry background, bad anatomy, deformed, mutated, extra limbs, extra arms, extra legs, bad hands, malformed hands, fused fingers, too many fingers, missing fingers, ugly, disfigured, low quality, worst quality, lowres, blurry, out of focus, jpeg artifacts, grainy, wrong clothing, casual clothes, dress, skirt, jacket, non-canon outfit, text, watermark, signature, logo, extra hair, bad hair, extra twintails, poorly drawn face, bad eyes, heterochromia, nude, naked, nsfw, exposed skin, bad proportions, missing body parts, floating limbs, disconnected limbs, poorly drawn hands, cloned face, duplicate, error, cropped

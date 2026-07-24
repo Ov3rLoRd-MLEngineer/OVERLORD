@@ -73,7 +73,7 @@ ANIME_HASHTAGS = [
     "#anime", "#animeart", "#animegirl", "#mangaart",
     "#digitalart", "#illustration", "#aiart", "#stablediffusion",
     "#evangelion", "#neongenesis", "#comfyui", "#animedrawing",
-    "#characterdesign", "#onibakugumi", "#overlordai",
+    "#characterdesign", "#ov3rlord", "#overlordai",
 ]
 
 
@@ -146,7 +146,7 @@ def create_thumbnail(image_path: Path, title: str, platform: str = "youtube",
 
         title_short = title[:50] + ("…" if len(title) > 50 else "")
         draw.text((w//20, h - h//7), title_short, fill=(255, 255, 255), font=font)
-        draw.text((w//20, h - h//14), "Onibaku Gumi • AI Production",
+        draw.text((w//20, h - h//14), "Ov3rLoRd • AI Production",
                   fill=(200, 150, 255), font=font)
 
         img.save(str(out), "JPEG", quality=92)
@@ -196,7 +196,7 @@ def generate_description(script: dict, platform: str = "youtube",
         f"{logline}\n\n"
         f"{synopsis}\n\n"
         f"Generated with Ov3rLoRd AI Pipeline V1.70\n"
-        f"Onibaku Gumi — AI Anime Production Studio"
+        f"Ov3rLoRd — AI Anime Production Studio"
     )
     return {"description": desc[:spec["description_max"]], "hashtags": ANIME_HASHTAGS}
 
@@ -304,7 +304,7 @@ def run_publisher(run_id: str = None, platforms: list = None,
         except Exception:
             pass
     script.setdefault("title", "Ov3rLoRd AI Production")
-    script.setdefault("logline", "AI-generated anime by Onibaku Gumi")
+    script.setdefault("logline", "AI-generated anime by Ov3rLoRd")
     script.setdefault("genre", ["anime", "action"])
 
     # Sélectionner les meilleures images

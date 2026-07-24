@@ -1,6 +1,6 @@
 """
 prompt_translator.py V1.1 -- Traducteur Narratif -> Intentions de Realisation JSON
-Studio Onibaku Gumi 鬼爆組
+Studio Ov3rLoRd
 V1.1 : Fix JSON tronque Ollama (extraction regex champs partiels) + Pacing Engine integre.
 """
 

@@ -14,7 +14,7 @@ que l'anglais directif perd — utilisé pour les prompts créatifs complexes.
 Usage :
   from agents.agent_translator import translate, detect_language, to_booru_en
   prompt_en = to_booru_en("fille en combinaison de pilote rouge, combat épique")
-  jp_text   = translate("Bienvenue dans Onibaku Gumi", target="ja")
+  jp_text   = translate("Bienvenue dans Ov3rLoRd", target="ja")
 """
 
 import logging
@@ -70,9 +70,9 @@ BOORU_FR_EN = {
     "style anime":       "anime style",
 }
 
-# Phrases clés Onibaku Gumi en japonais (calligraphie + romaji)
-ONIBAKU_JP = {
-    "Onibaku Gumi":          {"kanji": "鬼爆組", "romaji": "Onibaku Gumi",
+# Phrases clés Ov3rLoRd en japonais (calligraphie + romaji)
+OV3RLORD_JP = {
+    "Ov3rLoRd":          {"kanji": "", "romaji": "Ov3rLoRd",
                                "meaning": "Groupe de l'explosion démonique"},
     "Production IA":         {"kanji": "AI制作", "romaji": "AI Seisaku",
                                "meaning": "Production par IA"},
@@ -159,9 +159,9 @@ def translate(text: str, target: str = "en",
     if target == "en" and context == "booru":
         return to_booru_en(text)
 
-    # Lookup statique pour les termes Onibaku Gumi
+    # Lookup statique pour les termes Ov3rLoRd
     if target == "ja":
-        for term, jp_data in ONIBAKU_JP.items():
+        for term, jp_data in OV3RLORD_JP.items():
             if term.lower() in text.lower():
                 kanji  = jp_data.get("kanji", "")
                 romaji = jp_data.get("romaji", "")
@@ -217,7 +217,7 @@ def optimize_prompt_language(prompt: str, target_llm: str = "mistral",
 
 def get_jp_glossary() -> dict:
     """Retourne le glossaire japonais complet du projet."""
-    glossary = dict(ONIBAKU_JP)
+    glossary = dict(OV3RLORD_JP)
     # Termes techniques supplémentaires
     extras = {
         "Evangelion":       {"kanji": "エヴァンゲリオン", "romaji": "Evangerion"},
@@ -239,7 +239,7 @@ def print_jp_glossary():
     """Affiche le glossaire japonais formaté."""
     g = get_jp_glossary()
     print(f"\n{'─'*60}")
-    print(f"  GLOSSAIRE JAPONAIS — Onibaku Gumi")
+    print(f"  GLOSSAIRE JAPONAIS — Ov3rLoRd")
     print(f"{'─'*60}")
     for term, data in g.items():
         kanji  = data.get("kanji", "—")
@@ -294,7 +294,7 @@ if __name__ == "__main__":
         print(f"  Booru FR→EN  : '{to_booru_en('fille combat épique fond détruit')[:60]}'")
         print()
         print("Glossaire partiel :")
-        for k, v in list(ONIBAKU_JP.items())[:4]:
+        for k, v in list(OV3RLORD_JP.items())[:4]:
             print(f"  {k} → {v['kanji']} ({v['romaji']})")
         print()
         print("Utiliser --glossary pour le glossaire complet")

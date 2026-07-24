@@ -1237,6 +1237,12 @@ def run_pipeline(config: dict = None, from_block: str = None,
 
 # ── CLI ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    try:
+        from ov_console import ascii_banner
+        ascii_banner()
+    except Exception:
+        pass
+
     parser = argparse.ArgumentParser(description="Maestro V1.60 -- Ov3rLoRd Pipeline")
     parser.add_argument("--config",     type=str, default=None)
     parser.add_argument("--from-block", type=str, default=None, choices=BLOCKS)

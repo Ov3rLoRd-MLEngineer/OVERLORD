@@ -1,7 +1,7 @@
 r"""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║          Ov3rLoRd — frame_extractor.py  V1.0                        ║
-║          Studio Onibaku Gumi 鬼爆組                                  ║
+║          Studio Ov3rLoRd                                  ║
 ║  Extrait des frames depuis un segment vidéo, génère les skeletons   ║
 ║  DWPose via ComfyUI, et injecte dans pose_library.py                ║
 ╚══════════════════════════════════════════════════════════════════════╝

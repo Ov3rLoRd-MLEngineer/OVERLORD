@@ -1,6 +1,6 @@
 """
 audit_logger.py V1.0 -- Tracabilite SQLite par Frame
-Studio Onibaku Gumi 鬼爆組
+Studio Ov3rLoRd
 Enregistre chaque frame generee avec : run_id, shot_id, prompt_intent_id,
 seed, model_hash, score_clip, score_conformite, artefacts detectes.
 Permet le debug "pourquoi ca a plante a 3h du matin" en 1 requete SQL.

@@ -1,6 +1,6 @@
 """
 Ov3rLoRd - watchdog_config.py V1.0
-Studio Onibaku Gumi 鬼爆組
+Studio Ov3rLoRd
 
 Seuils adaptatifs pour watchdog, clip_validator et inpaint_queue.
 Tous les agents lisent depuis ce module au lieu de hardcoder leurs seuils.

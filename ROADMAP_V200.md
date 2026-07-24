@@ -132,7 +132,7 @@ GPU_TOPOLOGY = {
 
 ## SPRINT 6 — Publication & Branding (Semaine 8)
 
-**Objectif :** Onibaku Gumi visible sur les réseaux.
+**Objectif :** Ov3rLoRd visible sur les réseaux.
 
 ### transmedia_publisher.py
 
@@ -188,7 +188,7 @@ python maestro.py --universe "evangelion" --use-prompt-library
 python agents/dream_mode.py --stop-at 08:00 --cooldown 60
 
 # Entraîner une nouvelle LoRa depuis les meilleures images
-python agents/lora_trainer.py --trigger "onibaku_style" --steps 1500
+python agents/lora_trainer.py --trigger "ov3rlord_style" --steps 1500
 
 # Publier les résultats
 python agents/transmedia_publisher.py --platform tiktok --runs-dir workspace/archive/
@@ -205,7 +205,7 @@ python api_server.py --host 0.0.0.0 --port 5757
 
 ---
 
-## HORS-SÉRIE — Projets Parallèles Onibaku Gumi
+## HORS-SÉRIE — Projets Parallèles Ov3rLoRd
 
 ### OPP-LIVRE — "Ov3rLoRd Was Here" — Le Livre
 **Format :** Interview IA × Humain → livre édité

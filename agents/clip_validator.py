@@ -1,6 +1,6 @@
 """
 clip_validator.py V1.0
-Ov3rLoRd — Onibaku Gumi 鬼爆組
+Ov3rLoRd
 Validation cohérence visuelle inter-shots par distance cosinus CLIP.
 Intégration : appelé par maestro.py après block_production().
 """

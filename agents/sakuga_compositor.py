@@ -449,7 +449,7 @@ if __name__ == "__main__":
     parser.add_argument("--compose", type=str, default=None,
                         help="Dossier de layers à composer")
     parser.add_argument("--demo",    action="store_true",
-                        help="Générer le plan pour la démo Onibaku Gumi")
+                        help="Générer le plan pour la démo Ov3rLoRd")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO,

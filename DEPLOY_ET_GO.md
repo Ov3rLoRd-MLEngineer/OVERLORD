@@ -322,7 +322,7 @@ python agents\agent_overclock.py --profile turbo --comfyui
 
 ---
 
-*Ov3rLoRd V1.70 — 鬼爆組 — L'usine est prête.*
+*Ov3rLoRd V1.70 — — L'usine est prête.*
 
 ---
 

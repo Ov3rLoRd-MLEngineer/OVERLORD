@@ -1,6 +1,6 @@
 """
 pacing_engine.py V1.0
-Ov3rLoRd — Onibaku Gumi 鬼爆組
+Ov3rLoRd
 Moteur de rythme : calcule la durée optimale par shot et génère le manifeste
 de timing pour postprod.py / transition_builder.py.
 Sources : shot_type, camera_movement, acting_intent, univers.

@@ -6,14 +6,15 @@ Couleurs ANSI compatibles Windows 10+ (cmd et PowerShell).
 À importer dans tous les agents qui affichent des infos console.
 
 Usage :
-  from ov_console import cprint, banner, progress, result_line
+  from ov_console import cprint, banner, ascii_banner, progress, result_line
 
   cprint("Fichier chargé", "ok", detail="maestro.py")
   cprint("Erreur critique", "err", detail="timeout ComfyUI")
   cprint("Attention", "warn", detail="3 retries restants")
   cprint("En cours", "info", detail="batch 3/8")
 
-  banner("OV3RLORD V1.70")
+  ascii_banner()             # bannière ASCII complète, au lancement
+  banner("OV3RLORD V1.70")   # bannière encadrée compacte
   progress("Images générées", 6, 8)
   result_line(ok=7, err=1)
 """
@@ -276,10 +277,30 @@ def file_status(filepath: str, status: str = "ok",
     print(line)
 
 
+# ── Bannière ASCII ──────────────────────────────────────────────────────
+
+ASCII_LOGO = r""" ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+ ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝"""
+
+
+def ascii_banner(tagline: str = "L'usine pense. L'usine apprend. L'usine publie."):
+    """Bannière ASCII pleine (police ANSI Shadow), affichée au lancement."""
+    print()
+    for line in ASCII_LOGO.splitlines():
+        print(f"{C.BRED}{C.BOLD}{line}{C.RESET}")
+    if tagline:
+        pad = max((68 - len(tagline)) // 2, 0)
+        print(f"\n{' '*pad}{C.DIM}\"{tagline}\"{C.RESET}\n")
+
+
 # ── Démo ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    banner("OV3RLORD V1.70", subtitle="Onibaku Gumi 鬼爆組")
+    ascii_banner()
 
     section("DÉMARRAGE PIPELINE")
     cprint("ComfyUI",         "ok",   detail="EN LIGNE port 8188")

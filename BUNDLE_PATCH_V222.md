@@ -1,4 +1,4 @@
-# BUNDLE PATCH V2.22 — Ov3rLoRd / Onibaku Gumi 鬼爆組
+# BUNDLE PATCH V2.22 — Ov3rLoRd / Ov3rLoRd
 
 ## Nouveaux fichiers (copier dans `agents/` ET racine)
 
@@ -201,4 +201,4 @@ run.bat --scene-type action_dynamic
             └── inpaint_queue    -> lit bus -> ne rejette pas le motion blur
 ```
 
-*Ov3rLoRd V2.22 — Onibaku Gumi 鬼爆組 — Japan Expo 2026* 🔥
+*Ov3rLoRd V2.22 — Japan Expo 2026* 🔥

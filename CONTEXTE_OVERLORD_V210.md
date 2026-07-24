@@ -1,6 +1,6 @@
 # CONTEXTE_OVERLORD.md
 ## Cerveau de démarrage — Pipeline IA Anime Ov3rLoRd V2.10
-### Studio Onibaku Gumi 鬼爆組
+### Studio Ov3rLoRd
 **Généré le : 23 juin 2026 — Session de passation**
 **Auteur :** Claude Sonnet 4.6 (instance précédente)
 **Destinataire :** Nouvelle instance Claude — reprendre immédiatement sans questions superflues
@@ -259,6 +259,6 @@ python maestro.py --media-type anime --universe "evangelion battle asuka"
 
 ---
 
-*Ov3rLoRd V2.10 — Onibaku Gumi 鬼爆組*
+*Ov3rLoRd V2.10*
 *"La connaissance est binaire, pas incertaine."*
-*Japan Expo 2026. 鬼爆組. 🔥*
+*Japan Expo 2026.. 🔥*

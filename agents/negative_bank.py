@@ -1,6 +1,6 @@
 """
 negative_bank.py V1.0
-Ov3rLoRd — Onibaku Gumi 鬼爆組
+Ov3rLoRd
 Banque de prompts négatifs spécifiques par personnage, univers et shot_type.
 Intégration : importé par agent_supervisor_v2.py et prompt_translator.py
 """

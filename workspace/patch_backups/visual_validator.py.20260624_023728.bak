@@ -1,6 +1,6 @@
 """
 visual_validator.py V1.0
-Ov3rLoRd -- Onibaku Gumi
+Ov3rLoRd -- Ov3rLoRd
 Validation visuelle par QwenVL via Ollama.
 Roles specialises : asuka, rei, background, fx, anatomy, generic.
 Retourne PASS/FAIL + defauts detectes -> feed direct inpaint_queue.

@@ -1,7 +1,7 @@
 r"""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║         Ov3rLoRd — prompt_override.py  V1.0                         ║
-║         Studio Onibaku Gumi 鬼爆組                                   ║
+║         Studio Ov3rLoRd                                   ║
 ║  Injecte des prompts manuels dans le pipeline                        ║
 ║  Supporte : 1 prompt global OU N prompts numerotes (image par image) ║
 ╚══════════════════════════════════════════════════════════════════════╝

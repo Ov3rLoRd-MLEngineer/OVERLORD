@@ -1,7 +1,7 @@
 """
 agents/market_analyzer.py — Agent Stratège Marché V1.70
 Analyse le marché IA créatif, identifie les opportunités,
-et génère des recommandations stratégiques pour Onibaku Gumi.
+et génère des recommandations stratégiques pour Ov3rLoRd.
 
 Fonctions :
   - Veille technologique (nouveaux modèles, outils, tendances)
@@ -41,9 +41,9 @@ except ImportError:
 MARKET_DIR = Path("workspace/market")
 MARKET_LOG = Path("workspace/logs/market_analyzer.jsonl")
 
-# ── Positionnement Onibaku Gumi ───────────────────────────────────────
+# ── Positionnement Ov3rLoRd ───────────────────────────────────────
 
-ONIBAKU_POSITIONING = {
+OV3RLORD_POSITIONING = {
     "unique_value": (
         "Premier pipeline de production anime IA entièrement autonome "
         "développé par un créateur indépendant européen. "
@@ -183,11 +183,11 @@ def generate_opportunity_report(logger=None) -> str:
     log = logger or logging.getLogger("market_analyzer")
 
     lines = [
-        f"# RAPPORT MARCHÉ — Onibaku Gumi",
+        f"# RAPPORT MARCHÉ — Ov3rLoRd",
         f"## {datetime.now().strftime('%Y-%m-%d %H:%M')}",
         "",
         f"## POSITIONNEMENT",
-        f"{ONIBAKU_POSITIONING['unique_value']}",
+        f"{OV3RLORD_POSITIONING['unique_value']}",
         "",
         f"## OPPORTUNITÉS PAR HORIZON",
     ]
@@ -238,7 +238,7 @@ def run_market_analysis(logger=None) -> dict:
 
     result = {
         "timestamp":      datetime.now().isoformat(),
-        "positioning":    ONIBAKU_POSITIONING,
+        "positioning":    OV3RLORD_POSITIONING,
         "opportunities":  OPPORTUNITY_MAP,
         "tech_watchlist": TECH_WATCHLIST,
         "immediate_actions": [

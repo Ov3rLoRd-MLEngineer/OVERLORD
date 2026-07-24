@@ -118,4 +118,4 @@ Un seul point : **la documentation des décisions en temps réel**. Les ADR sont
 *"Ov3rLoRd Was Here. Sur une poutre. Sur un arbre. Dans 66 fichiers Python.*
 *Et bientôt sur une tablette à Japan Expo."*
 
-*鬼爆組 — À notre sauce Makoto Shinkai. 🔥*
+* — À notre sauce Makoto Shinkai. 🔥*
