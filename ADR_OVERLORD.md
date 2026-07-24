@@ -168,3 +168,24 @@
 
 **Limite :** Dépend de la qualité d'extraction du LLM. Si le scénario ne nomme pas explicitement les personnages établis, la continuité est partielle.
 
+---
+
+## ADR-012 — MusicGen pour la bande-son non-commerciale (`agents/music_synthesis.py`)
+
+**Statut :** Accepté  
+**Date :** 05/07/2026
+
+**Contexte :** Aucun moteur de musique n'existait dans le pipeline (cf. `DOCS/ADR_MUSIC.md` pour la comparaison MusicGen / AudioCraft / Suno). Besoin d'une bande-son d'ambiance générée sans supervision, sans risquer la monétisation du contenu publié.
+
+**Décision :** `agents/music_synthesis.py` utilise `transformers.MusicgenForConditionalGeneration` (modèle `facebook/musicgen-small` par défaut). `transformers` reste épinglé à `4.57.6` (contrainte déjà imposée par coqui-tts, cf. `DOCS/ADR_TTS.md`) — aucun conflit constaté après installation.
+
+**AudioCraft :** installé en `pip install --no-deps audiocraft` uniquement. Ses dépendances déclarées (`spacy`/`thinc`) échouent à la compilation sous Python 3.12 (erreur Cython dans `thinc/backends/numpy_ops.pyx`) et forceraient de toute façon un downgrade de `torch`/`numpy` incompatible avec la RTX 5080 (cu128). Conforme à `ADR_MUSIC.md` : AudioCraft n'apporte rien de plus que MusicGen pour ce projet, l'implémentation n'en dépend pas.
+
+**Séquentialité :** génération jamais concurrente de ComfyUI — passe par `agents/resource_scheduler.py` (agent `"music_synthesis"`, priorité 3 comme `dream_mode`/`postprod`, ~4 Go VRAM réservés pour le modèle `small`).
+
+**Licence :** les poids MusicGen sont sous CC-BY-NC 4.0. Chaque piste générée écrit un sidecar JSON (`{piste}.json`) et une entrée dans `workspace/logs/music_licenses.jsonl` avec `non_commercial: true`. `agents/transmedia_publisher.py::check_music_license()` bloque tout export (`run_publisher(..., monetized=True)`) qui inclurait une piste non-commerciale ou dont le statut de licence est inconnu (fail-safe).
+
+**Fallback :** OOM ou échec de génération = silencieux (cohérent ADR-009) — `MusicSynthesis.generate()` retourne `None`, jamais d'exception propagée, le run continue sans bande-son.
+
+**Limite connue :** aucune piste MusicGen ne doit être utilisée dans une vidéo monétisée sans négociation de licence commerciale avec Meta, ou remplacement par une piste Suno produite manuellement hors pipeline (cf. `DOCS/ADR_MUSIC.md`).
+
