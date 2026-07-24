@@ -24,7 +24,7 @@ COQUI_MODEL_NAME = "tts_models/multilingual/multi-dataset/xtts_v2"
 
 
 def _register_ffmpeg_dll_dirs() -> None:
-    """cf. commentaire jumeau dans agents/v140_voice_synthesis.py."""
+    """cf. commentaire jumeau dans agents/voice_synthesis.py."""
     if os.name != "nt" or not hasattr(os, "add_dll_directory"):
         return
     candidates = []

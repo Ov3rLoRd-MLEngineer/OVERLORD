@@ -100,7 +100,7 @@ def test_director_publishes_to_bus():
 # ── Tests EmotionEngine ───────────────────────────────────────────────────────
 @test("EmotionEngine : import et parametres")
 def test_emotion_engine():
-    from agents.v130_emotion_engine import get_emotion_engine
+    from agents.emotion_engine import get_emotion_engine
     eng = get_emotion_engine()
     params = eng.get_comfy_params("tension")
     assert "cfg" in params,     "params doit avoir cfg"
@@ -110,7 +110,7 @@ def test_emotion_engine():
 
 @test("EmotionEngine : enrich_shot ajoute les parametres")
 def test_emotion_enrich_shot():
-    from agents.v130_emotion_engine import get_emotion_engine
+    from agents.emotion_engine import get_emotion_engine
     eng  = get_emotion_engine()
     shot = {"prompt": "battle scene", "negative_prompt": "blur"}
     enriched = eng.enrich_shot(shot, "tension")
@@ -121,7 +121,7 @@ def test_emotion_enrich_shot():
 # ── Tests WorldModel ──────────────────────────────────────────────────────────
 @test("WorldModel : import et enregistrement entite")
 def test_world_model():
-    from agents.v130_world_model import get_world_model
+    from agents.world_model import get_world_model
     wm = get_world_model("test_integration_series")
     wm.register_entity("Goku", "character", {"hair_color": "black"})
     entity = wm.get_entity("Goku")
@@ -129,7 +129,7 @@ def test_world_model():
 
 @test("WorldModel : validate_and_fix_prompt enrichit le prompt")
 def test_world_model_prompt():
-    from agents.v130_world_model import get_world_model
+    from agents.world_model import get_world_model
     wm = get_world_model("test_integration_series")
     wm.register_entity("Vegeta", "character", {"hair_color": "dark"})
     prompt, warns = wm.validate_and_fix_prompt("standing pose", "Vegeta")

@@ -336,7 +336,6 @@ class OverLordLauncher:
             ("   Self-Improve",        "⟳",  self._launch_self_improve,False),
             ("   Test Pipeline",       "✔",  self._launch_test,        False),
             ("   Gestionnaire Stock.", "⊞",  self._launch_storage,     False),
-            ("   Dashboard v1.30",     "▦",  self._launch_dash130,     False),
             ("   Dashboard v1.20",     "▦",  self._launch_dash120,     False),
             ("   Graphe Neuronal",     "⬡",  self._launch_graph,       False),
             ("   Chat Llama",          "◎",  self._launch_llama,       False),
@@ -451,9 +450,8 @@ class OverLordLauncher:
     def _launch_self_improve(self):  self._run("self_improve.py", ["--mode", "auto", "--dry-run"])
     def _launch_test(self):          self._run("test_pipeline.py", ["--quick"])
     def _launch_storage(self):       self._run("storage_manager.py")
-    def _launch_dash130(self):       self._run("agents/v130_dashboard.py")
-    def _launch_dash120(self):       self._run("agents/v120_dashboard.py")
-    def _launch_graph(self):         self._run("agents/v110_graph_ui.py")
+    def _launch_dash120(self):       self._run("agents/dashboard.py")
+    def _launch_graph(self):         self._run("agents/graph_ui.py")
     def _launch_llama(self):         self._run("llama_chat.py")
     def _launch_licence(self):       self._run("licence_server.py")
     def _launch_learning(self):      self._run("learning_ui.py")

@@ -60,35 +60,35 @@ except ImportError:
     def get_bus(): return None
 
 try:
-    from agents.v130_emotion_engine import EmotionEngine
+    from agents.emotion_engine import EmotionEngine
     EMOTION_OK = True
 except ImportError:
     EMOTION_OK = False
     EmotionEngine = None
 
 try:
-    from agents.v130_world_model import WorldModel
+    from agents.world_model import WorldModel
     WORLD_OK = True
 except ImportError:
     WORLD_OK = False
     WorldModel = None
 
 try:
-    from agents.v130_agent_personality import get_personality_manager
+    from agents.agent_personality import get_personality_manager
     PERSONALITY_OK = True
 except ImportError:
     PERSONALITY_OK = False
     get_personality_manager = None
 
 try:
-    from agents.v130_intelligence_ext import IntelligenceExtV130
+    from agents.intelligence_ext import IntelligenceExtV130
     INTEL_OK = True
 except ImportError:
     INTEL_OK = False
     IntelligenceExtV130 = None
 
 try:
-    from agents.v130_generative_world import GenerativeWorld
+    from agents.generative_world import GenerativeWorld
     GENWORLD_OK = True
 except ImportError:
     GENWORLD_OK = False

@@ -54,7 +54,7 @@ except ImportError:
 log = logging.getLogger("self_improve")
 
 try:
-    from agents.v130_intelligence_ext import IntelligenceExtV130
+    from agents.intelligence_ext import IntelligenceExtV130
     _intel = IntelligenceExtV130()
     INTEL_OK = True
 except Exception:
@@ -135,7 +135,7 @@ class Observer:
 
     def get_creative_fatigue(self) -> dict:
         try:
-            from agents.v130_intelligence_ext import CreativeFatigueDetector
+            from agents.intelligence_ext import CreativeFatigueDetector
             detector = CreativeFatigueDetector()
             fatigue  = detector.get_fatigue_level()
             level    = fatigue.get("level", "unknown")

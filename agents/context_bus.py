@@ -115,7 +115,7 @@ class ContextBus:
                 if v.get("agent_id","") != agent}
 
     def get_attention_map(self) -> list[dict]:
-        """Pour v110_graph_ui : carte d'attention des agents."""
+        """Pour graph_ui : carte d'attention des agents."""
         snap = self.snapshot()
         agents = {}
         for entry in snap.values():

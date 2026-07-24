@@ -70,17 +70,24 @@ AGENT_PY_FILES = {
     "social_agent.py", "sys_agent.py", "remote_gpu.py",
     "gpu_scheduler.py", "ray_cluster.py", "telegram_bot.py",
     "comfy_autoconfig.py", "api_server.py", "agent_supervisor_v2.py",
-    # v110-v140
-    "v110_core.py", "v110_intelligence.py", "v110_graph_ui.py",
-    "v120_dashboard.py", "v120_analytics.py", "v120_ab_testing.py",
-    "v120_collective.py", "v120_narrative_coach.py", "v120_production_director.py",
-    "v130_emotion_engine.py", "v130_world_model.py", "v130_generative_world.py",
-    "v130_narrative_dna.py", "v130_agent_personality.py",
-    "v130_cocreation.py", "v130_dream_mode.py", "v130_intelligence_ext.py",
-    "v140_model_downloader.py", "v140_synchronicity.py", "v140_theory_of_mind.py",
-    "v140_thermal_protection.py", "v140_video_pipeline.py", "v140_voice_synthesis.py",
+    # v110-v140 : noms historiques debarrasses du prefixe de version le
+    # 2026-07-25 (restructuration en-tetes/nommage) -- lignee still tracee
+    # dans les CONTEXTE_OVERLORD_V1x0.md correspondants.
+    "core.py", "intelligence.py", "graph_ui.py",
+    "dashboard.py", "alignment.py", "collective.py", "generation.py",
+    "learning.py", "moe.py",
+    "emotion_engine.py", "world_model.py", "generative_world.py",
+    "narrative_dna.py", "agent_personality.py",
+    "cocreation.py", "dream_simulation.py", "intelligence_ext.py",
+    "model_downloader.py", "synchronicity.py", "theory_of_mind.py",
+    "thermal_protection.py", "video_pipeline.py", "voice_synthesis.py",
+    # Jamais implementes -- references historiques (etaient deja dans cette
+    # liste avant le nettoyage du 2026-07-25, aucun fichier correspondant
+    # n'a jamais existe dans le depot) -- a garder si ce travail est repris.
+    "v120_analytics.py", "v120_ab_testing.py",
+    "v120_narrative_coach.py", "v120_production_director.py",
     # Sous-agents
-    "agent_supervisor_v2.py", "agent_personality.py",
+    "agent_supervisor_v2.py",
 }
 
 # Dossiers NATIFS Ov3rLoRd (a ne pas toucher sauf conformite interne)

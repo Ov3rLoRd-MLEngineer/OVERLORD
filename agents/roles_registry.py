@@ -1,6 +1,6 @@
 """
 agents/roles_registry.py -- Referentiel des Roles et Nomenclature Metier Ov3rLoRd
-V1.49p : get_system_prompt() ajoute (requise par v120_dashboard.py et oracle_interface.py).
+V1.49p : get_system_prompt() ajoute (requise par dashboard.py et oracle_interface.py).
 """
 
 from dataclasses import dataclass, field
@@ -177,7 +177,7 @@ def get_role(role_id: str) -> Optional[Role]:
 def get_system_prompt(role: str = "default", **kwargs) -> str:
     """
     Retourne le system_prompt d'un role donne.
-    Requis par v120_dashboard.py et oracle_interface.py.
+    Requis par dashboard.py et oracle_interface.py.
     role : id du role (ex: "director", "critic", "scenario", "oracle")
            ou "default" pour le prompt Oracle.
     """
