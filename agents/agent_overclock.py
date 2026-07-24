@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 """
 agents/agent_overclock.py — Agent Overclock & Monitoring Hardware V1.70
 Gère l'overclock CPU (i7 8700K) et surveille les ressources système.
