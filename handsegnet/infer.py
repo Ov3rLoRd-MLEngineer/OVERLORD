@@ -1,5 +1,5 @@
 # infer.py — HandSegNet (Ov3rLoRd Pipeline)
-# Inférence du SAM ViT-B fine-tuné mains/doigts/poignets.
+# Inférence du SAM ViT-B fine-tuné mains (mono-classe pour l'instant).
 # Même architecture que footsegnet\infer.py. Le modèle est agnostique à la
 # classe : c'est la boîte englobante fournie (keypoints OpenPose main) qui
 # cible la partie voulue ; `part` ne sert qu'au nommage du fichier de sortie.
@@ -88,7 +88,8 @@ def generate_part_mask(
         output_path : chemin du masque (défaut: <frame>_<part>mask.png)
         threshold   : seuil sur la probabilité sigmoïde
         verbose     : affiche les étapes
-        part        : étiquette libre pour le nommage ("hand", "fingers", "wrist")
+        part        : étiquette libre pour le nommage ("hand", ou une sous-partie
+                      future comme "fingers"/"wrist")
         pipeline_convention : True → NOIR=régénérer/BLANC=préserver ; False → BLANC=objet
         feather_px  : flou gaussien de bord (0 = net)
 
@@ -163,7 +164,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=f"{PROJECT} — inférence masque")
     parser.add_argument("--image",     required=True)
     parser.add_argument("--box",       default=None, help="'x,y,w,h' en pixels")
-    parser.add_argument("--part",      default=None, help="hand / fingers / wrist (nommage)")
+    parser.add_argument("--part",      default=None, help="étiquette de nommage (défaut: hand)")
     parser.add_argument("--output",    default=None)
     parser.add_argument("--threshold", type=float, default=0.5)
     parser.add_argument("--raw",       action="store_true",
