@@ -91,7 +91,8 @@ def generate_foot_mask(
     pipeline_convention: bool = True,
     feather_px: int = FEATHER_PX,
     refine: bool = True,
-) -> str | None:
+    return_score: bool = False,
+) -> str | tuple[str, float] | None:
     """
     Segmente les pieds/chaussures d'une frame avec le SAM fine-tuné.
 
@@ -113,9 +114,13 @@ def generate_foot_mask(
                       sortie (usage natif de l'entrée mask_input du
                       mask_decoder, pas un hack) ; False → un seul passage
                       (comportement historique)
+        return_score : True → retourne (chemin, score SAM natif scores[0])
+                      au lieu du chemin seul, pour trier/prioriser en aval
+                      (agents.segnet_premask) sans appel LLM supplémentaire
 
     Returns:
-        Chemin du masque PNG généré, ou None si échec.
+        Chemin du masque PNG généré (ou (chemin, score) si return_score),
+        ou None si échec.
     """
     frame_path = Path(frame_path)
     if not frame_path.exists():
@@ -203,6 +208,8 @@ def generate_foot_mask(
               f"{time.time() - t0:.2f}s")
         print(f"[footsegnet] -> {final_path}")
 
+    if return_score:
+        return final_path, float(scores[0])
     return final_path
 
 

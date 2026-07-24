@@ -48,7 +48,7 @@ COMPARE_PANEL_HEIGHT = 512
 
 PROVENANCE_FIELDS = ["timestamp", "image", "category", "box_source",
                      "x", "y", "w", "h", "status", "mask_pct",
-                     "iou_manual", "elapsed_s"]
+                     "iou_manual", "sam_score", "elapsed_s"]
 
 
 @dataclass
@@ -155,13 +155,84 @@ def _failure_names(failure_log: Path) -> set[str]:
     return names
 
 
+def _migrate_provenance_header(csv_path: Path) -> None:
+    """
+    Réécrit _provenance.csv avec l'en-tête PROVENANCE_FIELDS courant si un
+    ancien schéma est détecté (ex. colonne `sam_score` ajoutée après coup) —
+    sinon un DictWriter avec un fieldnames plus large que l'en-tête existant
+    désaligne silencieusement toutes les lignes déjà écrites (l'en-tête n'est
+    écrit qu'une fois, à la création du fichier).
+
+    Lit en mode positionnel (pas DictReader) : une ligne dont le nombre de
+    valeurs correspond à un en-tête plus ancien (moins de colonnes) est
+    mappée sur cet ancien en-tête, colonnes manquantes -> "". Gère aussi le
+    cas d'un fichier déjà mixte (ancien + nouveau schéma) sans corrompre les
+    lignes déjà au nouveau format.
+    """
+    with open(csv_path, encoding="utf-8-sig", newline="") as f:
+        rows = list(csv.reader(f))
+    if not rows:
+        return
+    old_header, raw_rows = rows[0], rows[1:]
+    if old_header == PROVENANCE_FIELDS:
+        return
+
+    migrated = []
+    for raw in raw_rows:
+        if len(raw) == len(PROVENANCE_FIELDS):
+            header = PROVENANCE_FIELDS
+        elif len(raw) == len(old_header):
+            header = old_header
+        else:
+            continue   # ligne illisible (tronquée) — ignorée plutôt que plantée
+        as_dict = dict(zip(header, raw))
+        migrated.append({k: as_dict.get(k, "") for k in PROVENANCE_FIELDS})
+
+    with open(csv_path, "w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=PROVENANCE_FIELDS)
+        writer.writeheader()
+        writer.writerows(migrated)
+
+
 def _append_provenance(csv_path: Path, rows: list[dict]) -> None:
     new_file = not csv_path.exists()
+    if not new_file:
+        _migrate_provenance_header(csv_path)
     with open(csv_path, "a", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=PROVENANCE_FIELDS)
         if new_file:
             writer.writeheader()
         writer.writerows(rows)
+
+
+def load_sam_scores(premasks_dir: Path) -> dict[str, float]:
+    """
+    Lit _provenance.csv et retourne {stem_image: score_sam} pour la ligne "OK"
+    la plus récente de chaque image (le CSV est en append — plusieurs runs
+    successifs peuvent avoir généré des lignes pour la même image ; on garde
+    la dernière rencontrée, donc la plus récente puisque les lignes sont
+    ajoutées dans l'ordre chronologique).
+
+    Utilisé par annotate.py --by-confidence pour ouvrir les images en premier
+    dans l'ordre où SAM était le moins sûr de lui (logique d'active learning).
+    """
+    csv_path = premasks_dir / "_provenance.csv"
+    scores: dict[str, float] = {}
+    if not csv_path.exists():
+        return scores
+    with open(csv_path, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            if row.get("status") != "OK":
+                continue
+            raw = row.get("sam_score", "")
+            if not raw:
+                continue
+            stem = Path(row["image"]).stem
+            try:
+                scores[stem] = float(raw)
+            except ValueError:
+                continue
+    return scores
 
 
 def _iou(a: np.ndarray, b: np.ndarray) -> float | None:
@@ -183,35 +254,46 @@ def _enclosing_box(boxes: list[tuple[int, int, int, int]]) -> tuple[int, int, in
 
 def _infer_union(infer_fn: Callable, img_path: Path, out_path: Path,
                  boxes: list[tuple[int, int, int, int]], threshold: float,
-                 infer_kwargs: dict) -> bool:
+                 infer_kwargs: dict) -> tuple[bool, float | None]:
     """
     Inférence SAM par bbox puis UNION des masques dans out_path (une passe
     par instance au lieu d'une passe sur une bbox englobante géante — mode
-    multi-instance). Retourne False si aucune passe n'a abouti.
+    multi-instance). Retourne (False, None) si aucune passe n'a abouti.
+
+    Le score retourné est le score de confiance natif de SAM (scores[0] du
+    predictor, déjà calculé à chaque prédiction — cf. infer.py) : le MINIMUM
+    des scores par instance en mode multi-instance (le maillon le plus faible
+    détermine la confiance globale du masque final).
     """
     if len(boxes) == 1:
         result = infer_fn(frame_path=str(img_path), zone=boxes[0],
                           output_path=str(out_path), threshold=threshold,
                           pipeline_convention=False, feather_px=0,
-                          **infer_kwargs)
-        return result is not None
+                          return_score=True, **infer_kwargs)
+        if result is None:
+            return False, None
+        _, sam_score = result
+        return True, sam_score
 
     union: np.ndarray | None = None
+    scores: list[float] = []
     for k, box in enumerate(boxes):
         part_path = out_path.with_suffix(f".part{k}.png")
         result = infer_fn(frame_path=str(img_path), zone=box,
                           output_path=str(part_path), threshold=threshold,
                           pipeline_convention=False, feather_px=0,
-                          **infer_kwargs)
+                          return_score=True, **infer_kwargs)
         if result is None:
             continue
+        _, part_score = result
+        scores.append(part_score)
         part = (np.array(Image.open(part_path).convert("L")) > 127).astype(np.uint8)
         union = part if union is None else np.maximum(union, part)
         part_path.unlink(missing_ok=True)
     if union is None:
-        return False
+        return False, None
     Image.fromarray(union * 255, mode="L").save(out_path)
-    return True
+    return True, min(scores) if scores else None
 
 
 # ── Boucle principale ────────────────────────────────────────────────────────
@@ -282,6 +364,7 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
     infer_failed: list[str] = []
     rows: list[dict] = []
     ious: list[float] = []
+    sam_scores: list[float] = []
     t_start = time.time()
 
     for i, (img_path, cat) in enumerate(todo, 1):
@@ -315,14 +398,16 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
                          "image": img_path.name, "category": label,
                          "box_source": "", "x": "", "y": "", "w": "", "h": "",
                          "status": "BOX_FAILED", "mask_pct": "",
-                         "iou_manual": "", "elapsed_s": round(time.time() - t0, 1)})
+                         "iou_manual": "", "sam_score": "",
+                         "elapsed_s": round(time.time() - t0, 1)})
             continue
         box = _enclosing_box(boxes)   # bbox unique du CSV/print
 
         # 2. Inférence SAM du projet (convention ML brute, masque net) —
         #    une passe par bbox, union des masques si multi-instance
-        if not _infer_union(infer_fn, img_path, out_path, boxes,
-                            threshold, cat.infer_kwargs):
+        infer_ok, sam_score = _infer_union(infer_fn, img_path, out_path, boxes,
+                                           threshold, cat.infer_kwargs)
+        if not infer_ok:
             print(f"{tag} ({i}/{len(todo)}) {img_path.name} [{label}] : "
                   f"inférence échouée — ignoré")
             infer_failed.append(out_name)
@@ -330,7 +415,7 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
                          "image": img_path.name, "category": label,
                          "box_source": box_source, "x": box[0], "y": box[1],
                          "w": box[2], "h": box[3], "status": "INFER_FAILED",
-                         "mask_pct": "", "iou_manual": "",
+                         "mask_pct": "", "iou_manual": "", "sam_score": "",
                          "elapsed_s": round(time.time() - t0, 1)})
             continue
 
@@ -363,14 +448,18 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
         counts_source[box_source.split("(")[0]] += 1
         elapsed = time.time() - t0
         iou_txt = f" IoU={iou_val:.2f}" if iou_val is not None else ""
+        score_txt = f" SAM={sam_score:.3f}" if sam_score is not None else ""
+        if sam_score is not None:
+            sam_scores.append(sam_score)
         print(f"{tag} ({i}/{len(todo)}) {out_name} [{box_source}] "
-              f"{mask_pct:.1f}%{iou_txt} ({elapsed:.1f}s)")
+              f"{mask_pct:.1f}%{iou_txt}{score_txt} ({elapsed:.1f}s)")
         rows.append({"timestamp": datetime.now().isoformat(timespec="seconds"),
                      "image": img_path.name, "category": label,
                      "box_source": box_source, "x": box[0], "y": box[1],
                      "w": box[2], "h": box[3], "status": "OK",
                      "mask_pct": round(mask_pct, 2),
                      "iou_manual": round(iou_val, 3) if iou_val is not None else "",
+                     "sam_score": round(sam_score, 3) if sam_score is not None else "",
                      "elapsed_s": round(elapsed, 1)})
 
     # 5. Rapports
@@ -388,6 +477,10 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
         print(f"{tag} IoU vs masques manuels : moyenne {np.mean(ious):.3f}, "
               f"médiane {np.median(ious):.3f}, min {min(ious):.3f} "
               f"sur {len(ious)} masque(s)")
+    if sam_scores:
+        print(f"{tag} Score SAM natif : moyenne {np.mean(sam_scores):.3f}, "
+              f"médiane {np.median(sam_scores):.3f}, min {min(sam_scores):.3f} "
+              f"sur {len(sam_scores)} masque(s) — cf. annotate.py --by-confidence")
     print(f"{tag} Provenance : {provenance_csv}")
     print(f"{tag} QC : {qc_dir}")
 

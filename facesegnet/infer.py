@@ -78,7 +78,8 @@ def generate_part_mask(
     part: str | None = None,
     pipeline_convention: bool = True,
     feather_px: int = FEATHER_PX,
-) -> str | None:
+    return_score: bool = False,
+) -> str | tuple[str, float] | None:
     """
     Segmente un trait du visage ciblé par la boîte `zone`.
 
@@ -91,9 +92,11 @@ def generate_part_mask(
         part        : étiquette libre ("eyes", "mouth", "nose", "eyebrows", "hairline")
         pipeline_convention : True → NOIR=régénérer/BLANC=préserver ; False → BLANC=objet
         feather_px  : flou gaussien de bord (0 = net)
+        return_score : True → retourne (chemin, score SAM natif scores[0])
+                      au lieu du chemin seul, pour trier/prioriser en aval
 
     Returns:
-        Chemin du masque PNG, ou None si échec.
+        Chemin du masque PNG (ou (chemin, score) si return_score), ou None si échec.
     """
     frame_path = Path(frame_path)
     if not frame_path.exists():
@@ -160,6 +163,8 @@ def generate_part_mask(
         print(f"[{PROJECT}] Masque : {pct:.1f}% objet — score={float(scores[0]):.3f} "
               f"— {time.time() - t0:.2f}s -> {final_path}")
 
+    if return_score:
+        return final_path, float(scores[0])
     return final_path
 
 

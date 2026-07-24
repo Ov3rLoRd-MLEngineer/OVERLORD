@@ -37,6 +37,7 @@
 #   py -3.12 annotate.py --images D:\OVERLORD\handsegnet\dataset\raw --masks D:\OVERLORD\handsegnet\dataset\masks_raw
 
 import argparse
+import sys
 import tkinter as tk
 from pathlib import Path
 
@@ -45,10 +46,16 @@ import numpy as np
 from PIL import Image, ImageTk
 from scipy.ndimage import binary_fill_holes
 
+REPO_ROOT = Path(r"D:\OVERLORD")
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from agents.segnet_premask import load_sam_scores    # noqa: E402
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 PROJECT_ROOT   = Path(r"D:\OVERLORD\handsegnet")
 DEFAULT_IMAGES = PROJECT_ROOT / "dataset" / "raw"
 DEFAULT_MASKS  = PROJECT_ROOT / "dataset" / "masks_raw"
+DEFAULT_PREMASKS = PROJECT_ROOT / "dataset" / "premasks"
 SAM_CHECKPOINT = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
 
 OVERLAY_COLOR = (255, 60, 60)   # rouge semi-transparent sur les zones masquées
@@ -88,11 +95,14 @@ def get_sam_predictor():
 # ── Application ──────────────────────────────────────────────────────────────
 
 class AnnotatorApp:
-    def __init__(self, root: tk.Tk, images_dir: Path, masks_dir: Path):
+    def __init__(self, root: tk.Tk, images_dir: Path, masks_dir: Path,
+                 premasks_dir: Path = DEFAULT_PREMASKS,
+                 by_confidence: bool = False):
         self.root = root
         self.images_dir = images_dir
         self.masks_dir = masks_dir
         self.masks_dir.mkdir(parents=True, exist_ok=True)
+        self.premasks_dir = premasks_dir
 
         exts = {".png", ".jpg", ".jpeg", ".webp"}
         self.image_paths = sorted(
@@ -101,6 +111,19 @@ class AnnotatorApp:
         )
         if not self.image_paths:
             raise SystemExit(f"[annotate] Aucune image dans {images_dir}")
+
+        if by_confidence:
+            # Active learning : score SAM natif croissant en premier (les cas
+            # où le modèle est le moins sûr de lui) ; images sans score connu
+            # (jamais pré-masquées) à la suite, dans l'ordre alphabétique.
+            scores = load_sam_scores(self.premasks_dir)
+            with_score = [p for p in self.image_paths if p.stem in scores]
+            without_score = [p for p in self.image_paths if p.stem not in scores]
+            with_score.sort(key=lambda p: scores[p.stem])
+            self.image_paths = with_score + without_score
+            print(f"[annotate] --by-confidence : {len(with_score)} image(s) "
+                  f"triée(s) par score SAM croissant, {len(without_score)} "
+                  f"sans score (à la suite)")
 
         self.index = 0
         self.mode = "point" if SAM_AVAILABLE else "brush"
@@ -555,9 +578,16 @@ if __name__ == "__main__":
                         help="Dossier des images à annoter")
     parser.add_argument("--masks",  default=str(DEFAULT_MASKS),
                         help="Dossier de sortie des masques PNG")
+    parser.add_argument("--premasks", default=str(DEFAULT_PREMASKS),
+                        help="Dossier des pré-masques (batch_premask.py)")
+    parser.add_argument("--by-confidence", action="store_true",
+                        help="Ouvre les images triées par score SAM natif croissant "
+                             "(_provenance.csv) au lieu de l'ordre alphabétique — "
+                             "concentre la correction manuelle sur les cas incertains")
     args = parser.parse_args()
 
     root = tk.Tk()
     root.title("HandSegNet Annotator — Ov3rLoRd")
-    app = AnnotatorApp(root, Path(args.images), Path(args.masks))
+    app = AnnotatorApp(root, Path(args.images), Path(args.masks), Path(args.premasks),
+                       by_confidence=args.by_confidence)
     root.mainloop()
