@@ -29,9 +29,9 @@ python maestro.py --universe "evangelion battle mecha girl"
 python agent_supervisor_v2.py
 
 # Tests
-python test_suite_v170.py --quick
-python test_suite_v170.py
-python test_suite_v170.py --agent scenario   # one agent
+python test_suite.py --quick
+python test_suite.py
+python test_suite.py --agent scenario   # one agent
 
 # GUI / HUD
 python overlord_launcher.py        # tkinter desktop launcher

@@ -1,10 +1,19 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 """
-test_suite_v170.py — Tests Unitaires Complets V1.70
+test_suite.py — Tests Unitaires Complets V1.70
 Couvre tous les agents V1.50-V1.70.
 Usage :
-    python test_suite_v170.py           # tous les tests
-    python test_suite_v170.py --quick   # tests rapides seulement
-    python test_suite_v170.py --agent scenario  # un agent spécifique
+    python test_suite.py           # tous les tests
+    python test_suite.py --quick   # tests rapides seulement
+    python test_suite.py --agent scenario  # un agent spécifique
 """
 
 import argparse
