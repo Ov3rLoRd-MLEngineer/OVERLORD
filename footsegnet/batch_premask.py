@@ -1,127 +1,68 @@
 # batch_premask.py — FootSegNet (Ov3rLoRd Pipeline)
-# Génère en batch les pré-masques (pose DWPose -> box pied -> SAM + raffinement
-# de infer.py) pour toutes les images de dataset\raw\ qui n'ont pas encore de
-# masque annoté à la main, afin de pré-remplir annotate.py (voir tâche
-# suivante) et accélérer la correction manuelle sur les images restantes.
+# Génère en batch les pré-masques (bbox pied -> SAM + raffinement de infer.py)
+# pour pré-remplir annotate.py. Bbox : pose DWPose (foot_box_for_image) en
+# source principale, avec FALLBACK grounding VLM (agents.vlm_grounding,
+# requête neutre "the character's shoes or feet") quand la pose échoue —
+# intégration validée le 2026-07-14 sur les 8 images en échec DWPose.
 #
-# Écrit UNIQUEMENT dans dataset\premasks\ -- jamais dans dataset\masks_raw\,
-# pour ne jamais écraser du travail d'annotation manuel déjà fait.
+# La logique batch (sélection, provenance, closing des trous, QC, rapports)
+# est factorisée dans agents\segnet_premask.py, partagée avec hand/face/body.
 #
-# Convention : BLANC (255) = pied/chaussure, NOIR (0) = fond (convention ML,
-# la même que masks_raw -- pas la convention pipeline inpaint de infer.py).
+# Écrit UNIQUEMENT dans dataset\premasks\ -- jamais dans dataset\masks_raw\.
+# Convention : BLANC (255) = pied/chaussure, NOIR (0) = fond (convention ML).
 #
 # Usage :
 #   py -3.12 batch_premask.py
 #   py -3.12 batch_premask.py --clean --limit 20
+#   py -3.12 batch_premask.py --from-failures --force        (validation IoU)
+#   py -3.12 batch_premask.py --no-fallback                  (DWPose seul, historique)
 
-import argparse
-from datetime import datetime
+import sys
 from pathlib import Path
 
-import numpy as np
-from PIL import Image
-from scipy import ndimage
-
-from infer import generate_foot_mask
-from _pose_box import foot_box_for_image
-
-# ── CONFIG ────────────────────────────────────────────────────────────────────
 FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
-RAW_IMAGES  = FOOTSEGNET_ROOT / "dataset" / "raw"
-MASKS_RAW   = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
-PREMASKS    = FOOTSEGNET_ROOT / "dataset" / "premasks"
-FAILURE_LOG = PREMASKS / "_failures.log"
+REPO_ROOT = Path(r"D:\OVERLORD")
+for _p in (str(FOOTSEGNET_ROOT), str(REPO_ROOT)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from infer import generate_foot_mask                       # noqa: E402
+from _pose_box import foot_box_for_image                   # noqa: E402
+from agents.segnet_premask import (                        # noqa: E402
+    PremaskCategory, run_batch, make_cli_parser,
+)
+
+DEFAULT_OBJECT = "the character's shoes or feet"
 
 
-def clean_mask(mask_bin: np.ndarray, keep: int = 2) -> np.ndarray:
-    """
-    Garde les `keep` plus grosses composantes connexes du masque binaire,
-    retire le reste (bruit type point isolé observé sur footsegnet_00112).
-    """
-    labeled, n = ndimage.label(mask_bin)
-    if n <= keep:
-        return mask_bin
-    sizes = ndimage.sum(mask_bin, labeled, index=range(1, n + 1))
-    keep_labels = set((np.argsort(sizes)[::-1][:keep] + 1).tolist())
-    return np.isin(labeled, list(keep_labels)).astype(np.uint8)
-
-
-def collect_unannotated() -> list[Path]:
-    """Images de dataset/raw/ sans masque correspondant dans masks_raw/."""
-    exts = {".png", ".jpg", ".jpeg", ".webp"}
-    result = []
-    for img_path in sorted(RAW_IMAGES.iterdir()):
-        if img_path.suffix.lower() not in exts or img_path.name.startswith("_"):
-            continue
-        if (MASKS_RAW / f"{img_path.stem}.png").exists():
-            continue
-        result.append(img_path)
-    return result
-
-
-def run(limit: int | None, clean: bool, refine: bool, threshold: float) -> None:
-    images = collect_unannotated()
-    if limit:
-        images = images[:limit]
-    PREMASKS.mkdir(parents=True, exist_ok=True)
-
-    print(f"[batch_premask] {len(images)} image(s) sans masque manuel à traiter")
-
-    ok = 0
-    pose_failed: list[str] = []
-    infer_failed: list[str] = []
-
-    for i, img_path in enumerate(images, 1):
-        box = foot_box_for_image(img_path)
-        if box is None:
-            print(f"[batch_premask] ({i}/{len(images)}) Pose non détectée, ignoré : {img_path.name}")
-            pose_failed.append(img_path.name)
-            continue
-
-        out_path = PREMASKS / f"{img_path.stem}.png"
-        result = generate_foot_mask(
-            frame_path=str(img_path), zone=box, output_path=str(out_path),
-            threshold=threshold, pipeline_convention=False, feather_px=0,
-            refine=refine,
-        )
-        if result is None:
-            print(f"[batch_premask] ({i}/{len(images)}) Inférence échouée, ignoré : {img_path.name}")
-            infer_failed.append(img_path.name)
-            continue
-
-        if clean:
-            mask_bin = (np.array(Image.open(str(out_path)).convert("L")) > 127).astype(np.uint8)
-            cleaned = clean_mask(mask_bin)
-            Image.fromarray(cleaned * 255, mode="L").save(str(out_path))
-
-        ok += 1
-        print(f"[batch_premask] ({i}/{len(images)}) -> {out_path.name}")
-
-    total_failed = len(pose_failed) + len(infer_failed)
-    print(f"\n[batch_premask] Terminé : {ok} pré-masque(s) généré(s), {total_failed} échec(s)")
-
-    if pose_failed or infer_failed:
-        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        lines = [f"[{ts}] batch_premask -- {ok} OK, "
-                f"{len(pose_failed)} échec(s) pose, {len(infer_failed)} échec(s) inférence"]
-        lines += [f"  POSE   {n}" for n in pose_failed]
-        lines += [f"  INFER  {n}" for n in infer_failed]
-        with open(FAILURE_LOG, "a", encoding="utf-8") as f:
-            f.write("\n".join(lines) + "\n")
-        print(f"[batch_premask] Échecs journalisés -> {FAILURE_LOG}")
+def _foot_box(image_path: Path):
+    # person_index="largest" : cible la personne à la plus grande boîte
+    # englobante (sujet principal), pas people[0] qui peut être un personnage
+    # secondaire minuscule (même choix que run_dilation_test.py).
+    return foot_box_for_image(image_path, person_index="largest")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="FootSegNet — génération batch de pré-masques (images raw sans masque manuel)"
-    )
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Limiter aux N premières images (test rapide)")
-    parser.add_argument("--clean", action="store_true",
-                        help="Garde les 2 plus grosses composantes connexes, retire le bruit isolé")
-    parser.add_argument("--refine", action=argparse.BooleanOptionalAction, default=True,
+    parser = make_cli_parser("FootSegNet", "pieds/chaussures")
+    parser.add_argument("--refine", action="store_true", default=True,
                         help="Raffinement itératif de infer.py (défaut: activé)")
-    parser.add_argument("--threshold", type=float, default=0.5)
+    parser.add_argument("--no-refine", dest="refine", action="store_false")
+    parser.add_argument("--grounding-object", default=DEFAULT_OBJECT,
+                        help=f"Requête de grounding VLM (défaut: \"{DEFAULT_OBJECT}\")")
     args = parser.parse_args()
 
-    run(limit=args.limit, clean=args.clean, refine=args.refine, threshold=args.threshold)
+    categories = [PremaskCategory(
+        name=None,                       # mono-classe : premasks\<stem>.png
+        grounding_object=args.grounding_object,
+        primary_box_fn=_foot_box,
+        infer_kwargs={"refine": args.refine},
+    )]
+
+    run_batch(
+        "footsegnet", FOOTSEGNET_ROOT / "dataset", generate_foot_mask,
+        categories,
+        limit=args.limit, only=args.only, clean=args.clean,
+        skip_existing=args.skip_existing, force=args.force,
+        from_failures=args.from_failures, threshold=args.threshold,
+        grounding_margin=args.grounding_margin, no_fallback=args.no_fallback,
+    )

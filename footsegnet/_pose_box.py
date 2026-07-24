@@ -25,6 +25,9 @@ def foot_box_for_image(
     image_path: Path,
     margin: float = 0.05,
     extension: float = 0.12,
+    margin_top_px: int | None = None,
+    margin_side_px: int | None = None,
+    person_index: int | str = 0,
 ) -> tuple[int, int, int, int] | None:
     """
     Retourne la bbox pied (x, y, w, h) en pixels absolus pour `image_path`,
@@ -34,6 +37,15 @@ def foot_box_for_image(
         image_path : image source
         margin      : marge relative haut/gauche/droite (cf. extract_foot_bbox)
         extension   : marge relative vers le bas (cf. extract_foot_bbox)
+        margin_top_px : marge haute en pixels absolus, remplace la marge
+                      relative pour le haut uniquement (cf. extract_foot_bbox ;
+                      None = comportement historique, ex. batch_premask.py)
+        margin_side_px : marge latérale en pixels absolus, remplace la marge
+                      relative gauche/droite (cf. extract_foot_bbox ; None =
+                      comportement historique)
+        person_index : index de personne, ou "largest" pour cibler la personne
+                      avec la plus grande boîte englobante (sujet principal
+                      probable — cf. extract_foot_bbox ; 0 = historique)
     """
     image_path = Path(image_path)
     stem = image_path.stem
@@ -60,4 +72,8 @@ def foot_box_for_image(
     if not openpose_dicts:
         return None
 
-    return extract_foot_bbox(openpose_dicts[0], margin=margin, foot_extension=extension)
+    return extract_foot_bbox(
+        openpose_dicts[0], margin=margin, foot_extension=extension,
+        margin_top_px=margin_top_px, margin_side_px=margin_side_px,
+        person_index=person_index,
+    )
