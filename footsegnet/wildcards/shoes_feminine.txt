@@ -1,0 +1,27 @@
+# wildcards\shoes_feminine.txt — chaussures à connotation féminine, piochées
+# pour les templates "1girl". Cf. footsegnet/README.md "Cohérence
+# genre/vêtements" — pas d'exclusivité stricte, voir shoes_cross.txt.
+red high heel pumps
+pink and white platform sneakers
+knee-high black leather boots
+gold strappy heels
+red mary jane shoes with white socks
+white ballet flats
+lavender platform sandals
+ankle boots with small heel
+glittery party heels
+pastel pink sneakers with bows
+thigh-high stiletto boots
+white platform mary janes
+floral print espadrilles
+sparkly ballet slippers
+wedge sandals, cork sole
+kitten heel pumps, pastel color
+lace-up ballet flats
+rhinestone-studded sandals
+cream-colored knee boots
+bow-tie flat shoes
+strappy gladiator sandals
+soft pink house slippers
+satin ribbon ballet shoes
+platform loafers with buckle

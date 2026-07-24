@@ -1,0 +1,42 @@
+# wildcards\outfits_neutral.txt — tenues unisexes (piochées quel que soit le
+# genre du template). Cf. footsegnet/README.md "Cohérence genre/vêtements".
+blue denim jeans and white t-shirt
+red tracksuit
+cargo shorts and tank top
+gym shorts and sports top
+ripped jeans and leather jacket
+baggy streetwear pants and graphic tee
+overalls over striped shirt
+jogger pants and windbreaker
+kimono, ankle-length
+racing jumpsuit
+sweatpants and basketball jersey
+business casual shirt and straight-leg trousers
+denim overalls and long sleeve shirt
+hooded rain jacket and cargo pants
+plain hoodie and joggers
+band t-shirt and ripped jeans
+martial arts gi, belt tied
+swim shorts and rash guard
+utility vest over t-shirt and cargo pants
+oversized flannel shirt and jeans
+tracksuit jacket and matching pants
+denim jacket over plain t-shirt and jeans
+cyberpunk-style jacket with tech accessories
+scout uniform, shorts and neckerchief
+school uniform, trousers and blazer
+lab coat over casual clothes
+apron over t-shirt and jeans, chef style
+hiking outfit, cargo pants and thermal jacket
+yukata, casual summer robe
+streetwear puffer jacket and joggers
+referee-style striped jersey and shorts
+delivery uniform, cap and vest
+karate uniform with colored belt
+astronaut-style jumpsuit, casual sci-fi
+rain poncho over casual clothes
+plain tank top and gym shorts, athletic
+denim vest over long sleeve shirt and jeans
+cargo shorts and graphic hoodie
+tracksuit with reflective stripes
+loose linen shirt and drawstring pants

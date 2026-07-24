@@ -1,0 +1,34 @@
+# wildcards\lighting.txt — éclairages (nouvelle catégorie, v2 préparation
+# dataset Control-LoRA — auparavant seulement inline dans 1-2 templates).
+# Volontairement générique/non lié à un fond précis pour rester combinable
+# avec n'importe quelle valeur de backgrounds.txt.
+dynamic lighting
+soft diffused lighting
+harsh midday sun
+golden hour sunlight, long shadows
+overcast, flat even lighting
+backlit silhouette, rim light
+neon lighting, colorful reflections
+moonlit, cool blue tones
+warm indoor lamp lighting
+dramatic side lighting, high contrast
+soft studio lighting, minimal shadows
+early morning light, soft haze
+harsh fluorescent lighting
+candlelight, warm flickering glow
+stormy overcast lighting, moody
+sunset glow, orange and pink hues
+streetlight glow at night
+spotlight from above
+dappled sunlight through leaves
+foggy diffused light, low contrast
+bright noon sun, minimal shadows
+twilight blue hour lighting
+firelight glow, campfire nearby
+underwater-style caustic light reflections
+cold clinical white lighting
+warm cafe lighting, ambient glow
+lightning flash, brief high contrast
+soft window light, indoor daytime
+festival string lights glow
+volumetric light rays through dust or mist

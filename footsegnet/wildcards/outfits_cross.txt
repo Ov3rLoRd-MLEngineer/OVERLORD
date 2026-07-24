@@ -1,0 +1,18 @@
+# wildcards\outfits_cross.txt — associations délibérément "cross-gender"
+# (ex. homme en jupe/talons), tirées avec une petite probabilité EXPLICITE
+# (CROSS_PROBABILITY dans generate_dataset.py) plutôt que par collision
+# accidentelle entre deux pools indépendants. Cf. footsegnet/README.md
+# "Cohérence genre/vêtements" pour l'objectif (liberté créative assumée,
+# pas de biais d'échantillonnage non intentionnel).
+man wearing a flowing skirt and tights, deliberate style choice
+woman in an oversized men's business suit, borrowed-boyfriend style
+man in a frilly lolita-style dress, alternative fashion
+woman in a men's tuxedo with slacks, androgynous style
+man wearing a pleated school skirt uniform variant, gender-nonconforming style
+woman in men's work overalls and tool belt
+man in a floral sundress, confident and unbothered
+woman in a men's bomber jacket and baggy cargo pants
+man wearing thigh-high socks and a skirt, alternative streetwear
+woman in men's formal hakama and haori
+man in a knit sweater dress, casual androgynous look
+woman in a men's varsity jacket, oversized fit

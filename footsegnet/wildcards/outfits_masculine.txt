@@ -1,0 +1,27 @@
+# wildcards\outfits_masculine.txt — tenues à connotation masculine, piochées
+# pour les templates "1boy". Cf. footsegnet/README.md "Cohérence
+# genre/vêtements" — pas d'exclusivité stricte, voir outfits_cross.txt.
+business suit with slacks
+men's kimono with hakama
+varsity jacket and straight jeans
+buttoned shirt tucked into slacks
+leather biker jacket and dark jeans
+tracksuit jacket over compression shirt
+formal tuxedo, bow tie
+denim jacket over hoodie and cargo pants
+bomber jacket and joggers
+work overalls over t-shirt, tool belt
+samurai-style hakama and haori
+suspenders over dress shirt, slacks
+varsity letterman jacket and shorts
+military-style cargo uniform
+rugged flannel jacket over jeans
+slim-fit suit, no tie, sleeves rolled up
+street basketball jersey and long shorts
+trench coat over shirt and trousers
+martial arts gi with black belt
+skater outfit, baggy pants and beanie
+delivery courier uniform, cap and cargo pants
+formal yukata with hakama, festival style
+leather vest over bare torso, rugged look
+suit vest over dress shirt, no jacket
