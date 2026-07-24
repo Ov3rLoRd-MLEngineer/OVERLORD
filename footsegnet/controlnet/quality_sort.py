@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 # quality_sort.py — FootSegNet -> Control-LoRA (Ov3rLoRd Pipeline)
 #
 # Classe chaque paire (image, masque) du dataset FootSegNet en :

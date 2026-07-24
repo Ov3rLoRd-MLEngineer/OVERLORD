@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 # train_control_lora.py — FootSegNet -> Control-LoRA SDXL (Ov3rLoRd Pipeline)
 #
 # Entraîne un Control-LoRA (pas un ControlNet plein) conditionnant SDXL

@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 # _pose_box.py — FootSegNet (Ov3rLoRd Pipeline)
 # Dérive la bbox pied (x, y, w, h) d'une image via DWPose, factorisé pour être
 # partagé par analyze_errors.py et batch_premask.py (les deux ont besoin de la

@@ -1,3 +1,12 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
 # annotate.py — FootSegNet (Ov3rLoRd Pipeline)
 # Interface d'annotation légère (tkinter) pour créer les masques pieds/chaussures.
 #
