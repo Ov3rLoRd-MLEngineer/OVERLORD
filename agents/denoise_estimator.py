@@ -19,6 +19,11 @@ import argparse
 import urllib.request
 import urllib.error
 
+import sys
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 try:
     import numpy as np
     from PIL import Image

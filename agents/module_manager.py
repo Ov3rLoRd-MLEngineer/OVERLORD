@@ -29,6 +29,10 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 try:
     from agents.overlord_utils import ensure_workspace
     UTILS_OK = True

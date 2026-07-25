@@ -38,6 +38,11 @@ from dataclasses import dataclass, field
 from typing import Optional
 import requests
 
+import sys
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 PERSONALITY_DIR = Path("workspace/personalities")
 ANTHROPIC_URL   = "https://api.anthropic.com/v1/messages"
 CLAUDE_MODEL    = "claude-sonnet-4-6"

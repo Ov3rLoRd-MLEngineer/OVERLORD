@@ -55,6 +55,10 @@ if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 import config
 
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 COMFY_URL      = "http://127.0.0.1:8188"
 DEMO_DIR       = str(config.DEMO_DIR)

@@ -30,6 +30,10 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 # ── Palette de couleurs par catégorie ────────────────────────────────
 COLORS = {
     "model":       "#3D5A80",   # Bleu ardoise — checkpoint/LoRA

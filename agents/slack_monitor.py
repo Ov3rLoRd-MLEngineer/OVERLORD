@@ -32,6 +32,11 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
+import sys
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 try:
     from agents.context_bus import get_bus
     BUS_OK = True

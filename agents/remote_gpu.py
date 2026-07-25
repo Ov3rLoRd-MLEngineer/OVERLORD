@@ -32,6 +32,11 @@ from enum import Enum
 from dataclasses import dataclass, field
 from typing import Optional
 
+import sys
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 COMFY_PORT    = 8188
 REMOTE_CONFIG = Path("workspace/remote_gpu_config.json")
 

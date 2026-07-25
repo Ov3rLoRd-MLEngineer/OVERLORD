@@ -60,6 +60,11 @@ def _resolve_scene_type(universe: str = "", action: str = "", scene_type: str = 
 from enum import Enum
 from typing import Optional
 
+import sys
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 # ── Imports avec fallbacks complets ──────────────────────────────────
 try:
     from agents.context_bus import get_bus, ContextBus

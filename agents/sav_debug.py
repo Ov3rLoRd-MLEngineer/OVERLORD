@@ -36,6 +36,10 @@ from enum import Enum
 import os
 from pathlib import Path
 
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 
 def _get_api_key() -> str:

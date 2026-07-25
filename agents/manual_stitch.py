@@ -14,6 +14,10 @@ import config
 
 from PIL import Image, ImageFilter
 
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 # ── À ADAPTER ────────────────────────────────────────────────────────────────
 SOURCE_IMAGE    = "2026-06-30-212153_fabricatedXL_v70_391065954874066.png"
 INPAINTED_CROP  = str(config.COMFYUI_OUTPUT / "asuka_run" / "inpaint__00007_.png")

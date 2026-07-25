@@ -44,6 +44,11 @@ from pathlib import Path
 from datetime import datetime
 from enum import Enum
 
+import sys
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 OBS_WS_HOST    = "localhost"
 OBS_WS_PORT    = 4455
 OBS_WS_PASS    = ""          # mot de passe OBS WebSocket (vide si non configuré)

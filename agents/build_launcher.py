@@ -14,6 +14,10 @@ Usage : python build_launcher.py
 import subprocess, sys, shutil
 from pathlib import Path
 
+import io
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 print("═"*55)
 print("  Ov3rLoRd — Build Launcher EXE v1.45")
 print("═"*55)
