@@ -1,2 +1,19 @@
 __pycache__/
 *.pyc
+
+# Datasets et checkpoints SegNet generes -- jamais commites (binaires, des
+# milliers de fichiers). Les .gitkeep deja suivis dans ces dossiers ne sont
+# pas affectes (gitignore n'agit que sur les fichiers non suivis).
+**/dataset/raw/
+**/dataset/images/
+**/dataset/masks/
+**/dataset/masks_raw/
+**/dataset/premasks/
+**/dataset/conditioning_images/
+**/dataset/error_analysis/
+**/dataset/diversity_stats/
+**/dataset/annotations/*.json
+**/checkpoints/*.pth
+
+# Sorties de test generees (memes raisons)
+tests/bottes_generiques/dataset/
