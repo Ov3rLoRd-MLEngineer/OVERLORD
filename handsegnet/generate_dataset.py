@@ -67,6 +67,14 @@ NEGATIVE_PROMPT = (
     "hands out of frame, hands cropped, watermark, signature, text, nsfw"
 )
 
+# LoRA anti-mains-difformes (sdxl-wrong-lora, HuggingFace minimaxir, MIT) --
+# teste sur 12 seeds rejetes du 1er lot (voir session du 2026-07-25) :
+# 4/12 amelioration nette, 0/12 degradation, aucune difference 0.5 vs 0.7 --
+# poids 0.5 retenu (le plus leger qui apporte le benefice observe).
+LORA_FILE           = "sdxl-wrong-lora.bin"
+LORA_WEIGHT_DEFAULT = 0.5
+LORA_TRIGGER_NEGATIVE = "wrong"
+
 POLL_INTERVAL = 2.0
 POLL_TIMEOUT  = 300
 
@@ -113,36 +121,49 @@ def resolve_prompt(template: str, rng: random.Random) -> str:
 
 # ── Workflow ComfyUI ─────────────────────────────────────────────────────────
 
-def build_txt2img_workflow(positive: str, seed: int, filename_prefix: str) -> dict:
-    return {
+def build_txt2img_workflow(positive: str, seed: int, filename_prefix: str,
+                            lora_weight: float | None = None) -> dict:
+    wf = {
         "1": {"class_type": "CheckpointLoaderSimple",
               "inputs": {"ckpt_name": CHECKPOINT}},
         "2": {"class_type": "VAELoader",
               "inputs": {"vae_name": VAE}},
-        "3": {"class_type": "CLIPTextEncode",
-              "inputs": {"text": positive, "clip": ["1", 1]}},
-        "4": {"class_type": "CLIPTextEncode",
-              "inputs": {"text": NEGATIVE_PROMPT, "clip": ["1", 1]}},
         "5": {"class_type": "EmptyLatentImage",
               "inputs": {"width": WIDTH, "height": HEIGHT, "batch_size": 1}},
-        "6": {"class_type": "KSampler",
-              "inputs": {
-                  "model":        ["1", 0],
-                  "positive":     ["3", 0],
-                  "negative":     ["4", 0],
-                  "latent_image": ["5", 0],
-                  "seed":         seed,
-                  "steps":        STEPS,
-                  "cfg":          CFG,
-                  "sampler_name": SAMPLER,
-                  "scheduler":    SCHEDULER,
-                  "denoise":      1.0,
-              }},
         "7": {"class_type": "VAEDecode",
               "inputs": {"samples": ["6", 0], "vae": ["2", 0]}},
         "8": {"class_type": "SaveImage",
               "inputs": {"images": ["7", 0], "filename_prefix": filename_prefix}},
     }
+
+    model_ref, clip_ref = ["1", 0], ["1", 1]
+    negative_text = NEGATIVE_PROMPT
+    if lora_weight is not None:
+        wf["9"] = {"class_type": "LoraLoader",
+                    "inputs": {
+                        "model": ["1", 0], "clip": ["1", 1],
+                        "lora_name": LORA_FILE,
+                        "strength_model": lora_weight, "strength_clip": lora_weight,
+                    }}
+        model_ref, clip_ref = ["9", 0], ["9", 1]
+        negative_text = NEGATIVE_PROMPT + ", " + LORA_TRIGGER_NEGATIVE
+
+    wf["3"] = {"class_type": "CLIPTextEncode", "inputs": {"text": positive, "clip": clip_ref}}
+    wf["4"] = {"class_type": "CLIPTextEncode", "inputs": {"text": negative_text, "clip": clip_ref}}
+    wf["6"] = {"class_type": "KSampler",
+               "inputs": {
+                   "model":        model_ref,
+                   "positive":     ["3", 0],
+                   "negative":     ["4", 0],
+                   "latent_image": ["5", 0],
+                   "seed":         seed,
+                   "steps":        STEPS,
+                   "cfg":          CFG,
+                   "sampler_name": SAMPLER,
+                   "scheduler":    SCHEDULER,
+                   "denoise":      1.0,
+               }}
+    return wf
 
 
 def submit(workflow: dict) -> str | None:
@@ -197,7 +218,8 @@ def save_manifest(manifest: dict) -> None:
 
 # ── Boucle principale ────────────────────────────────────────────────────────
 
-def generate_batch(count: int, start_index: int, base_seed: int, dry_run: bool) -> int:
+def generate_batch(count: int, start_index: int, base_seed: int, dry_run: bool,
+                    lora_weight: float | None = LORA_WEIGHT_DEFAULT) -> int:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     templates = load_templates()
     manifest = load_manifest()
@@ -223,7 +245,7 @@ def generate_batch(count: int, start_index: int, base_seed: int, dry_run: bool) 
             done += 1
             continue
 
-        wf = build_txt2img_workflow(prompt, seed, f"{OUTPUT_PREFIX}{i:05d}_")
+        wf = build_txt2img_workflow(prompt, seed, f"{OUTPUT_PREFIX}{i:05d}_", lora_weight)
         submit_time = time.time()
         pid = submit(wf)
         if not pid:
@@ -240,6 +262,7 @@ def generate_batch(count: int, start_index: int, base_seed: int, dry_run: bool) 
             "index": i, "seed": seed, "prompt": prompt, "template": template,
             "comfyui_source": out, "width": WIDTH, "height": HEIGHT,
             "checkpoint": CHECKPOINT,
+            "lora": {"file": LORA_FILE, "weight": lora_weight} if lora_weight is not None else None,
         }
         save_manifest(manifest)
         done += 1
@@ -254,11 +277,18 @@ if __name__ == "__main__":
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--base-seed",   type=int, default=BASE_SEED)
     parser.add_argument("--dry-run",     action="store_true")
+    parser.add_argument("--lora-weight", type=float, default=LORA_WEIGHT_DEFAULT,
+                         help=f"Poids du LoRA anti-mains-difformes {LORA_FILE} "
+                              f"(défaut: {LORA_WEIGHT_DEFAULT}, testé 0.5/0.7 sans différence)")
+    parser.add_argument("--no-lora",     action="store_true",
+                         help="Désactive le LoRA (comportement du 1er lot, avant test)")
     args = parser.parse_args()
 
     if not args.dry_run and not HAS_REQUESTS:
         print(f"[{PROJECT}] 'requests' requis (py -3.12 -m pip install requests)")
         raise SystemExit(1)
 
-    n = generate_batch(args.count, args.start_index, args.base_seed, args.dry_run)
-    print(f"\n[{PROJECT}] Terminé : {n}/{args.count} images dans {RAW_DIR}")
+    lora_weight = None if args.no_lora else args.lora_weight
+    lora_suffix = f"(LoRA {LORA_FILE}@{lora_weight})" if lora_weight is not None else "(sans LoRA)"
+    n = generate_batch(args.count, args.start_index, args.base_seed, args.dry_run, lora_weight)
+    print(f"\n[{PROJECT}] Terminé : {n}/{args.count} images dans {RAW_DIR} {lora_suffix}")
