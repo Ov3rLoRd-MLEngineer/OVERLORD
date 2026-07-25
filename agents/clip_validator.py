@@ -48,8 +48,10 @@ try:
 except ImportError:
     AUDIT_AVAILABLE = False
 
+import config
+
 # ── Configuration ──────────────────────────────────────────────────────────────
-PROJECT_ROOT   = Path(r"D:\OVERLORD")
+PROJECT_ROOT   = config.OVERLORD_ROOT
 WORKSPACE      = PROJECT_ROOT / "workspace"
 AUDIT_DB       = WORKSPACE / "audit" / "overlord_audit.db"
 REPORTS_DIR    = WORKSPACE / "reports"

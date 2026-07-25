@@ -406,6 +406,11 @@ if __name__ == "__main__":
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     logging.basicConfig(level=logging.INFO)
 
+    _REPO_ROOT = Path(__file__).resolve().parent.parent
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    import config
+
     print("=== Quality Reviewer V1.70 ===")
     print(f"Target score  : {TARGET_SCORE}")
     print(f"Max retries   : {MAX_RETRIES}")
@@ -416,7 +421,7 @@ if __name__ == "__main__":
     # Test sur une image existante si disponible
     test_img = next(
         (p for p in [
-            Path(r"D:/Ov3rLoRd AI/ComfyUI/output"),
+            config.COMFYUI_OUTPUT,
             Path("workspace/archive"),
         ] if p.exists()), None
     )

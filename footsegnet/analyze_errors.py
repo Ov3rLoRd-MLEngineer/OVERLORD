@@ -30,11 +30,17 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 from infer import generate_foot_mask
 from _pose_box import foot_box_for_image
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
+FOOTSEGNET_ROOT = config.FOOTSEGNET_ROOT
 RAW_IMAGES  = FOOTSEGNET_ROOT / "dataset" / "raw"
 RAW_MASKS   = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
 ANNOT_DIR   = FOOTSEGNET_ROOT / "dataset" / "annotations"

@@ -44,12 +44,18 @@ from segment_anything.utils.transforms import ResizeLongestSide
 
 from build_coco import decode_rle
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
+FOOTSEGNET_ROOT = config.FOOTSEGNET_ROOT
 IMAGES_DIR      = FOOTSEGNET_ROOT / "dataset" / "images"
 ANNOT_DIR       = FOOTSEGNET_ROOT / "dataset" / "annotations"
 CKPT_DIR        = FOOTSEGNET_ROOT / "checkpoints"
-SAM_CHECKPOINT  = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
+SAM_CHECKPOINT  = config.SAM_CHECKPOINT
 
 IMG_SIZE     = 1024      # taille d'entrée SAM (côté long)
 LOWRES_SIZE  = 256       # résolution de sortie du mask_decoder

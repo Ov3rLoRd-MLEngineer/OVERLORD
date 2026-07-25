@@ -25,6 +25,11 @@ import uuid
 from pathlib import Path
 from datetime import datetime
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── PIL pour manipulation masque ───────────────────────────────────────────────
 try:
     from PIL import Image, ImageChops, ImageFilter, ImageOps
@@ -46,7 +51,7 @@ except ImportError:
     NEGBANK_AVAILABLE = False
 
 # ── Configuration ──────────────────────────────────────────────────────────────
-PROJECT_ROOT     = Path(r"D:\OVERLORD")
+PROJECT_ROOT     = config.OVERLORD_ROOT
 WORKSPACE        = PROJECT_ROOT / "workspace"
 COMFYUI_URL      = "http://127.0.0.1:8188"
 INPAINT_DIR      = WORKSPACE / "inpaint"
@@ -257,7 +262,7 @@ class InpaintQueue:
                         if images:
                             info = images[0]
                             return (
-                                Path(r"D:\Ov3rLoRd AI\ComfyUI\output")
+                                config.COMFYUI_OUTPUT
                                 / info.get("subfolder", "")
                                 / info.get("filename", "")
                             )

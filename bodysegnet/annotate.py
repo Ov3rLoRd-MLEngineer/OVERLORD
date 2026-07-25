@@ -47,11 +47,17 @@ import numpy as np
 from PIL import Image, ImageTk
 from scipy.ndimage import binary_fill_holes
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-PROJECT_ROOT   = Path(r"D:\OVERLORD\bodysegnet")
+PROJECT_ROOT   = config.BODYSEGNET_ROOT
 DEFAULT_IMAGES = PROJECT_ROOT / "dataset" / "raw"
 DEFAULT_MASKS  = PROJECT_ROOT / "dataset" / "masks_raw"
-SAM_CHECKPOINT = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
+SAM_CHECKPOINT = config.SAM_CHECKPOINT
 
 # (nom, couleur overlay RGB) — l'ordre définit les touches 1..N
 CATEGORIES = [

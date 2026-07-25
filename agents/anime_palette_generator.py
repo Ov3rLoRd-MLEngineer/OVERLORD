@@ -43,6 +43,11 @@ from datetime import datetime
 if hasattr(sys.stdout, 'buffer'):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 try:
     from PIL import Image, ImageDraw
     PIL_OK = True
@@ -50,7 +55,7 @@ except ImportError:
     PIL_OK = False
 
 PALETTE_DIR = Path("workspace/palettes")
-COMFYUI_DIR = Path(r"D:/Ov3rLoRd AI/ComfyUI/models/colors")
+COMFYUI_DIR = config.COMFYUI_MODELS / "colors"
 
 # ══════════════════════════════════════════════════════════════════════
 #  DICTIONNAIRE COMPLET DES PALETTES ANIME
@@ -484,7 +489,7 @@ def generate_palette(palette_name: str,
 
     # Copier vers ComfyUI si disponible
     if copy_to_comfyui:
-        comfyui_colors = Path(r"D:/Ov3rLoRd AI/ComfyUI/models") / "colors"
+        comfyui_colors = config.COMFYUI_MODELS / "colors"
         comfyui_colors.mkdir(parents=True, exist_ok=True)
         for fmt, path in results.items():
             if path and Path(str(path)).exists():
@@ -626,7 +631,7 @@ if __name__ == "__main__":
         print(f"\n✓ {len(results)} palettes générées dans workspace/palettes/")
         print(f"  Formats : .json | .png (swatch) | .act (ComfyUI) | .csv")
         if not args.no_comfyui:
-            print(f"  Copiées → D:\\Ov3rLoRd AI\\ComfyUI\\models\\colors\\")
+            print(f"  Copiées → {config.COMFYUI_MODELS / 'colors'}")
 
     elif args.palette:
         results = generate_palette(args.palette,

@@ -32,6 +32,11 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── Banniere ───────────────────────────────────────────────────────────────────
 BANNER = r"""
 ╔══════════════════════════════════════════════════════════════╗
@@ -41,7 +46,7 @@ BANNER = r"""
 """
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-PROJECT_ROOT = Path(os.environ.get("OVERLORD_ROOT", r"D:\OVERLORD"))
+PROJECT_ROOT = config.OVERLORD_ROOT
 GROK_API_URL = "https://api.x.ai/v1/chat/completions"
 GROK_MODEL   = "grok-3"
 

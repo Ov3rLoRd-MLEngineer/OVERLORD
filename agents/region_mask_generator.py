@@ -61,8 +61,13 @@ try:
 except ImportError:
     BUS_OK = False
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # Chemin ComfyUI input
-COMFYUI_INPUT = Path(r"D:/Ov3rLoRd AI/ComfyUI/input")
+COMFYUI_INPUT = config.COMFYUI_INPUT
 MASKS_DIR     = Path("workspace/masks")
 
 # Couleurs régionales

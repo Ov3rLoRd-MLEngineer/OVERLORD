@@ -112,11 +112,13 @@ def _read_from_bus() -> dict:
     result = {}
     try:
         sys_path_backup = None
-        project_root = Path(os.environ.get("OVERLORD_ROOT", r"D:\OVERLORD"))
 
         import sys
-        if str(project_root) not in sys.path:
-            sys.path.insert(0, str(project_root))
+        _repo_root = Path(__file__).resolve().parent.parent
+        if str(_repo_root) not in sys.path:
+            sys.path.insert(0, str(_repo_root))
+        import config
+        project_root = config.OVERLORD_ROOT
 
         from agents.context_bus import get_bus
         bus = get_bus()

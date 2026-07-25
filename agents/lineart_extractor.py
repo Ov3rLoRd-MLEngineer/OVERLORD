@@ -46,11 +46,16 @@ import time
 import shutil
 from PIL import Image
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 COMFYUI_URL = "http://127.0.0.1:8188"
-COMFYUI_INPUT = r"D:\Ov3rLoRd AI\ComfyUI\input"
-COMFYUI_OUTPUT_ROOT = r"D:\Ov3rLoRd AI\ComfyUI\output"
-COMFYUI_OUTPUT = r"D:\Ov3rLoRd AI\ComfyUI\output\lineart_extract"
-FRAMES_DIR = r"D:\OVERLORD\DEMO\frames"
+COMFYUI_INPUT = str(config.COMFYUI_INPUT)
+COMFYUI_OUTPUT_ROOT = str(config.COMFYUI_OUTPUT)
+COMFYUI_OUTPUT = str(config.COMFYUI_OUTPUT / "lineart_extract")
+FRAMES_DIR = str(config.DEMO_DIR / "frames")
 OUTPUT_DIR = os.path.join(FRAMES_DIR, "lineart_910x512")
 SOURCE_VIDEO_FRAMES = os.path.join(FRAMES_DIR, "video_frames")
 

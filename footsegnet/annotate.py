@@ -53,17 +53,19 @@ import numpy as np
 from PIL import Image, ImageTk
 from scipy.ndimage import binary_fill_holes
 
-REPO_ROOT = Path(r"D:\OVERLORD")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+import config
+REPO_ROOT = config.OVERLORD_ROOT
 from agents.segnet_premask import load_sam_scores    # noqa: E402
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
+FOOTSEGNET_ROOT = config.FOOTSEGNET_ROOT
 DEFAULT_IMAGES   = FOOTSEGNET_ROOT / "dataset" / "raw"
 DEFAULT_MASKS    = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
 DEFAULT_PREMASKS = FOOTSEGNET_ROOT / "dataset" / "premasks"
-SAM_CHECKPOINT  = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
+SAM_CHECKPOINT  = config.SAM_CHECKPOINT
 
 OVERLAY_COLOR = (255, 40, 40)   # rouge semi-transparent sur les zones masquées
 OVERLAY_ALPHA = 110

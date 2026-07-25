@@ -34,8 +34,14 @@ from pathlib import Path
 import requests
 from PIL import Image
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-ENDPOINTS_CFG = Path(r"D:\OVERLORD\config\llm_endpoints.json")
+ENDPOINTS_CFG = config.OVERLORD_ROOT / "config" / "llm_endpoints.json"
 
 DEFAULT_MODEL   = "qwen2.5vl:7b"
 DEFAULT_TIMEOUT = 240   # s par image — modèle vision 7B

@@ -38,10 +38,16 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageFilter
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
+FOOTSEGNET_ROOT = config.FOOTSEGNET_ROOT
 CKPT_BEST       = FOOTSEGNET_ROOT / "checkpoints" / "footsegnet_vit_b_best.pth"
-SAM_FALLBACK    = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\sams\sam_vit_b_01ec64.pth")
+SAM_FALLBACK    = config.SAM_CHECKPOINT
 FEATHER_PX      = 8      # même feathering que sam_mask_generator.py
 
 _predictor = None
