@@ -180,10 +180,21 @@ def build_models(weight_dtype: torch.dtype, lora_rank: int):
     unet.enable_gradient_checkpointing()
     controlnet.enable_gradient_checkpointing()
 
+    # peft.modules_to_save ne sait pas wrapper un nn.ModuleList directement
+    # (pas de forward() propre) : controlnet_down_blocks est un ModuleList de
+    # zero-convs, il faut donc lister chaque sous-module indexé individuellement.
+    modules_to_save = []
+    for name in LORA_MODULES_TO_SAVE:
+        submodule = getattr(controlnet, name)
+        if isinstance(submodule, torch.nn.ModuleList):
+            modules_to_save.extend(f"{name}.{i}" for i in range(len(submodule)))
+        else:
+            modules_to_save.append(name)
+
     lora_config = LoraConfig(
         r=lora_rank, lora_alpha=lora_rank, lora_dropout=0.0,
         target_modules=LORA_TARGET_MODULES,
-        modules_to_save=LORA_MODULES_TO_SAVE,
+        modules_to_save=modules_to_save,
     )
     controlnet = get_peft_model(controlnet, lora_config)
     controlnet.print_trainable_parameters()
@@ -230,6 +241,10 @@ def run_validation(models, sample: dict, device, weight_dtype, output_dir: Path,
             latent_in, t, encoder_hidden_states=prompt_embeds, controlnet_cond=cond,
             added_cond_kwargs=added_cond_kwargs, return_dict=False,
         )
+        # cf. commentaire équivalent dans train() : accelerator.prepare(controlnet)
+        # reconvertit sa sortie en fp32, incompatible avec l'UNet resté en bf16.
+        down_res = [s.to(dtype=weight_dtype) for s in down_res]
+        mid_res = mid_res.to(dtype=weight_dtype)
         noise_pred = unet(
             latent_in, t, encoder_hidden_states=prompt_embeds, added_cond_kwargs=added_cond_kwargs,
             down_block_additional_residuals=down_res, mid_block_additional_residual=mid_res,
@@ -287,6 +302,7 @@ def train(args: argparse.Namespace) -> None:
     text_encoder.to(device, dtype=weight_dtype)
     text_encoder_2.to(device, dtype=weight_dtype)
     vae.to(device, dtype=torch.float32)   # VAE en fp32 (stabilité numérique standard SDXL)
+    vae.enable_tiling()   # sans ça, l'encode fp32 d'images 1024x1536 sature 16GB de VRAM (OOM confirmé)
 
     trainable_params = [p for p in controlnet.parameters() if p.requires_grad]
     n_trainable = sum(p.numel() for p in trainable_params)
@@ -348,6 +364,14 @@ def train(args: argparse.Namespace) -> None:
                     controlnet_cond=cond_values, added_cond_kwargs=added_cond_kwargs,
                     return_dict=False,
                 )
+                # accelerator.prepare(controlnet) enveloppe son forward dans l'autocast
+                # bf16 d'Accelerate, qui reconvertit systématiquement la sortie en fp32
+                # (accelerate.utils.operations.convert_to_fp32) -- l'UNet, lui, est casté
+                # bf16 à la main sans passer par prepare(). Sans ce recast, les résidus
+                # fp32 provoquent "Mixed dtype: expect parameter to have scalar type of
+                # Float" au premier GroupNorm de l'UNet rencontré (confirmé en test-run).
+                down_block_res_samples = [s.to(dtype=weight_dtype) for s in down_block_res_samples]
+                mid_block_res_sample = mid_block_res_sample.to(dtype=weight_dtype)
                 model_pred = unet(
                     noisy_latents, timesteps, encoder_hidden_states=prompt_embeds,
                     added_cond_kwargs=added_cond_kwargs,
