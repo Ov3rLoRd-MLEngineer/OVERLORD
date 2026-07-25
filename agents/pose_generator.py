@@ -13,7 +13,13 @@ import uuid
 import logging
 import argparse
 import requests
+import sys
 from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
 
 COMFY_URL = "http://127.0.0.1:8188"
 POSES_DIR = Path("workspace/poses")
@@ -248,7 +254,7 @@ def generate_pose(image_path: str, output_path: str = "") -> tuple[str, str | No
                     if images:
                         img = images[0]
                         comfy_out = (
-                            Path(r"D:\Ov3rLoRd AI\ComfyUI\output")
+                            config.COMFYUI_OUTPUT
                             / img.get("subfolder", "")
                             / img.get("filename", "")
                         )

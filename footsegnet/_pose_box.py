@@ -12,9 +12,11 @@ import json
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(r"D:\OVERLORD")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+import config
+REPO_ROOT = config.OVERLORD_ROOT
 
 from agents.pose_generator import generate_pose, extract_foot_bbox  # noqa: E402
 

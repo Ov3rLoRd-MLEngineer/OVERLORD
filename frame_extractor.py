@@ -38,6 +38,8 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
+import config
+
 # ── Bannière ───────────────────────────────────────────────────────────────────
 BANNER = """
 ╔══════════════════════════════════════════════════════════════╗
@@ -47,10 +49,10 @@ BANNER = """
 """
 
 # ── Config par défaut ──────────────────────────────────────────────────────────
-PROJECT_ROOT  = Path(os.environ.get("OVERLORD_ROOT", r"D:\OVERLORD"))
+PROJECT_ROOT  = config.OVERLORD_ROOT
 WORKSPACE     = PROJECT_ROOT / "workspace"
 DEFAULT_OUT   = WORKSPACE / "poses" / "extracted"
-COMFYUI_ROOT  = Path(r"D:\Ov3rLoRd AI\ComfyUI")
+COMFYUI_ROOT  = config.COMFYUI_ROOT
 COMFYUI_INPUT = COMFYUI_ROOT / "input"
 COMFY_URL     = "http://127.0.0.1:8188"
 POSE_LIBRARY  = PROJECT_ROOT / "agents" / "pose_library.py"

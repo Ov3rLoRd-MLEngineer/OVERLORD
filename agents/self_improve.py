@@ -44,6 +44,10 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
+_REPO_ROOT = BASE_DIR.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
 
 try:
     from agents.overlord_utils import fallback_llm, safe_json_parse, get_api_key
@@ -64,7 +68,7 @@ except Exception:
 ARCHIVE_DRIVES = [
     Path("E:/OVERLORD_LOGS"),
     Path("G:/OVERLORD_LOGS"),
-    Path("D:/OVERLORD/workspace/logs/improve"),
+    config.WORKSPACE_DIR / "logs" / "improve",
 ]
 
 def setup_improve_logging(run_id: str = None) -> logging.Logger:

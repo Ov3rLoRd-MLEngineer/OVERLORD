@@ -20,11 +20,14 @@
 import sys
 from pathlib import Path
 
-FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
-REPO_ROOT = Path(r"D:\OVERLORD")
-for _p in (str(FOOTSEGNET_ROOT), str(REPO_ROOT)):
-    if _p not in sys.path:
-        sys.path.insert(0, _p)
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+import config
+FOOTSEGNET_ROOT = config.FOOTSEGNET_ROOT
+REPO_ROOT = config.OVERLORD_ROOT
+if str(FOOTSEGNET_ROOT) not in sys.path:
+    sys.path.insert(0, str(FOOTSEGNET_ROOT))
 
 from infer import generate_foot_mask                       # noqa: E402
 from _pose_box import foot_box_for_image                   # noqa: E402

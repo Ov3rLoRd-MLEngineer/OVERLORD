@@ -46,14 +46,20 @@ import torch.nn.functional as F
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
 
-FOOTSEGNET_ROOT  = Path(r"D:\OVERLORD\footsegnet")
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
+FOOTSEGNET_ROOT  = config.FOOTSEGNET_ROOT
 CONTROLNET_ROOT  = FOOTSEGNET_ROOT / "controlnet"
 CN_DATASET_ROOT  = CONTROLNET_ROOT / "dataset"
 DEFAULT_MANIFEST = CN_DATASET_ROOT / "manifest.jsonl"
 DEFAULT_OUTPUT   = CONTROLNET_ROOT / "output" / "control_lora_v1"
 
-CHECKPOINT_PATH = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\checkpoints\fabricatedXL_v70.safetensors")
-VAE_PATH        = Path(r"D:\Ov3rLoRd AI\ComfyUI\models\vae\sdxl_vae.safetensors")   # cf. en-tête : pas taesdxl
+CHECKPOINT_PATH = config.CHECKPOINTS_DIR / "fabricatedXL_v70.safetensors"
+VAE_PATH        = config.COMFYUI_MODELS / "vae" / "sdxl_vae.safetensors"   # cf. en-tête : pas taesdxl
 
 LORA_TARGET_MODULES = ["to_q", "to_k", "to_v", "to_out.0"]
 LORA_MODULES_TO_SAVE = ["controlnet_cond_embedding", "controlnet_down_blocks", "controlnet_mid_block"]
@@ -145,6 +151,23 @@ def compute_time_ids(height: int, width: int, device, dtype) -> torch.Tensor:
 
 # ── Modèle ────────────────────────────────────────────────────────────────────
 
+def _expand_modules_to_save(model, names: list[str]) -> list[str]:
+    """peft ne peut pas envelopper un nn.ModuleList/ModuleDict avec modules_to_save
+    (voir peft.utils.other.AuxiliaryTrainingWrapper.check_module) : `controlnet_down_blocks`
+    est un ModuleList de convolutions zero-init individuelles. On l'éclate en ses
+    enfants nommés (des nn.Conv2d, des feuilles valides) ; les autres noms (modules
+    déjà feuille ou simplement non-ModuleList) sont laissés tels quels."""
+    named = dict(model.named_modules())
+    expanded = []
+    for name in names:
+        submodule = named.get(name)
+        if isinstance(submodule, (torch.nn.ModuleList, torch.nn.ModuleDict)):
+            expanded.extend(f"{name}.{child_name}" for child_name, _ in submodule.named_children())
+        else:
+            expanded.append(name)
+    return expanded
+
+
 def build_models(weight_dtype: torch.dtype, lora_rank: int):
     from diffusers import StableDiffusionXLPipeline, ControlNetModel, AutoencoderKL
     from peft import LoraConfig, get_peft_model
@@ -183,7 +206,7 @@ def build_models(weight_dtype: torch.dtype, lora_rank: int):
     lora_config = LoraConfig(
         r=lora_rank, lora_alpha=lora_rank, lora_dropout=0.0,
         target_modules=LORA_TARGET_MODULES,
-        modules_to_save=LORA_MODULES_TO_SAVE,
+        modules_to_save=_expand_modules_to_save(controlnet, LORA_MODULES_TO_SAVE),
     )
     controlnet = get_peft_model(controlnet, lora_config)
     controlnet.print_trainable_parameters()
@@ -230,6 +253,8 @@ def run_validation(models, sample: dict, device, weight_dtype, output_dir: Path,
             latent_in, t, encoder_hidden_states=prompt_embeds, controlnet_cond=cond,
             added_cond_kwargs=added_cond_kwargs, return_dict=False,
         )
+        down_res = [s.to(dtype=weight_dtype) for s in down_res]   # cf. commentaire dans train()
+        mid_res = mid_res.to(dtype=weight_dtype)
         noise_pred = unet(
             latent_in, t, encoder_hidden_states=prompt_embeds, added_cond_kwargs=added_cond_kwargs,
             down_block_additional_residuals=down_res, mid_block_additional_residual=mid_res,
@@ -287,6 +312,10 @@ def train(args: argparse.Namespace) -> None:
     text_encoder.to(device, dtype=weight_dtype)
     text_encoder_2.to(device, dtype=weight_dtype)
     vae.to(device, dtype=torch.float32)   # VAE en fp32 (stabilité numérique standard SDXL)
+    vae.enable_tiling()   # encode par tuiles spatiales -- l'encodeur VAE en fp32 pleine
+                           # résolution est le pic mémoire du forward, pas l'UNet/ControlNet
+                           # (RTX 5080 16GB : SDXL UNet + 2 text encoders + ControlNet+LoRA
+                           # laissent peu de marge, cf. OOM observé sans ceci)
 
     trainable_params = [p for p in controlnet.parameters() if p.requires_grad]
     n_trainable = sum(p.numel() for p in trainable_params)
@@ -322,8 +351,9 @@ def train(args: argparse.Namespace) -> None:
                 pixel_values = batch["pixel_values"].to(device, dtype=torch.float32)
                 cond_values = batch["conditioning_pixel_values"].to(device, dtype=weight_dtype)
 
-                latents = vae.encode(pixel_values).latent_dist.sample()
-                latents = latents * vae.config.scaling_factor
+                with torch.no_grad():
+                    latents = vae.encode(pixel_values).latent_dist.sample()
+                    latents = latents * vae.config.scaling_factor
                 latents = latents.to(weight_dtype)
 
                 noise = torch.randn_like(latents)
@@ -333,9 +363,10 @@ def train(args: argparse.Namespace) -> None:
                 ).long()
                 noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
 
-                prompt_embeds, pooled_embeds = encode_prompt(
-                    batch["text"], [tokenizer, tokenizer_2], [text_encoder, text_encoder_2], device,
-                )
+                with torch.no_grad():
+                    prompt_embeds, pooled_embeds = encode_prompt(
+                        batch["text"], [tokenizer, tokenizer_2], [text_encoder, text_encoder_2], device,
+                    )
                 prompt_embeds, pooled_embeds = prompt_embeds.to(weight_dtype), pooled_embeds.to(weight_dtype)
                 add_time_ids = torch.cat([
                     compute_time_ids(h, w, device, weight_dtype)
@@ -348,6 +379,13 @@ def train(args: argparse.Namespace) -> None:
                     controlnet_cond=cond_values, added_cond_kwargs=added_cond_kwargs,
                     return_dict=False,
                 )
+                # controlnet passe par accelerator.prepare() (autocast) alors que l'unet
+                # gelé est casté manuellement en weight_dtype (pas prepare()) -- sans ce
+                # cast explicite, les résidus (parfois remontés en fp32 par l'autocast,
+                # cf. GroupNorm sur la liste "garder en fp32" de torch.autocast) et les
+                # activations bf16 de l'unet se mélangent -> RuntimeError mixed dtype.
+                down_block_res_samples = [s.to(dtype=weight_dtype) for s in down_block_res_samples]
+                mid_block_res_sample = mid_block_res_sample.to(dtype=weight_dtype)
                 model_pred = unet(
                     noisy_latents, timesteps, encoder_hidden_states=prompt_embeds,
                     added_cond_kwargs=added_cond_kwargs,

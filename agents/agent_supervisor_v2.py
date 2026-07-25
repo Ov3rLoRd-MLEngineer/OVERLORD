@@ -17,6 +17,11 @@ import io
 from pathlib import Path
 from datetime import datetime
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # Force UTF-8 si overlord_utils_utf8 n'a pas deja ete appele
 if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
@@ -458,7 +463,7 @@ def run_batch_advanced(jobs: list[dict], run_id: str = None,
                 ok = wait_for_completion(prompt_id, timeout=600, logger=logger)
                 if ok:
                     # Archiver les images produites
-                    comfy_out = Path(r"D:/Ov3rLoRd AI/ComfyUI/output")
+                    comfy_out = config.COMFYUI_OUTPUT
                     if not comfy_out.exists():
                         comfy_out = Path("workspace/outputs/images")
                     archived = archive_images(comfy_out, job, run_id, idx)
