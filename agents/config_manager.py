@@ -16,9 +16,15 @@ import json
 import logging
 import os
 import sqlite3
+import sys
 import threading
 from pathlib import Path
 from datetime import datetime
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+from config import COMFYUI_OUTPUT
 
 DB_PATH   = Path("workspace/config.db")
 ENV_PATH  = Path(".env")
@@ -41,7 +47,7 @@ DEFAULTS = {
     "comfyui.height":     1536,
     "comfyui.vae":        "taesdxl",
     "comfyui.checkpoint": "fabricatedXL_v70.safetensors",
-    "comfyui.output_dir": r"D:/Ov3rLoRd AI/ComfyUI/output",
+    "comfyui.output_dir": str(COMFYUI_OUTPUT),
     "comfyui.max_retries": 3,
     "comfyui.retry_delay": 5,
     # Production

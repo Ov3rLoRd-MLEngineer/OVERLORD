@@ -37,9 +37,10 @@ import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage
 
-REPO_ROOT = Path(r"D:\OVERLORD")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+import config
 
 from agents.vlm_grounding import grounding_boxes  # noqa: E402
 

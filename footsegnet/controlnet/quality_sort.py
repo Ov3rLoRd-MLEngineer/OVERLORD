@@ -27,7 +27,13 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-FOOTSEGNET_ROOT = Path(r"D:\OVERLORD\footsegnet")
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
+FOOTSEGNET_ROOT = config.FOOTSEGNET_ROOT
 RAW_DIR         = FOOTSEGNET_ROOT / "dataset" / "raw"
 MASKS_RAW_DIR   = FOOTSEGNET_ROOT / "dataset" / "masks_raw"
 PREMASKS_DIR    = FOOTSEGNET_ROOT / "dataset" / "premasks"

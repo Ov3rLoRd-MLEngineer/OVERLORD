@@ -2,9 +2,15 @@
 # Gestion état de session : seed, IPAdapter source, SSIM, statut, rollback
 # Format A compatible — py -3.12
 
+import sys
 import json
 from pathlib import Path
 from datetime import datetime
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
 
 SESSION_STATE_VERSION = "1.0"
 
@@ -349,10 +355,10 @@ if __name__ == "__main__":
     ]
 
     state = create_session(
-        output_dir=r"D:\Ov3rLoRd AI\ComfyUI\output\asuka_run",
-        global_anchor=r"D:\OVERLORD\DEMO\frame_0000_00001_.png",
+        output_dir=str(config.COMFYUI_OUTPUT / "asuka_run"),
+        global_anchor=str(config.DEMO_DIR / "frame_0000_00001_.png"),
         shots_config=SHOTS,
-        session_path=r"D:\OVERLORD\DEMO\session_state.json",
+        session_path=str(config.DEMO_DIR / "session_state.json"),
     )
 
     update_frame(state, 1, 0,  "validated", ssim_score=1.0, seed=42)

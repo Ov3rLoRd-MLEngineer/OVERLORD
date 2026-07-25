@@ -61,9 +61,14 @@ try:
 except ImportError:
     MASK_OK = False
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 COMFYUI_URL    = "http://127.0.0.1:8188"
-COMFYUI_INPUT  = Path(r"D:/Ov3rLoRd AI/ComfyUI/input")
-COMFYUI_OUTPUT = Path(r"D:/Ov3rLoRd AI/ComfyUI/output")
+COMFYUI_INPUT  = config.COMFYUI_INPUT
+COMFYUI_OUTPUT = config.COMFYUI_OUTPUT
 
 ADVANCED_WF = Path("Advanced_QwenVL_V35.json")
 DETAILER_WF = Path("Detailer_V35.json")

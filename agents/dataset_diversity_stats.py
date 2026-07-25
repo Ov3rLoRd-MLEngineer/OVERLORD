@@ -34,9 +34,10 @@ import time
 from collections import Counter
 from pathlib import Path
 
-REPO_ROOT = Path(r"D:\OVERLORD")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+import config
 
 from agents.vlm_grounding import _call_vlm, load_ollama_url  # noqa: E402
 

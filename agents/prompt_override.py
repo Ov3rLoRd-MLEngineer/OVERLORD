@@ -39,6 +39,11 @@ import argparse
 import logging
 from pathlib import Path
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── Banniere ───────────────────────────────────────────────────────────────────
 BANNER = r"""
 ╔══════════════════════════════════════════════════════╗
@@ -47,7 +52,7 @@ BANNER = r"""
 ╚══════════════════════════════════════════════════════╝
 """
 
-PROJECT_ROOT   = Path(os.environ.get("OVERLORD_ROOT", r"D:\OVERLORD"))
+PROJECT_ROOT   = config.OVERLORD_ROOT
 DEFAULT_FILE   = PROJECT_ROOT / "prompt_override.txt"
 DEFAULT_EXPORT = PROJECT_ROOT / "workspace" / "prompts_override.json"
 

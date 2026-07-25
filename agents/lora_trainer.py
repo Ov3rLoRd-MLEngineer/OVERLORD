@@ -26,6 +26,11 @@ from pathlib import Path
 if hasattr(sys.stdout, 'buffer'):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 try:
     from agents.config_manager import get_config
     CFG_OK = True
@@ -44,7 +49,7 @@ try:
 except ImportError:
     UTILS_OK = False
 
-LORA_DIR     = Path(r"D:/Ov3rLoRd AI/ComfyUI/models/loras")
+LORA_DIR     = config.LORAS_DIR
 DATASET_DIR  = Path("workspace/lora_datasets")
 OUTPUT_DIR   = Path("workspace/lora_outputs")
 KOHYA_PATH   = Path("D:/kohya_ss")  # à adapter
@@ -52,7 +57,7 @@ TRAINER_LOG  = Path("workspace/logs/lora_training.jsonl")
 
 # Paramètres d'entraînement par défaut (RTX 5080 16GB)
 DEFAULT_TRAIN_CONFIG = {
-    "pretrained_model":  r"D:/Ov3rLoRd AI/ComfyUI/models/checkpoints/fabricatedXL_v70.safetensors",
+    "pretrained_model":  str(config.CHECKPOINTS_DIR / "fabricatedXL_v70.safetensors"),
     "network_module":    "networks.lora",
     "network_dim":       32,
     "network_alpha":     16,

@@ -13,6 +13,12 @@ from pathlib import Path
 from dataclasses import dataclass, asdict, field
 from typing import List
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 log = logging.getLogger("pacing_engine")
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -271,7 +277,7 @@ if __name__ == "__main__":
     parser.add_argument("--storyboard",  default="")
     parser.add_argument("--universe",    default="evangelion")
     parser.add_argument("--fps",         type=int, default=24)
-    parser.add_argument("--output-dir",  default=r"D:\OVERLORD\workspace\reports")
+    parser.add_argument("--output-dir",  default=str(config.WORKSPACE_DIR / "reports"))
     parser.add_argument("--shot-type",   default="")
     parser.add_argument("--movement",    default="static")
     parser.add_argument("--intent",      default="dramatic")

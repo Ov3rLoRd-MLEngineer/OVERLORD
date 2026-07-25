@@ -22,12 +22,18 @@ try:
 except ImportError:
     HAS_REQUESTS = False
 
+import sys
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 PROJECT         = "bodysegnet"
 COMFYUI_URL     = "http://127.0.0.1:8188"
-COMFYUI_OUTPUT  = r"D:\Ov3rLoRd AI\ComfyUI\output"
+COMFYUI_OUTPUT  = str(config.COMFYUI_OUTPUT)
 
-PROJECT_ROOT  = Path(r"D:\OVERLORD\bodysegnet")
+PROJECT_ROOT  = config.BODYSEGNET_ROOT
 RAW_DIR       = PROJECT_ROOT / "dataset" / "raw"
 MANIFEST_PATH = RAW_DIR / "manifest.json"
 PROMPTS_FILE  = PROJECT_ROOT / "prompts_wildcards.txt"

@@ -27,18 +27,23 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+import config
+
 # ══════════════════════════════════════════════════════════════════════
 # CONFIGURATION
 # ══════════════════════════════════════════════════════════════════════
 
-CONFIG_FILE = Path("D:/OVERLORD/config.json")
+CONFIG_FILE = config.OVERLORD_ROOT / "config.json"
 
 DISK_RULES = {
     "D:": {
         "label":          "SSD 1To — Pipeline",
         "threshold_pct":  50,         # → déplacer vers E: si > 50%
         "move_to":        "E:",
-        "source_dirs":    ["D:/OVERLORD/outputs"],
+        "source_dirs":    [str(config.OVERLORD_ROOT / "outputs")],
         "keep_recent_days": 3,        # garder les 3 derniers jours sur D:
     },
     "E:": {
@@ -66,7 +71,7 @@ TRANSFERABLE_EXTENSIONS = {
 }
 
 CHECK_INTERVAL_S  = 300   # vérifier toutes les 5 minutes
-LOG_FILE          = Path("D:/OVERLORD/workspace/sys_reports/storage_manager.log")
+LOG_FILE          = config.WORKSPACE_DIR / "sys_reports" / "storage_manager.log"
 
 
 # ══════════════════════════════════════════════════════════════════════
