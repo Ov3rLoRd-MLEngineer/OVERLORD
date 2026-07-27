@@ -16,5 +16,11 @@ __pycache__/
 **/dataset/annotations/*.json
 **/checkpoints/*.pth
 
+# Dossiers de liens physiques jetables (agents/prepare_route_folders.py,
+# generalise a tout module) — jamais de contenu reel, recrees a la demande,
+# ne doivent jamais etre commites.
+**/dataset/_route_review/
+**/dataset/_route_auto/
+
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
