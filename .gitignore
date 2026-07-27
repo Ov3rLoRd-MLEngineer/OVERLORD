@@ -16,5 +16,30 @@ __pycache__/
 **/dataset/annotations/*.json
 **/checkpoints/*.pth
 
+# Dossier de liens physiques jetable (prepare_review_folder.py) — jamais de
+# contenu reel, recree a la demande, ne doit jamais etre commite.
+**/dataset/_review_manual/
+
+# Exception ciblee a **/dataset/premasks/ (ligne 12) : ce script et son
+# README sont du code reutilisable, pas des donnees generees -- doivent
+# rester suivis. Scope volontairement limite a footsegnet/ (pas **/) pour ne
+# pas changer le comportement des 3 autres SegNets. Un !chemin/ seul ne
+# suffit pas a re-inclure des fichiers sous un repertoire deja exclu par
+# **/dataset/premasks/ (regle git : impossible de re-inclure un fichier dont
+# un dossier parent est exclu) -- d'ou le re-exclude explicite du contenu
+# juste apres avant de re-negativer les deux fichiers precis.
+!footsegnet/dataset/premasks/
+footsegnet/dataset/premasks/*
+!footsegnet/dataset/premasks/README.md
+!footsegnet/dataset/premasks/prepare_review_folder.py
+
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
+.aider*
+
+# pose_capture (HandSegNet, mocap mains) -- modele MediaPipe telecharge
+# (7.5Mo, pas du code) et sorties de test regenerees a chaque run.
+handsegnet/pose_capture/models/*.task
+handsegnet/pose_capture/out_*.json
+handsegnet/pose_capture/preview/
+handsegnet/pose_capture/tmp/

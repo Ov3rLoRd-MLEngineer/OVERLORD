@@ -1,0 +1,74 @@
+# Reglages de calibration stereo double camera (S10+ 4K60 + webcam).
+# Adapte de TemugeB/python_stereo_camera_calibrate (calibration_settings.yaml
+# d'origine avait un seul frame_width/frame_height partage par les deux
+# cameras - ici chaque camera a son propre bloc car les deux flux ont des
+# resolutions/fps differents dans notre cas). Voir README.md de ce dossier
+# pour la procedure complete.
+
+camera0:
+  name: webcam
+  # Index du peripherique OpenCV (0, 1, 2...) SI la webcam est branchee en
+  # direct sur le PC, OU chemin/URL (chaine) si le flux est autre chose
+  # (ex: URL http MJPEG d'une appli "IP camera", ou fichier video deja
+  # enregistre pour le mode file-pairs). A verifier le jour du tournage avec
+  # `py -3.12 list_video_devices.py` ou en testant les index 0/1/2.
+  source: 0
+  width: 1920
+  height: 1080
+  fps: 30
+
+camera1:
+  name: s10plus
+  # Le S10+ ne sera tres probablement PAS un device OpenCV live (pas de mode
+  # webcam USB natif confirme sur ce modele) : le flux normal est un fichier
+  # .mp4 enregistre sur le telephone puis transfere sur le PC. Mettre ici le
+  # chemin du fichier (mono-calibration ET mode file-pairs fonctionnent tous
+  # les deux avec un fichier - cv2.VideoCapture accepte un chemin comme un
+  # index). Si un jour le S10+ est tethere en live (appli type IP Webcam),
+  # remplacer par l'URL du flux.
+  source: "chemin/vers/clip_s10plus.mp4"
+  # IMPORTANT : cette resolution DOIT etre la resolution REELLE du tournage
+  # mocap final, pas un preview reduit - les parametres intrinseques calcules
+  # ici ne sont valables qu'a cette resolution exacte (cf. README, section
+  # "Piege resolution").
+  width: 3840
+  height: 2160
+  fps: 60
+
+# Mire de calibration (damier / chessboard).
+# rows/columns = nombre de COINS INTERNES (crosses), PAS le nombre de cases
+# (une mire "10x7 cases" a "9x6" coins internes). Voir README pour le choix
+# du modele et le lien du generateur calib.io.
+chessboard:
+  rows: 6
+  columns: 9
+  # taille reelle d'une case du damier, en cm - A MESURER sur la mire
+  # imprimee/montee (ne pas se fier a la taille "voulue", l'imprimante ou le
+  # montage peut legerement deformer l'echelle).
+  box_size_cm: 2.5
+
+capture:
+  # nombre de frames a capturer pour la calibration mono (intrinseques) de
+  # chaque camera
+  mono_calibration_frames: 15
+  # nombre de paires a capturer pour la calibration stereo (extrinseques)
+  stereo_calibration_frames: 15
+  # frames d'attente entre deux captures automatiques (mode live), pour
+  # laisser le temps de bouger la mire
+  cooldown: 100
+  # si l'image live est trop grande pour l'ecran, diviser l'affichage par ce
+  # facteur (la frame sauvegardee reste en pleine resolution)
+  view_resize: 1
+
+# Mode "file-pairs" uniquement (cf. README) : utilise quand les deux flux
+# sont des fichiers video enregistres independamment (cas S10+ + webcam non
+# tetheree), synchronises approximativement par un clap/flash au debut du
+# tournage.
+sync:
+  # decalage estime en secondes entre les deux fichiers, mesure sur le clap
+  # (temps_apparition_clap_camera1 - temps_apparition_clap_camera0).
+  # A recalculer a chaque nouvelle paire de clips - voir README.
+  clap_offset_seconds: 0.0
+  # intervalle en secondes entre deux echantillons candidats lors du
+  # scan automatique des deux clips
+  pair_interval_seconds: 2.0
