@@ -18,3 +18,7 @@ __pycache__/
 
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
+
+# footsegnet/controlnet/eval_checkpoint.py -- images/manifests regeneres a
+# chaque run, jamais commites (comparaison visuelle locale entre checkpoints).
+footsegnet/controlnet/eval_output/
