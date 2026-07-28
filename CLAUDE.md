@@ -118,8 +118,10 @@ Index des fichiers les plus souvent recherchés en début de session, pour évit
 Pour tout run de calcul **substantiel** (entraînement, génération batch >50 images, test de diagnostic >15min — PAS les appels VLM/grounding ponctuels, trop nombreux et peu significatifs individuellement), ajoute une ligne à `gpu_usage_log.csv` (racine du dépôt, créer si absent sinon append) :
 
 ```
-date_iso,gpu,duree_minutes,module,description,cout_estime_usd
-2026-07-28T14:30:00,RTX5080,95,footsegnet-controlnet,"test poids x50 mode collapse",1.90
+date_iso,gpu,duree_minutes,module,description,cout_estime_usd,estime_retroactif
+2026-07-28T14:30:00,RTX5080,95,footsegnet-controlnet,"test poids x50 mode collapse",1.90,false
 ```
 
 `cout_estime_usd` = `duree_minutes/60 × tarif horaire de référence` — les RTX 5080/5060 Ti locales coûtent 0$ en pratique, c'est un équivalent-coût cloud à but de comparaison uniquement (tarifs de référence : A100 ~1,20$/h, H100 ~2,40$/h). Consultable via `py -3.12 gpu_cost_estimate.py` (cumul par GPU/module + équivalent-coût total).
+
+`estime_retroactif` : `false` pour une ligne loguée au moment où le run a tourné (durée connue avec certitude) ; `true` pour une ligne reconstituée après coup depuis des traces indirectes (logs de job scratch, dates de fichiers, throughput extrapolé d'un autre run) — toujours préciser dans `description` la méthode et la marge d'incertitude plutôt que de présenter une durée reconstituée comme une mesure directe.
