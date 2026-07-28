@@ -41,6 +41,7 @@ footsegnet/dataset/premasks/*
 
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
+**/dataset/wildcard_fix_validation/
 .aider*
 
 # handsegnet/prototype_circle_sam.py -- masques de test regeneres a chaque
