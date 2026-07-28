@@ -471,7 +471,22 @@ def train(args: argparse.Namespace) -> None:
                     mid_block_additional_residual=mid_block_res_sample,
                 ).sample
 
-                mse_loss = F.mse_loss(model_pred.float(), noise.float(), reduction="mean")
+                if args.mask_loss_weight != 1.0:
+                    # Correctif candidat (non valide) -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md :
+                    # la MSE non ponderee ne recompense pas le fait que le residu ControlNet
+                    # depende du contenu du masque (masque pied/chaussure tres eparse, 1-8% du
+                    # cadre -- son gradient est marginal face au reste de l'image). On sur-pondere
+                    # ici l'erreur de reconstruction precisement la ou le masque le designe
+                    # (redimensionne a la resolution latente, sans interpolation floue) pour forcer
+                    # le modele a "lire" le masque plutot qu'apprendre un motif moyen generique.
+                    mask_latent = F.interpolate(
+                        cond_values.mean(dim=1, keepdim=True).float(),
+                        size=noisy_latents.shape[-2:], mode="nearest",
+                    )
+                    weight_map = 1.0 + (args.mask_loss_weight - 1.0) * mask_latent
+                    mse_loss = ((model_pred.float() - noise.float()) ** 2 * weight_map).mean()
+                else:
+                    mse_loss = F.mse_loss(model_pred.float(), noise.float(), reduction="mean")
                 # Regularisation explicite sur la norme des residus ControlNet : diagnostic
                 # 2026-07-25 a montre que ni un LR bas (1e-5/1e-6) ni un clip de gradient
                 # serre (0.1) sur les modules_to_save n'empechent leur explosion -- la loss
@@ -560,6 +575,13 @@ def parse_args() -> argparse.Namespace:
                              "0.0 = desactivee. Diagnostic 2026-07-25 : ni LR bas ni clip "
                              "serre n'empechent l'explosion des residus, cette regularisation "
                              "cible directement la magnitude plutot que la vitesse d'y arriver.")
+    parser.add_argument("--mask-loss-weight", type=float, default=1.0,
+                        help="[CORRECTIF CANDIDAT, NON VALIDE -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md] "
+                             "Poids multiplicateur de la MSE dans la zone du masque de conditionnement "
+                             "(resize nearest a la resolution latente). 1.0 = desactive, comportement "
+                             "identique a avant ce correctif. Piste pour le mode collapse observe : "
+                             "sur-ponderer l'erreur de reconstruction sous le masque force le modele a "
+                             "le lire plutot qu'apprendre un residu generique independant du conditionnement.")
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--gradient-accumulation-steps", type=int, default=4)
     parser.add_argument("--num-epochs", type=int, default=10,
