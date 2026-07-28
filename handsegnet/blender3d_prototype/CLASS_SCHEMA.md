@@ -145,8 +145,70 @@ du preprocesseur), `test_result_beauty*.png` (deux essais, params differents).
   de la main (nombre de doigts, ecartement, position laterale du pouce) suit
   fidelement le guide 3D. Defaut cosmetique observe : la paume (zone lisse
   sans detail interne dans le guide) a ete remplie par un objet parasite
-  ("objectif d'appareil photo") - pas un probleme du guide, plutot un manque
-  de contrainte de contenu sur cette zone vide + prompt pas assez specifique
-  ("masterpiece" etc. peut halluciner un sujet) - a corriger par prompt (ex.
-  decrire explicitement "empty palm, skin only, no object") si ce test est
-  repris pour de vrai, pas un blocage de la methode.
+  ("objectif d'appareil photo") - a l'epoque attribue a un manque de
+  contrainte du guide sur cette zone vide. **Corrige ci-dessous : ce n'etait
+  PAS la vraie cause.**
+
+## Enquete metadonnees (2026-07-28) : la cause reelle de l'objet parasite
+
+Avant d'investir dans un fix geometrique, verification des metadonnees PNG
+(tEXt chunk `prompt`, JSON du workflow ComfyUI embarque a la generation) sur
+le dataset HandSegNet reel pour verifier une hypothese : le mot "camera" dans
+le prompt du test precedent (`palm facing camera`) pourrait etre la vraie
+cause, pas le guide.
+
+**Confirme, tres nettement.** Scan de `handsegnet/dataset/raw/*.png`
+(322 images) : 52 prompts positifs contiennent "camera", repartis en deux
+fragments distincts issus du template wildcard du dataset -
+- `"hands close to camera"` (41 images, fragment fixe de framing/distance) :
+  **0 objet parasite** sur les images verifiees visuellement (00000, 00006,
+  00056 - gestes normaux, mains nues).
+- `"reaching toward camera"` (11 images, `handsegnet/wildcards/gestures.txt`
+  ligne 15, un choix parmi les gestes tires aleatoirement) : **appareil photo
+  halluciné sur 100% des images verifiees** (00030, 00063, 00109, 00230,
+  00289 - toutes avec du texte de marque illisible du type "SCCRE"/"SOORE"/
+  "SGC", signature typique d'un objet halluciné plutot que genere depuis un
+  vrai concept appris).
+
+Le prompt du test ControlNet precedent ("palm facing camera") est
+semantiquement proche de "reaching toward camera" (orientation/interaction
+explicite avec "camera") - explique tres probablement l'objet parasite
+observe, independamment du guide 3D. `reaching toward camera` reste un bug
+de wildcard dataset-wide a corriger un jour dans `gestures.txt` (hors
+perimetre de cette session, note pour reference future) - PAS un defaut de
+ce chantier 3D.
+
+## Fix palm ajoute quand meme (2026-07-28), puis verification honnete
+
+Avant l'enquete metadonnees ci-dessus, un detail geometrique a ete ajoute a
+la paume : 3 fines CRETES (elements CAPSULE metaball positifs, pas des creux
+- un creux negatif s'est revele indetectable par Freestyle quel que soit le
+reglage teste, cf. commentaires de `add_palm_creases()` dans
+`build_and_render_v3.py` pour le detail des essais). Rayon calibre a 0.005
+apres plusieurs iterations (0.003-0.004 fragmentaient en eclats disjoints,
+resolution du maillage marching-cubes trop grossiere a cette echelle).
+
+**Test de verification en isolant les deux variables** (meme seed, meme
+config ControlNet strength=0.75/50 steps, prompt NEUTRE sans "camera" ni
+objet tenu - `score_9, score_8_up, source_anime, 1girl, solo, close-up on
+hand, open palm, detailed palm and knuckles, wrist visible, cozy interior,
+anime style`) :
+- Guide SANS crete (`render_celshaded_no_creases.png`) + prompt neutre :
+  paume propre, ombrage naturel, **aucun objet parasite**.
+- Guide AVEC crete (`render_celshaded_with_creases.png`) + prompt neutre :
+  paume propre, lignes de vie visibles et credibles, **aucun objet
+  parasite**.
+- 3e pose (`render_from_landmarks_celshaded.png`, PoC MediaPipe, sans crete,
+  main en coupe) + prompt neutre : **aucun objet parasite** non plus, malgre
+  un geste de "coupe" qui aurait pu evoquer un objet tenu.
+
+**Conclusion honnete : le fix geometrique n'etait PAS necessaire pour
+corriger ce defaut precis** - un prompt neutre suffit a lui seul, dans les
+trois cas testes. Le vrai coupable etait le fragment de prompt
+"reaching toward camera"/"palm facing camera", pas l'absence de detail dans
+le guide. Le fix palm est neanmoins **conserve** dans `build_and_render_v3.py`
+: il ameliore reellement le rendu (paume plus detaillee/credible, cf.
+comparaison A/B ci-dessus) sans aucune regression observee sur la
+segmentation (`seg_class_2_palm.png` inchange en silhouette) ni sur le
+rendu des autres classes - un plus cosmetique honnete, pas un correctif de
+bug credite a tort.
