@@ -24,3 +24,10 @@ __pycache__/
 
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
+
+# handsegnet/prototype_circle_sam.py -- masques de test regeneres a chaque
+# run, jamais commites (comparaison visuelle locale entre strategies).
+handsegnet/prototype_circle_sam_output/
+
+# handsegnet/prototype_circle_sam_multi.py -- idem, suite PR #23.
+handsegnet/prototype_circle_sam_multi_output/
