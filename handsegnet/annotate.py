@@ -44,9 +44,14 @@
 # Usage :
 #   py -3.12 annotate.py
 #   py -3.12 annotate.py --images D:\OVERLORD\handsegnet\dataset\raw --masks D:\OVERLORD\handsegnet\dataset\masks_raw
+#   py -3.12 annotate.py --pre-fill-vlm   (pré-remplissage auto detection VLM
+#                                          multi-mains, suite PR #23 -- images
+#                                          pas encore annotées uniquement)
 
 import argparse
+import os
 import sys
+import time
 import tkinter as tk
 from pathlib import Path
 
@@ -60,6 +65,12 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 import config
 from agents.segnet_premask import load_sam_scores    # noqa: E402
+from agents.vlm_grounding import grounding_boxes      # noqa: E402
+
+# GPU 1 (RTX 5060 Ti) uniquement pour le SAM local de cet outil -- ne jamais
+# charger sur la RTX 5080 (ComfyUI/entrainement), meme regle que
+# handsegnet/prototype_circle_sam*.py. Fixe AVANT l'import de torch.
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 PROJECT_ROOT   = config.HANDSEGNET_ROOT
@@ -102,17 +113,60 @@ def get_sam_predictor():
     return _sam_predictor
 
 
+# ── Pré-remplissage automatique VLM (--pre-fill-vlm) ────────────────────────
+#
+# Industrialise handsegnet/prototype_circle_sam_multi.py (PR #23, suite) :
+# un cercle par main détectée via le grounding VLM multi-instance (déjà en
+# prod pour batch_premask.py), un appel SAM indépendant par cercle (point
+# centre + box dérivée du cercle -- seule des 3 stratégies testées en PR #23
+# à être exploitable), fusion des masques par union. Limites connues et
+# acceptées, non traitées ici (annotation manuelle classique pour ces cas) :
+# mains petites/coupées en bord de cadre mal localisées par le VLM,
+# occlusion par objet tenu.
+
+GROUNDING_OBJECT = "the character's hands"   # aligné sur batch_premask.py::DEFAULT_OBJECT
+GROUNDING_MARGIN = 20                        # vlm_grounding.DEFAULT_MARGIN
+CIRCLE_MARGIN = 1.15                         # cf. prototype_circle_sam.py::bbox_to_circle
+
+
+def bbox_to_circle(x: int, y: int, w: int, h: int,
+                   margin: float = CIRCLE_MARGIN) -> tuple[float, float, float]:
+    """cf. prototype_circle_sam.py -- centre = centre bbox, rayon = moyenne
+    géométrique sqrt(w*h)/2 (pas max(w,h)/2, qui déborde sur bbox multi-
+    instance très allongées)."""
+    cx = x + w / 2
+    cy = y + h / 2
+    radius = (w * h) ** 0.5 / 2 * margin
+    return cx, cy, radius
+
+
+def circle_to_box(cx: float, cy: float, radius: float) -> np.ndarray:
+    return np.array([cx - radius, cy - radius, cx + radius, cy + radius], dtype=np.float32)
+
+
+def detect_hand_centers(image_path: Path
+                        ) -> tuple[list[tuple[float, float, float]], int]:
+    """Détecte les mains via agents.vlm_grounding.grounding_boxes() (même
+    appel que batch_premask.py). Retourne (cercles, n_mains) -- n_mains
+    explicite : 0, 1, ou 2+."""
+    boxes = grounding_boxes(image_path, GROUNDING_OBJECT, margin_px=GROUNDING_MARGIN)
+    if not boxes:
+        return [], 0
+    return [bbox_to_circle(x, y, w, h) for (x, y, w, h) in boxes], len(boxes)
+
+
 # ── Application ──────────────────────────────────────────────────────────────
 
 class AnnotatorApp:
     def __init__(self, root: tk.Tk, images_dir: Path, masks_dir: Path,
                  premasks_dir: Path = DEFAULT_PREMASKS,
-                 by_confidence: bool = False):
+                 by_confidence: bool = False, pre_fill_vlm: bool = False):
         self.root = root
         self.images_dir = images_dir
         self.masks_dir = masks_dir
         self.masks_dir.mkdir(parents=True, exist_ok=True)
         self.premasks_dir = premasks_dir
+        self.pre_fill_vlm = pre_fill_vlm
 
         exts = {".png", ".jpg", ".jpeg", ".webp"}
         self.image_paths = sorted(
@@ -205,7 +259,8 @@ class AnnotatorApp:
         self.clamp_view()   # centre l'image si son ratio ne remplit pas le canvas
 
         mask_path = self.mask_path()
-        if mask_path.exists():
+        had_manual_mask = mask_path.exists()
+        if had_manual_mask:
             m = Image.open(str(mask_path)).convert("L")
             if m.size != (w, h):
                 m = m.resize((w, h), Image.NEAREST)
@@ -217,6 +272,15 @@ class AnnotatorApp:
         self.sam_image_set = False
         self.undo_stack = []
         self.dirty = False
+
+        # Pré-remplissage auto VLM : uniquement pour une image jamais annotée
+        # (un masque manuel existant ne doit jamais être écrasé par une
+        # nouvelle passe automatique). Un Ctrl+Z après coup revient au masque
+        # vide (snapshot pris avant l'appel).
+        if self.pre_fill_vlm and not had_manual_mask and SAM_AVAILABLE:
+            self.push_undo()
+            self.run_vlm_prefill()
+
         self.refresh(full=True)
 
     def mask_path(self) -> Path:
@@ -426,6 +490,56 @@ class AnnotatorApp:
         self.dirty = True
         self.refresh()
 
+    def run_vlm_prefill(self):
+        """Pré-remplissage automatique --pre-fill-vlm : un cercle par main
+        détectée (detect_hand_centers), un appel SAM indépendant par cercle
+        (point centre + box, avec raffinement mask_input comme
+        prototype_circle_sam_multi.py::run_sam_circle), fusion par union.
+        Ne touche pas self.sam_points (mode "point" au clic reste utilisable
+        ensuite tel quel, sans interaction avec ce pré-remplissage). Log
+        console uniquement (pas d'UI) : nombre de mains + score par main."""
+        predictor = get_sam_predictor()
+        if predictor is None:
+            return
+        path = self.image_paths[self.index]
+
+        t0 = time.time()
+        circles, n_hands = detect_hand_centers(path)
+        t_vlm = time.time() - t0
+        if n_hands == 0:
+            print(f"[annotate] pre-fill VLM {path.name} : 0 main détectée "
+                  f"({t_vlm:.1f}s) — annotation manuelle requise")
+            return
+
+        if not self.sam_image_set:
+            predictor.set_image(np.array(self.img_pil))
+            self.sam_image_set = True
+
+        t_sam0 = time.time()
+        union = np.zeros(self.mask.shape, dtype=bool)
+        scores: list[float] = []
+        for cx, cy, radius in circles:
+            point_coords = np.array([[cx, cy]], dtype=np.float32)
+            point_labels = np.ones(1, dtype=np.int32)
+            box = circle_to_box(cx, cy, radius)
+            masks, s, logits = predictor.predict(
+                point_coords=point_coords, point_labels=point_labels,
+                box=box, multimask_output=True)
+            best_idx = int(np.argmax(s))
+            best_logit = logits[best_idx]
+            masks2, s2, _ = predictor.predict(
+                point_coords=point_coords, point_labels=point_labels, box=box,
+                mask_input=best_logit[None, :, :], multimask_output=False)
+            union = np.logical_or(union, masks2[0])
+            scores.append(float(s2[0]))
+        t_sam = time.time() - t_sam0
+
+        self.mask = union.astype(np.uint8) * 255
+        self.dirty = True
+        scores_txt = ",".join(f"{s:.2f}" for s in scores)
+        print(f"[annotate] pre-fill VLM {path.name} : {n_hands} main(s), "
+              f"scores=[{scores_txt}] (vlm {t_vlm:.1f}s + sam {t_sam:.1f}s)")
+
     # ── Brush ────────────────────────────────────────────────────────────────
 
     def paint(self, ex: float, ey: float, value: int):
@@ -594,10 +708,16 @@ if __name__ == "__main__":
                         help="Ouvre les images triées par score SAM natif croissant "
                              "(_provenance.csv) au lieu de l'ordre alphabétique — "
                              "concentre la correction manuelle sur les cas incertains")
+    parser.add_argument("--pre-fill-vlm", action="store_true",
+                        help="Pré-remplissage automatique par détection VLM multi-mains "
+                             "(un cercle par main, SAM par cercle, union) au lieu du clic "
+                             "manuel, pour chaque image pas encore annotée. Le mode clic "
+                             "manuel (touche B) reste disponible ensuite pour corriger/"
+                             "compléter. Suite de PR #23 (circle-sam-prototype).")
     args = parser.parse_args()
 
     root = tk.Tk()
     root.title("HandSegNet Annotator — Ov3rLoRd")
     app = AnnotatorApp(root, Path(args.images), Path(args.masks), Path(args.premasks),
-                       by_confidence=args.by_confidence)
+                       by_confidence=args.by_confidence, pre_fill_vlm=args.pre_fill_vlm)
     root.mainloop()
