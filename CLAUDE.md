@@ -106,3 +106,9 @@ Index des fichiers les plus souvent recherchés en début de session, pour évit
 - `.env` (racine) — secrets/clés API uniquement (ADR-005)
 
 **Non trouvé à l'emplacement attendu** : `agents/llm_router.py`, mentionné dans un doc de session antérieur, n'existe pas dans l'arborescence actuelle — seulement dans le worktree non fusionné `.claude/worktrees/llm-endpoints-config/`. À vérifier/récupérer si son routage par type de tâche (code/prompt_refinement/general/complex) est encore nécessaire.
+
+## Gestion de contexte en session longue/autonome
+- Surveille ton pourcentage d'utilisation de contexte tout du long.
+- À 90% : commence à conclure proprement — termine l'étape en cours, ne démarre rien de nouveau.
+- À 92% : arrête-toi complètement. Committe le travail en l'état (ou sauvegarde dans un état stable si un commit n'est pas pertinent), écris un résumé clair de où tu en es et ce qu'il reste à faire dans un fichier de handoff (ex. HANDOFF.md dans le worktree concerné).
+- Ne laisse jamais un fichier à moitié écrit, un commit incomplet, ou un process GPU orphelin pour gagner quelques % de marge supplémentaire.
