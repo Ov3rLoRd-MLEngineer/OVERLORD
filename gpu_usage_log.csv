@@ -1,0 +1,2 @@
+date_iso,gpu,duree_minutes,module,description,cout_estime_usd
+2026-07-29T22:39:00,RTX5060Ti,8.6,handsegnet-mediapipe-rig,"sequence 26 frames (0-25) drive_from_landmarks.py, beauty+celshaded, Cycles/OptiX",0.17

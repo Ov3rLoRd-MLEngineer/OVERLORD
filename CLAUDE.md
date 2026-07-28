@@ -112,3 +112,14 @@ Index des fichiers les plus souvent recherchés en début de session, pour évit
 - À 90% : commence à conclure proprement — termine l'étape en cours, ne démarre rien de nouveau.
 - À 92% : arrête-toi complètement. Committe le travail en l'état (ou sauvegarde dans un état stable si un commit n'est pas pertinent), écris un résumé clair de où tu en es et ce qu'il reste à faire dans un fichier de handoff (ex. HANDOFF.md dans le worktree concerné).
 - Ne laisse jamais un fichier à moitié écrit, un commit incomplet, ou un process GPU orphelin pour gagner quelques % de marge supplémentaire.
+
+## Traçage du temps GPU
+
+Pour tout run de calcul **substantiel** (entraînement, génération batch >50 images, test de diagnostic >15min — PAS les appels VLM/grounding ponctuels, trop nombreux et peu significatifs individuellement), ajoute une ligne à `gpu_usage_log.csv` (racine du dépôt, créer si absent sinon append) :
+
+```
+date_iso,gpu,duree_minutes,module,description,cout_estime_usd
+2026-07-28T14:30:00,RTX5080,95,footsegnet-controlnet,"test poids x50 mode collapse",1.90
+```
+
+`cout_estime_usd` = `duree_minutes/60 × tarif horaire de référence` — les RTX 5080/5060 Ti locales coûtent 0$ en pratique, c'est un équivalent-coût cloud à but de comparaison uniquement (tarifs de référence : A100 ~1,20$/h, H100 ~2,40$/h). Consultable via `py -3.12 gpu_cost_estimate.py` (cumul par GPU/module + équivalent-coût total).
