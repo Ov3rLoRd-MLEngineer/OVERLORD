@@ -16,6 +16,12 @@ __pycache__/
 **/dataset/annotations/*.json
 **/checkpoints/*.pth
 
+# Dossiers de liens physiques jetables (agents/prepare_route_folders.py,
+# generalise a tout module) — jamais de contenu reel, recrees a la demande,
+# ne doivent jamais etre commites.
+**/dataset/_route_review/
+**/dataset/_route_auto/
+
 # Dossier de liens physiques jetable (prepare_review_folder.py) — jamais de
 # contenu reel, recree a la demande, ne doit jamais etre commite.
 **/dataset/_review_manual/
@@ -36,6 +42,13 @@ footsegnet/dataset/premasks/*
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
 .aider*
+
+# handsegnet/prototype_circle_sam.py -- masques de test regeneres a chaque
+# run, jamais commites (comparaison visuelle locale entre strategies).
+handsegnet/prototype_circle_sam_output/
+
+# handsegnet/prototype_circle_sam_multi.py -- idem, suite PR #23.
+handsegnet/prototype_circle_sam_multi_output/
 
 # pose_capture (HandSegNet, mocap mains) -- modele MediaPipe telecharge
 # (7.5Mo, pas du code) et sorties de test regenerees a chaque run.
