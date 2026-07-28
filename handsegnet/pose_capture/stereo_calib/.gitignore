@@ -1,0 +1,4 @@
+frames/*.png
+frames_pair/*.png
+camera_parameters/*.dat
+!.gitkeep
