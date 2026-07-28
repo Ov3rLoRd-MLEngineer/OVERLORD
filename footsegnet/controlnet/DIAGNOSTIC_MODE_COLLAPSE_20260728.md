@@ -240,24 +240,50 @@ pas uniquement du changement de loss. Pour trancher proprement, il
 faudrait rejouer la même comparaison sur le même GPU (séquentiel, pas
 parallèle).
 
-**Conclusion : le correctif seul (pondération x10 sous le masque) ne
-suffit pas à casser clairement le mode collapse en 750 steps.** Pas assez
-concluant pour recommander un run complet 6000 steps sur cette seule
-configuration. Pistes à tester avant d'aller plus loin, par ordre de coût
-croissant :
+### Rejeu sur un seul GPU (élimination de la réserve matérielle)
 
-1. **Rejouer le même test correctif-vs-témoin sur le même GPU** (séquentiel)
-   pour éliminer la réserve matérielle ci-dessus et confirmer si l'écart de
-   0,003 à step 300 est réel ou du bruit GPU-a-GPU.
-2. **Augmenter `--mask-loss-weight` plus agressivement** (50-100 au lieu de
+Même comparaison (mêmes hyperparamètres, mêmes checkpoints 150/300/450/600/750),
+rejouée **séquentiellement sur le même GPU (RTX 5080)** pour éliminer la
+réserve ci-dessus (`output/control_lora_v1_fix_test_samegpu/` et
+`control_lora_v1_control_test_samegpu/`) :
+
+| Step | Correctif (`mask_loss_weight=10.0`) | Témoin (`mask_loss_weight=1.0`) | Écart |
+|------|--------------------------------------|-----------------------------------|-------|
+| 150  | 0,9987                               | 0,9987                            | 0,0000 |
+| 300  | 0,9964                               | 0,9997                            | -0,0033 |
+| 450  | 0,9990                               | 0,9997                            | -0,0007 |
+| 600  | 0,9992                               | 0,9995                            | -0,0003 |
+| 750  | 0,9992                               | 0,9990                            | **+0,0002** |
+
+Le creux à step 300 se reproduit presque à l'identique (-0,0033 vs -0,0030
+en parallèle) — ce n'est donc pas un artefact GPU, cet écart-là est réel.
+En revanche l'écart à step 750 **s'inverse** (le correctif devient
+légèrement plus corrélé que le témoin, alors qu'il était très légèrement
+en dessous dans le test parallèle) : le schéma "systématiquement plus bas,
+5/5 checkpoints" observé lors du premier test ne tient plus une fois le
+matériel contrôlé. Sur GPU unique : 3 checkpoints en faveur du correctif
+(300/450/600), 1 neutre (150), 1 en sa défaveur (750) — pas un effet
+soutenu ou croissant vers la fin du run.
+
+**Conclusion (confirmée après élimination de la réserve matérielle) : le
+correctif seul (pondération x10 sous le masque) ne casse pas clairement le
+mode collapse en 750 steps.** L'écart à step 300 est réel et reproductible,
+mais isolé, ne grandit pas avec l'entraînement et s'inverse en toute fin de
+run — profil compatible avec du bruit d'entraînement stochastique
+(tirage des timesteps/du batch) plutôt qu'avec une rupture de symétrie
+naissante. Pas assez concluant pour recommander un run complet 6000 steps
+sur cette configuration. Pistes à tester avant d'aller plus loin, par ordre
+de coût croissant :
+
+1. **Augmenter `--mask-loss-weight` plus agressivement** (50-100 au lieu de
    10) — la couverture du masque étant très faible (0,9-8,4 % du cadre),
    même un facteur 10 ne représente qu'une hausse modeste de la part totale
    de la loss attribuable à cette zone.
-3. **Tester le correctif avec `--reg-weight 0`** — la régularisation L2 sur
+2. **Tester le correctif avec `--reg-weight 0`** — la régularisation L2 sur
    la magnitude des résidus pourrait contrer une partie du signal que le
    correctif essaie justement d'amplifier (elle pénalise la variance
    supplémentaire que le correctif encourage).
-4. **Tester sur un budget de steps plus long** (1500-2000, toujours pas un
+3. **Tester sur un budget de steps plus long** (1500-2000, toujours pas un
    run complet) — le run de départage lui-même ne montrait un
    fléchissement (même faible, jamais < 0,9946) qu'à partir de step
    ~2000-2250, donc 750 steps est peut-être simplement trop court pour
