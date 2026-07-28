@@ -201,7 +201,7 @@ def add_metaball_object(name, pass_index, material):
     return obj, mb
 
 
-def add_capsule_element(mb, head, tail, radius, overlap=OVERLAP):
+def add_capsule_element(mb, head, tail, radius, overlap=OVERLAP, negative=False):
     head_v = mathutils.Vector(head)
     tail_v = mathutils.Vector(tail)
     direction = tail_v - head_v
@@ -214,7 +214,50 @@ def add_capsule_element(mb, head, tail, radius, overlap=OVERLAP):
     elem.radius = radius
     elem.size_x = half_len
     elem.rotation = mathutils.Vector((1, 0, 0)).rotation_difference(direction.normalized())
+    elem.use_negative = negative
     return elem
+
+
+def add_palm_creases(mb, palm_center):
+    """Ajoute 3 lignes de paume stylisees sous forme de fines CRETES
+    (elements CAPSULE positifs, legerement proeminents hors de la face avant
+    cote camera -Y de l'ellipsoide paume). But : donner au guide un minimum
+    de detail interne dans une zone auparavant totalement lisse, pour
+    contraindre le contenu genere par ControlNet dans cette region (cf.
+    session precedente : une paume vide sans aucune ligne s'est fait combler
+    par un objet halluciné - piste secondaire, la cause principale identifiee
+    est un fragment de prompt independant du guide, cf. CLASS_SCHEMA.md
+    "Enquete metadonnees"). Pas un objectif de realisme anatomique (vraies
+    lignes de main sont courbes, ici 3 segments droits suffisent pour le but
+    recherche)."""
+    # Approche calibrée empiriquement (test isolé dédié) : des elements
+    # NEGATIFS (creux/sillon) ne creent qu'une depression lisse (continue en
+    # courbure) - invisible pour Freestyle "crease" quel que soit le seuil
+    # teste (100 deg, 70 deg) ou le rayon (0.006 a 0.02), car il n'y a jamais
+    # de vraie cassure d'angle, juste une pente douce. Une fine CRETE
+    # POSITIVE (legerement proeminente hors de la surface) cree en revanche
+    # deux transitions d'angle nettes (montee + descente) detectees sans
+    # probleme meme a rayon fin (0.004-0.008 tous visibles au test isole).
+    cx, cy, cz = palm_center
+    # cote camera (-Y) ; legerement au-dela de la surface avant nominale de
+    # l'ellipsoide (half_extent Y=0.024) pour que la crete depasse vraiment
+    front_y = cy - 0.026
+    lines = [
+        # (offset_z, demi-largeur X, legere inclinaison)
+        (0.028, 0.030, -0.008),   # ligne de coeur (haute, proche des doigts)
+        (0.010, 0.033, 0.005),    # ligne de tete (mediane)
+        (-0.012, 0.024, 0.014),   # ligne de vie (basse, cote pouce)
+    ]
+    for dz, half_w, tilt in lines:
+        head = (cx - half_w, front_y, cz + dz - tilt)
+        tail = (cx + half_w, front_y, cz + dz + tilt)
+        # rayon calibre empiriquement : 0.003-0.004 se fragmentent en petits
+        # eclats disjoints (resolution du maillage marching-cubes trop
+        # grossiere pour une crete aussi fine a cette echelle) ; 0.005 donne
+        # des lignes pleines et continues - prime la continuite sur la
+        # finesse visuelle, l'objectif est un guide exploitable, pas un rendu
+        # elegant.
+        add_capsule_element(mb, head, tail, radius=0.005, overlap=0.0, negative=False)
 
 
 def add_ellipsoid_element(mb, center, half_extents):
@@ -255,6 +298,7 @@ def main():
     palm_obj, palm_mb = add_metaball_object("palm", 2, mats[2])
     palm_mb.threshold = ELLIPSOID_THRESHOLD
     add_ellipsoid_element(palm_mb, (0, 0, 0.065), (0.067, 0.024, 0.052))
+    add_palm_creases(palm_mb, (0, 0, 0.065))
     all_meta_objects.append(palm_obj)
 
     # --- doigts : 3 elements CAPSULE par doigt, MEME objet metaball -> fusion
