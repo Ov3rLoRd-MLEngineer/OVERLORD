@@ -121,3 +121,32 @@ phalanges suivantes qui elles s'enchainent reellement) - `b.use_connect =
 (i > 0)` dans `build_rig()`. Resultat : doigts repartis le long de la largeur
 de la paume, pouce positionne sur le cote comme une vraie main, au lieu d'un
 eventail issu d'un point unique.
+
+## Validation objectif 3 (2026-07-28) : test ControlNet reel
+
+Test de bout en bout sur GPU1 (RTX 5060 Ti, libre - GPU0 occupe par un
+entrainement Control-LoRA en cours, non touche) : `render_celshaded.png`
+uploade dans ComfyUI, passe par `LineArtPreprocessor` (comfyui_controlnet_aux),
+puis ControlNet `xinsir-controlnet-lineart-sdxl.safetensors` sur le checkpoint
+du projet (`fabricatedXL_v70.safetensors`). Fichiers : `controlnet_test_workflow*.json`
+(graphes API envoyes a `/prompt`), `test_result_lineart_extracted.png` (sortie
+du preprocesseur), `test_result_beauty*.png` (deux essais, params differents).
+
+**Resultat : le guide est bien exploitable par ControlNet.**
+- L'extraction lineart automatique (`LineArtPreprocessor`) retrouve un contour
+  propre, quasi identique au contour du proxy - confirme que le lissage
+  metaball (fini le bruit de facettage marching-cubes corrige plus haut) paie
+  aussi en aval, pas seulement sur le rendu Blender lui-meme.
+- 1er essai (`strength=1.0`, 30 steps) : structure respectee mais rendu final
+  plat/type icone (pas de nuance de shading anime credible) - ControlNet trop
+  rigide + pas assez de steps pour ce checkpoint.
+- 2e essai (`strength=0.75`, `end_percent=0.85`, 50 steps, prompt densifie avec
+  details de texture) : rendu anime nettement plus convaincant, ET la structure
+  de la main (nombre de doigts, ecartement, position laterale du pouce) suit
+  fidelement le guide 3D. Defaut cosmetique observe : la paume (zone lisse
+  sans detail interne dans le guide) a ete remplie par un objet parasite
+  ("objectif d'appareil photo") - pas un probleme du guide, plutot un manque
+  de contrainte de contenu sur cette zone vide + prompt pas assez specifique
+  ("masterpiece" etc. peut halluciner un sujet) - a corriger par prompt (ex.
+  decrire explicitement "empty palm, skin only, no object") si ce test est
+  repris pour de vrai, pas un blocage de la methode.
