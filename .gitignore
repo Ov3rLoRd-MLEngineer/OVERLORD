@@ -56,3 +56,7 @@ handsegnet/pose_capture/models/*.task
 handsegnet/pose_capture/out_*.json
 handsegnet/pose_capture/preview/
 handsegnet/pose_capture/tmp/
+
+# footsegnet/controlnet/eval_checkpoint.py -- images/manifests regeneres a
+# chaque run, jamais commites (comparaison visuelle locale entre checkpoints).
+footsegnet/controlnet/eval_output/
