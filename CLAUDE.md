@@ -70,5 +70,45 @@ Many of these are logged formally in `ADR_OVERLORD.md` — read it before changi
 `CONTEXTE_OVERLORD_V*.md` files (V150 through the current highest number) are session handoff notes — each captures in-progress bugs, what was just fixed, and next steps at the time it was written. When resuming multi-session work, read the **highest-numbered** one first; treat older ones as historical record only, since defaults and conventions get superseded (e.g. VAE, sampler, checkpoint choices evolve across sessions and are only trustworthy as of the date at the top of each file). `ADDENDUM_*.md` files are supplements meant to be read alongside a specific `CONTEXTE_*` file (named in the addendum's own header).
 
 ### Repo hygiene notes
-- Root contains many one-off `fix_*.py`, `scan_*.py`, `_peek*.py` scripts and stray zero-byte files (`git`, `python`, `logging.Logger`) left over from earlier debugging sessions — these are not part of any import graph; don't treat their presence as significant, and don't assume a same-named file is "the" implementation without checking `agents/` first (duplicate filenames exist between root and `agents/`, e.g. `reference_aligner_v2.py`, `invert_lineart.py`).
+- Root contains many one-off `fix_*.py`, `scan_*.py`, `_peek*.py` scripts and stray zero-byte files (`git`, `python`, `logging.Logger`) left over from earlier debugging sessions — these are not part of any import graph; don't treat their presence as significant, and don't assume a same-named file is "the" implementation without checking `agents/` first (duplicate filenames exist between root and `agents/`, e.g. `reference_aligner_v2.py`, `invert_lineart.py`, `patcher.py` — root's `patcher.py` is V1.1 (supports two bundle formats), `agents/patcher.py` is the older V1.0, root is current).
 - `agents/` also contains vendored third-party packages (`requests/`, `urllib3/`, `certifi/`, `idna/`, `charset_normalizer/`) alongside the actual agent modules — don't confuse these with project code when searching.
+
+## Emplacements clés
+
+Index des fichiers les plus souvent recherchés en début de session, pour éviter un aller-retour de recherche. Chemins vérifiés depuis `D:\OVERLORD\` ; ignorer tout chemin identique sous `.claude/worktrees/` ou `BACKUP/` (copies non fusionnées ou obsolètes, jamais la version courante).
+
+**SegNets** (le même trio existe dans chacun de `footsegnet/`, `handsegnet/`, `bodysegnet/`, `facesegnet/`) :
+- `<module>/annotate.py` — interface tkinter d'annotation manuelle (pré-remplissage SAM + brush/fill), voir `--by-confidence` pour trier par score SAM croissant
+- `<module>/batch_premask.py` — pré-masquage automatique (bbox pose + SAM + fallback grounding VLM)
+- `<module>/build_coco.py` — export du dataset annoté au format COCO
+- `<module>/dataset/premasks/_provenance.csv` — journal de provenance par image (box_source, status, mask_pct, sam_score) ; lu par `agents/segnet_premask.py::load_sam_scores()`
+
+**Control-LoRA FootSegNet → SDXL** (`footsegnet/controlnet/`, voir son propre `README.md` pour le flux complet) :
+- `footsegnet/controlnet/prepare_dataset.py` — génération + pré-masque + assemblage des paires
+- `footsegnet/controlnet/quality_sort.py` — tri exploitable / à corriger / à exclure (couverture, box_source, fragmentation de masque)
+- `footsegnet/controlnet/train_control_lora.py` — entraînement (diffusers + peft)
+- `footsegnet/controlnet/route_by_sam_confidence.py` — routage manuel/auto par seuil de score SAM natif
+- `footsegnet/dataset/premasks/route_auto_sort.txt` / `route_manual_review.txt` — listes de routage du lot Control-LoRA (stems, un par ligne)
+- `footsegnet/dataset/premasks/prepare_review_folder.py` + `README.md` — prépare un dossier de liens physiques pour ouvrir uniquement les stems de `route_manual_review.txt` dans `annotate.py`
+
+**Pipeline core** :
+- `maestro.py` — orchestrateur historique (SOURCING→SCENARIO→STORYBOARD→PRODUCTION→POST-PROD→3D)
+- `agent_supervisor_v2.py` — orchestrateur industriel (parle à l'API ComfyUI), reste à la racine (ADR-001)
+- `agents/director.py` — Le Réalisateur (mise en scène/direction narrative)
+- `agents/context_bus.py` — bus pub/sub inter-agents (`get_bus().write()/.read()`)
+- `agents/segnet_premask.py` — logique partagée de pré-masquage (`load_sam_scores`, `clean_mask`, `fill_mask_holes`, `run_batch`) derrière les 4 `batch_premask.py`
+- `patcher.py` (racine, V1.1, courant) — agent de patch find/replace ou CREATE/UPDATE ; ne pas confondre avec `agents/patcher.py` (V1.0, plus ancien)
+- `ADR_OVERLORD.md` — décisions d'architecture formelles (sampler, VAE, seeds, config...)
+
+**Config** :
+- `config.py` (racine) — chemins/constantes partagés (`FOOTSEGNET_ROOT`, `SAM_CHECKPOINT`, etc.), importé par la plupart des scripts SegNet/Control-LoRA
+- `agents/config_manager.py` — config centralisée (`cfg.get(...)`), précédence DEFAULTS < `workspace/config.db` < `.env` < kwargs runtime
+- `.env` (racine) — secrets/clés API uniquement (ADR-005)
+
+**Non trouvé à l'emplacement attendu** : `agents/llm_router.py`, mentionné dans un doc de session antérieur, n'existe pas dans l'arborescence actuelle — seulement dans le worktree non fusionné `.claude/worktrees/llm-endpoints-config/`. À vérifier/récupérer si son routage par type de tâche (code/prompt_refinement/general/complex) est encore nécessaire.
+
+## Gestion de contexte en session longue/autonome
+- Surveille ton pourcentage d'utilisation de contexte tout du long.
+- À 90% : commence à conclure proprement — termine l'étape en cours, ne démarre rien de nouveau.
+- À 92% : arrête-toi complètement. Committe le travail en l'état (ou sauvegarde dans un état stable si un commit n'est pas pertinent), écris un résumé clair de où tu en es et ce qu'il reste à faire dans un fichier de handoff (ex. HANDOFF.md dans le worktree concerné).
+- Ne laisse jamais un fichier à moitié écrit, un commit incomplet, ou un process GPU orphelin pour gagner quelques % de marge supplémentaire.

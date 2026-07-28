@@ -1,0 +1,13 @@
+{
+  "1": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "fabricatedXL_v70.safetensors"}},
+  "2": {"class_type": "LoadImage", "inputs": {"image": "render_celshaded_no_creases.png"}},
+  "3": {"class_type": "LineArtPreprocessor", "inputs": {"image": ["2", 0], "coarse": "disable", "resolution": 1024}},
+  "4": {"class_type": "ControlNetLoader", "inputs": {"control_net_name": "xinsir-controlnet-lineart-sdxl.safetensors"}},
+  "5": {"class_type": "CLIPTextEncode", "inputs": {"clip": ["1", 1], "text": "score_9, score_8_up, source_anime, 1girl, solo, close-up on hand, open palm, detailed palm and knuckles, wrist visible, cozy interior, anime style"}},
+  "6": {"class_type": "CLIPTextEncode", "inputs": {"clip": ["1", 1], "text": "worst quality, low quality, blurry, deformed hands, extra fingers, missing fingers, fused fingers, bad anatomy, mutated hands, hands out of frame, hands cropped, watermark, signature, text, nsfw, wrong"}},
+  "7": {"class_type": "ControlNetApplyAdvanced", "inputs": {"positive": ["5", 0], "negative": ["6", 0], "control_net": ["4", 0], "image": ["3", 0], "strength": 0.75, "start_percent": 0.0, "end_percent": 0.85}},
+  "8": {"class_type": "EmptyLatentImage", "inputs": {"width": 1024, "height": 1280, "batch_size": 1}},
+  "9": {"class_type": "KSampler", "inputs": {"model": ["1", 0], "seed": 4001, "steps": 50, "cfg": 6.5, "sampler_name": "dpmpp_2m", "scheduler": "karras", "denoise": 1.0, "positive": ["7", 0], "negative": ["7", 1], "latent_image": ["8", 0]}},
+  "10": {"class_type": "VAEDecode", "inputs": {"samples": ["9", 0], "vae": ["1", 2]}},
+  "11": {"class_type": "SaveImage", "inputs": {"images": ["10", 0], "filename_prefix": "neutral_A_nocrease"}}
+}

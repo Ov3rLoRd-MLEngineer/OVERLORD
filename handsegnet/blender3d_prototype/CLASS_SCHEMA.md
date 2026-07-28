@@ -1,0 +1,214 @@
+# Structure de classes — prototype pipeline 3D HandSegNet
+
+Extraite du buffer Object Index Blender (voir `build_and_render.py`). Chaque classe
+correspond a un `pass_index` distinct assigne aux objets 3D de la scene ; le rendu
+produit un masque binaire separe par classe en plus du mask couleur combine et de
+la silhouette union (mono-classe, pour comparaison directe au dataset HandSegNet
+reel actuel qui est mono-classe "hand").
+
+| id | classe      | objets 3D couverts                          | fichier de sortie              |
+|----|-------------|----------------------------------------------|---------------------------------|
+| 1  | wrist       | boite poignet                                | `seg_class_1_wrist.png`         |
+| 2  | palm        | boite paume                                   | `seg_class_2_palm.png`          |
+| 3  | thumb       | 3 phalanges pouce                             | `seg_class_3_thumb.png`         |
+| 4  | index       | 3 phalanges index                             | `seg_class_4_index.png`         |
+| 5  | middle      | 3 phalanges majeur                            | `seg_class_5_middle.png`        |
+| 6  | ring        | 3 phalanges annulaire                         | `seg_class_6_ring.png`          |
+| 7  | pinky       | 3 phalanges auriculaire                       | `seg_class_7_pinky.png`         |
+
+Sorties supplementaires (non-classes, pour verification/compat) :
+- `seg_idcolor.png` — les 7 classes superposees en fausses couleurs (verif visuelle rapide)
+- `seg_binary.png` — union des 7 classes = silhouette "main" complete, meme convention
+  que le masque mono-classe HandSegNet actuel (BLANC=main, NOIR=fond)
+
+## Pourquoi ce decoupage (poignet / paume / 5 doigts individuels) et pas plus fin
+
+Correspond exactement a la demande : distinguer poignet, paume, et chaque doigt
+individuellement — pas de decoupage par phalange (proximale/intermediaire/distale
+par doigt, ce qui donnerait 17 classes). Les 3 phalanges d'un meme doigt partagent
+le meme `pass_index` : elles sont fusionnees en une seule classe "doigt".
+
+Avec l'annotation manuelle, rester mono-classe etait un choix delibere pour limiter
+le cout (cf. `handsegnet/README.md`, "future extension multi-classes... reintroduirait
+un masque par categorie, comme avant ce changement"). Avec le rendu 3D, ce cout
+n'existe quasiment plus : passer a 7 classes n'a demande qu'un `pass_index` different
+par objet + une passe de rendu de plus par classe (~0.7s/classe sur cette scene de
+test) — d'ou la decision d'exploiter cette granularite des maintenant plutot que
+d'attendre. Si un besoin de granularite par phalange apparait plus tard (ex. pour
+un futur rig avec flexion articulee par phalange), le meme mecanisme s'etend
+directement en donnant un `pass_index` propre a chaque phalange au lieu de le
+partager par doigt — aucun changement structurel necessaire, juste plus d'ID.
+
+## Occlusion
+
+Le buffer Object Index reflete ce qui est reellement visible depuis la camera :
+quand le pouce passe devant la paume, le pixel appartient au pouce dans le mask
+paume ET dans le mask pouce (pas de double-compte, pas de fuite) — verifie
+visuellement sur `seg_class_2_palm.png` (encoche a l'endroit ou le pouce recouvre
+la paume). Ce comportement correct-par-construction est un avantage direct du
+rendu 3D par rapport a l'annotation manuelle multi-classe (qui devrait gerer les
+occlusions a la main, polygone par polygone).
+
+## Limite actuelle (assumee, hors-scope de cette etape)
+
+Le style visuel reste du rendu 3D brut (pas de cel-shading), et la geometrie est
+un proxy schematique (boites + ellipsoides), pas un mesh anatomique detaille.
+Ces deux points sont le "domain gap" deja identifie dans
+`ADDENDUM_PISTES_FUTURES_V3_JUILLET2026.md` et restent volontairement non
+attaques a cette etape (consigne : rester concentre sur la geometrie propre +
+structure multi-classe avant le style visuel).
+
+## Mise a jour v3 (2026-07-28) : proxy geometrique en metaballs
+
+Le point ci-dessus ("geometrie = proxy schematique boites + ellipsoides") a ete
+attaque et en grande partie resolu par `build_and_render_v3.py`. Diagnostic
+precis pose la session precedente (memoire projet `blender-3d-segnet-pivot`,
+verdict du calibrage cel-shading) : ce n'etait pas le shader qui bloquait mais
+les jointures boite/ellipsoide - chaque phalange ellipsoide restait une surface
+distincte qui se touche a peine ("collier de perles"), et le poignet/la paume
+en boites avaient des angles droits inexistants en anatomie reelle. Sous
+Freestyle, ces jointures/angles artificiels etaient dessines comme des aretes
+qui ne correspondent a rien de reel.
+
+**Fix v3** : chaque classe (poignet, paume, chaque doigt) devient un objet
+METABALL (surface implicite qui fusionne nativement a l'intersection) au lieu
+d'un ou plusieurs objets mesh. Chaque doigt = 3 elements CAPSULE dans le MEME
+objet metaball (fusion interne continue, effilee vers la pointe, plus de bosse
+par phalange). Poignet/paume = 1 element ELLIPSOID chacun (arrondi, plus
+d'angle droit). Comparaison directe `render_beauty.png`/`render_celshaded.png`
+avant/apres dans ce dossier (ecrases par la derniere execution - v2 archive
+dans `build_and_render.py`, non touche, reste la version "boites+ellipsoides"
+de reference si besoin de comparer a nouveau).
+
+Toujours 7 objets **separes** (pas un metaball global pour toute la main) :
+deliberement choisi, pas une limite - fusionner tout en un seul objet aurait
+aussi fusionne les FRONTIERES entre classes, hors de propos ici car (1)
+`MetaElement` n'a pas de `material_index` dans cette version de Blender (verifie
+empiriquement) donc pas d'alternative pour retrouver les 7 masques autrement
+qu'avec l'Object Index actuel (qui reste une propriete PAR OBJET), et (2) une
+ligne visible base-de-doigt/paume ou poignet/paume correspond a une vraie
+crease anatomique, contrairement aux bosses intra-doigt qui, elles, ne
+correspondaient a rien de reel - le probleme cible etait specifiquement
+intra-partie.
+
+**Piege technique rencontre et corrige** : un element metaball ISOLE (sans
+voisin pour renforcer le champ pres du bord) rend a environ 55% de sa taille
+`size_x/y/z` nominale au seuil (`threshold`) par defaut de 0.6 - mesure
+empirique : 0.6->~55%, 0.3->~74%, 0.1->~85% de la taille demandee. Poignet et
+paume (chacun un seul element) laissaient donc un vrai vide visible entre eux
+et avec les doigts au premier rendu v3. Fix : `threshold=0.3` sur ces deux
+objets + demi-extents elargis avec une marge de recouvrement volontaire (meme
+principe que `OVERLAP` pour les capsules de doigt, qui elles n'avaient pas ce
+probleme car deja chevauchantes par construction).
+
+**Piege Freestyle rencontre et corrige** : le maillage d'un metaball est
+tessellise par marching cubes - meme lisse en apparence, les facettes creent
+de petits angles reels entre polygones que Freestyle "crease" detecte comme
+bruit parasite (petits traits epars le long des doigts). Le sens du parametre
+`crease_angle` est contre-intuitif : une valeur PLUS HAUTE rend la detection
+PLUS sensible (170 deg a produit un hachurage dense, pire que le defaut
+~150 deg) - abaisse a 100 deg pour n'accrocher que les vraies cassures.
+
+**Bug distinct trouve et corrige dans la meme session** : les 5 doigts
+convergeaient tous au MEME point au premier essai (bug herite de v2, pas
+introduit par le passage aux metaballs : `EditBone.use_connect=True` force le
+`head` de l'os enfant a coincider avec le `tail` du parent, ce qui ecrasait
+silencieusement les positions `base` individuelles par doigt definies dans
+`FINGER_SPECS` - confirme via introspection directe des bones apres
+construction). Fix : `use_connect=False` pour la 1ere phalange de chaque
+doigt uniquement (sa base n'est pas la pointe de la paume, contrairement aux
+phalanges suivantes qui elles s'enchainent reellement) - `b.use_connect =
+(i > 0)` dans `build_rig()`. Resultat : doigts repartis le long de la largeur
+de la paume, pouce positionne sur le cote comme une vraie main, au lieu d'un
+eventail issu d'un point unique.
+
+## Validation objectif 3 (2026-07-28) : test ControlNet reel
+
+Test de bout en bout sur GPU1 (RTX 5060 Ti, libre - GPU0 occupe par un
+entrainement Control-LoRA en cours, non touche) : `render_celshaded.png`
+uploade dans ComfyUI, passe par `LineArtPreprocessor` (comfyui_controlnet_aux),
+puis ControlNet `xinsir-controlnet-lineart-sdxl.safetensors` sur le checkpoint
+du projet (`fabricatedXL_v70.safetensors`). Fichiers : `controlnet_test_workflow*.json`
+(graphes API envoyes a `/prompt`), `test_result_lineart_extracted.png` (sortie
+du preprocesseur), `test_result_beauty*.png` (deux essais, params differents).
+
+**Resultat : le guide est bien exploitable par ControlNet.**
+- L'extraction lineart automatique (`LineArtPreprocessor`) retrouve un contour
+  propre, quasi identique au contour du proxy - confirme que le lissage
+  metaball (fini le bruit de facettage marching-cubes corrige plus haut) paie
+  aussi en aval, pas seulement sur le rendu Blender lui-meme.
+- 1er essai (`strength=1.0`, 30 steps) : structure respectee mais rendu final
+  plat/type icone (pas de nuance de shading anime credible) - ControlNet trop
+  rigide + pas assez de steps pour ce checkpoint.
+- 2e essai (`strength=0.75`, `end_percent=0.85`, 50 steps, prompt densifie avec
+  details de texture) : rendu anime nettement plus convaincant, ET la structure
+  de la main (nombre de doigts, ecartement, position laterale du pouce) suit
+  fidelement le guide 3D. Defaut cosmetique observe : la paume (zone lisse
+  sans detail interne dans le guide) a ete remplie par un objet parasite
+  ("objectif d'appareil photo") - a l'epoque attribue a un manque de
+  contrainte du guide sur cette zone vide. **Corrige ci-dessous : ce n'etait
+  PAS la vraie cause.**
+
+## Enquete metadonnees (2026-07-28) : la cause reelle de l'objet parasite
+
+Avant d'investir dans un fix geometrique, verification des metadonnees PNG
+(tEXt chunk `prompt`, JSON du workflow ComfyUI embarque a la generation) sur
+le dataset HandSegNet reel pour verifier une hypothese : le mot "camera" dans
+le prompt du test precedent (`palm facing camera`) pourrait etre la vraie
+cause, pas le guide.
+
+**Confirme, tres nettement.** Scan de `handsegnet/dataset/raw/*.png`
+(322 images) : 52 prompts positifs contiennent "camera", repartis en deux
+fragments distincts issus du template wildcard du dataset -
+- `"hands close to camera"` (41 images, fragment fixe de framing/distance) :
+  **0 objet parasite** sur les images verifiees visuellement (00000, 00006,
+  00056 - gestes normaux, mains nues).
+- `"reaching toward camera"` (11 images, `handsegnet/wildcards/gestures.txt`
+  ligne 15, un choix parmi les gestes tires aleatoirement) : **appareil photo
+  halluciné sur 100% des images verifiees** (00030, 00063, 00109, 00230,
+  00289 - toutes avec du texte de marque illisible du type "SCCRE"/"SOORE"/
+  "SGC", signature typique d'un objet halluciné plutot que genere depuis un
+  vrai concept appris).
+
+Le prompt du test ControlNet precedent ("palm facing camera") est
+semantiquement proche de "reaching toward camera" (orientation/interaction
+explicite avec "camera") - explique tres probablement l'objet parasite
+observe, independamment du guide 3D. `reaching toward camera` reste un bug
+de wildcard dataset-wide a corriger un jour dans `gestures.txt` (hors
+perimetre de cette session, note pour reference future) - PAS un defaut de
+ce chantier 3D.
+
+## Fix palm ajoute quand meme (2026-07-28), puis verification honnete
+
+Avant l'enquete metadonnees ci-dessus, un detail geometrique a ete ajoute a
+la paume : 3 fines CRETES (elements CAPSULE metaball positifs, pas des creux
+- un creux negatif s'est revele indetectable par Freestyle quel que soit le
+reglage teste, cf. commentaires de `add_palm_creases()` dans
+`build_and_render_v3.py` pour le detail des essais). Rayon calibre a 0.005
+apres plusieurs iterations (0.003-0.004 fragmentaient en eclats disjoints,
+resolution du maillage marching-cubes trop grossiere a cette echelle).
+
+**Test de verification en isolant les deux variables** (meme seed, meme
+config ControlNet strength=0.75/50 steps, prompt NEUTRE sans "camera" ni
+objet tenu - `score_9, score_8_up, source_anime, 1girl, solo, close-up on
+hand, open palm, detailed palm and knuckles, wrist visible, cozy interior,
+anime style`) :
+- Guide SANS crete (`render_celshaded_no_creases.png`) + prompt neutre :
+  paume propre, ombrage naturel, **aucun objet parasite**.
+- Guide AVEC crete (`render_celshaded_with_creases.png`) + prompt neutre :
+  paume propre, lignes de vie visibles et credibles, **aucun objet
+  parasite**.
+- 3e pose (`render_from_landmarks_celshaded.png`, PoC MediaPipe, sans crete,
+  main en coupe) + prompt neutre : **aucun objet parasite** non plus, malgre
+  un geste de "coupe" qui aurait pu evoquer un objet tenu.
+
+**Conclusion honnete : le fix geometrique n'etait PAS necessaire pour
+corriger ce defaut precis** - un prompt neutre suffit a lui seul, dans les
+trois cas testes. Le vrai coupable etait le fragment de prompt
+"reaching toward camera"/"palm facing camera", pas l'absence de detail dans
+le guide. Le fix palm est neanmoins **conserve** dans `build_and_render_v3.py`
+: il ameliore reellement le rendu (paume plus detaillee/credible, cf.
+comparaison A/B ci-dessus) sans aucune regression observee sur la
+segmentation (`seg_class_2_palm.png` inchange en silhouette) ni sur le
+rendu des autres classes - un plus cosmetique honnete, pas un correctif de
+bug credite a tort.
