@@ -334,25 +334,120 @@ faible pour surmonter la dilution du gradient (masque à 0,9-8,4 % du cadre)
 et la régularisation L2 sur la magnitude des résidus ; à `×50`, l'effet
 devient net et auto-entretenu.
 
-**Recommandation explicite :** ce résultat justifie une investigation plus
-poussée avant un run complet 6000 steps, mais ne le nécessite pas
-forcément immédiatement :
-- Le plus informatif à court terme : **prolonger ce test précis
-  (`mask_loss_weight=50`, mêmes réglages) au-delà de 750 steps** (ex.
-  1500-2000) pour voir si la corrélation continue de chuter, se stabilise
-  à un niveau bas (signe d'un vrai apprentissage différencié), ou
-  s'effondre jusqu'à l'incohérence totale (signe qu'un poids ×50 est trop
-  agressif et dégrade la qualité générale, même si ça casse le collapse).
-- Une inspection visuelle des previews (actuellement désactivées
-  `--validation-steps 0` dans ces tests courts) sur ce même run aiderait à
-  confirmer que la différenciation produit des images cohérentes et pas du
-  bruit structuré.
-- Si ces deux vérifications sont concluantes, le run complet 6000 steps
-  (avec `--mask-loss-weight 50.0`) devient raisonnable à lancer — décision
-  qui reste à la charge de l'utilisateur, pas prise dans cette session.
+**Recommandation initiale (2026-07-28, avant vérification visuelle) :**
+prolonger le test au-delà de 750 steps et inspecter visuellement les
+previews avant toute décision sur un run complet. **Cette vérification a
+été faite le 2026-07-29 (section suivante) et infirme la lecture ci-dessus
+— le signal de corrélation était trompeur.**
 
-Pas de run complet 6000 steps lancé dans cette session, conformément à la
-consigne.
+## Vérification visuelle (2026-07-29) — le signal de corrélation était un faux positif
+
+### Extension à 1500 steps, previews activées
+
+Reprise du run `mask_loss_weight=50.0` depuis checkpoint-750 jusqu'à 1500
+(`--resume-from-checkpoint latest`, mêmes réglages, `--validation-steps 150`
+cette fois). Terminé sans erreur. Sonde de corrélation aux checkpoints
+supplémentaires :
+
+| Step | Corrélation moyenne | min |
+|------|---------------------|-----|
+| 750  | 0,4509              | 0,1320 |
+| 900  | 0,4698              | 0,1863 |
+| 1050 | 0,4738              | 0,1815 |
+| 1200 | 0,4582              | 0,1647 |
+| 1350 | 0,4120              | 0,1508 |
+| 1500 | 0,3553              | 0,1016 |
+
+La chute se poursuit doucement sans redevenir erratique (pas d'oscillation
+violente step à step) — en apparence un profil "sain". Loss vérifiée
+également saine sur toute l'extension (mse 0,22-0,51, pas de NaN).
+**Ces deux signaux (corrélation, loss) se sont révélés insuffisants pour
+juger la qualité réelle.**
+
+### Previews `run_validation()` : bruit statique — mais aussi sur le run JAMAIS corrigé
+
+Les previews générées (steps 900/1200/1500) sont du **bruit statique pur,
+sans aucune structure reconnaissable** (pas de silhouette, pas de
+vêtements). Alarmant, mais avant de conclure : comparaison avec la preview
+`step_006000.png` du run de départage **original, jamais touché par un
+correctif** (`control_lora_v1_convergence_test`, checkpoint final 6000
+steps) — **également du bruit statique pur, identique en apparence.**
+
+Cela signifie que `run_validation()` (fonction de preview intégrée à
+`train_control_lora.py`) est probablement buggée indépendamment de tout
+correctif : sa boucle de débruitage n'implémente **aucun classifier-free
+guidance** (pas de branche non conditionnelle, pas de `guidance_scale`) —
+un ingrédient normalement indispensable pour qu'un modèle SDXL produise
+une image cohérente à partir de bruit pur sur seulement 30 steps. Le
+fichier `eval_checkpoint.py` (PR #18, déjà existant) documente lui-même
+avoir été conçu **volontairement indépendant de `train_control_lora.py`**
+"car une autre session diagnostique un bug dessus" — confirmation externe
+qu'un problème était déjà identifié dans ce fichier.
+
+### `eval_checkpoint.py` (CFG correct, `guidance_scale=7.0`) : le vrai diagnostic
+
+Utilisation de `eval_checkpoint.py` (pipeline diffusers standard, CFG
+correct) sur le checkpoint-2000 du run **original** (`convergence_test`,
+jamais corrigé) :
+
+- `--conditioning-scale 1.0` (ControlNet actif, réglage standard) :
+  **bruit statique pur**, identique à `run_validation()`.
+- `--conditioning-scale 0.0` (`--baseline`, ControlNet désactivé) :
+  **image parfaitement cohérente et fidèle au prompt** (fille en kimono
+  sur des escaliers, néons — correspond exactement au texte).
+
+Même test sur mon checkpoint `mask_loss_weight=50.0` / step 1500 (2 prompts,
+`--baseline`) : **résultat identique** — bruit statique pur à
+`conditioning_scale=1.0` sur les deux prompts, image parfaitement cohérente
+à `conditioning_scale=0.0` sur les deux.
+
+**Conclusion : le résidu ControlNet, injecté à pleine puissance
+(`conditioning_scale=1.0`, réglage standard), détruit entièrement la
+génération — sur le run original ET sur mon correctif ×50, sans exception.**
+La chute de corrélation observée avec `mask_loss_weight=50` ne reflétait
+donc pas un apprentissage différencié utile : elle reflétait une
+divergence croissante des résidus vers des motifs de plus en plus corrompus
+et mutuellement incohérents (du bruit décorrélé du bruit reste décorrélé,
+sans être pour autant du signal). **Le signal de corrélation positif
+identifié le 2026-07-28 était un faux positif.**
+
+Point positif néanmoins : test à `conditioning_scale=0.15` sur le même
+checkpoint ×50/step1500 → **image cohérente**, avec des différences de
+pose/détail plausibles par rapport au baseline pur (main près du visage,
+détail des bottes plus marqué) — un résidu exploitable existe, il est
+simplement écrasé par sa propre magnitude à pleine échelle. Piste concrète
+pour la suite (voir ci-dessous).
+
+### Décision finale : SIGNAL NÉGATIF — pas de run complet 6000 steps
+
+Le correctif `--mask-loss-weight` (à 10 comme à 50) ne résout pas le
+problème réel : il agissait sur un proxy (corrélation des résidus) qui
+s'est avéré ne pas mesurer ce qu'on croyait. Lancer un run complet 6000
+steps avec ce réglage produirait très probablement un modèle inutilisable
+à `conditioning_scale` standard, comme le run original déjà produit.
+**Aucun run complet lancé.**
+
+Piste suivante recommandée pour une session future, par ordre de
+pertinence :
+
+1. **Diagnostiquer la magnitude des résidus sur la trajectoire complète
+   d'échantillonnage** (30 steps d'`eval_checkpoint.py`/`run_validation()`),
+   pas seulement en std/mean_abs sur un seul forward comme fait jusqu'ici —
+   le problème n'est peut-être visible qu'en cumulé sur plusieurs steps
+   (accumulation d'erreur), pas sur un forward isolé pendant l'entraînement.
+2. **Explorer si un `conditioning_scale` réduit à l'inférence (0.1-0.3)
+   révèle une différenciation réelle liée au masque**, en comparant
+   plusieurs prompts/masques très différents à `eval_checkpoint.py` à ce
+   réglage réduit — reformule la question : le ControlNet contient-il de
+   l'information utile, indépendamment du fait qu'elle soit inutilisable à
+   pleine échelle ?
+3. **Corriger `run_validation()`** (ajout du CFG manquant) pour que les
+   previews d'entraînement futures soient un signal fiable, plutôt que de
+   dépendre uniquement d'`eval_checkpoint.py` (plus lent, GPU dédié).
+4. **Revoir la régularisation de magnitude** (`reg_weight`, clip norm) —
+   apparemment insuffisante pour empêcher une magnitude destructrice à
+   l'inférence multi-step, même si elle limite la croissance visible dans
+   les stats d'entraînement à un seul forward.
 
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
