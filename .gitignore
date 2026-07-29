@@ -16,6 +16,13 @@ __pycache__/
 **/dataset/annotations/*.json
 **/checkpoints/*.pth
 
+# Poids convertis pour publication HF (huggingface/) -- artefact local en
+# vue d'un upload manuel, jamais commite dans ce depot prive (meme
+# convention que **/checkpoints/*.pth ci-dessus ; voir DOCS/MD/
+# EXTRACTION_*_PUBLICATION.md pour le flux de publication complet).
+**/huggingface/*.safetensors
+**/huggingface/*.pth
+
 # Dossiers de liens physiques jetables (agents/prepare_route_folders.py,
 # generalise a tout module) — jamais de contenu reel, recrees a la demande,
 # ne doivent jamais etre commites.
