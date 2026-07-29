@@ -705,6 +705,157 @@ noyée/écrasée plus loin dans le réseau ?). Nécessite de charger le
 ControlNet et de faire un forward partiel (jusqu'à `controlnet_cond_embedding`
 seulement) sur plusieurs masques différents — GPU léger, pas d'entraînement.
 
+## Inspection directe de `controlnet_cond_embedding` (2026-07-29) — localisation précise de la perte d'information
+
+Suite directe de la piste laissée en suspens à la fin de la section
+précédente : le mécanisme de conditionnement transmet-il une information
+exploitable dès l'encodeur d'entrée, indépendamment de la loss ? Script
+`diagnostics/probe_cond_embedding_trajectory.py` (lecture seule, aucun
+entraînement, `train_control_lora.py` non modifié — importé et réutilisé tel
+quel comme les scripts précédents). GPU 0 (RTX 5080) libre avant lancement
+(`nvidia-smi` vérifié, 467 MiB/16303 MiB), consommation redescendue à
+638 MiB en fin de run — largement sous la règle 90 %/92 %.
+
+### Méthode
+
+`ControlNetConditioningEmbedding` (diffusers 0.38.0,
+`models/controlnets/controlnet.py:65-107`) est une petite pile de 4
+convolutions 3×3 (`conv_in` → 3×(conv stride 1 + conv stride 2, SiLU) →
+`conv_out`), la toute première porte d'entrée du masque dans le réseau,
+avant les zero-convs (`controlnet_down_blocks`/`controlnet_mid_block`) et
+avant l'injection dans les blocs copiés de l'UNet
+(`sample = conv_in(latent) + controlnet_cond_embedding(masque)`,
+`controlnet.py:736-739`).
+
+Comme tout le module est enregistré dans `modules_to_save`, peft le
+remplace par un `ModulesToSaveWrapper` qui conserve **les deux versions en
+mémoire simultanément** : `.original_module` (copie gelée, jamais
+entraînée, init aléatoire de `from_unet`) et
+`.modules_to_save["default"]` (copie entraînée, chargée depuis un
+checkpoint). Le forward de `ControlNetConditioningEmbedding` a été rejoué
+manuellement couche par couche (conv_in, block0..block5, conv_out) sur les
+deux copies, avec deux jeux de masques :
+
+1. **Masques synthétiques extrêmes** (moitié gauche blanche vs moitié
+   droite blanche, 1024×1536) — cas demandé explicitement, différence
+   maximale et non locale.
+2. **Masques réels du dataset** (idx 0 vs idx 300, mêmes indices que
+   `probe_mode_collapse.py`) — représentatifs de la vraie distribution
+   (couverture blanche localisée, 0,9-8,4 % du cadre).
+
+Checkpoint utilisé : `control_lora_v1_convergence_test/checkpoint-6000` (run
+complet 6000 steps, `mask_loss_weight` implicite = 1.0, jamais retouché —
+le modèle "de production" dont le mode collapse est la cause initiale de
+toute cette investigation).
+
+### Résultat — corrélation spatiale (Pearson, DC retiré) par étape
+
+| Étape | Synthé. gauche/droite — gelé | Synthé. — entraîné (step 6000) | Réel idx0/idx300 — gelé | Réel — entraîné (step 6000) |
+|---|---|---|---|---|
+| conv_in | -0,9976 | -0,9977 | -0,0129 | -0,0133 |
+| block0 | -0,9936 | -0,9967 | -0,0085 | -0,0120 |
+| block1 | -0,9920 | -0,9959 | -0,0008 | -0,0048 |
+| block2 | -0,9666 | -0,9888 | 0,1117 | 0,0829 |
+| block3 | -0,9044 | -0,8997 | 0,3443 | 0,4798 |
+| block4 | 0,1820 | 0,1125 | **0,9496** | **0,9519** |
+| block5 | 0,7058 | 0,4341 | **0,9868** | 0,9759 |
+| conv_out | 0,0000/0,0000 (std=0, zero-init exact) | **0,7877** | 0,0000/0,0000 (std=0) | **0,9931** |
+
+(trajectoire complète pour référence : `mid_block_res_sample` — après
+passage dans les blocs copiés de l'UNet + `controlnet_mid_block` —
+corrélation = **0,9936** sur les mêmes masques synthétiques gauche/droite,
+à comparer au 0,7877 déjà atteint à la sortie de `controlnet_cond_embedding`
+seul.)
+
+### Interprétation
+
+**1. Pour les masques réels (petits, localisés — le cas qui compte en
+production) : la perte d'information est déjà quasi totale À L'INTÉRIEUR de
+`controlnet_cond_embedding`, avant même les zero-convs.** La corrélation
+passe de ~0 (masques vraiment différents) à 0,95 dès `block4`, pour finir à
+0,9931 à `conv_out` — comparable aux ~0,999+ déjà mesurés sur le résidu
+final dans le reste de ce rapport. Les heatmaps de différence
+(`diagnostics/cond_embedding_probe_outputs/real_*.png`) confirment
+visuellement : l'écart entre les deux masques reste localisé (silhouette du
+masque visible sur les 8 étapes) mais son amplitude absolue chute d'un
+facteur ~1000 entre `conv_in` (max ~0,2) et `block5` (max ~0,00025) — le
+signal spécifique au masque devient négligeable face au reste de l'activation.
+
+**2. Point capital : ce rétrécissement est déjà présent AVANT tout
+entraînement.** Sur masques réels, la corrélation à `block4` est
+**quasi identique gelé (0,9496) vs entraîné (0,9519)** — 6000 steps
+d'entraînement ne changent presque rien à ce stade. Ce n'est donc **pas
+principalement un problème appris** (la loss qui n'incite pas à différencier,
+cause déjà identifiée dans ce rapport) **mais en bonne partie une propriété
+architecturale inhérente** : 3 convolutions à stride 2 appliquées à un
+masque épars (0,9-8,4 % de couverture blanche) lissent presque
+inévitablement l'information de position fine dès les premières couches,
+avec ou sans apprentissage. L'entraînement n'aggrave quasiment pas cette
+composante architecturale — il agit ailleurs (point 3).
+
+**3. Ce que l'entraînement fait réellement : gonfler la magnitude de
+`conv_out`, pas la différenciation.** `conv_out` est zero-init par
+construction (`zero_module`, std exactement 0 avant tout entraînement,
+confirmant à nouveau la conclusion "zero-init correcte" de l'étape 0 de ce
+rapport) mais fait partie de `modules_to_save` — après 6000 steps, son std
+passe de 0 à 0,585-0,600, sans que sa corrélation gauche/droite ne
+s'améliore (elle est déjà élevée du simple fait de l'architecture, point 2).
+L'entraînement ajoute donc un signal de grande magnitude mais largement
+générique (indépendant du masque précis) — cohérent avec la conclusion déjà
+établie plus haut sur l'échec de `mask-loss-weight` : sur-pondérer la MSE
+sous le masque pousse le modèle à produire *plus* de signal dans cette zone,
+mais rien n'indique que ce signal soit spécifique au contenu du masque plutôt
+qu'un motif moyen amplifié.
+
+**4. Pour des différences de masque non réalistes mais massives
+(gauche/droite) : une vraie différenciation survit à la sortie de
+`controlnet_cond_embedding` (corr. 0,79, loin du collapse) — mais elle est
+ensuite fortement diluée plus loin dans le réseau.** La corrélation continue
+de grimper de 0,79 (`conv_out`) à 0,9936 (`mid_block_res_sample`) en
+traversant les blocs copiés de l'UNet (gelés, sauf adaptateurs LoRA rang 64)
+et `controlnet_mid_block`. Autrement dit, même dans le cas le plus favorable
+testé, l'essentiel de la capacité résiduelle du réseau après
+`controlnet_cond_embedding` continue d'éroder la différenciation plutôt que
+de la préserver ou l'amplifier.
+
+### Réponse à la question posée
+
+**L'information du masque se perd aux DEUX endroits, mais dans des
+proportions différentes selon l'échelle du masque :**
+
+- **Masques réalistes (petits, épars — le cas de production) : la perte est
+  déjà quasi complète DANS `controlnet_cond_embedding` lui-même**,
+  essentiellement à cause des 3 stride-2 qui lissent un signal épars — un
+  phénomène largement **architectural, pas appris** (quasi identique avant
+  et après entraînement). Ce qui sort de l'encodeur pour ce type de masque
+  est déjà proche d'un signal indépendant du masque, avant même d'atteindre
+  les zero-convs ou l'UNet gelé.
+- **Masques massifs/non locaux : une différenciation réelle existe encore à
+  la sortie de l'encodeur, mais elle continue d'être diluée en aval**, dans
+  les blocs copiés de l'UNet (gelés + LoRA) et `controlnet_mid_block`.
+
+**Conséquence pour la recherche d'un vrai correctif** (la piste `--mask-loss-weight`, déjà abandonnée plus haut dans ce rapport, ne pouvait de toute façon
+pas résoudre un goulot d'étranglement en grande partie architectural) :
+
+1. **Revoir l'architecture de `controlnet_cond_embedding` pour ce type de
+   conditionnement épars** — moins de stride agressif, ou une branche à plus
+   haute résolution préservée plus longtemps (à la manière de T2I-Adapter,
+   pensé justement pour des conditionnements structurés/épars plutôt que des
+   images denses comme Canny/depth qui remplissent tout le cadre).
+2. **Traitement du masque en amont** (dilatation morphologique, flou gaussien
+   léger avant normalisation [0,1]) pour augmenter sa couverture effective et
+   réduire la perte due au lissage inhérent aux convolutions à stride 2 — piste
+   peu coûteuse à tester (aucune modification d'architecture, juste du
+   pré-traitement du masque, testable en quelques minutes en injectant un
+   masque dilaté dans un checkpoint existant).
+3. Le terme de loss contrastif explicite (déjà documenté plus haut) reste
+   pertinent mais s'attaquerait surtout au symptôme (point 4 : dilution en
+   aval) plutôt qu'à la cause principale identifiée ici (point 1-2 :
+   lissage architectural en amont sur masques épars).
+
+Script réutilisable : `diagnostics/probe_cond_embedding_trajectory.py`.
+Heatmaps de preuve : `diagnostics/cond_embedding_probe_outputs/*.png`.
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
