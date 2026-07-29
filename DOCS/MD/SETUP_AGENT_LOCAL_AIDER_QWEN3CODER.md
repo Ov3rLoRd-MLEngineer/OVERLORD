@@ -282,11 +282,27 @@ reproduit 3 fois ce jour.
   la qualification de defaults génératifs traitées cette nuit/ce jour) —
   hors du périmètre pour lequel ce mécanisme a même été envisagé.
 
+## 1quater. Cause racine identifiée + wrapper de fiabilisation (2026-07-29, session 2)
+
+Suite du §1ter, même jour, session dédiée à la fiabilisation. Diagnostic
+complet et statut à jour désormais dans
+`DOCS/MD/PROCEDURE_FALLBACK_LLM.md` §0 — ne pas dupliquer ici, juste le
+résumé : le crash Git Bash était un problème d'encodage stdout (`cp1252`
+par défaut dès que la sortie est redirigée, fix `PYTHONIOENCODING=utf-8`) ;
+le fichier vide silencieux (Git Bash **et** PowerShell) vient d'une
+fragilité probabiliste du parseur d'édition d'Aider face à qwen3-coder, pas
+d'un problème d'environnement — non éliminée à la source, mais absorbée de
+façon fiable par un wrapper de vérification+relance
+(`agents/aider_fallback_run.py`, 9/9 tâches de validation réussies en ≤2
+tentatives). **Le mécanisme est déclaré fiable via ce wrapper, pas en appel
+direct à `aider.exe`.**
+
 ## Rappel
 
 Objectif réaliste : réduction de la dépendance à l'abonnement Claude Code sur
 les tâches routinières, pas suppression totale — les tâches complexes (comme
 le diagnostic Control-LoRA en cours) restent mieux traitées directement par
-Claude Code. **Mise à jour 2026-07-29 : même les tâches routinières ne sont
-pas encore fiables en mode automatisé — voir §1ter avant de compter sur ce
-mécanisme en situation réelle de quota épuisé.**
+Claude Code. **Mise à jour 2026-07-29 (session 2) : fiable pour les tâches
+routinières via `agents/aider_fallback_run.py` — voir §1quater et
+`DOCS/MD/PROCEDURE_FALLBACK_LLM.md`. Ne pas utiliser Aider en appel direct
+sans le wrapper.**
