@@ -449,6 +449,66 @@ pertinence :
    l'inférence multi-step, même si elle limite la croissance visible dans
    les stats d'entraînement à un seul forward.
 
+## Balayage de `conditioning_scale` (2026-07-29, suite) — courbe qualité/échelle
+
+Aucun nouveau training. Sur le checkpoint `mask_loss_weight=50.0` / step 1500
+déjà entraîné, script `diagnostics/sweep_conditioning_scale.py` (réutilise
+`load_pipeline()`/`generate()`/`FIXED_TEST_SET` d'`eval_checkpoint.py`, un
+seul chargement de pipeline) : 5 prompts de référence × 6 valeurs de
+`conditioning_scale` (0,15 / 0,30 / 0,50 / 0,70 / 0,85 / 1,00) = 30 images,
+GPU 0 (RTX 5080 — GPU 1/5060 Ti occupé par un entraînement HandSegNet
+légitime, non touché).
+
+| `conditioning_scale` | Qualité observée |
+|-----------------------|-------------------|
+| 0,15 | **Cohérent, haute qualité**, sur les 3 prompts inspectés en détail (00000/00001/00002) et le 4e vérifié (00040) — poses et détails visiblement liés au masque/prompt (pieds nus visibles pour "barefoot", geta + lean contre le mur pour la scène convenience store, talons dorés pour la pose en équilibre) |
+| 0,30 | **Cohérent** — personnage net et fidèle au prompt sur les 3 prompts vérifiés, mais **début de dégradation de l'arrière-plan** (texture facettée/cristalline sur les étagères, le fond) — la dégradation touche l'arrière-plan avant le sujet |
+| 0,50 | **Dégradé** — silhouette et éléments de composition (escalier, personnage) encore devinables, mais texture de bruit structuré envahissante, qualité inutilisable |
+| 0,70 | **Très dégradé** — vague forme sombre résiduelle à peine distinguable, essentiellement du bruit |
+| 0,85 | **Quasi bruit total** — infime résidu de forme sombre au centre |
+| 1,00 | **Bruit statique pur** (confirme la vérification du 2026-07-29 précédente) |
+
+**Point de bascule net entre 0,30 et 0,50** — pas une dégradation graduelle
+linéaire, une chute de qualité abrupte dans cet intervalle, la coupure
+touchant d'abord l'arrière-plan puis le sujet.
+
+**La différenciation à échelle réduite (0,15-0,30) semble bien liée au
+masque**, pas à un artefact de faible magnitude générique : les poses/
+détails de pieds/chaussures observés correspondent aux éléments spécifiques
+de chaque prompt (barefoot, geta sandals, talons). Réserve méthodologique :
+chaque prompt du set fixe utilise un texte ET un seed différents en plus
+d'un masque différent (`FIXED_TEST_SET`/`BASE_SEED + i*137` d'
+`eval_checkpoint.py`) — cette expérience ne permet donc pas d'isoler
+strictement l'effet du masque de celui du texte/seed (contrairement à la
+sonde de corrélation qui, elle, fixait texte et seed). La cohérence
+prompt↔détails observée est un signal encourageant mais pas une preuve
+isolée que c'est spécifiquement le masque (et pas seulement le texte) qui
+pilote la différenciation visible.
+
+### Recommandation
+
+- **Échelle d'inférence exploitable : ≤ 0,30**, idéalement autour de
+  0,15-0,25 pour une marge de sécurité (l'arrière-plan commence déjà à se
+  dégrader à 0,30). Utilisable dès maintenant sur ce checkpoint pour des
+  tests qualitatifs, sans attendre un correctif d'entraînement.
+- **Ça change la stratégie de correctif.** Pousser `--mask-loss-weight`
+  encore plus haut (×100+) pour tenter de casser plus fort le mode collapse
+  serait contre-productif : ça pousserait probablement le point de bascule
+  encore plus bas (résidus encore plus grands), pas plus haut. La vraie
+  piste est l'inverse — **calibrer un poids d'entraînement nettement plus
+  faible que ×50** (peut-être même repartir d'une base sans
+  `mask-loss-weight`, ou une valeur type ×2-5) *spécifiquement pour que la
+  magnitude du résidu reste dans la zone cohérente à `conditioning_scale=1.0`*
+  plutôt que de continuer à pousser le poids de loss pour casser la
+  corrélation — objectif de calibration de magnitude, pas de corrélation.
+- Piste opérationnelle immédiate à tester en priorité dans une session
+  future : reprendre un entraînement à poids modéré (×2-5) tout en
+  surveillant explicitement, à intervalles réguliers, la qualité de
+  génération complète à `conditioning_scale=1.0` via `eval_checkpoint.py`
+  (pas seulement la corrélation des résidus ni la loss d'entraînement) —
+  le critère de succès devient "reste cohérent à scale=1.0 ET montre une
+  différenciation liée au masque", pas "corrélation basse".
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
