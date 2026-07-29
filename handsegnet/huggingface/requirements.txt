@@ -1,0 +1,9 @@
+# Minimal dependencies to run standalone_infer.py / convert_to_safetensors.py
+# — no dependency on the rest of the Ov3rLoRd pipeline.
+#
+# Install torch/torchvision from https://pytorch.org/get-started/locally/
+# first (CUDA build recommended), then:
+Pillow
+numpy
+safetensors
+git+https://github.com/facebookresearch/segment-anything.git
