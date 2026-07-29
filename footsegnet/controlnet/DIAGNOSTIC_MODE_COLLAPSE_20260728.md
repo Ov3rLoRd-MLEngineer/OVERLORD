@@ -292,6 +292,68 @@ de coût croissant :
 Pas de run complet 6000 steps lancé sur cette configuration — conforme à
 la consigne (signal pas assez net pour la justifier dans cette session).
 
+### `--mask-loss-weight 50.0` (2026-07-29) — signal net et reproductible
+
+Piste #1 ci-dessus testée : même méthodologie (750 steps, dataset complet,
+`reg-weight=0.01`, `modules-to-save-lr=5e-5`, `seed=42`, GPU unique RTX 5080
+séquentiel), poids porté à **50** au lieu de 10. Témoin réutilisé tel quel
+(`control_lora_v1_control_test_samegpu`, même GPU, déjà mesuré ci-dessus —
+pas besoin de le relancer).
+
+Incident en cours de route : premier lancement a planté à step 60
+(`MemoryError` Python/PIL au chargement d'une image, RAM système — pas lié
+au correctif). Cause probable : deux process Python zombies (un très ancien,
+~8,8 Go de VRAM bloqués sur GPU1 depuis le tout premier crash croisé de la
+session ; un second orphelin issu du crash lui-même) qui n'avaient jamais
+été nettoyés. Tués (`taskkill`), RAM libre remontée de 16,7 à 20,1 Go,
+relancé proprement — terminé sans erreur (exit code 0).
+
+| Step | Témoin (×1) | Correctif ×10 | **Correctif ×50** |
+|------|-------------|----------------|---------------------|
+| 150  | 0,9987      | 0,9987         | 0,9995 |
+| 300  | 0,9997      | 0,9964         | 0,9874 |
+| 450  | 0,9997      | 0,9990         | **0,9454** |
+| 600  | 0,9995      | 0,9992         | **0,8565** (min 0,7299) |
+| 750  | 0,9990      | 0,9992         | **0,4509** (min 0,1320, max 0,7711) |
+
+**Signal net, fort, et croissant.** Contrairement au ×10 (bruit, pas
+d'effet soutenu), le ×50 montre un effondrement de la corrélation qui
+s'accélère à chaque checkpoint (delta entre checkpoints successifs :
+-0,012 / -0,042 / -0,089 / -0,406) — pas un plateau, une divergence encore
+en accélération à la fin du test. Vérification que ce n'est pas de
+l'instabilité numérique plutôt qu'un vrai apprentissage : la loss reste
+saine et continue de descendre tout du long (`mse` 2,12 → ~0,30-0,47 sur
+les 750 steps, pas de NaN, pas d'explosion — cf. `fix50_test_samegpu.log`),
+le `reg` reste dans une fourchette bornée (2-9) sans dérive. La chute de
+corrélation coïncide avec un entraînement qui continue de progresser
+normalement, pas avec un effondrement du modèle.
+
+**C'est le signal de rupture de symétrie recherché depuis le début de
+l'investigation.** À `mask_loss_weight=10`, la sur-pondération était trop
+faible pour surmonter la dilution du gradient (masque à 0,9-8,4 % du cadre)
+et la régularisation L2 sur la magnitude des résidus ; à `×50`, l'effet
+devient net et auto-entretenu.
+
+**Recommandation explicite :** ce résultat justifie une investigation plus
+poussée avant un run complet 6000 steps, mais ne le nécessite pas
+forcément immédiatement :
+- Le plus informatif à court terme : **prolonger ce test précis
+  (`mask_loss_weight=50`, mêmes réglages) au-delà de 750 steps** (ex.
+  1500-2000) pour voir si la corrélation continue de chuter, se stabilise
+  à un niveau bas (signe d'un vrai apprentissage différencié), ou
+  s'effondre jusqu'à l'incohérence totale (signe qu'un poids ×50 est trop
+  agressif et dégrade la qualité générale, même si ça casse le collapse).
+- Une inspection visuelle des previews (actuellement désactivées
+  `--validation-steps 0` dans ces tests courts) sur ce même run aiderait à
+  confirmer que la différenciation produit des images cohérentes et pas du
+  bruit structuré.
+- Si ces deux vérifications sont concluantes, le run complet 6000 steps
+  (avec `--mask-loss-weight 50.0`) devient raisonnable à lancer — décision
+  qui reste à la charge de l'utilisateur, pas prise dans cette session.
+
+Pas de run complet 6000 steps lancé dans cette session, conformément à la
+consigne.
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
