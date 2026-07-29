@@ -70,8 +70,13 @@ class PremaskCategory:
                        (<stem>__<name>.png, ex. "hand", "eyes").
     grounding_object : requête de grounding VLM, neutre et sans couleur
                        (ex. "the character's hands").
-    primary_box_fn   : source de bbox principale (ex. DWPose) — callable
-                       (Path) -> (x, y, w, h) | None ; None = grounding direct.
+    primary_box_fn   : source de bbox principale (ex. DWPose, YOLO spécialisé)
+                       — callable (Path) -> (x, y, w, h) | list[(x, y, w, h)] |
+                       None ; une liste déclenche l'union multi-instance (ex.
+                       une bbox par main détectée) ; None = grounding direct.
+    primary_box_source : nom de provenance pour cette source (colonne CSV et
+                       QC visuel — cf. _build_compare) ; suffixé "_multi(N)"
+                       automatiquement si primary_box_fn retourne N > 1 boîtes.
     infer_kwargs     : kwargs additionnels pour infer_fn (ex. {"refine": True}
                        pour footsegnet, {"part": "hand"} pour les autres).
     keep_components  : nb de composantes connexes gardées par --clean.
@@ -79,6 +84,7 @@ class PremaskCategory:
     name: str | None
     grounding_object: str
     primary_box_fn: Callable | None = None
+    primary_box_source: str = "dwpose"
     infer_kwargs: dict = field(default_factory=dict)
     keep_components: int = 2
 
@@ -115,10 +121,11 @@ def fill_mask_holes(mask_bin: np.ndarray) -> np.ndarray:
 def _build_compare(source: Image.Image, boxes: list[tuple[int, int, int, int]],
                    box_source: str, mask: Image.Image,
                    label: str) -> Image.Image:
-    """Source + bbox(es) (ROUGE=dwpose, VERT=qwenvl_grounding — même code
-    couleur que le test de grounding) | masque, à hauteur fixe."""
+    """Source + bbox(es) (ROUGE=source primaire ex. dwpose/yolo, VERT=
+    qwenvl_grounding — même code couleur que le test de grounding) | masque,
+    à hauteur fixe."""
     source = source.convert("RGB")
-    color = (255, 0, 0) if box_source == "dwpose" else (0, 255, 0)
+    color = (0, 255, 0) if box_source.startswith("qwenvl_grounding") else (255, 0, 0)
     draw = ImageDraw.Draw(source)
     for x, y, w, h in boxes:
         draw.rectangle([x, y, x + w, y + h], outline=color, width=4)
@@ -368,8 +375,7 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
           f"{'désactivé' if no_fallback else 'actif'})")
 
     ok = 0
-    counts_source = {"dwpose": 0, "qwenvl_grounding": 0,
-                     "qwenvl_grounding_multi": 0}
+    counts_source: dict[str, int] = {}
     box_failed: list[str] = []
     infer_failed: list[str] = []
     rows: list[dict] = []
@@ -391,8 +397,9 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
         if cat.primary_box_fn is not None:
             primary = cat.primary_box_fn(img_path)
             if primary is not None:
-                boxes = [primary]
-                box_source = "dwpose"
+                boxes = primary if isinstance(primary, list) else [primary]
+                box_source = (cat.primary_box_source if len(boxes) == 1
+                              else f"{cat.primary_box_source}_multi({len(boxes)})")
         if not boxes and not no_fallback:
             found = grounding_boxes(img_path, cat.grounding_object,
                                     margin_px=grounding_margin)
@@ -455,7 +462,8 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
         compare.save(qc_dir / f"{Path(out_name).stem}_compare.png")
 
         ok += 1
-        counts_source[box_source.split("(")[0]] += 1
+        src_key = box_source.split("(")[0]
+        counts_source[src_key] = counts_source.get(src_key, 0) + 1
         elapsed = time.time() - t0
         iou_txt = f" IoU={iou_val:.2f}" if iou_val is not None else ""
         score_txt = f" SAM={sam_score:.3f}" if sam_score is not None else ""
@@ -478,10 +486,8 @@ def run_batch(project: str, dataset_root: Path, infer_fn: Callable,
 
     total_failed = len(box_failed) + len(infer_failed)
     elapsed_total = time.time() - t_start
-    print(f"\n{tag} Terminé : {ok} pré-masque(s) "
-          f"(dwpose={counts_source['dwpose']}, "
-          f"qwenvl_grounding={counts_source['qwenvl_grounding']}, "
-          f"multi={counts_source['qwenvl_grounding_multi']}), "
+    counts_str = ", ".join(f"{k}={v}" for k, v in sorted(counts_source.items()))
+    print(f"\n{tag} Terminé : {ok} pré-masque(s) ({counts_str}), "
           f"{total_failed} échec(s), {elapsed_total:.1f}s")
     if ious:
         print(f"{tag} IoU vs masques manuels : moyenne {np.mean(ious):.3f}, "
