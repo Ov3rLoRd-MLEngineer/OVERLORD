@@ -1129,3 +1129,71 @@ pour ne pas les écraser).
   (conforme à la consigne : tests courts uniquement). Le test de validation
   du correctif (section suivante, ajoutée après ce diagnostic) reste lui
   aussi limité à 500-800 steps, pas un run complet.
+
+## Clôture (2026-07-29) — chantier mis EN PAUSE, pas abandonné
+
+### Statut
+
+**Ce chantier est mis en pause pour cette itération du projet, pas
+abandonné.** Décision prise après trois pistes de correctif léger testées
+et écartées, chacune par une vérification indépendante rigoureuse (pas
+seulement sur la métrique de substitution utilisée pour la guider) :
+
+| # | Piste | Coût | Verdict | Preuve clé |
+|---|---|---|---|---|
+| 1 | `--mask-loss-weight` (×10/×20/×50) | Faible (repondération de loss) | **Écartée** | Aucune différenciation masque-seul détectable à aucun poids testé, malgré un signal de corrélation prometteur au départ (faux positif) |
+| 2 | Dilatation/flou du masque en pré-traitement | Faible (aucun training requis pour la mesure, un seul run pour la vérification visuelle) | **Écartée** | Gain marginal en sortie d'encodeur, effacé plus loin dans le réseau ; coût de précision spatiale disqualifiant |
+| 3 | Loss contrastive (`--contrastive-weight`) | Moyen (2e forward ControlNet/step, ingénierie VRAM significative) | **Écartée** | Signal d'entraînement spectaculaire (corr. -0,99) mais faux positif confirmé — le réseau a appris à différencier le bruit latent (non partagé entre les deux forwards, contrainte VRAM), pas le masque |
+
+Point commun aux trois échecs, la leçon la plus importante de ce
+diagnostic : **une métrique de substitution (corrélation, magnitude de
+loss) qui bouge dans le sens souhaité ne prouve rien par elle-même** — il
+faut systématiquement vérifier avec un protocole indépendant qui isole
+strictement le masque (texte et seed fixes) et confirme la cohérence
+visuelle à l'échelle d'inférence standard (`conditioning_scale=1,0`). Les
+trois pistes ont chacune produit un signal positif sur leur propre
+métrique avant d'être invalidées par ce protocole.
+
+### Cause racine confirmée
+
+La perte d'information du masque est **majoritairement architecturale**,
+localisée dans `controlnet_cond_embedding` (3 convolutions stride-2 qui
+lissent un signal épars, 0,9-8,4 % du cadre — déjà quasi collapsée avant
+tout entraînement) et amplifiée par la dilution progressive dans les blocs
+copiés de l'UNet en aval. Aucun ajustement de loss ou de pré-traitement du
+masque ne peut compenser un goulot d'étranglement architectural de cette
+nature.
+
+### Pistes pour une reprise future (par ordre de priorité)
+
+1. **CtrLoRA** — alternative identifiée depuis ce diagnostic, nettement
+   plus légère que la piste T2I-Adapter envisagée initialement (littérature
+   indique ~1000 images / 1 GPU / ~1h). **À investiguer en premier si ce
+   chantier est repris** : le rapport coût/risque est bien plus favorable
+   qu'une refonte d'architecture complète avant même de savoir si une
+   simple repondération/reformulation suffit avec cette approche.
+2. **ViscoNet** — signalé comme lecture prioritaire, aborde
+   **explicitement** le problème de mode collapse du conditionnement (pas
+   juste un ControlNet générique) — à lire avant de choisir entre CtrLoRA
+   et une refonte plus lourde, pourrait informer directement la conception
+   du correctif.
+3. **Refonte d'architecture complète type T2I-Adapter** — la piste la plus
+   coûteuse (en données et en calcul GPU), gardée en dernier recours si
+   CtrLoRA/ViscoNet ne suffisent pas. Cohérente avec le diagnostic
+   architectural de ce rapport (moins de stride agressif / branche
+   haute-résolution préservée plus longtemps pour un conditionnement épars).
+
+### État du dépôt
+
+- Branche `worktree-controlnet-mode-collapse-fix` : propre, entièrement
+  poussée sur origin.
+- **PR #33** : fusionnée dans `main` le 2026-07-29 (commit `e7a860c`,
+  jusqu'à la section dilatation/flou incluse) — fusion antérieure à la
+  session ayant produit la section "loss contrastive" ci-dessus et cette
+  clôture, qui restent donc **non fusionnées** sur cette même branche à ce
+  stade. Une PR distincte porte ce reliquat, laissée en draft (pas de
+  fusion — ce chantier reste un rapport de recherche, pas du code de
+  production à intégrer tant que le chantier est en pause).
+- Aucun changement de comportement en production : tous les flags ajoutés
+  (`--mask-loss-weight`, `--contrastive-weight`, `--max-image-side`) sont
+  opt-in, désactivés par défaut.
