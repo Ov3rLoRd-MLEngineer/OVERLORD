@@ -856,6 +856,121 @@ pas résoudre un goulot d'étranglement en grande partie architectural) :
 Script réutilisable : `diagnostics/probe_cond_embedding_trajectory.py`.
 Heatmaps de preuve : `diagnostics/cond_embedding_probe_outputs/*.png`.
 
+## Dilatation/flou du masque en pré-traitement (2026-07-29) — piste ÉCARTÉE
+
+Suite directe de la section précédente : les masques réalistes (petits,
+épars) perdent presque toute leur différenciation dès la sortie de
+`controlnet_cond_embedding` (corr. ~0,99), alors que des masques massifs
+non locaux (test gauche/droite, 50 % du cadre) en conservent nettement plus
+(corr. 0,79). Hypothèse testée ici : un simple pré-traitement du masque
+(dilatation morphologique ou flou gaussien, **avant** `controlnet_cond_embedding`,
+sans toucher à l'architecture ni à la loss) suffit-il à rapprocher le
+comportement d'un masque réel de celui d'un masque massif ?
+
+Script `diagnostics/probe_mask_dilation_blur.py` (lecture seule, aucun
+entraînement, réutilise directement `get_cond_embedding_states`/
+`trace_embedding`/`spatial_corr` de `probe_cond_embedding_trajectory.py`).
+Même checkpoint (`convergence_test/checkpoint-6000`), mêmes masques réels
+de référence (idx 0/idx 300). GPU 0 (RTX 5080) libre avant lancement,
+930 MiB en fin de run — sous la règle 90 %/92 %.
+
+### Résultat
+
+| Transformation | Couverture idx0/idx300 | corr. `conv_out` (sortie encodeur) | corr. `mid_block_res_sample` (résidu final) |
+|---|---|---|---|
+| Original (témoin) | 1,53 % / 2,28 % | 0,9931 | 0,9991 |
+| Dilatation r=10px | 2,40 % / 3,51 % | 0,9886 | 0,9990 |
+| Dilatation r=25px | 3,76 % / 5,26 % | 0,9825 | 0,9989 |
+| Dilatation r=60px | 7,50 % / 9,42 % | 0,9690 | 0,9985 |
+| Flou σ=8px | 1,51 % / 2,28 % | 0,9929 | 0,9992 |
+| Flou σ=20px | 1,41 % / 2,15 % | 0,9935 | 0,9992 |
+| Flou σ=50px | 0,10 % / 1,28 %* | 0,9955 | 0,9992 |
+| *Référence* — masque synthétique gauche/droite (50 % du cadre) | 50 % / 50 % | 0,7877 | 0,9936 |
+
+\* à σ=50, le seuil de couverture "effective" (>0,5) sous-estime l'emprise
+réelle du flou — un artefact de la métrique de couverture, pas une vraie
+réduction de zone (cf. `mask_dilation_probe_outputs/masks_blur.png`, la
+tache reste bien présente, juste diffuse et de faible intensité de crête).
+
+### Interprétation
+
+**1. La dilatation a un effet réel mais faible sur la sortie de l'encodeur,
+et cet effet est presque entièrement annulé plus loin dans le réseau.**
+`corr_conv_out` descend de 0,9931 à 0,9690 entre r=0 et r=60px (couverture
+multipliée par ~4-5×, jusqu'à 7,5-9,4 % — déjà proche du haut de la
+fourchette naturelle du dataset, 0,9-8,4 %) : un mouvement réel, dans le
+bon sens, mais dix fois plus petit que l'écart observé avec un masque
+massif (0,9931→0,7877, soit -0,2054 contre -0,0241 ici). Et surtout,
+**`corr_mid_block_res_sample` (le résidu qui compte réellement pour la
+génération) ne bouge presque pas : 0,9991→0,9985**, un delta de 0,0006 sur
+toute la plage testée. Exactement la même dynamique que celle documentée
+dans la section précédente (point 4) avec le masque synthétique massif :
+ce qui survit à la sortie de `controlnet_cond_embedding` continue d'être
+dilué dans les blocs copiés de l'UNet (gelés + LoRA rang 64) et
+`controlnet_mid_block`. La dilatation améliore légèrement l'entrée du
+tunnel, pas ce qui en ressort.
+
+**2. Le flou n'a aucun effet utile — dans certains cas il va dans le
+mauvais sens.** `corr_conv_out` reste stable autour de 0,993-0,996 sur
+toute la plage de σ testée (au lieu de baisser comme espéré, il remonte
+légèrement à σ=50). Un signal diffus et de faible amplitude de crête
+semble encore plus facile à confondre avec le "motif moyen" que le réseau
+a appris à produire indépendamment du masque, qu'un signal net à bords
+francs. `corr_mid_block_res_sample` ne bouge pas du tout (0,9991-0,9992
+sur toute la plage).
+
+**3. Le coût en précision de forme est immédiat et disqualifiant, bien
+avant que l'effet (déjà faible) ne devienne intéressant.** Dès r=60px
+(le seul niveau qui bouge un peu l'aiguille), la silhouette fine du
+pied/de la chaussure est déjà méconnaissable — un blob arrondi sans
+rapport avec la forme d'origine (cf. `mask_dilation_probe_outputs/masks_dilation.png`).
+Le guidage de forme fine (l'objectif même du ControlNet ici) serait détruit
+avant même d'obtenir un gain mesurable sur le résidu final.
+
+### Verdict
+
+**Dilatation/flou du masque en pré-traitement : piste ÉCARTÉE, à tous les
+niveaux testés.** Le goulot d'étranglement principal n'est pas seulement
+la faible couverture du masque à l'entrée de l'encodeur (ce que corrige la
+dilatation) mais la dilution progressive de TOUTE différenciation à travers
+la profondeur du réseau (confirmée deux fois maintenant : sur le masque
+synthétique massif dans la section précédente, et ici sur des masques
+réels dilatés) — un pré-traitement du masque ne peut agir que sur le
+premier facteur, marginal comparé au second, et le fait au prix d'une perte
+de précision spatiale qui va à l'encontre de l'usage recherché.
+
+**Conséquence : pas de piste de correctif à court terme (loss, pré-traitement)
+qui tienne.** Les deux angles peu coûteux disponibles (repondération de la
+loss sous le masque, pré-traitement du masque) sont maintenant tous deux
+écartés par des mesures directes. Il ne reste que des pistes plus lourdes :
+
+1. **Refonte de l'architecture de `controlnet_cond_embedding`** pour ce
+   type de conditionnement épars — moins de stride agressif, ou une
+   branche à plus haute résolution préservée plus longtemps (type
+   T2I-Adapter, conçu justement pour des conditionnements structurés/épars).
+2. **S'attaquer à la dilution en aval**, pas seulement à l'amont : un terme
+   de loss contrastif explicite (déjà documenté plus haut) qui pénalise
+   directement la similarité du résidu final entre échantillons à masques
+   différents — cible directement le point 4 de la section précédente et le
+   point 1 de cette section (la dilution dans les blocs copiés de l'UNet),
+   plutôt que d'espérer qu'un signal d'entrée plus fort suffise à survivre
+   au trajet.
+3. Combiner 1 et 2 reste probablement nécessaire — rien dans les données
+   accumulées jusqu'ici ne suggère qu'une seule de ces deux pistes, seule,
+   suffira.
+
+Script réutilisable : `diagnostics/probe_mask_dilation_blur.py`. Heatmaps
+et montages de preuve : `diagnostics/mask_dilation_probe_outputs/*.png`,
+`diagnostics/cond_embedding_probe_outputs/dilation_strongest.png`,
+`diagnostics/cond_embedding_probe_outputs/blur_strongest.png`.
+
+Pas de test complémentaire `eval_checkpoint.py` (point 4 de la consigne) —
+les résultats de corrélation ci-dessus sont déjà suffisamment nets et
+négatifs (delta quasi nul sur le résidu final) pour ne pas justifier le
+coût d'un chargement de pipeline SDXL supplémentaire ; une évaluation
+visuelle n'aurait pas pu montrer une différenciation que la mesure
+quantitative, plus sensible, ne détecte déjà pas.
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
