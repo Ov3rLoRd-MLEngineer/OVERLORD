@@ -105,3 +105,56 @@ maintenant.
   et conditionnée par un domain gap "confirmé significatif" qui n'a pas pu
   être mesuré.
 - Aucune modification du pipeline de production.
+
+## 6. Suite (2026-07-29, même journée) — DiffDoctor bloqué à son tour, même famille de problème
+
+Vérification en profondeur demandée avant tout téléchargement de poids
+(`ad_pytorch_model.bin`, via git-lfs). Lecture directe du code
+(`ad_inference.py`), pas seulement du README.
+
+**Le détecteur d'artefacts DiffDoctor est un fine-tune de `nvidia/mit-b5`
+(backbone SegFormer-B5, NVIDIA/NVlabs).** `ad_inference.py` instancie
+d'abord `SegformerForSemanticSegmentation.from_pretrained("nvidia/mit-b5")`
+(télécharge les poids NVIDIA pour construire l'architecture), remplace la
+tête de classification, puis charge `ad_pytorch_model.bin` par-dessus
+(`load_state_dict`) — le checkpoint final est donc un **dérivé direct** des
+poids SegFormer de NVIDIA, pas un modèle entraîné from scratch.
+
+- **Licence du backbone** (`NVlabs/SegFormer`, fichier `LICENSE` lu
+  directement) : *NVIDIA Source Code License*, section 3.3 — **"The Work
+  and any derivative works thereof only may be used or intended for use
+  non-commercially... 'non-commercially' means for research or evaluation
+  purposes only."** Section 3.2 précise explicitement que cette limitation
+  se propage aux œuvres dérivées.
+- **Conséquence** : le tag `MIT` du dépôt `ali-vilab/DiffDoctor` couvre
+  vraisemblablement le **code** (scripts d'inférence/entraînement), mais
+  **pas** les poids `ad_pytorch_model.bin` eux-mêmes, qui restent dérivés
+  d'un modèle NVIDIA à usage non-commercial — même schéma que MeshGraphormer/
+  MANO (code MIT, poids restreints), découvert dans la même journée sur un
+  candidat différent. Ce n'est pas une lecture certaine à 100% (DiffDoctor
+  ne clarifie pas explicitement ce point dans son propre README), mais le
+  risque est du même ordre que le blocage MANO et mérite la même prudence.
+- **Nuance par rapport au cas MANO** : ici, aucun enregistrement personnel
+  n'est requis (les poids `nvidia/mit-b5` sont librement téléchargeables),
+  et le texte de la licence NVIDIA autorise explicitement l'usage
+  *"research or evaluation purposes"* — un test zero-shot ponctuel pour
+  trancher un domain gap pourrait plausiblement entrer dans ce cadre,
+  contrairement à une intégration en production. **Décision volontairement
+  laissée à l'utilisateur** : la limite entre "évaluation" et "en vue d'une
+  intégration produit" est une question de jugement, pas une lecture
+  technique tranchée.
+
+**Conforme à la consigne de session : arrêt ici, pas de 4e alternative
+cherchée sans validation.** Aucun poids téléchargé (ni `nvidia/mit-b5` ni
+`ad_pytorch_model.bin`), aucune inférence lancée. GPU vérifiés avant
+l'analyse (5080 à 64%/15.9 Go — Control-LoRA en cours, non touchée ; 5060 Ti
+libre, non sollicitée puisqu'aucun calcul n'a été lancé).
+
+Les trois candidats audités ce jour-là (HADM, HandRefiner, DiffDoctor)
+présentent chacun un blocage de nature différente : aucune licence (HADM),
+dépendance à enregistrement personnel non-commercial (HandRefiner/MANO), et
+dépendance probable à un backbone non-commercial sans enregistrement
+(DiffDoctor/SegFormer-NVIDIA). Aucune 4e piste n'a été recherchée cette
+session — à décider avec l'utilisateur : valider l'usage "évaluation" de
+DiffDoctor tel quel, contacter un auteur pour clarification, ou explorer
+d'autres candidats.
