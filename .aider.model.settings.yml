@@ -1,0 +1,9 @@
+# Duplique de ~/.aider.model.settings.yml (config globale) -- au cas ou la
+# presence d'un .aider.conf.yml local au depot change la resolution du
+# fichier de model-settings. Meme plafond, memes raisons (cf. config
+# globale et DOCS/MD/SETUP_AGENT_LOCAL_AIDER_QWEN3CODER.md etape 1) :
+# sans num_ctx explicite, Aider peut demander jusqu'au defaut du modele
+# (262144 tokens), qui ne tient pas en VRAM sur la RTX 5060 Ti 16 Go.
+- name: ollama_chat/qwen3-coder:30b-a3b-q4_K_M
+  extra_params:
+    num_ctx: 32768

@@ -1,0 +1,18 @@
+# Config Aider locale au depot OVERLORD (surcharge la config globale
+# ~/.aider.conf.yml quand Aider est lance depuis ce depot -- cf. aider --help,
+# "search for .aider.conf.yml in git root, cwd or home directory").
+#
+# Objectif : que qwen3-coder ait acces aux memes conventions de base que
+# Claude Code (regles GPU, ast.parse() obligatoire, py -3.12, worktrees...)
+# sans avoir a les rappeler a chaque tache -- voir
+# DOCS/MD/SETUP_AGENT_LOCAL_AIDER_QWEN3CODER.md pour le contexte complet.
+#
+# model: duplique de la config globale (au cas ou ce fichier la remplace au
+# lieu de la completer -- pas garanti sans ce doublon).
+model: ollama_chat/qwen3-coder:30b-a3b-q4_K_M
+
+# Fichiers toujours inclus en lecture seule (jamais modifies par l'agent) --
+# equivalent a --read CLAUDE.md --read DOCS/INDEX.md passe a chaque lancement.
+read:
+  - CLAUDE.md
+  - DOCS/INDEX.md
