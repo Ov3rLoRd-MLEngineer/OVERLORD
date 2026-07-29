@@ -129,3 +129,16 @@ Index des fichiers les plus souvent recherchés en début de session, pour évit
 
 - **Ne jamais outrepasser une consigne d'occupation GPU établie.** Si une carte est indiquée comme occupée (test/entraînement en cours), c'est normalement voulu — vérifie `nvidia-smi` avant toute action GPU, puis adapte-toi en utilisant la carte libre plutôt que de forcer un partage de ressource ou d'attendre sans solution. Ne jamais tuer/redémarrer un process GPU pour libérer de la place sans consigne explicite de l'utilisateur (cf. session 2026-07-28 : deux process qui semblaient orphelins via `nvidia-smi` étaient en fait des zombies laissés par un crash antérieur — leur suppression était correcte mais restait une décision utilisateur, pas une initiative à prendre seul).
 - **Epingler un rendu Blender à une carte précise** : le moteur Workbench (contexte OpenGL par défaut du système) n'est PAS pilotable — testé le 2026-07-29, la préférence Windows "GPU par application" (registre `UserGpuPreferences`) ne redirige pas ce contexte, le rendu reste sur la RTX 5080 (carte d'affichage principale) quoi qu'il arrive. Utiliser le moteur **Cycles** à la place : il expose une liste de devices CUDA/OptiX activables individuellement (`bpy.context.preferences.addons['cycles'].preferences.devices`, activer uniquement ceux dont le nom correspond à la carte visée) — seule méthode fiable trouvée sur cette machine. Voir `handsegnet/blender3d_prototype/drive_from_landmarks.py::configure_cycles_gpu` pour une implémentation de référence.
+
+## Traçage du temps GPU
+
+Pour tout run de calcul **substantiel** (entraînement, génération batch >50 images, test de diagnostic >15min — PAS les appels VLM/grounding ponctuels, trop nombreux et peu significatifs individuellement), ajoute une ligne à `gpu_usage_log.csv` (racine du dépôt, créer si absent sinon append) :
+
+```
+date_iso,gpu,duree_minutes,module,description,cout_estime_usd,estime_retroactif
+2026-07-28T14:30:00,RTX5080,95,footsegnet-controlnet,"test poids x50 mode collapse",1.90,false
+```
+
+`cout_estime_usd` = `duree_minutes/60 × tarif horaire de référence` — les RTX 5080/5060 Ti locales coûtent 0$ en pratique, c'est un équivalent-coût cloud à but de comparaison uniquement (tarifs de référence : A100 ~1,20$/h, H100 ~2,40$/h). Consultable via `py -3.12 gpu_cost_estimate.py` (cumul par GPU/module + équivalent-coût total).
+
+`estime_retroactif` : `false` pour une ligne loguée au moment où le run a tourné (durée connue avec certitude) ; `true` pour une ligne reconstituée après coup depuis des traces indirectes (logs de job scratch, dates de fichiers, throughput extrapolé d'un autre run) — toujours préciser dans `description` la méthode et la marge d'incertitude plutôt que de présenter une durée reconstituée comme une mesure directe.
