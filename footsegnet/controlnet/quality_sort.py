@@ -35,6 +35,7 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
+from scipy import ndimage
 
 import sys
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -58,6 +59,17 @@ EXPLOITABLE, A_CORRIGER, A_EXCLURE = "exploitable", "a_corriger", "a_exclure"
 DEFAULT_MIN_PCT = 0.5    # en dessous : masque suspicieusement petit (occlusion probable)
 DEFAULT_MAX_PCT = 20.0   # au dessus : masque suspicieusement large (bbox mal centrée)
 
+# Seuil de fragmentation (composante connexe minoritaire / total, en %) —
+# calibré manuellement sur 22 cas ambigus de route_auto_sort.txt (2026-07-27,
+# cf. tests/footsegnet_fragmentation_ambiguous/) : <=26% couvre a la fois les
+# fragments parasites francs (ex. footsegnet_00401 : 0.4%) et les captures
+# partielles d'un second pied/chaussure reel (ex. footsegnet_00494 : 9.2%,
+# footsegnet_00588 : 25.7% malgre son ratio eleve - sliver fin, pas une
+# chaussure complete) ; >26% correspond dans tous les cas observes a deux
+# pieds/chaussures legitimes et distincts (13/13 cas au-dessus de 19%, sauf
+# l'exception 00588 justement sous ce seuil de 26%).
+FRAGMENTATION_MINORITY_RATIO_MAX = 26.0
+
 
 def _latest_provenance_rows() -> dict[str, dict]:
     """Dernière ligne de _provenance.csv par image (une image peut avoir
@@ -79,6 +91,29 @@ def _mask_pct_from_file(mask_path: Path) -> float | None:
         return None
 
 
+def _mask_fragmentation(mask_path: Path) -> tuple[int, float] | None:
+    """(nombre de composantes connexes, % de la plus petite composante par
+    rapport au total de pixels blancs) — scipy.ndimage.label, même convention
+    que agents/segnet_premask.py::clean_mask. None si illisible ou masque
+    vide. Un ratio minoritaire faible signale soit un fragment parasite franc
+    (ex. footsegnet_00401.png : rayure de pantalon, 0.4%), soit une capture
+    partielle d'un second pied/chaussure réel (ex. footsegnet_00494.png :
+    sliver fin, 9.2%) — les deux sont des défauts réels à corriger. Au-delà
+    de FRAGMENTATION_MINORITY_RATIO_MAX, les cas observés sont deux pieds/
+    chaussures légitimes et distincts (calibré manuellement, cf. constante)."""
+    try:
+        arr = (np.array(Image.open(mask_path).convert("L")) > 127).astype(np.uint8)
+        labeled, n = ndimage.label(arr)
+        if n < 2:
+            return n, 0.0
+        sizes = ndimage.sum(arr, labeled, index=range(1, n + 1))
+        total = float(sizes.sum())
+        minority_ratio = float(sizes.min()) / total * 100 if total > 0 else 0.0
+        return n, minority_ratio
+    except Exception:
+        return None
+
+
 def classify(stem: str, provenance: dict, min_pct: float, max_pct: float) -> tuple[str, str, dict]:
     """Retourne (catégorie, raison, détails) pour une image du dataset raw."""
     manual_mask = MASKS_RAW_DIR / f"{stem}.png"
@@ -87,8 +122,17 @@ def classify(stem: str, provenance: dict, min_pct: float, max_pct: float) -> tup
     if manual_mask.exists():
         pct = _mask_pct_from_file(manual_mask)
         pct_txt = f"{pct:.2f}%" if pct is not None else "?"
-        return EXPLOITABLE, f"masque manuel (vérité terrain), couverture {pct_txt}", \
-            {"mask_source": "manual", "mask_pct": pct, "box_source": ""}
+        details = {"mask_source": "manual", "mask_pct": pct, "box_source": ""}
+        frag = _mask_fragmentation(manual_mask)
+        if frag is not None:
+            n_components, minority_ratio = frag
+            if n_components >= 2 and minority_ratio <= FRAGMENTATION_MINORITY_RATIO_MAX:
+                return A_CORRIGER, f"masque manuel fragmenté en {n_components} composantes " \
+                    f"connexes, composante minoritaire = {minority_ratio:.1f}% du total " \
+                    "(fragment parasite ou capture partielle probable) — à vérifier avant usage", \
+                    {**details, "components": n_components,
+                     "minority_ratio_pct": round(minority_ratio, 1)}
+        return EXPLOITABLE, f"masque manuel (vérité terrain), couverture {pct_txt}", details
 
     row = provenance.get(f"{stem}.png")
 
@@ -107,6 +151,17 @@ def classify(stem: str, provenance: dict, min_pct: float, max_pct: float) -> tup
             return A_EXCLURE, "inférence SAM échouée sur la bbox trouvée", details
         if status != "OK":
             return A_EXCLURE, f"statut de génération inattendu ({status})", details
+
+        frag = _mask_fragmentation(auto_mask)
+        if frag is not None:
+            n_components, minority_ratio = frag
+            if n_components >= 2 and minority_ratio <= FRAGMENTATION_MINORITY_RATIO_MAX:
+                return A_CORRIGER, f"masque fragmenté en {n_components} composantes connexes, " \
+                    f"composante minoritaire = {minority_ratio:.1f}% du total (fragment " \
+                    "parasite ou capture partielle probable) — à vérifier avant usage (même si " \
+                    "la couverture globale est dans la plage plausible)", \
+                    {**details, "components": n_components,
+                     "minority_ratio_pct": round(minority_ratio, 1)}
 
         if box_source.startswith("qwenvl_grounding"):
             return A_CORRIGER, f"bbox obtenue par fallback grounding VLM ({box_source}) " \
@@ -130,6 +185,16 @@ def classify(stem: str, provenance: dict, min_pct: float, max_pct: float) -> tup
         details = {"mask_source": "auto", "mask_pct": pct, "box_source": "unknown"}
         if pct is None:
             return A_EXCLURE, "pré-masque illisible", details
+        frag = _mask_fragmentation(auto_mask)
+        if frag is not None:
+            n_components, minority_ratio = frag
+            if n_components >= 2 and minority_ratio <= FRAGMENTATION_MINORITY_RATIO_MAX:
+                return A_CORRIGER, f"masque fragmenté en {n_components} composantes connexes, " \
+                    f"composante minoritaire = {minority_ratio:.1f}% du total (fragment " \
+                    "parasite ou capture partielle probable) — à vérifier avant usage " \
+                    "(provenance non tracée)", \
+                    {**details, "components": n_components,
+                     "minority_ratio_pct": round(minority_ratio, 1)}
         if pct < min_pct or pct > max_pct:
             return A_CORRIGER, f"provenance non tracée (masque pré-existant), couverture " \
                 f"hors plage plausible ({pct:.2f}%)", details
