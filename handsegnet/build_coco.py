@@ -22,6 +22,11 @@
 # Usage :
 #   py -3.12 build_coco.py
 #   py -3.12 build_coco.py --val-ratio 0.15 --split-seed 42
+#
+# Exclusion sémantique (pas "masque vide") : dataset\EXCLUDED_STEMS.txt liste
+# les stems à exclure pour une raison documentée (ex. collapse mirroring —
+# cf. LIMITATIONS_CONNUES.md sur main) alors même que leur masque annoté est
+# valide et non vide, donc non filtrable par le contrôle "masque vide" seul.
 
 import argparse
 import json
@@ -46,6 +51,7 @@ RAW_MASKS  = PROJECT_ROOT / "dataset" / "masks_raw"
 IMAGES_DIR = PROJECT_ROOT / "dataset" / "images"
 MASKS_DIR  = PROJECT_ROOT / "dataset" / "masks"
 ANNOT_DIR  = PROJECT_ROOT / "dataset" / "annotations"
+EXCLUDED_STEMS_FILE = PROJECT_ROOT / "dataset" / "EXCLUDED_STEMS.txt"
 
 CATEGORY = {"id": 1, "name": "hand", "supercategory": "body_part"}
 
@@ -155,16 +161,41 @@ def augment_rotate(img: Image.Image, mask_bin: np.ndarray, angle: float,
 
 # ── Construction ─────────────────────────────────────────────────────────────
 
+def load_excluded_stems(path: Path = EXCLUDED_STEMS_FILE) -> set[str]:
+    """Charge les stems exclus pour une raison sémantique (ex. collapse
+    mirroring documenté dans LIMITATIONS_CONNUES.md sur main) — distinct du
+    filtre "masque vide" appliqué dans build_split_json. Un masque non-vide
+    ne suffit pas à justifier l'inclusion des stems listés ici."""
+    if not path.exists():
+        return set()
+    stems = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stem = line.split("#", 1)[0].strip()
+        if stem:
+            stems.add(stem)
+    return stems
+
+
 def collect_pairs() -> list[tuple[Path, Path]]:
-    """Retourne les paires (image, masque) dont l'annotation existe et n'est pas vide."""
+    """Retourne les paires (image, masque) dont l'annotation existe et n'est pas
+    vide, en excluant les stems listés dans EXCLUDED_STEMS.txt (exclusion
+    sémantique, ex. collapse mirroring — pas un critère "masque vide/invalide")."""
+    excluded = load_excluded_stems()
     pairs = []
+    skipped_excluded = 0
     exts = {".png", ".jpg", ".jpeg", ".webp"}
     for img_path in sorted(RAW_IMAGES.iterdir()):
         if img_path.suffix.lower() not in exts or img_path.name.startswith("_"):
             continue
+        if img_path.stem in excluded:
+            skipped_excluded += 1
+            continue
         mask_path = RAW_MASKS / f"{img_path.stem}.png"
         if mask_path.exists():
             pairs.append((img_path, mask_path))
+    if skipped_excluded:
+        print(f"[build_coco] {skipped_excluded} stem(s) exclu(s) (raison sémantique, "
+              f"cf. dataset/EXCLUDED_STEMS.txt) : {sorted(excluded)}")
     return pairs
 
 

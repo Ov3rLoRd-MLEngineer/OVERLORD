@@ -199,8 +199,9 @@ def evaluate(sam, loader, device, use_bf16) -> float:
 def train(args) -> None:
     if not torch.cuda.is_available():
         print(f"[{PROJECT}] WARN : CUDA indisponible — entraînement CPU (très lent)")
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    use_bf16 = device == "cuda"
+    device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
+    use_bf16 = device.startswith("cuda")
+    print(f"[{PROJECT}] Device : {device}")
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
@@ -280,5 +281,7 @@ if __name__ == "__main__":
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--seed",         type=int,   default=1337)
     parser.add_argument("--resume",       default=None)
+    parser.add_argument("--device",       default=None,
+                        help="cuda:0 / cuda:1 / cpu (défaut : auto-détection, cuda:0 si dispo)")
     args = parser.parse_args()
     train(args)
