@@ -33,6 +33,12 @@ __pycache__/
 # contenu reel, recree a la demande, ne doit jamais etre commite.
 **/dataset/_review_manual/
 
+# Dossiers de liens physiques jetables (prepare_quality_review_folders.py,
+# source quality_report.json) — memes raisons que ci-dessus.
+**/dataset/_review_manual_fragmented/
+**/dataset/_review_auto_fragmented/
+**/dataset/_review_auto_other/
+
 # Exception ciblee a **/dataset/premasks/ (ligne 12) : ce script et son
 # README sont du code reutilisable, pas des donnees generees -- doivent
 # rester suivis. Scope volontairement limite a footsegnet/ (pas **/) pour ne
@@ -45,6 +51,7 @@ __pycache__/
 footsegnet/dataset/premasks/*
 !footsegnet/dataset/premasks/README.md
 !footsegnet/dataset/premasks/prepare_review_folder.py
+!footsegnet/dataset/premasks/prepare_quality_review_folders.py
 
 # Sorties de test generees (memes raisons)
 tests/bottes_generiques/dataset/
