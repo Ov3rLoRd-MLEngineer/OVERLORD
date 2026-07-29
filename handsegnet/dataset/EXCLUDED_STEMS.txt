@@ -1,0 +1,14 @@
+# Stems exclus du build COCO (handsegnet/build_coco.py) pour une raison
+# SEMANTIQUE, pas parce que leur masque serait vide ou invalide. Un masque
+# non-vide ne suffit PAS a justifier l'inclusion des stems listes ici.
+#
+# Reference : LIMITATIONS_CONNUES.md (branche main), section "Mains
+# jointes/qui se touchent dans une composition symetrique" -> collapse
+# mirroring (le modele hallucine un seul motif decoratif symetrique plutot
+# que deux mains distinctes et anatomiquement coherentes).
+#
+# Format : un stem par ligne (nom de fichier sans extension), '#' pour
+# commentaire (fin de ligne ou ligne entiere).
+
+handsegnet_00137  # collapse mirroring confirme, exclu du jeu d'entrainement
+handsegnet_00167  # collapse mirroring confirme le 2026-07-29 (masque manuel : fusion quasi totale des doigts, aucun pouce distinguable)

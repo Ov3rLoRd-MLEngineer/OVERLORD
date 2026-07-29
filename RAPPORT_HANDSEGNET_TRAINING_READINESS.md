@@ -63,7 +63,7 @@ split aléatoire) et **supprimés** : c'étaient des résidus du build v0 laiss�
 mauvais dossier de split, sans impact sur le manifeste JSON lui-même mais qui auraient
 pollué un futur audit d'intégrité. Après nettoyage : 0 orphelin, 0 anomalie.
 
-### handsegnet_00137 — la prémisse "masque vide" ne se vérifie pas
+### handsegnet_00137 — la prémisse "masque vide" ne se vérifie pas (mise à jour : exclu quand même, pour une autre raison)
 
 Vérification demandée sur `handsegnet_00137` : **son masque n'est pas vide**. Inspection
 visuelle directe (image source + masque) : il s'agit de deux mains jointes (pose
@@ -72,16 +72,22 @@ cohérente avec la photo. `_provenance.csv` indique un score SAM initial bas
 (`sam_score=0.304`, `qwenvl_grounding_multi(2)`, `iou_manual` vide donc jamais
 re-vérifié manuellement), ce qui explique probablement pourquoi cette image avait été
 signalée comme suspecte — mais le masque final dans `masks_raw/` n'est ni vide ni
-manifestement dégénéré. `build_coco.py` ne l'a donc **pas filtré** (aucun message
-"masque vide, ignoré" dans la sortie), et l'image apparaît normalement dans
-`instances_train.json` avec ses 6 variantes augmentées.
-**Recommandation : ne pas l'exclure automatiquement** sur la base de cette
-vérification — si une exclusion est toujours souhaitée, ce serait un choix éditorial
-(faible confiance SAM d'origine) plutôt qu'une correction de bug, et nécessiterait une
-review manuelle via `annotate.py --by-confidence` plutôt qu'un filtre automatique.
+manifestement dégénéré.
 Scan complet de `masks_raw/` (322 fichiers) : **0 masque réellement vide** (0 pixel
 non-nul), 50 masques à faible couverture (<2%, plausible pour des mains partiellement
 hors-cadre) — aucun cas de masque à 0%.
+
+**Correction (2026-07-29, session suivante) : le critère "masque non vide" n'était pas
+le bon test.** `handsegnet_00137` est documenté dans `LIMITATIONS_CONNUES.md` (branche
+main) comme cas de **collapse mirroring** (le modèle hallucine un seul motif décoratif
+symétrique plutôt que deux mains anatomiquement distinctes sur une composition à forte
+symétrie bilatérale) — une raison sémantique, orthogonale à la validité technique du
+masque. `handsegnet_00167` a été requalifié dans la même catégorie après vérification
+de son masque manuel (fusion quasi totale des doigts, aucun pouce distinguable sur les
+deux mains — voir PR #31). `build_coco.py` exclut désormais explicitement les deux via
+`handsegnet/dataset/EXCLUDED_STEMS.txt` (nouveau fichier, un stem exclu par ligne,
+mécanisme réutilisable pour tout futur cas de collapse mirroring découvert) —
+voir §1ter pour le rebuild correspondant.
 
 ### Point d'attention — diversité réelle (mise à jour)
 
@@ -93,6 +99,36 @@ frontal / 4.5% profil / 0.4% low-angle, sur un lot de 224 images) reste antérie
 set final à 322 images et n'a pas été régénéré dans cette session — à relancer
 (`agents/dataset_diversity_stats.py`) si un diagnostic de biais d'angle est nécessaire
 après un premier run.
+
+## 1ter. Rebuild avec exclusion sémantique (2026-07-29, session suivante)
+
+`build_coco.py` corrigé : `collect_pairs()` charge désormais
+`handsegnet/dataset/EXCLUDED_STEMS.txt` (`load_excluded_stems()`) et exclut ces stems
+**avant** le filtre "masque vide" existant — les deux critères sont indépendants et
+un masque non-vide ne suffit plus à garantir l'inclusion. Fichier d'exclusion
+initialisé avec `handsegnet_00137` et `handsegnet_00167` (collapse mirroring, cf.
+§ ci-dessus et `LIMITATIONS_CONNUES.md` sur main) ; mécanisme réutilisable en
+ajoutant simplement une ligne pour tout futur cas similaire, sans retoucher au code.
+
+Rebuild relancé (`py -3.12 build_coco.py`, mêmes défauts que le rebuild précédent) :
+
+```
+[build_coco] 2 stem(s) exclu(s) (raison sémantique, cf. dataset/EXCLUDED_STEMS.txt) : ['handsegnet_00137', 'handsegnet_00167']
+[build_coco] 320 paires — train=288 val=32
+[build_coco] train : 288 flips horizontaux ajoutés
+[build_coco] train : 1152 rotations ±15° ajoutées
+[build_coco] instances_train.json : 1728 images, 1728 annotations
+[build_coco] instances_val.json   : 32 images, 32 annotations
+```
+
+**Nouveau total réel : 1728 train + 32 val = 1760 images** (320 uniques × ~5.5 en
+moyenne, contre 1740/32 = 1772 avant exclusion — écart de 12 images = 2 stems de
+base × 6 variantes, cohérent). `val` reste à 32 malgré l'exclusion de 2 stems sur 322
+car aucun des deux stems exclus n'était tombé dans le split val du seed 1337 (le split
+aléatoire porte sur les 320 restants, `max(1, int(320*0.1))` = 32 inchangé).
+
+**Ce total (1728/32) remplace 1740/32 comme référence pour le premier run** —
+mise à jour de la checklist en §6 en conséquence.
 
 ## 2. Scaffold d'entraînement — prêt, structurellement identique à FootSegNet
 
@@ -174,12 +210,14 @@ avant/après via `nvidia-smi`).
 
 ## 6. Checklist — prêt à lancer dès que la 5080 se libère
 
-- [x] Dataset reconstruit sur l'état complet de l'annotation (1740 train / 32 val,
-      322 images uniques, 0 anomalie, orphelins v0 nettoyés)
+- [x] Dataset reconstruit sur l'état complet de l'annotation (**1728 train / 32 val**
+      après exclusion sémantique — 320 images uniques utilisables sur 322 annotées,
+      0 anomalie, orphelins v0 nettoyés — voir §1ter, remplace le 1740/32 initial)
 - [x] `build_coco.py` réexécuté avec succès, COCO valide et re-vérifié (RLE, bbox,
       dimensions, correspondance disque)
-- [x] `handsegnet_00137` vérifié individuellement — pas vide, inclus normalement (voir
-      §1bis pour le détail et la recommandation)
+- [x] `handsegnet_00137` et `handsegnet_00167` **exclus** via
+      `dataset/EXCLUDED_STEMS.txt` (collapse mirroring documenté dans
+      `LIMITATIONS_CONNUES.md` — voir §1bis/§1ter pour le détail)
 - [x] `train.py` scaffold fonctionnel, bugs connus déjà corrigés
 - [x] Hyperparamètres de départ identiques à la référence prod FootSegNet — aucun
       ajustement à faire avant le premier run
