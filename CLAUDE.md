@@ -55,6 +55,16 @@ ComfyUI workflows are stored as exported API-format JSON at the repo root (e.g. 
 
 Numbered/lettered `_PIPELINE_PATCHED*`, `*_v2`, `*_v3` files and the many root-level `patch_*.txt` / `PATCH_*.txt` files are point-in-time patch outputs kept for traceability — treat the highest version number as current, older ones as history, not as alternatives to pick between.
 
+**Prompt-upsampling ban list (hallucination guard)** : le seul système d'upsampling de prompt de type TIPO/DanTagGen du dépôt est le node `AILab_QwenVL_PromptEnhancer` (`custom_system_prompt`, widget index 7 — vérifié dans `AILab_QwenVL_PromptEnhancer.py::process()`, `base_instruction = custom_system_prompt.strip() or ...`), actuellement en `mode: 4` (bypass) partout où il apparaît.
+
+Fichier **réellement actif** : `Advanced_QwenVL_V35.json` (racine, sans suffixe — tracké en git depuis le commit initial) est chargé en dur par `agents/workflow_controller.py` (`ADVANCED_WF`), exécutable en CLI manuel (`python agents/workflow_controller.py --pass ...`, hors chaîne automatisée maestro/supervisor). C'est ce fichier qui a reçu la section "Ban List" (`holding|object|cup|phone|cellphone|camera|bottle|weapon|gun`, ajoutée le 2026-07-30) — persistera tant qu'il n'est pas régénéré depuis l'UI ComfyUI (auquel cas re-appliquer la section). **Non câblé** dans le générateur automatique de HandSegNet (`generate_dataset.py` construit le prompt directement depuis les wildcards → `CLIPTextEncode`, sans étage LLM).
+
+`Advanced_QwenVL_V35_PIPELINE_PATCHED_v3.json` (patché le 2026-07-29, AVANT la correction de portée ci-dessus) n'est référencé nulle part dans le code — fix appliqué au mauvais fichier initialement, corrigé.
+
+`Advanced_QwenVL_V35_ORIGINAL.json` — comparaison nœud-par-nœud confirmée identique à `Advanced_QwenVL_V35.json` sur les 208 nœuds SAUF ce même node QwenVL (ban list absente) : c'est le snapshot pré-patch du même pipeline, pas un pipeline différent. Conservé à la demande explicite de l'utilisateur (base de référence pour tests en cours) — **pas encore protégé par la ban list**, décision volontairement laissée à l'utilisateur plutôt qu'appliquée unilatéralement (cf. rapport de session 2026-07-30).
+
+`_PIPELINE_PATCHED.json`/`_PATCHED_v2.json`/`_PATCHED_v3.json` : candidats confirmés à la suppression par l'utilisateur (non référencés dans le code) — pas supprimés, en attente d'une action explicite de suppression.
+
 ### Decisions that constrain future changes
 Many of these are logged formally in `ADR_OVERLORD.md` — read it before changing sampler defaults, storage strategy, config precedence, or seed strategy. The highlights, some superseded by later session logs (`CONTEXTE_OVERLORD_V2xx.md`, latest is highest number):
 - `taesdxl` is the VAE in use (the real `sdxl_vae.safetensors` was corrupted; ADR-002) — don't swap this without checking whether it's been re-downloaded.
@@ -65,6 +75,8 @@ Many of these are logged formally in `ADR_OVERLORD.md` — read it before changi
 - Image archiving uses `shutil.copy2`, never `rename`/move, so ComfyUI's own `output/` folder is never emptied by the pipeline (ADR-007).
 - SAM-based masking: images must be composited onto a white background before `SAMPreprocessor` — passing raw RGBA silently fails in ~0.02s with no output. Mask convention is **black = regenerate, white = preserve** (confirmed via ComfyUI MaskEditor).
 - AnimateDiff must use `ADE_AnimateDiffLoaderGen1` (Gen2 is unavailable on this machine).
+
+`LIMITATIONS_CONNUES.md` catalogs known generative-model limitations (e.g. bilateral-symmetry hand compositions collapsing into a mirrored decorative motif) that are **not pipeline bugs** — check it before reopening an investigation into a "failed" image, so the same non-actionable case doesn't get reprocessed every session.
 
 ### Session context docs
 `CONTEXTE_OVERLORD_V*.md` files (V150 through the current highest number) are session handoff notes — each captures in-progress bugs, what was just fixed, and next steps at the time it was written. When resuming multi-session work, read the **highest-numbered** one first; treat older ones as historical record only, since defaults and conventions get superseded (e.g. VAE, sampler, checkpoint choices evolve across sessions and are only trustworthy as of the date at the top of each file). `ADDENDUM_*.md` files are supplements meant to be read alongside a specific `CONTEXTE_*` file (named in the addendum's own header).
@@ -112,6 +124,11 @@ Index des fichiers les plus souvent recherchés en début de session, pour évit
 - À 90% : commence à conclure proprement — termine l'étape en cours, ne démarre rien de nouveau.
 - À 92% : arrête-toi complètement. Committe le travail en l'état (ou sauvegarde dans un état stable si un commit n'est pas pertinent), écris un résumé clair de où tu en es et ce qu'il reste à faire dans un fichier de handoff (ex. HANDOFF.md dans le worktree concerné).
 - Ne laisse jamais un fichier à moitié écrit, un commit incomplet, ou un process GPU orphelin pour gagner quelques % de marge supplémentaire.
+
+## Règles GPU (machine à 2 cartes : RTX 5080 + RTX 5060 Ti)
+
+- **Ne jamais outrepasser une consigne d'occupation GPU établie.** Si une carte est indiquée comme occupée (test/entraînement en cours), c'est normalement voulu — vérifie `nvidia-smi` avant toute action GPU, puis adapte-toi en utilisant la carte libre plutôt que de forcer un partage de ressource ou d'attendre sans solution. Ne jamais tuer/redémarrer un process GPU pour libérer de la place sans consigne explicite de l'utilisateur (cf. session 2026-07-28 : deux process qui semblaient orphelins via `nvidia-smi` étaient en fait des zombies laissés par un crash antérieur — leur suppression était correcte mais restait une décision utilisateur, pas une initiative à prendre seul).
+- **Epingler un rendu Blender à une carte précise** : le moteur Workbench (contexte OpenGL par défaut du système) n'est PAS pilotable — testé le 2026-07-29, la préférence Windows "GPU par application" (registre `UserGpuPreferences`) ne redirige pas ce contexte, le rendu reste sur la RTX 5080 (carte d'affichage principale) quoi qu'il arrive. Utiliser le moteur **Cycles** à la place : il expose une liste de devices CUDA/OptiX activables individuellement (`bpy.context.preferences.addons['cycles'].preferences.devices`, activer uniquement ceux dont le nom correspond à la carte visée) — seule méthode fiable trouvée sur cette machine. Voir `handsegnet/blender3d_prototype/drive_from_landmarks.py::configure_cycles_gpu` pour une implémentation de référence.
 
 ## Traçage du temps GPU
 
