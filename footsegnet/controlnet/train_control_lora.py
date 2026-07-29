@@ -192,6 +192,13 @@ def build_models(weight_dtype: torch.dtype, lora_rank: int):
     text_encoder, text_encoder_2 = pipe.text_encoder, pipe.text_encoder_2
     unet = pipe.unet
     noise_scheduler = pipe.scheduler
+    # scheduler DÉDIÉ à run_validation() : EulerDiscreteScheduler est stateful
+    # (set_timesteps() réécrit self.timesteps sur l'objet). Si run_validation()
+    # appelait set_timesteps(30, ...) sur noise_scheduler ci-dessus (le même
+    # objet utilisé par add_noise() dans la boucle d'entraînement), self.timesteps
+    # se retrouvait tronqué aux 30 valeurs d'inférence -> IndexError au step
+    # d'entraînement suivant (timestep introuvable dans la liste réduite).
+    val_scheduler = type(noise_scheduler).from_config(noise_scheduler.config)
 
     if VAE_PATH.exists():
         print(f"[train_control_lora] VAE dédié (pas taesdxl) : {VAE_PATH.name}")
@@ -224,7 +231,7 @@ def build_models(weight_dtype: torch.dtype, lora_rank: int):
         "tokenizer": tokenizer, "tokenizer_2": tokenizer_2,
         "text_encoder": text_encoder, "text_encoder_2": text_encoder_2,
         "vae": vae, "unet": unet, "controlnet": controlnet,
-        "noise_scheduler": noise_scheduler,
+        "noise_scheduler": noise_scheduler, "val_scheduler": val_scheduler,
     }
 
 
@@ -236,7 +243,8 @@ def run_validation(models, sample: dict, device, weight_dtype, output_dir: Path,
     d'entraînement, pour vérifier visuellement la cohérence de sortie —
     PAS une métrique quantitative, juste un contrôle qualité humain."""
     controlnet, unet, vae = models["controlnet"], models["unet"], models["vae"]
-    noise_scheduler = models["noise_scheduler"]
+    noise_scheduler = models["val_scheduler"]   # copie dédiée -- ne JAMAIS réutiliser
+                                                 # models["noise_scheduler"] ici (stateful, cf. build_models)
     was_training = controlnet.training
     controlnet.eval()
 
@@ -284,6 +292,47 @@ def run_validation(models, sample: dict, device, weight_dtype, output_dir: Path,
         controlnet.train()
 
 
+def _resolve_checkpoint_dir(output_dir: Path, resume_arg: str) -> Path:
+    if resume_arg != "latest":
+        ckpt_dir = Path(resume_arg)
+        if not ckpt_dir.exists():
+            raise FileNotFoundError(f"--resume-from-checkpoint introuvable : {ckpt_dir}")
+        return ckpt_dir
+    candidates = sorted(
+        output_dir.glob("checkpoint-*"),
+        key=lambda p: int(p.name.split("-")[-1]),
+    )
+    if not candidates:
+        raise FileNotFoundError(f"--resume-from-checkpoint latest : aucun checkpoint-* dans {output_dir}")
+    return candidates[-1]
+
+
+def _load_checkpoint(controlnet, output_dir: Path, resume_arg: str) -> int:
+    """Recharge les poids peft (LoRA + modules_to_save) d'un checkpoint sauvé par
+    save_pretrained() dans la boucle d'entraînement, et reprend le compteur de
+    steps depuis le nom du dossier (checkpoint-500 -> global_step=500).
+
+    Limitation acceptée : l'état de l'optimiseur (moments Adam) n'est pas
+    sauvegardé par save_pretrained()/ce script, donc il redémarre à zéro après
+    un resume -- pas bloquant pour reprendre un entraînement interrompu, juste
+    quelques steps de moins bonne convergence que si l'optimiseur avait été
+    préservé."""
+    from peft import set_peft_model_state_dict
+    from safetensors.torch import load_file
+
+    ckpt_dir = _resolve_checkpoint_dir(output_dir, resume_arg)
+    weights_path = ckpt_dir / "adapter_model.safetensors"
+    if not weights_path.exists():
+        raise FileNotFoundError(f"adapter_model.safetensors introuvable dans {ckpt_dir}")
+
+    state_dict = load_file(str(weights_path))
+    set_peft_model_state_dict(controlnet, state_dict)
+    global_step = int(ckpt_dir.name.split("-")[-1])
+    print(f"[train_control_lora] Reprise depuis {ckpt_dir} -> global_step={global_step} "
+          f"(etat optimiseur reinitialise, cf. limitation connue)")
+    return global_step
+
+
 # ── Boucle d'entraînement ─────────────────────────────────────────────────────
 
 def train(args: argparse.Namespace) -> None:
@@ -326,16 +375,32 @@ def train(args: argparse.Namespace) -> None:
                            # (RTX 5080 16GB : SDXL UNet + 2 text encoders + ControlNet+LoRA
                            # laissent peu de marge, cf. OOM observé sans ceci)
 
-    trainable_params = [p for p in controlnet.parameters() if p.requires_grad]
+    # LR distinct pour les modules_to_save (controlnet_cond_embedding, down_blocks,
+    # mid_block -- des "zero convolutions" pleine-resolution parties de zero-init)
+    # vs les deltas LoRA (ajustement fin de poids deja pre-entraines). Diagnostic
+    # du 2026-07-25 : un LR unique (1e-4) fait exploser les residus des
+    # modules_to_save des le premier checkpoint (std ~35-58 vs 0 en zero-init,
+    # deja mauvais a step 500, pas une derive progressive) -- les zero-convs du
+    # ControlNet original sont concues pour croitre lentement, pas pour un LR
+    # plus eleve. modules_to_save passe donc a un LR ~10x plus bas (pratique
+    # standard ControlNet ~1e-5), LoRA garde le LR "learning-rate" habituel.
+    lora_params = [p for n, p in controlnet.named_parameters() if p.requires_grad and "lora_" in n.lower()]
+    mts_params = [p for n, p in controlnet.named_parameters() if p.requires_grad and "lora_" not in n.lower()]
+    trainable_params = lora_params + mts_params
     n_trainable = sum(p.numel() for p in trainable_params)
-    print(f"[train_control_lora] Paramètres entraînables : {n_trainable:,}")
+    print(f"[train_control_lora] Paramètres entraînables : {n_trainable:,} "
+          f"(LoRA={sum(p.numel() for p in lora_params):,} @ lr={args.learning_rate}, "
+          f"modules_to_save={sum(p.numel() for p in mts_params):,} @ lr={args.modules_to_save_lr})")
 
     if args.use_8bit_adam:
         import bitsandbytes as bnb
         optimizer_cls = bnb.optim.AdamW8bit
     else:
         optimizer_cls = torch.optim.AdamW
-    optimizer = optimizer_cls(trainable_params, lr=args.learning_rate)
+    optimizer = optimizer_cls([
+        {"params": lora_params, "lr": args.learning_rate},
+        {"params": mts_params, "lr": args.modules_to_save_lr},
+    ])
 
     max_train_steps = args.max_train_steps or (
         math.ceil(len(dataset) / args.batch_size) * args.num_epochs
@@ -349,7 +414,11 @@ def train(args: argparse.Namespace) -> None:
     val_sample = dataset[0]   # échantillon fixe pour comparer les previews au fil de l'entraînement
 
     global_step = 0
+    if args.resume_from_checkpoint:
+        global_step = _load_checkpoint(accelerator.unwrap_model(controlnet), Path(args.output_dir), args.resume_from_checkpoint)
     running_loss = 0.0
+    running_mse = 0.0
+    running_reg = 0.0
     controlnet.train()
     print(f"[train_control_lora] Démarrage : {max_train_steps} steps, "
           f"batch_size={args.batch_size}, lr={args.learning_rate}, rank={args.lora_rank}")
@@ -402,21 +471,60 @@ def train(args: argparse.Namespace) -> None:
                     mid_block_additional_residual=mid_block_res_sample,
                 ).sample
 
-                loss = F.mse_loss(model_pred.float(), noise.float(), reduction="mean")
+                if args.mask_loss_weight != 1.0:
+                    # Correctif candidat (non valide) -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md :
+                    # la MSE non ponderee ne recompense pas le fait que le residu ControlNet
+                    # depende du contenu du masque (masque pied/chaussure tres eparse, 1-8% du
+                    # cadre -- son gradient est marginal face au reste de l'image). On sur-pondere
+                    # ici l'erreur de reconstruction precisement la ou le masque le designe
+                    # (redimensionne a la resolution latente, sans interpolation floue) pour forcer
+                    # le modele a "lire" le masque plutot qu'apprendre un motif moyen generique.
+                    mask_latent = F.interpolate(
+                        cond_values.mean(dim=1, keepdim=True).float(),
+                        size=noisy_latents.shape[-2:], mode="nearest",
+                    )
+                    weight_map = 1.0 + (args.mask_loss_weight - 1.0) * mask_latent
+                    mse_loss = ((model_pred.float() - noise.float()) ** 2 * weight_map).mean()
+                else:
+                    mse_loss = F.mse_loss(model_pred.float(), noise.float(), reduction="mean")
+                # Regularisation explicite sur la norme des residus ControlNet : diagnostic
+                # 2026-07-25 a montre que ni un LR bas (1e-5/1e-6) ni un clip de gradient
+                # serre (0.1) sur les modules_to_save n'empechent leur explosion -- la loss
+                # MSE seule recompense structurellement des residus de grande magnitude,
+                # quel que soit le rythme auquel on les y laisse arriver. Penalise donc
+                # directement la magnitude (norme L2 moyenne) des residus eux-memes.
+                reg_loss = sum(r.float().pow(2).mean() for r in down_block_res_samples) \
+                    + mid_block_res_sample.float().pow(2).mean()
+                loss = mse_loss + args.reg_weight * reg_loss
                 accelerator.backward(loss)
                 if accelerator.sync_gradients:
-                    accelerator.clip_grad_norm_(trainable_params, 1.0)
+                    # Clip separe : un clip global sur trainable_params (LoRA+modules_to_save
+                    # combines, 53M/19M params) dilue l'effet sur les modules_to_save (36
+                    # tenseurs) face aux 544 tenseurs LoRA -- la norme combinee est rarement
+                    # dominee par le petit groupe. Clip modules_to_save nettement plus serre
+                    # (zero-convs zero-init, cf. diagnostic 2026-07-25 : explosion des residus
+                    # deja a step 50-150 malgre LR reduit).
+                    accelerator.clip_grad_norm_(lora_params, 1.0)
+                    accelerator.clip_grad_norm_(mts_params, args.modules_to_save_clip_norm)
                 optimizer.step()
                 optimizer.zero_grad()
 
             if accelerator.sync_gradients:
                 global_step += 1
                 running_loss += loss.detach().item()
+                running_mse += mse_loss.detach().item()
+                running_reg += reg_loss.detach().item()
 
                 if global_step % args.log_every == 0:
                     avg_loss = running_loss / args.log_every
-                    print(f"[train_control_lora] step {global_step}/{max_train_steps}  loss={avg_loss:.4f}")
+                    avg_mse = running_mse / args.log_every
+                    avg_reg = running_reg / args.log_every
+                    print(f"[train_control_lora] step {global_step}/{max_train_steps}  "
+                          f"loss={avg_loss:.4f} (mse={avg_mse:.4f}, reg={avg_reg:.2f}, "
+                          f"reg*w={args.reg_weight * avg_reg:.4f})")
                     running_loss = 0.0
+                    running_mse = 0.0
+                    running_reg = 0.0
 
                 if args.validation_steps and global_step % args.validation_steps == 0 and accelerator.is_main_process:
                     run_validation(models, val_sample, device, weight_dtype, output_dir, global_step)
@@ -450,7 +558,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-samples", type=int, default=None,
                         help="Limite le dataset complet à N paires (hors --test-run)")
     parser.add_argument("--lora-rank", type=int, default=64)
-    parser.add_argument("--learning-rate", type=float, default=1e-4)
+    parser.add_argument("--learning-rate", type=float, default=1e-4,
+                        help="LR pour les deltas LoRA (ajustement de poids pre-entraines)")
+    parser.add_argument("--modules-to-save-lr", type=float, default=1e-5,
+                        help="LR pour les modules_to_save (zero-convs pleine-resolution, "
+                             "partent de zero-init -- doit rester bas, pas eleve, cf. "
+                             "diagnostic 2026-07-25 : explosion des residus a 1e-4)")
+    parser.add_argument("--modules-to-save-clip-norm", type=float, default=1.0,
+                        help="Clip de norme de gradient DEDIE aux modules_to_save (separe "
+                             "du clip LoRA a 1.0) -- diagnostic 2026-07-25 : un clip serre "
+                             "(0.1) seul aggrave l'explosion des residus, defaut remonte a "
+                             "1.0 (= pas de restriction supplementaire vs le clip LoRA)")
+    parser.add_argument("--reg-weight", type=float, default=0.0,
+                        help="Poids de la regularisation L2 sur la norme des residus "
+                             "ControlNet (down_block_res_samples + mid_block_res_sample) -- "
+                             "0.0 = desactivee. Diagnostic 2026-07-25 : ni LR bas ni clip "
+                             "serre n'empechent l'explosion des residus, cette regularisation "
+                             "cible directement la magnitude plutot que la vitesse d'y arriver.")
+    parser.add_argument("--mask-loss-weight", type=float, default=1.0,
+                        help="[CORRECTIF CANDIDAT, NON VALIDE -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md] "
+                             "Poids multiplicateur de la MSE dans la zone du masque de conditionnement "
+                             "(resize nearest a la resolution latente). 1.0 = desactive, comportement "
+                             "identique a avant ce correctif. Piste pour le mode collapse observe : "
+                             "sur-ponderer l'erreur de reconstruction sous le masque force le modele a "
+                             "le lire plutot qu'apprendre un residu generique independant du conditionnement.")
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--gradient-accumulation-steps", type=int, default=4)
     parser.add_argument("--num-epochs", type=int, default=10,
@@ -465,6 +596,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--log-every", type=int, default=10)
     parser.add_argument("--validation-steps", type=int, default=50)
     parser.add_argument("--checkpointing-steps", type=int, default=200)
+    parser.add_argument("--resume-from-checkpoint", default=None,
+                        help="Reprend l'entraînement depuis un checkpoint sauvé par "
+                             "--checkpointing-steps : chemin d'un dossier checkpoint-N, ou "
+                             "'latest' pour le plus récent trouvé dans --output-dir. "
+                             "Recharge les poids peft (LoRA + modules_to_save) et reprend "
+                             "global_step à N ; l'état de l'optimiseur repart de zéro.")
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
