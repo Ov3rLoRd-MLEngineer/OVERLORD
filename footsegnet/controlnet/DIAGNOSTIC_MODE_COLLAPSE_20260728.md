@@ -971,6 +971,152 @@ coût d'un chargement de pipeline SDXL supplémentaire ; une évaluation
 visuelle n'aurait pas pu montrer une différenciation que la mesure
 quantitative, plus sensible, ne détecte déjà pas.
 
+## Loss contrastive `--contrastive-weight` (2026-07-29) — faux positif confirmé, piste écartée
+
+Dernière piste peu coûteuse envisagée avant refonte d'architecture : plutôt
+que d'espérer une différenciation indirecte (MSE pondérée, dilatation du
+masque), pénaliser **directement** la similarité entre les résidus
+ControlNet de deux exemples à masques différents.
+
+### Implémentation
+
+Nouveau flag `--contrastive-weight` (défaut `0.0` = désactivé, comportement
+identique à avant) dans `train_control_lora.py`. À chaque step, un
+**deuxième forward ControlNet** est exécuté sur un masque B (autre exemple
+du dataset, tiré au hasard) ; le terme de loss pénalise
+`spatial_corr_torch(mid_block_res_sample_A, mid_block_res_sample_B)`
+(corrélation de Pearson différentiable, DC retirée, **dénominateur détaché
+du graphe** — un premier smoke-test a produit des NaN dès le step 2 sans
+cette précaution, le gradient de `1/sqrt(x)` explosant quand les deux
+résidus sont encore proches de zero-init).
+
+**Ingénierie VRAM (règle 90 %/92 %)** — le deuxième forward a nécessité
+plusieurs itérations avant de tenir la règle sur ce dataset (images natives
+jusqu'à 1024×1536+) :
+1. Stop-gradient (`torch.no_grad()`) sur le forward B — signal de gradient
+   toujours valide (B traité comme référence fixe, pratique standard
+   type BYOL/SimSiam), évite de retenir deux graphes de calcul complets.
+2. Forward B réordonné **avant** le forward+backward (bien plus gros) de
+   l'UNet sur l'exemple A, pour ne jamais faire coexister les deux pics de
+   mémoire.
+3. Forward B à une **résolution fixe** (`CONTRASTIVE_PROBE_SIZE = 640×960`),
+   indépendante de la résolution native (variable) de l'exemple A — latents
+   propres (bruit non lié à une image réelle, seul le résidu ControlNet
+   nous intéresse), résultat redimensionné (NEAREST) avant corrélation.
+4. Malgré (1)-(3), la VRAM fluctuait encore entre 85 % et 96 % selon la
+   taille de l'image A piochée (au-dessus de la règle sur les plus grandes
+   images du dataset). Ajout d'un nouveau flag `--max-image-side` (défaut
+   `None` = résolution native, comportement inchangé par défaut) qui
+   plafonne le plus grand côté des images d'entraînement — utilisé à `640`
+   pour ce test. Résultat : VRAM stabilisée à 82-94 %, un seul pic bref à
+   94,2 % sur 750 steps, jamais d'OOM.
+
+**Poids de départ** : `--contrastive-weight 1.0`, choisi car du même ordre
+de grandeur que `mse_loss` (~0,2-0,7 sur ce dataset) — ni négligeable
+(risque "sans effet", déjà vu avec `mask-loss-weight×10`) ni dominant
+d'emblée (risque de déstabiliser tout de suite l'entraînement).
+
+### Test court (750 steps, dataset complet, mêmes hyperparamètres que les
+tests précédents : `reg-weight=0.01`, `modules-to-save-lr=5e-5`, `seed=42`,
+GPU unique RTX 5080, `--max-image-side 640`)
+
+| Step | mse | reg (magnitude résidus) | corrélation contrastive (métrique d'entraînement) |
+|------|-----|--------------------------|------------------------------------------------------|
+| 25   | 0,69 | 0,29 | -0,06 |
+| 150  | 0,33 | 40,4 | -0,76 |
+| 300  | 0,26 | 37,1 | -0,84 |
+| 450  | 0,20 | 51,7 | -0,95 |
+| 600  | 0,24 | 52,1 | -0,99 |
+| 750  | 0,23 | 53,3 | **-0,99** |
+
+**Signal apparemment spectaculaire** : la corrélation descend de façon
+régulière et quasi monotone jusqu'à -0,99 (proche du minimum théorique
+-1,0), sans NaN ni divergence de la `mse` (qui reste saine, 0,18-0,27 en
+fin de run). **Mais** la magnitude des résidus (`reg`) explose à des
+niveaux jamais vus dans les tests précédents (50+ contre 2-9 pour les runs
+"sains" documentés plus haut) — un profil qui rappelle immédiatement
+`mask-loss-weight×50` : une métrique qui bouge dans le bon sens, portée par
+une divergence de magnitude plutôt qu'un vrai apprentissage.
+
+### Vérification indépendante — le signal ne survit pas
+
+**1. Sonde `probe_cond_embedding_trajectory.py` sur `checkpoint-750`**
+(masques réels idx 0/idx 300, protocole identique aux sections précédentes) :
+
+| Métrique | Baseline (jamais touché, `convergence_test`) | Checkpoint contrastif (step 750) |
+|---|---|---|
+| corr. `conv_out` (masques réels) | 0,9931 | **0,9938** (quasi identique) |
+| corr. `mid_block_res_sample` (masques synthétiques gauche/droite) | 0,9936 | **1,0000** (pire que le baseline) |
+
+Aucune amélioration mesurable — la trajectoire complète sur masques
+synthétiques atteint même la corrélation maximale possible (1,0000),
+**plus collapsée** que le modèle jamais entraîné avec ce correctif.
+
+**2. Sweep masque-seul rigoureux** (`diagnostics/sweep_mask_only.py`, texte
+et seed fixes, 4 masques × 5 échelles) sur le même checkpoint :
+- `scale=1,0` : bruit statique pur, identique à tous les checkpoints
+  précédents (original, ×10, ×20, ×50).
+- `scale=0,15` (zone "cohérente") : images **visuellement identiques**
+  entre masques différents (même pose, même composition, mêmes détails de
+  décor) — aucune différenciation liée au masque, malgré la chute à -0,99
+  de la métrique de corrélation pendant l'entraînement.
+
+### Diagnostic de la cause — le faux positif expliqué
+
+La contrainte VRAM a forcé une décision qui invalide le signal : **le
+forward B utilise son propre bruit latent aléatoire, indépendant de celui
+de l'exemple A** (nécessaire pour découpler le coût mémoire de B de la
+résolution de A — cf. section "Ingénierie VRAM" ci-dessus). Le réseau a
+donc une solution **beaucoup plus simple** pour satisfaire le terme
+contrastif que d'apprendre à lire le masque : devenir sensible au bruit
+d'entrée. Deux tirages de bruit gaussien indépendants sont, par
+construction, décorrélés — le réseau n'a qu'à amplifier sa dépendance au
+bruit (ce que `reg` qui explose à 50+ suggère fortement) pour faire
+baisser la corrélation mesurée, sans jamais avoir besoin de différencier
+le contenu du masque. C'est exactement le même mécanisme de triche que
+`mask-loss-weight×50` (une métrique qui s'améliore via une divergence de
+magnitude/sensibilité générique, pas via un apprentissage du signal
+recherché) — documenté ici avec un mécanisme différent (bruit non partagé)
+mais la même leçon : **ne jamais valider un correctif sur sa propre
+métrique de substitution sans vérification indépendante**.
+
+### Verdict
+
+**Piste `--contrastive-weight` écartée, telle qu'implémentée dans cette
+session.** Le compromis VRAM nécessaire (bruit indépendant entre A et B)
+ouvre une voie de triche que le réseau exploite immédiatement et bien plus
+facilement que d'apprendre à lire le masque. Un vrai test de cette
+approche nécessiterait de partager les mêmes latents/bruit entre A et B
+(comme dans la conception initiale, avant les contraintes VRAM) — ce qui
+requiert soit un GPU avec nettement plus de VRAM que le RTX 5080 16 Go
+disponible ici, soit une résolution d'entraînement plus basse pour TOUS
+les exemples (pas seulement B), au prix d'un entraînement moins fidèle à
+l'usage réel (images 1024×1536+).
+
+**Aucun run complet 6000 steps lancé** — le signal d'entraînement était
+positif mais la vérification indépendante (obligatoire après l'expérience
+`mask-loss-weight×50`) l'a invalidé avant tout engagement de calcul
+supplémentaire.
+
+**Conséquence pour la suite : les trois pistes de correctif léger testées
+dans ce rapport (`mask-loss-weight`, dilatation/flou du masque, loss
+contrastive) sont maintenant toutes écartées par des vérifications
+indépendantes.** Il ne reste que la refonte d'architecture de
+`controlnet_cond_embedding` (piste déjà identifiée comme la cause
+principale, majoritairement architecturale, pour les masques réalistes) —
+ou accepter que le Control-LoRA FootSegNet reste hors de portée pour cette
+itération du projet avec le matériel/temps disponibles.
+
+Fichiers : `train_control_lora.py` (flag `--contrastive-weight` +
+`--max-image-side`, opt-in, comportement par défaut inchangé),
+`diagnostics/run_train_worktree.py` (lanceur pour ce worktree),
+checkpoints sous `output/control_lora_v1_contrastive_test_samegpu/`,
+images sous `eval_output/mask_only_sweep_contrastive/`. Heatmaps de la
+sonde sur `checkpoint-750` :
+`diagnostics/cond_embedding_probe_outputs/*_contrastive750.png` (noms
+distincts des heatmaps de la section précédente, sur `checkpoint-6000`,
+pour ne pas les écraser).
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
@@ -983,3 +1129,71 @@ quantitative, plus sensible, ne détecte déjà pas.
   (conforme à la consigne : tests courts uniquement). Le test de validation
   du correctif (section suivante, ajoutée après ce diagnostic) reste lui
   aussi limité à 500-800 steps, pas un run complet.
+
+## Clôture (2026-07-29) — chantier mis EN PAUSE, pas abandonné
+
+### Statut
+
+**Ce chantier est mis en pause pour cette itération du projet, pas
+abandonné.** Décision prise après trois pistes de correctif léger testées
+et écartées, chacune par une vérification indépendante rigoureuse (pas
+seulement sur la métrique de substitution utilisée pour la guider) :
+
+| # | Piste | Coût | Verdict | Preuve clé |
+|---|---|---|---|---|
+| 1 | `--mask-loss-weight` (×10/×20/×50) | Faible (repondération de loss) | **Écartée** | Aucune différenciation masque-seul détectable à aucun poids testé, malgré un signal de corrélation prometteur au départ (faux positif) |
+| 2 | Dilatation/flou du masque en pré-traitement | Faible (aucun training requis pour la mesure, un seul run pour la vérification visuelle) | **Écartée** | Gain marginal en sortie d'encodeur, effacé plus loin dans le réseau ; coût de précision spatiale disqualifiant |
+| 3 | Loss contrastive (`--contrastive-weight`) | Moyen (2e forward ControlNet/step, ingénierie VRAM significative) | **Écartée** | Signal d'entraînement spectaculaire (corr. -0,99) mais faux positif confirmé — le réseau a appris à différencier le bruit latent (non partagé entre les deux forwards, contrainte VRAM), pas le masque |
+
+Point commun aux trois échecs, la leçon la plus importante de ce
+diagnostic : **une métrique de substitution (corrélation, magnitude de
+loss) qui bouge dans le sens souhaité ne prouve rien par elle-même** — il
+faut systématiquement vérifier avec un protocole indépendant qui isole
+strictement le masque (texte et seed fixes) et confirme la cohérence
+visuelle à l'échelle d'inférence standard (`conditioning_scale=1,0`). Les
+trois pistes ont chacune produit un signal positif sur leur propre
+métrique avant d'être invalidées par ce protocole.
+
+### Cause racine confirmée
+
+La perte d'information du masque est **majoritairement architecturale**,
+localisée dans `controlnet_cond_embedding` (3 convolutions stride-2 qui
+lissent un signal épars, 0,9-8,4 % du cadre — déjà quasi collapsée avant
+tout entraînement) et amplifiée par la dilution progressive dans les blocs
+copiés de l'UNet en aval. Aucun ajustement de loss ou de pré-traitement du
+masque ne peut compenser un goulot d'étranglement architectural de cette
+nature.
+
+### Pistes pour une reprise future (par ordre de priorité)
+
+1. **CtrLoRA** — alternative identifiée depuis ce diagnostic, nettement
+   plus légère que la piste T2I-Adapter envisagée initialement (littérature
+   indique ~1000 images / 1 GPU / ~1h). **À investiguer en premier si ce
+   chantier est repris** : le rapport coût/risque est bien plus favorable
+   qu'une refonte d'architecture complète avant même de savoir si une
+   simple repondération/reformulation suffit avec cette approche.
+2. **ViscoNet** — signalé comme lecture prioritaire, aborde
+   **explicitement** le problème de mode collapse du conditionnement (pas
+   juste un ControlNet générique) — à lire avant de choisir entre CtrLoRA
+   et une refonte plus lourde, pourrait informer directement la conception
+   du correctif.
+3. **Refonte d'architecture complète type T2I-Adapter** — la piste la plus
+   coûteuse (en données et en calcul GPU), gardée en dernier recours si
+   CtrLoRA/ViscoNet ne suffisent pas. Cohérente avec le diagnostic
+   architectural de ce rapport (moins de stride agressif / branche
+   haute-résolution préservée plus longtemps pour un conditionnement épars).
+
+### État du dépôt
+
+- Branche `worktree-controlnet-mode-collapse-fix` : propre, entièrement
+  poussée sur origin.
+- **PR #33** : fusionnée dans `main` le 2026-07-29 (commit `e7a860c`,
+  jusqu'à la section dilatation/flou incluse) — fusion antérieure à la
+  session ayant produit la section "loss contrastive" ci-dessus et cette
+  clôture, qui restent donc **non fusionnées** sur cette même branche à ce
+  stade. Une PR distincte porte ce reliquat, laissée en draft (pas de
+  fusion — ce chantier reste un rapport de recherche, pas du code de
+  production à intégrer tant que le chantier est en pause).
+- Aucun changement de comportement en production : tous les flags ajoutés
+  (`--mask-loss-weight`, `--contrastive-weight`, `--max-image-side`) sont
+  opt-in, désactivés par défaut.

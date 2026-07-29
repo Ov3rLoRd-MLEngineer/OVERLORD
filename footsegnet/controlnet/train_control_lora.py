@@ -73,6 +73,13 @@ VAE_PATH        = config.COMFYUI_MODELS / "vae" / "sdxl_vae.safetensors"   # cf.
 LORA_TARGET_MODULES = ["to_q", "to_k", "to_v", "to_out.0"]
 LORA_MODULES_TO_SAVE = ["controlnet_cond_embedding", "controlnet_down_blocks", "controlnet_mid_block"]
 
+# Resolution FIXE du deuxieme forward ControlNet (--contrastive-weight), independante de la
+# resolution (variable, jusqu'a 1024x1536+) de l'exemple d'entrainement A -- cf. commentaire
+# a l'usage dans train(). Portrait, meme ratio que la majorite du dataset, ~40% de la surface
+# d'une image 1024x1536 -- assez pour rester representatif, assez petit pour plafonner le cout
+# VRAM du forward B independamment de la taille de l'image piochee pour A.
+CONTRASTIVE_PROBE_SIZE = (640, 960)   # (height, width), multiples de 8
+
 
 # ── Dataset ──────────────────────────────────────────────────────────────────
 
@@ -86,7 +93,7 @@ class ControlLoraDataset(Dataset):
     diffusers)."""
 
     def __init__(self, manifest_path: Path, dataset_root: Path,
-                 max_samples: int | None = None, seed: int = 42):
+                 max_samples: int | None = None, seed: int = 42, max_image_side: int | None = None):
         entries = []
         for line in manifest_path.read_text(encoding="utf-8").splitlines():
             line = line.strip()
@@ -99,6 +106,13 @@ class ControlLoraDataset(Dataset):
             entries = rng.sample(entries, max_samples)
         self.entries = entries
         self.dataset_root = dataset_root
+        # Plafond optionnel (--max-image-side), None par defaut = comportement identique a
+        # avant (resolution native, jusqu'a ~1024x1536+ sur ce dataset). Ajoute pour
+        # --contrastive-weight (2e forward ControlNet par step) : meme apres stop-gradient,
+        # liberation explicite et probe B a resolution fixe, la VRAM fluctuait encore entre
+        # 85% et 96% sur les plus grandes images natives du dataset (au-dessus de la regle
+        # 90%/92%) -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md, section "loss contrastive".
+        self.max_image_side = max_image_side
 
     def __len__(self) -> int:
         return len(self.entries)
@@ -109,6 +123,14 @@ class ControlLoraDataset(Dataset):
         cond = Image.open(self.dataset_root / entry["conditioning_image"]).convert("RGB")
         if cond.size != image.size:
             cond = cond.resize(image.size, Image.NEAREST)   # masque = pas d'interpolation floue
+
+        if self.max_image_side is not None and max(image.size) > self.max_image_side:
+            scale = self.max_image_side / max(image.size)
+            # multiples de 8 (requis par le VAE/UNet -- meme contrainte que le reste du pipeline)
+            new_w = max(8, round(image.width * scale / 8) * 8)
+            new_h = max(8, round(image.height * scale / 8) * 8)
+            image = image.resize((new_w, new_h), Image.LANCZOS)
+            cond = cond.resize((new_w, new_h), Image.NEAREST)   # masque = pas d'interpolation floue
 
         import numpy as np
         pixel_values = torch.from_numpy(np.array(image)).permute(2, 0, 1).float() / 127.5 - 1.0
@@ -156,6 +178,56 @@ def compute_time_ids(height: int, width: int, device, dtype) -> torch.Tensor:
     pas de crop appliqué ici (image entière), donc original == target, crop (0, 0)."""
     add_time_ids = list((height, width) + (0, 0) + (height, width))
     return torch.tensor([add_time_ids], device=device, dtype=dtype)
+
+
+# ── Loss contrastive (--contrastive-weight, cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md) ──
+
+def spatial_corr_torch(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    """Corrélation de Pearson différentiable sur la composante SPATIALE (DC
+    retirée par canal) -- version torch (autograd) de la métrique numpy déjà
+    utilisée dans diagnostics/probe_cond_embedding_trajectory.py. Choisie
+    plutôt qu'une distance L2 brute PRÉCISÉMENT parce qu'elle est invariante
+    à l'échelle : une distance L2 pourrait être "trichée" en grossissant
+    simplement la magnitude du résidu (déjà vu avec mask-loss-weight×50 --
+    la corrélation baissait mais parce que le résidu divergeait vers du
+    bruit, pas parce qu'il différenciait vraiment le masque). La corrélation
+    spatiale ne peut pas être manipulée de cette façon : agrandir uniformément
+    un résidu ne change ni sa moyenne (retirée) ni le signe/l'intensité de sa
+    corrélation avec un autre résidu.
+
+    Dénominateur DÉTACHÉ du graphe (trouvé nécessaire à l'implémentation,
+    2026-07-29) : en tout début d'entraînement, conv_out est encore proche de
+    son zero-init (cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md, étape 0), donc
+    les deux résidus ont une variance quasi nulle -- backpropager à travers
+    `1/sqrt(x)` avec x proche de zéro produit un gradient qui explose (NaN dès
+    le step 2, constaté en smoke test avant ce correctif). Détacher le
+    dénominateur (le traiter comme une simple constante de normalisation, pas
+    comme une quantité à optimiser) élimine ce risque sans changer le sens du
+    signal : le gradient continue de pousser le numérateur (le vrai produit
+    croisé spatial) vers le bas, normalisé par une échelle figée à chaque pas."""
+    a = a.float()
+    b = b.float()
+    a = a - a.mean(dim=(2, 3), keepdim=True)
+    b = b - b.mean(dim=(2, 3), keepdim=True)
+    num = (a * b).mean()
+    den = (a.pow(2).mean().sqrt() * b.pow(2).mean().sqrt()).detach().clamp_min(1e-4)
+    return num / den
+
+
+def _sample_contrastive_cond(dataset: "ControlLoraDataset", target_hw: tuple[int, int],
+                              device, dtype) -> torch.Tensor:
+    """Charge UNIQUEMENT le masque de conditionnement (pas l'image RGB, pas
+    inutile pour ce terme de loss) d'un autre exemple choisi au hasard dans
+    le dataset, redimensionné (NEAREST -- même convention que
+    ControlLoraDataset.__getitem__) à la résolution du batch en cours."""
+    import numpy as np
+    entry = random.choice(dataset.entries)
+    cond = Image.open(dataset.dataset_root / entry["conditioning_image"]).convert("RGB")
+    height, width = target_hw
+    if cond.size != (width, height):
+        cond = cond.resize((width, height), Image.NEAREST)
+    cond_values = torch.from_numpy(np.array(cond)).permute(2, 0, 1).float() / 255.0
+    return cond_values.unsqueeze(0).to(device, dtype=dtype)
 
 
 # ── Modèle ────────────────────────────────────────────────────────────────────
@@ -351,7 +423,8 @@ def train(args: argparse.Namespace) -> None:
 
     manifest_path = Path(args.manifest)
     max_samples = args.test_run_size if args.test_run else args.max_samples
-    dataset = ControlLoraDataset(manifest_path, CN_DATASET_ROOT, max_samples=max_samples, seed=args.seed or 42)
+    dataset = ControlLoraDataset(manifest_path, CN_DATASET_ROOT, max_samples=max_samples, seed=args.seed or 42,
+                                  max_image_side=args.max_image_side)
     print(f"[train_control_lora] Dataset : {len(dataset)} paire(s) "
           f"({'--test-run' if args.test_run else 'run complet'})")
 
@@ -419,6 +492,7 @@ def train(args: argparse.Namespace) -> None:
     running_loss = 0.0
     running_mse = 0.0
     running_reg = 0.0
+    running_contrastive = 0.0
     controlnet.train()
     print(f"[train_control_lora] Démarrage : {max_train_steps} steps, "
           f"batch_size={args.batch_size}, lr={args.learning_rate}, rank={args.lora_rank}")
@@ -451,6 +525,53 @@ def train(args: argparse.Namespace) -> None:
                     for h, w in zip(batch["height"], batch["width"])
                 ])
                 added_cond_kwargs = {"text_embeds": pooled_embeds, "time_ids": add_time_ids}
+
+                contrastive_loss = torch.zeros((), device=device)
+                if args.contrastive_weight > 0:
+                    # [CORRECTIF CANDIDAT, NON VALIDE -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md,
+                    # section "loss contrastive"] Deuxieme forward ControlNet, MEMES
+                    # noisy_latents/timesteps/prompt_embeds/added_cond_kwargs que l'exemple A
+                    # ci-dessous -- SEUL le masque change (un autre exemple du dataset,
+                    # redimensionne a la meme resolution). Isole strictement l'effet du masque,
+                    # sans le confondre avec texte/seed/image (cf. "reserve methodologique
+                    # confirmee" du meme rapport, ou varier les trois a la fois avait produit un
+                    # faux positif). Penalise la correlation spatiale entre les deux residus :
+                    # le modele ne peut pas "tricher" en grossissant juste la magnitude (metrique
+                    # invariante a l'echelle, cf. spatial_corr_torch) comme c'etait arrive avec
+                    # mask-loss-weight x50 (corr. en baisse mais divergence vers du bruit, pas un
+                    # vrai apprentissage -- confirme par eval_checkpoint.py a l'epoque).
+                    #
+                    # Fait AVANT le forward ControlNet/UNet de l'exemple A ci-dessous (pas apres) :
+                    # les deux forwards ControlNet ne se recouvrent alors jamais en memoire avec le
+                    # (bien plus gros) forward+backward UNet de A. A resolution FIXE
+                    # (CONTRASTIVE_PROBE_SIZE), independante de la resolution (variable, jusqu'a
+                    # 1024x1536+) de l'image A -- latents propres (bruit pur, pas besoin d'etre
+                    # une reconstruction reelle, seul le residu ControlNet nous interesse ici,
+                    # meme logique que les latents synthetiques deja utilises dans
+                    # diagnostics/probe_cond_embedding_trajectory.py). Necessaire : meme apres
+                    # stop-gradient + liberation explicite + reordonnancement, un forward B a la
+                    # resolution native de A faisait encore fluctuer la VRAM entre 85% et 96%
+                    # selon la taille de l'image piochee (au-dessus de la regle 90%/92% sur les
+                    # plus grandes images du dataset, 1024x1536) -- une taille fixe et modeste
+                    # plafonne ce cout independamment de l'image A.
+                    probe_h, probe_w = CONTRASTIVE_PROBE_SIZE
+                    cond_values_b = _sample_contrastive_cond(dataset, (probe_h, probe_w), device, weight_dtype)
+                    noisy_latents_b = torch.randn(
+                        (1, unet.config.in_channels, probe_h // 8, probe_w // 8), device=device, dtype=weight_dtype,
+                    )
+                    added_cond_kwargs_b = {
+                        "text_embeds": pooled_embeds,
+                        "time_ids": compute_time_ids(probe_h, probe_w, device, weight_dtype),
+                    }
+                    with torch.no_grad():
+                        _, mid_block_res_sample_b = controlnet(
+                            noisy_latents_b, timesteps, encoder_hidden_states=prompt_embeds,
+                            controlnet_cond=cond_values_b, added_cond_kwargs=added_cond_kwargs_b,
+                            return_dict=False,
+                        )
+                    mid_block_res_sample_b = mid_block_res_sample_b.to(dtype=weight_dtype).detach()
+                    del cond_values_b, noisy_latents_b
+                    torch.cuda.empty_cache()
 
                 down_block_res_samples, mid_block_res_sample = controlnet(
                     noisy_latents, timesteps, encoder_hidden_states=prompt_embeds,
@@ -495,7 +616,18 @@ def train(args: argparse.Namespace) -> None:
                 # directement la magnitude (norme L2 moyenne) des residus eux-memes.
                 reg_loss = sum(r.float().pow(2).mean() for r in down_block_res_samples) \
                     + mid_block_res_sample.float().pow(2).mean()
-                loss = mse_loss + args.reg_weight * reg_loss
+
+                if args.contrastive_weight > 0:
+                    # mid_block_res_sample_b vient d'une resolution fixe (CONTRASTIVE_PROBE_SIZE),
+                    # generalement differente de celle de l'exemple A -- redimensionne (NEAREST,
+                    # meme convention que le reste du fichier pour les cartes de conditionnement)
+                    # avant de correler.
+                    mid_b_resized = F.interpolate(
+                        mid_block_res_sample_b.float(), size=mid_block_res_sample.shape[-2:], mode="nearest",
+                    ).to(dtype=weight_dtype)
+                    contrastive_loss = spatial_corr_torch(mid_block_res_sample, mid_b_resized)
+
+                loss = mse_loss + args.reg_weight * reg_loss + args.contrastive_weight * contrastive_loss
                 accelerator.backward(loss)
                 if accelerator.sync_gradients:
                     # Clip separe : un clip global sur trainable_params (LoRA+modules_to_save
@@ -514,17 +646,21 @@ def train(args: argparse.Namespace) -> None:
                 running_loss += loss.detach().item()
                 running_mse += mse_loss.detach().item()
                 running_reg += reg_loss.detach().item()
+                running_contrastive += contrastive_loss.detach().item()
 
                 if global_step % args.log_every == 0:
                     avg_loss = running_loss / args.log_every
                     avg_mse = running_mse / args.log_every
                     avg_reg = running_reg / args.log_every
+                    avg_contrastive = running_contrastive / args.log_every
                     print(f"[train_control_lora] step {global_step}/{max_train_steps}  "
                           f"loss={avg_loss:.4f} (mse={avg_mse:.4f}, reg={avg_reg:.2f}, "
-                          f"reg*w={args.reg_weight * avg_reg:.4f})")
+                          f"reg*w={args.reg_weight * avg_reg:.4f}, contrastive_corr={avg_contrastive:.4f}, "
+                          f"contrastive*w={args.contrastive_weight * avg_contrastive:.4f})")
                     running_loss = 0.0
                     running_mse = 0.0
                     running_reg = 0.0
+                    running_contrastive = 0.0
 
                 if args.validation_steps and global_step % args.validation_steps == 0 and accelerator.is_main_process:
                     run_validation(models, val_sample, device, weight_dtype, output_dir, global_step)
@@ -557,6 +693,12 @@ def parse_args() -> argparse.Namespace:
                         help="Nombre de paires en mode --test-run (défaut: 120, plage 100-150)")
     parser.add_argument("--max-samples", type=int, default=None,
                         help="Limite le dataset complet à N paires (hors --test-run)")
+    parser.add_argument("--max-image-side", type=int, default=None,
+                        help="Plafonne le plus grand côté des images/masques (resize LANCZOS/"
+                             "NEAREST, arrondi au multiple de 8) -- None = résolution native "
+                             "(défaut, comportement identique à avant). Utile avec "
+                             "--contrastive-weight (2e forward ControlNet par step) pour rester "
+                             "sous la regle VRAM 90/92 pourcent sur les images natives les plus grandes.")
     parser.add_argument("--lora-rank", type=int, default=64)
     parser.add_argument("--learning-rate", type=float, default=1e-4,
                         help="LR pour les deltas LoRA (ajustement de poids pre-entraines)")
@@ -582,6 +724,15 @@ def parse_args() -> argparse.Namespace:
                              "identique a avant ce correctif. Piste pour le mode collapse observe : "
                              "sur-ponderer l'erreur de reconstruction sous le masque force le modele a "
                              "le lire plutot qu'apprendre un residu generique independant du conditionnement.")
+    parser.add_argument("--contrastive-weight", type=float, default=0.0,
+                        help="[CORRECTIF CANDIDAT, NON VALIDE -- cf. DIAGNOSTIC_MODE_COLLAPSE_20260728.md, "
+                             "section loss contrastive] Poids d'un terme qui penalise la correlation "
+                             "spatiale (DC retiree) entre mid_block_res_sample de l'exemple du batch et "
+                             "celui d'un DEUXIEME forward ControlNet sur un autre masque du dataset (memes "
+                             "latents/timestep/texte -- seul le masque varie). 0.0 = desactive, comportement "
+                             "identique a avant ce correctif. Contrairement a --mask-loss-weight, cible "
+                             "directement la differenciation entre residus plutot que d'esperer qu'elle "
+                             "emerge indirectement de la MSE de reconstruction.")
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--gradient-accumulation-steps", type=int, default=4)
     parser.add_argument("--num-epochs", type=int, default=10,
