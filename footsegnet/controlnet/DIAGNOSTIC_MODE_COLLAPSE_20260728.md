@@ -653,6 +653,58 @@ Aucun run complet 6000 steps lancé sur aucune configuration de
 `mask-loss-weight` — conclusion suffisamment nette pour ne pas le
 justifier.
 
+## Audit texte↔position du masque (2026-07-29) — piste ÉCARTÉE
+
+Analyse statistique pure (`diagnostics/audit_text_mask_correlation.py`),
+aucun training, aucun GPU : le texte du prompt corrèle-t-il déjà avec la
+position du masque, ce qui expliquerait que le modèle apprenne à ignorer
+le ControlNet (la loss diminue aussi bien en lisant le texte, déjà traité
+par CLIP, qu'en lisant le masque) ?
+
+Sur les 549 paires de `manifest_filtered.jsonl` : centre de masse
+horizontal du masque calculé pour chaque paire (549/549 exploitables),
+classé gauche/droite (coupure à 0,5 → 238 gauche / 311 droite).
+
+**Premier passage (biais brut, sans correction) : signal apparent** —
+plusieurs mots avec des écarts de 40 à 78 points par rapport à 50/50.
+**Ce signal ne survit PAS à une analyse statistique rigoureuse :**
+
+- 253 mots testés (≥15 occurrences chacun) → test binomial + correction de
+  Bonferroni (seuil α=0,05 → 0,000198 par test). **Aucun mot ne passe ce
+  seuil** — le meilleur p-value observé est 0,0013 (mot "mid-stride",
+  n=18), largement au-dessus du seuil corrigé. Les mots apparemment
+  "biaisés" du premier passage (biais brut 0,4-0,78) sont du bruit
+  d'échantillonnage explicable par le grand nombre de mots testés
+  (comparaisons multiples), pas un signal réel.
+- Mots-clés positionnels explicites ("left"/"right" dans le texte) :
+  présents dans seulement 37/549 paires (6,7% du dataset), précision
+  64,9% quand présents (test binomial p=0,049 — tout juste sous 0,05,
+  signal marginal). Même en le prenant au sérieux, sa couverture est bien
+  trop faible pour expliquer un mode collapse observé sur l'ensemble du
+  dataset (93,3% des paires n'ont aucun mot-clé positionnel explicite).
+
+**Verdict : piste ÉCARTÉE.** Le texte du dataset ne contient pas
+d'information positionnelle exploitable qui expliquerait, à elle seule ou
+même en partie substantielle, pourquoi le modèle ignore le masque. Le
+biais base-rate du dataset (56,6% "droite") existe mais n'est prédit par
+aucun mot du vocabulaire de façon statistiquement fiable.
+
+Aucune modification du dataset ni du code d'entraînement — analyse en
+lecture seule uniquement, conformément à la consigne.
+
+### Prochaine étape recommandée (non faite dans cette session, faute de temps)
+
+Piste suivante proposée dans le plan initial : **inspection directe de
+`controlnet_cond_embedding`** — vérifier si les activations produites par
+ce petit encodeur (le point d'entrée du masque dans le ControlNet) varient
+déjà selon le masque en entrée, à un stade très en amont du réseau, avant
+même d'atteindre les zero-convs. Objectif : localiser précisément où
+l'information du masque se perd dans le pipeline (l'encodeur lui-même ne
+différencie pas les masques ? ou différencie mais l'information est
+noyée/écrasée plus loin dans le réseau ?). Nécessite de charger le
+ControlNet et de faire un forward partiel (jusqu'à `controlnet_cond_embedding`
+seulement) sur plusieurs masques différents — GPU léger, pas d'entraînement.
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
