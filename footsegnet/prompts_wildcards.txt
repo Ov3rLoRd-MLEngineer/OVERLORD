@@ -15,4 +15,4 @@ score_9, score_8_up, source_anime, 1girl, solo, full body, side view, __poses__,
 score_9, score_8_up, source_anime, 1boy, solo, full body, back view, __poses__, __outfits__, __shoes__, __backgrounds__, __lighting__, heels and soles visible, anime style
 score_9, score_8_up, source_anime, 1girl, solo, full body, three-quarter view, __poses__, __outfits__, __shoes__, __backgrounds__, __lighting__, feet in frame, anime style
 score_9, score_8_up, source_anime, 1girl, solo, full body, __poses__, __outfits__, barefoot, __backgrounds__, __lighting__, detailed bare feet, toes visible, anime style
-score_9, score_8_up, source_anime, 1boy, solo, full body, __poses__, __outfits__, __shoes__, one shoe untied, __backgrounds__, __lighting__, feet close to camera, anime style
+score_9, score_8_up, source_anime, 1boy, solo, full body, __poses__, __outfits__, __shoes__, one shoe untied, __backgrounds__, __lighting__, feet close to viewer, anime style
