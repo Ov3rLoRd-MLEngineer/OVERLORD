@@ -603,6 +603,56 @@ quels.** Proposition alternative avant d'engager plus de calcul :
 **Décision laissée à l'utilisateur** avant d'engager plus de calcul GPU sur
 cette piste.
 
+## Test intermédiaire `mask_loss_weight=20.0` (2026-07-29) — conclusion définitive
+
+Training court (750 steps, mêmes hyperparamètres : `reg-weight=0.01`,
+`modules-to-save-lr=5e-5`, seed=42, GPU 0 RTX 5080) puis évaluation
+immédiate avec le protocole masque-seul rigoureux
+(`diagnostics/sweep_mask_only.py`, 4 masques × 5 échelles, texte et seed
+fixes).
+
+**Résultat : identique à ×10 et ×50.** À `scale=0,15` (zone cohérente),
+les 4 masques produisent des images visuellement indiscernables (même
+pose, même composition). À `scale=1,0`, bruit statique pur, également
+indiscernable d'un masque à l'autre.
+
+**Conclusion définitive sur l'approche `mask-loss-weight` : sur les trois
+poids testés (×10, ×20, ×50), couvrant toute la plage de "sans effet
+mesurable" à "destructeur à pleine échelle", AUCUN ne produit de
+différenciation liée au masque détectable visuellement, à aucune échelle.**
+La piste "sur-pondérer la MSE sous le masque" est une impasse — augmenter
+ou diminuer son poids ne fait que déplacer le curseur entre "le résidu ne
+fait rien" et "le résidu diverge en bruit", jamais vers "le résidu encode
+le masque". Le mécanisme lui-même ne semble pas transmettre l'information
+spatiale du masque dans l'image finale, quelle que soit la pression de
+loss appliquée.
+
+**Recommandation finale : abandonner l'approche `mask-loss-weight`.**
+Ce n'est pas une question de calibration plus fine (×15, ×25, etc.) —
+trois points bien espacés sur la plage montrent tous le même échec
+qualitatif. Repartir sur une piste plus fondamentale pour une session
+future :
+1. **Vérifier si le mécanisme de conditionnement lui-même transmet une
+   information exploitable**, indépendamment de la loss — ex. inspecter
+   directement (sans passer par une génération complète) si le
+   `controlnet_cond_embedding` produit des activations différentes selon
+   le masque en entrée, à un stade du réseau très en amont, pour voir où
+   l'information se perd.
+2. **Terme de loss contrastif explicite** (déjà documenté comme piste
+   coûteuse plus haut) — pénaliser directement la similarité du résidu
+   entre échantillons à masques différents, plutôt que d'espérer qu'une
+   repondération spatiale de la MSE suffise à faire émerger cette
+   différenciation indirectement.
+3. **Revenir sur l'hypothèse "dataset"** : auditer si le texte des
+   captions du manifest corrèle déjà fortement avec la position/le type de
+   masque (piste jamais testée, documentée depuis le diagnostic initial) —
+   si c'est le cas, le modèle n'a structurellement aucune raison
+   d'apprendre à lire le masque quand le texte suffit déjà.
+
+Aucun run complet 6000 steps lancé sur aucune configuration de
+`mask-loss-weight` — conclusion suffisamment nette pour ne pas le
+justifier.
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
