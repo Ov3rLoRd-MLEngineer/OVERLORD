@@ -76,6 +76,8 @@ Many of these are logged formally in `ADR_OVERLORD.md` — read it before changi
 - SAM-based masking: images must be composited onto a white background before `SAMPreprocessor` — passing raw RGBA silently fails in ~0.02s with no output. Mask convention is **black = regenerate, white = preserve** (confirmed via ComfyUI MaskEditor).
 - AnimateDiff must use `ADE_AnimateDiffLoaderGen1` (Gen2 is unavailable on this machine).
 
+`LIMITATIONS_CONNUES.md` catalogs known generative-model limitations (e.g. bilateral-symmetry hand compositions collapsing into a mirrored decorative motif) that are **not pipeline bugs** — check it before reopening an investigation into a "failed" image, so the same non-actionable case doesn't get reprocessed every session.
+
 ### Session context docs
 `CONTEXTE_OVERLORD_V*.md` files (V150 through the current highest number) are session handoff notes — each captures in-progress bugs, what was just fixed, and next steps at the time it was written. When resuming multi-session work, read the **highest-numbered** one first; treat older ones as historical record only, since defaults and conventions get superseded (e.g. VAE, sampler, checkpoint choices evolve across sessions and are only trustworthy as of the date at the top of each file). `ADDENDUM_*.md` files are supplements meant to be read alongside a specific `CONTEXTE_*` file (named in the addendum's own header).
 
