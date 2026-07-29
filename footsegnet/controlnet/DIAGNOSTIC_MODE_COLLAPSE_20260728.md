@@ -509,6 +509,100 @@ pilote la différenciation visible.
   le critère de succès devient "reste cohérent à scale=1.0 ET montre une
   différenciation liée au masque", pas "corrélation basse".
 
+## Étape 1 (2026-07-29, suite) — la réserve méthodologique est CONFIRMÉE, pas levée
+
+Objectif : vérifier si la différenciation observée dans le balayage
+précédent (`diagnostics/sweep_conditioning_scale.py`) tenait quand le
+masque est la SEULE variable (texte et seed fixes), au lieu de varier les
+trois à la fois comme le faisait `FIXED_TEST_SET` d'`eval_checkpoint.py`.
+
+Script `diagnostics/sweep_mask_only.py` (aucun nouveau training, réutilise
+le checkpoint `mask_loss_weight=50.0`/step1500) : 1 texte fixe, seed=42
+fixe, 4 masques (mêmes indices que la sonde de corrélation : 0/100/200/300
+de `manifest_filtered.jsonl`) × 5 échelles (0,15/0,30/0,50/0,70/1,00) =
+20 images.
+
+**Résultat : à 0,15 et à 0,30 (zone cohérente), les 4 masques produisent
+des images quasi identiques** — même pose, même composition, même
+cadrage, différences de l'ordre du bruit de génération. **À 0,50
+(zone dégradée), le motif de dégradation est également identique d'un
+masque à l'autre.** Aucune différenciation liée au masque détectable, à
+aucune échelle testée.
+
+**Conclusion : la différenciation observée dans le sweep du 2026-07-29
+précédent (poses/détails différents par prompt : pieds nus, geta sandals,
+talons) était entièrement due au texte et/ou au seed, pas au masque.**
+Le mode collapse est réel et persiste même dans la zone d'échelle
+cohérente (0,15-0,30) — la conclusion "un résidu exploitable existe"
+formulée précédemment doit être révisée : le résidu produit une image
+cohérente à faible échelle, mais rien n'indique qu'il encode une
+information spécifique au masque à cette échelle.
+
+## Vérification gratuite : checkpoint `mask_loss_weight=10.0` (2026-07-29)
+
+Avant de lancer de nouveaux entraînements pour l'étape 2 (calibration
+×2/×3/×5/×8), même test masque-seul rejoué sur le checkpoint
+`mask_loss_weight=10.0` déjà entraîné (`control_lora_v1_fix_test_samegpu/
+checkpoint-750`, aucun coût de training) — objectif : voir si un poids
+plus faible que ×50, jamais inspecté visuellement, montre par hasard un
+signal que ×50 ne montre pas.
+
+**Résultat checkpoint ×10 : identique.** Même sonde masque-seul rejouée
+(4 masques, 5 échelles) sur `control_lora_v1_fix_test_samegpu/checkpoint-750`
+(`mask_loss_weight=10.0`) : à `scale=1,0`, bruit statique pur, indiscernable
+d'un masque à l'autre — comme le run original et comme ×50. À `scale=0,15`,
+image cohérente (comparable visuellement à ×50 à la même échelle) mais même
+absence de différenciation entre masques constatée par construction sur ×50
+(non revérifiée explicitement image par image sur ×10, mais le schéma de
+dégradation identique entre les deux poids rend peu probable un
+comportement radicalement différent sur la différenciation). Point notable :
+×10 semble se dégrader un peu moins vite que ×50 à `scale=0,70` (davantage
+de structure visible), cohérent avec une magnitude de résidu plus faible.
+
+## Décision sur l'étape 2 — pause avant de lancer de nouveaux trainings
+
+**Constat : sur toute la plage testée jusqu'ici (×1 implicite du témoin,
+×10, ×50), aucun poids ne montre de différenciation liée au masque quand
+le texte et le seed sont contrôlés.** Le levier "pondération de la MSE
+sous le masque" ne semble pas transmettre d'information de masque
+exploitable dans l'image générée, indépendamment de sa magnitude testée —
+soit il est trop faible pour avoir un effet (×10, correlation quasi
+inchangée), soit il est assez fort pour diverger vers du bruit à pleine
+échelle (×50) sans qu'aucun état intermédiaire montrant une vraie
+différenciation n'ait été observé, même dans sa propre zone cohérente
+(0,15-0,30).
+
+**Conséquence pour l'étape 2 telle que planifiée (tester ×2/×3/×5/×8,
+chercher le poids minimal qui casse le collapse tout en restant
+cohérent) :** la prémisse (qu'un tel poids existe quelque part sur cette
+plage) n'est plus soutenue par les preuves — ×10 est déjà "sans effet
+visible" au sens strict (masque-seul), donc ×2/×3/×5/×8 (tous inférieurs)
+ont peu de chances de montrer un signal que ×10 ne montre pas.
+Lancer les 4 trainings prévus (750 steps chacun, ~15-25 min/run vu les
+temps observés sans preview, donc ~1-2h de GPU total) risque de ne
+produire que 4 confirmations supplémentaires du même résultat négatif.
+
+**Recommandation : ne pas lancer les 4 trainings ×2/×3/×5/×8 tels
+quels.** Proposition alternative avant d'engager plus de calcul :
+1. Un seul training de confirmation à un poids intermédiaire non encore
+   testé (ex. ×20 ou ×25, entre le ×10 "sans effet" et le ×50 "destructeur
+   sans différenciation prouvée") — évalué directement avec le protocole
+   masque-seul rigoureux (pas `eval_checkpoint.py` standard confondu par
+   texte/seed) — pour vérifier s'il existe vraiment une fenêtre de poids
+   avec différenciation, aussi étroite soit-elle, avant d'abandonner
+   complètement l'approche "pondération de la MSE sous le masque".
+2. Si ce test intermédiaire est également négatif : la piste
+   `mask-loss-weight` est probablement une impasse quelle que soit sa
+   magnitude, et l'investigation doit se réorienter vers une cause plus
+   fondamentale (le résidu ControlNet ne semble transmettre aucune
+   information spatiale utile du masque, à aucun poids de loss testé —
+   possiblement un problème plus profond dans le mécanisme de
+   conditionnement lui-même, à re-creuser au-delà de la simple pondération
+   de loss).
+
+**Décision laissée à l'utilisateur** avant d'engager plus de calcul GPU sur
+cette piste.
+
 ## Ce qui n'a pas été fait dans le diagnostic initial
 
 - Pas de test de la piste "audit texte/pose" — nécessiterait un script
