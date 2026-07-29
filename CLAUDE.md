@@ -55,6 +55,16 @@ ComfyUI workflows are stored as exported API-format JSON at the repo root (e.g. 
 
 Numbered/lettered `_PIPELINE_PATCHED*`, `*_v2`, `*_v3` files and the many root-level `patch_*.txt` / `PATCH_*.txt` files are point-in-time patch outputs kept for traceability — treat the highest version number as current, older ones as history, not as alternatives to pick between.
 
+**Prompt-upsampling ban list (hallucination guard)** : le seul système d'upsampling de prompt de type TIPO/DanTagGen du dépôt est le node `AILab_QwenVL_PromptEnhancer` (`custom_system_prompt`, widget index 7 — vérifié dans `AILab_QwenVL_PromptEnhancer.py::process()`, `base_instruction = custom_system_prompt.strip() or ...`), actuellement en `mode: 4` (bypass) partout où il apparaît.
+
+Fichier **réellement actif** : `Advanced_QwenVL_V35.json` (racine, sans suffixe — tracké en git depuis le commit initial) est chargé en dur par `agents/workflow_controller.py` (`ADVANCED_WF`), exécutable en CLI manuel (`python agents/workflow_controller.py --pass ...`, hors chaîne automatisée maestro/supervisor). C'est ce fichier qui a reçu la section "Ban List" (`holding|object|cup|phone|cellphone|camera|bottle|weapon|gun`, ajoutée le 2026-07-30) — persistera tant qu'il n'est pas régénéré depuis l'UI ComfyUI (auquel cas re-appliquer la section). **Non câblé** dans le générateur automatique de HandSegNet (`generate_dataset.py` construit le prompt directement depuis les wildcards → `CLIPTextEncode`, sans étage LLM).
+
+`Advanced_QwenVL_V35_PIPELINE_PATCHED_v3.json` (patché le 2026-07-29, AVANT la correction de portée ci-dessus) n'est référencé nulle part dans le code — fix appliqué au mauvais fichier initialement, corrigé.
+
+`Advanced_QwenVL_V35_ORIGINAL.json` — comparaison nœud-par-nœud confirmée identique à `Advanced_QwenVL_V35.json` sur les 208 nœuds SAUF ce même node QwenVL (ban list absente) : c'est le snapshot pré-patch du même pipeline, pas un pipeline différent. Conservé à la demande explicite de l'utilisateur (base de référence pour tests en cours) — **pas encore protégé par la ban list**, décision volontairement laissée à l'utilisateur plutôt qu'appliquée unilatéralement (cf. rapport de session 2026-07-30).
+
+`_PIPELINE_PATCHED.json`/`_PATCHED_v2.json`/`_PATCHED_v3.json` : candidats confirmés à la suppression par l'utilisateur (non référencés dans le code) — pas supprimés, en attente d'une action explicite de suppression.
+
 ### Decisions that constrain future changes
 Many of these are logged formally in `ADR_OVERLORD.md` — read it before changing sampler defaults, storage strategy, config precedence, or seed strategy. The highlights, some superseded by later session logs (`CONTEXTE_OVERLORD_V2xx.md`, latest is highest number):
 - `taesdxl` is the VAE in use (the real `sdxl_vae.safetensors` was corrupted; ADR-002) — don't swap this without checking whether it's been re-downloaded.
