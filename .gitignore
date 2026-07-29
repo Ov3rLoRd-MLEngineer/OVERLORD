@@ -2,6 +2,20 @@ __pycache__/
 *.pyc
 .env
 
+# Dataset QLoRA comportemental (session 2, generes depuis l'historique git +
+# export JSON de conversations Claude.ai) -- volume + contenu potentiellement
+# sensible malgre le filtrage applique, jamais commite. Les scripts de
+# generation (scripts/) restent suivis, seuls les .jsonl/dossiers _qa
+# generes sont exclus.
+workspace/qlora_dataset/*.jsonl
+workspace/qlora_dataset/_qa/
+
+# Sorties d'entraînement QLoRA (checkpoints/adapters/logs generes par
+# workspace/qlora_dataset/training/scripts/train_qlora.py) -- binaires,
+# regenerables a la demande, jamais commites. Les scripts restent suivis.
+workspace/qlora_dataset/training/runs/
+workspace/qlora_dataset/training/logs/
+
 # Datasets et checkpoints SegNet generes -- jamais commites (binaires, des
 # milliers de fichiers). Les .gitkeep deja suivis dans ces dossiers ne sont
 # pas affectes (gitignore n'agit que sur les fichiers non suivis).
