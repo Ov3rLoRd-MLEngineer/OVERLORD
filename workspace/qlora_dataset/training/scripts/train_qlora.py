@@ -17,12 +17,24 @@ gabarit de chat template) : charge et entraine sans probleme sur GPU1 (RTX
 qwen3-coder-30B-A3B reste la cible de production, a revisiter avec plus de
 marge VRAM (liberer GPU0, offloading MoE, ou cloud).
 
-Sur-echantillonnage Source A -- 67 exemples (diffs de code) contre 1435
-exemples Source B (dialogue, apres nettoyage session 4 -- 1470 avant) :
-volume total en caracteres quasi au ratio 5:1 (564969 Source A vs 2657959
+Sur-echantillonnage Source A -- 68 exemples (diffs de code) contre 1435
+exemples Source B (dialogue, apres nettoyage session 4) :
+volume total en caracteres quasi au ratio 5:1 (568018 Source A vs 2657959
 Source B) -- facteur de sur-echantillonnage de 5x conserve inchange, toujours
-justifie apres le nettoyage (ratio reel ~4.70, 5x reste la valeur la plus
-proche).
+justifie (ratio reel ~4.68, quasi identique au ~4.70 de session 4 : Source A
+n'a grossi que de 67->68 exemples malgre 5 commits non-merge supplementaires
+depuis la derniere extraction, la plupart filtres par le plafond de taille de
+diff ou le filtre trivial -- 5x reste la valeur la plus proche, inchange).
+
+SESSION 5 -- regeneration Source A sur l'etat courant du depot (108 commits
+non-merge vs 103 en session 2, PR #29-#35 mergees depuis) + verification
+Source B (0 fuite PII, 0 artefact d'outil residuel sur les 1435 exemples
+existants -- reconfirme par balayage automatique des memes patterns que
+build_source_b.py, cf. rapport final). Le "nouvel export Claude.ai" evoque
+en consigne de session s'est avere etre le meme fichier conversations.json
+deja utilise depuis la session 2 (aucune mise a jour de contenu detectee) --
+pas de re-extraction Source B necessaire, dataset_source_b.jsonl (1435
+exemples, nettoye session 4) reutilise tel quel.
 
 SESSION 4 -- deux corrections suite au verdict qualitatif de reel_v1
 (cf. VERDICT_EVALUATION_QUALITATIVE.md) :

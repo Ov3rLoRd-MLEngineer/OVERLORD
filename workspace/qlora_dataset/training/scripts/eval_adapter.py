@@ -9,22 +9,24 @@ jeux de reponses et de les ecrire cote a cote dans un fichier markdown.
 Le jugement qualitatif (ton, structure, conventions projet) est fait a la
 lecture, pas ici.
 
-Session 4 -- ADAPTER_PATH/OUT_PATH pointent sur reel_v2 (dataset nettoye +
-completion_only_loss) pour comparaison directe avec le rapport de la
-session 3 (eval_baseline_vs_adapter.md, adapter reel_v1) sans l'ecraser.
-GPU par defaut passe a la RTX 5060 Ti (contrainte de cette session).
+Session 5 -- ADAPTER_PATH/OUT_PATH pointent sur reel_v3 (Source A
+regeneree sur l'historique git courant, 68 exemples) pour comparaison
+directe avec les rapports des sessions 3/4 (reel_v1, reel_v2) sans les
+ecraser. GPU par defaut passe a la RTX 5080 (contrainte de cette session --
+les deux cartes etaient libres au demarrage, 5080 choisie comme carte
+principale).
 """
 import json
 import os
 import time
 
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")  # RTX 5060 Ti pour cette session
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")  # RTX 5080 pour cette session
 os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
 
 REPO_ROOT = r"D:\OVERLORD"
 BASE_MODEL = "unsloth/Qwen3-4B-Instruct-2507"
-ADAPTER_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "runs", "reel_v2", "adapter_final")
-OUT_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "eval_baseline_vs_adapter_v2.md")
+ADAPTER_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "runs", "reel_v3", "adapter_final")
+OUT_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "eval_baseline_vs_adapter_v3.md")
 MAX_SEQ_LENGTH = 3072
 MAX_NEW_TOKENS = 500
 # Session 3 (verdict precedent) : greedy pur, sans penalite, a produit une
@@ -116,14 +118,14 @@ def main():
         finetuned_outputs.append(generate(model, tokenizer, prompt))
 
     with open(OUT_PATH, "w", encoding="utf-8") as f:
-        f.write("# Comparaison baseline vs adapter reel_v1 -- generation deterministe (greedy)\n\n")
+        f.write("# Comparaison baseline vs adapter reel_v3 -- generation deterministe (greedy)\n\n")
         f.write(f"Modele de base : `{BASE_MODEL}` | Adapter : `{ADAPTER_PATH}`\n\n")
         for i, (source, prompt) in enumerate(PROMPTS):
             f.write(f"## Prompt {i+1} ({source})\n\n")
             f.write(f"**Prompt :** {prompt}\n\n")
             f.write("### Baseline (sans adapter)\n\n")
             f.write(baseline_outputs[i] + "\n\n")
-            f.write("### Fine-tune (avec adapter reel_v1)\n\n")
+            f.write("### Fine-tune (avec adapter reel_v3)\n\n")
             f.write(finetuned_outputs[i] + "\n\n")
             f.write("---\n\n")
 
