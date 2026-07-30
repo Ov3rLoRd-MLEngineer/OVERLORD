@@ -1,16 +1,18 @@
 # Dataset QLoRA comportemental -- Session 2 -- Statistiques et recommandation
 
 Généré le 2026-07-29. Préparation de données uniquement -- **aucun entraînement lancé**.
+Mis à jour Session 6 (2026-07-30) : ajout de Source C, voir section dédiée en bas de fichier.
 
 ## Composition
 
 | Fichier | Source | Format | Exemples |
 |---|---|---|---|
-| `dataset_source_a.jsonl` | Historique git du dépôt (103 commits non-merge) | Alpaca (`instruction`=sujet commit, `input`=corps du message, `output`=diff) | **67** |
-| `dataset_source_b.jsonl` | Export JSON conversations Claude.ai (18 conversations, 3787 messages) | Alpaca (`instruction`=message humain, `input`="", `output`=réponse assistant) | **1470** |
-| **Total** | | | **1537** |
+| `dataset_source_a.jsonl` | Historique git du dépôt (103 commits non-merge, 68 exemples depuis régénération Session 5) | Alpaca (`instruction`=sujet commit, `input`=corps du message, `output`=diff) | **68** |
+| `dataset_source_b.jsonl` | Export JSON conversations Claude.ai (18 conversations, 3787 messages) | Alpaca (`instruction`=message humain, `input`="", `output`=réponse assistant) | **1435** (nettoyé Session 4) |
+| `dataset_source_c.jsonl` | Rapports de session Claude Code (`.claude/projects/*/*.jsonl`, 74 fichiers) | Alpaca (`instruction`=message humain, `input`="", `output`=raisonnement assistant + code produit Write/Edit) | **275** |
+| **Total** | | | **1778** |
 
-Les deux fichiers restent **séparés** (styles différents : diffs de code isolés vs. dialogue "rapport d'architecte") -- à charger comme deux datasets distincts dans Unsloth, pas concaténés.
+Les trois fichiers restent **séparés** (styles différents : diffs de code isolés vs. dialogue "rapport d'architecte" vs. raisonnement+code de session de dev) -- à charger comme trois datasets distincts dans Unsloth, pas concaténés.
 
 ## Filtrage appliqué
 
@@ -52,4 +54,64 @@ Recommandation concrète : premier essai QLoRA sur Source B seule ou Source B do
 
 ## Reproductibilité
 
-Scripts dans `scripts/` (`build_source_a.py`, `build_source_b.py`, `compute_stats.py`), exécutables via `py -3.12`. Les critères d'exclusion (mots-clés, UUIDs de messages, plafond de taille de diff) sont documentés en commentaire en tête de chaque script.
+Scripts dans `scripts/` (`build_source_a.py`, `build_source_b.py`, `build_source_c.py`, `compute_stats.py`), exécutables via `py -3.12`. Les critères d'exclusion (mots-clés, UUIDs de messages, plafond de taille de diff) sont documentés en commentaire en tête de chaque script.
+
+## Session 6 (2026-07-30) -- Source C : rapports de session Claude Code
+
+### Origine et méthode
+
+`dataset_source_c.jsonl` est construit à partir des transcripts complets de session Claude Code (`C:\Users\<user>\.claude\projects\*\*.jsonl` -- un fichier par session, 74 fichiers hors la session en cours d'écriture au moment du run, ~365 Mo au total, sessions interactives et sessions "bg" lancées via `.claude/jobs/` confondues -- ce sont les deux localisations citées dans la consigne de session, `.claude/jobs/` s'étant avéré ne contenir que des résumés condensés par transition d'état, `timeline.jsonl`, alors que le transcript complet référencé par son `linkScanPath` sous `.claude/projects/` est la source réellement riche en raisonnement + code).
+
+Contrairement à Source A (diffs git isolés, sans raisonnement du tout) et Source B (dialogue Claude.ai, jamais de code produit dans le même tour), Source C vise des paires qui combinent les deux : `instruction` = message réellement tapé par l'utilisateur (`type=="user"`, `content` une chaîne, `origin.kind=="human"` -- distingue un vrai message humain d'un résultat d'outil renvoyé au modèle, qui porte aussi `type=="user"` mais `content` une liste de blocs `tool_result`), `output` = concaténation du texte assistant visible (blocs `text`, jamais `thinking` -- raisonnement interne du modèle, pas un rapport destiné à l'utilisateur, exclu par choix) **plus**, quand le même tour contient un appel `Write`/`Edit`/`NotebookEdit` sur un fichier `.py` ou `.md`, le code/contenu produit (texte intégral pour `Write`, bloc avant/après pour `Edit` -- volontairement diff-like plutôt que fichier entier, dans le même esprit que Source A). Une paire n'est gardée que si elle contient du texte de raisonnement non vide -- le code seul, sans raisonnement, ne suffit pas (ce serait redondant avec le rôle de Source A). Vérifié manuellement sur deux transcripts de tailles très différentes (un run bg court, un run interactif de 74 Mo) : aucun message humain de ce corpus ne contient de bloc `<system-reminder>` -- l'injection de contexte système ne pollue donc pas le côté instruction sur cette version du CLI, contrairement à une inquiétude initiale.
+
+Les tours appartenant à un sous-agent (`isSidechain: true`, conversations internes de l'outil Agent/Task) sont exclus -- ce n'est pas l'utilisateur principal qui s'exprime.
+
+### Filtrage appliqué
+
+- **Discipline identique à la correction Session 4 sur Source B** : `PERSONAL_PATTERNS` et `has_tool_artifact()`/`clean_stray_markers()` de `build_source_b.py` sont réimportés tels quels (pas redéfinis en parallèle) pour garantir une règle strictement identique, plutôt qu'une variante qui diverge avec le temps -- 36 paires exclues pour contenu personnel, 4 pour artefact d'outil résiduel.
+- **Filet de sécurité supplémentaire** (`SECRET_PATTERNS`, nouveau à cette source) : formes de secrets usuelles (clés `sk-`/`AKIA`/`ghp_`/`xox`, blocs `PRIVATE KEY`) -- 0 occurrence trouvée, cohérent avec le fait que le périmètre d'extraction ne capture jamais la sortie brute de `Bash`/`Read`/`Grep` (seul vecteur plausible d'une fuite de `.env`), seulement le texte assistant et les payloads `Write`/`Edit`.
+- 25 doublons exacts retirés (sessions reprises/forkées loggant deux fois le même échange).
+- Audit manuel complémentaire après filtrage automatique (mots-clés hors liste initiale : mot de passe, secret, carte bancaire, IBAN, salaire, impôts...) : aucune occurrence problématique trouvée sur les 275 exemples retenus -- contrairement à Source B, un seul passage a suffi ici, probablement parce que le contenu est technique par construction (transcripts de travail sur le dépôt) plutôt que du dialogue libre où une tangente personnelle peut se glisser.
+- Plafond de sortie 20000 caractères (cohérent avec `DIFF_SIZE_CAP` de Source A) -- 1 seul exemple sur 275 atteint ce plafond.
+
+### Statistiques
+
+| | Source C |
+|---|---|
+| Exemples | 275 |
+| `instruction` (moy/médiane, chars) | 187 / 58 |
+| `output` (moy/médiane, chars) | 4936 / 2410 |
+| `output` max (chars) | 20000 (plafond, 1 exemple) |
+| Volume total (~tokens, ~4 chars/token) | ~352 000 |
+| Exemples avec code produit (Write/Edit/.py ou .md) | 115 / 275 (~42%) |
+
+### Comparaison au seuil 500-1000 recommandé
+
+La consigne de session vise à rapprocher le **volume factuel/code** (catégorie de Source A, diffs/code à forte densité de signal, distincte du dialogue plus abondant mais moins dense de Source B) du seuil de quelques centaines à un millier d'exemples évoqué en Session 2.
+
+**Source A + Source C combinées = 68 + 275 = 343 exemples.** C'est **5x le volume de Source A seule**, mais **toujours en dessous du bas de la fourchette 500-1000**. Raison identifiée : la majorité des 74 fichiers de session ne contiennent qu'une poignée de messages *réellement tapés par l'utilisateur* -- beaucoup de sessions "bg"/autonomes (`/loop`, sessions longues avec peu d'interaction, cf. la consigne même de cette session) n'ont qu'un seul message humain initial suivi de dizaines de tours purement autonomes (outils, pas de nouvelle instruction humaine), ce qui limite mécaniquement le nombre de paires extractibles quel que soit le volume brut de transcript traité (365 Mo pour seulement 355 tours humains bruts, 275 après filtrage).
+
+**Recommandation** : ne pas forcer un seuil artificiel en assouplissant les critères de qualité (ce serait recréer le problème diagnostiqué en Session 4 -- artefacts d'outil réintroduits dans le dataset). Le volume continuera de croître session après session à mesure que de nouveaux transcripts s'accumulent, exactement comme Source A (`build_source_c.py` est ré-exécutable tel quel). Pour un premier essai QLoRA combinant les trois sources, garder Source B comme base dominante (volume), Source A et Source C comme signal complémentaire fin (comportement de code + raisonnement de session), avec un sur-échantillonnage léger des deux dernières si mélangées en pratique -- même logique que la recommandation Session 2, étendue à trois sources plutôt que deux.
+
+## Session 6 (2026-07-30) -- Sous-ensemble Python CommitPackFT (préparation externe)
+
+### Écart consigne / état réel
+
+La consigne de session suppose les 5 bases externes (CommitPack, OpenCodeInstruct, Stack v2/v3, CodeAlpaca, Evol-Instruct-Code) en cours de téléchargement vers le HDD externe (`G:`, "Seagate 8To"), avec un script à préparer mais **pas exécuter** tant que les données ne sont pas confirmées présentes. Vérification faite à l'exécution (`Get-Volume`, contenu de `G:\Data` et `E:\data`, ligne de commande des process Python actifs) :
+
+- `bigcode/the-stack` (le plus volumineux des 5) était **réellement en cours de téléchargement** vers `G:\Data\the-stack` (HDD) au moment de la vérification -- conforme à la consigne pour cette base.
+- **CommitPackFT, OpenCodeInstruct et evol-codealpaca-v1 étaient déjà téléchargées et complètes, directement sur `E:\data\` (le SSD 2 To dédié "990Pro 2To"), pas sur le HDD.** Vérifié pour CommitPackFT : 277 répertoires de langage (`kilobytes.txt` liste 279 lignes dont l'en-tête et le total = cohérent), taille totale mesurée 1507 Mo vs. ~2 Go annoncés par le README HuggingFace du dataset (écart cohérent avec un arrondi) -- téléchargement complet, pas partiel.
+
+Le script `build_source_commitpack_python.py` a donc été écrit pour vérifier plusieurs emplacements candidats (HDD supposé ET SSD réellement observé) plutôt que de coder en dur l'hypothèse de la consigne, et exécuté dans cette même session conformément à la clause conditionnelle de la consigne ("si le téléchargement est déjà présent, tu peux lancer l'extraction directement"). Aucune copie HDD->SSD n'a été nécessaire pour CommitPackFT (source déjà sur le SSD dédié) -- le script reste néanmoins générique pour ce cas si une future base atterrit bien sur le HDD comme prévu.
+
+### Filtrage et résultat
+
+CommitPackFT/Python complet : 56025 exemples (129.6 Mo de JSONL brut, mesuré). Filtres appliqués : `lang=="Python"` (déjà vrai), sujet non trivial, `old_contents != new_contents`, **`ast.parse()` validé sur `new_contents`** (obligatoire selon les règles de session -- 4755 exemples rejetés, ~8.5%, cohérent avec le fait connu que CommitPack contient des extraits Python 2 tronqués/invalides), diff plafonné à 20000 caractères (0 exemple au-delà -- les fichiers de CommitPackFT sont en pratique plus courts que les diffs les plus longs de Source A), `SECRET_PATTERNS` (mêmes regex que `build_source_c.py`, 4 exemples rejetés). 51266 exemples ont passé tous les filtres ; échantillon aléatoire (seed 3407) à **2000** exemples pour ce premier sous-ensemble.
+
+**`PERSONAL_PATTERNS` (filtre vie privée de Source B/C) n'a volontairement PAS été appliqué ici** : un audit rapide montre 191/2000 exemples matchés, mais 189 sont le motif email générique déclenché par des métadonnées d'auteur open source légitimes et déjà publiques (`__author__`, `author_email` dans des `setup.py` de tiers -- ex. `raphael@hackebrot.de`, `kinnen@cqse.eu`), pas une fuite de données personnelles de l'utilisateur Ov3rLoRd. Appliquer ce filtre reviendrait à une erreur de catégorie (le motif protège l'identité de l'utilisateur dans son propre dialogue, pas les métadonnées d'auteurs tiers dans du code déjà public sous licence permissive) et dégraderait la qualité du sous-ensemble sans bénéfice de confidentialité réel.
+
+Sortie : `E:\data\commitpackft_python_subset\dataset_source_commitpack_python.jsonl` (sur le SSD dédié) + copie de référence versionnée `workspace/qlora_dataset/dataset_source_commitpack_python.jsonl` (2000 lignes, format Alpaca identique à Source A : `instruction`=sujet de commit, `input`=corps du message, `output`=diff unifié).
+
+### Statut
+
+Préparation de données uniquement -- **aucun entraînement lancé** sur ce sous-ensemble. Script réexécutable (`py -3.12 workspace/qlora_dataset/scripts/build_source_commitpack_python.py`) une fois les 4 autres bases externes (OpenCodeInstruct, Stack v2/v3, CodeAlpaca, Evol-Instruct-Code) confirmées présentes et complètes, sur le même principe -- non fait dans cette session (hors périmètre de la consigne, qui ne visait que CommitPack).

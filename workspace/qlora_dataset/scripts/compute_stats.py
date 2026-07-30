@@ -12,6 +12,7 @@ import statistics
 FILES = {
     "Source A (git)": r"D:\OVERLORD\workspace\qlora_dataset\dataset_source_a.jsonl",
     "Source B (Claude.ai)": r"D:\OVERLORD\workspace\qlora_dataset\dataset_source_b.jsonl",
+    "Source C (sessions Claude Code)": r"D:\OVERLORD\workspace\qlora_dataset\dataset_source_c.jsonl",
 }
 
 
