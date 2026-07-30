@@ -17,16 +17,41 @@ gabarit de chat template) : charge et entraine sans probleme sur GPU1 (RTX
 qwen3-coder-30B-A3B reste la cible de production, a revisiter avec plus de
 marge VRAM (liberer GPU0, offloading MoE, ou cloud).
 
-Sur-echantillonnage Source A -- 67 exemples (diffs de code) contre 1470
-exemples Source B (dialogue) : sans correction, Source A representerait
-~4.4% du dataset par nombre d'exemples ET serait noye plus fort encore en
-volume de texte vu que ses exemples sont ~4.4x plus longs en moyenne. Le
-volume total en caracteres est quasi identique au ratio 5:1
-(564969 Source A vs 2824597 Source B, cf. STATS_ET_RECOMMANDATION.md) --
-un facteur de sur-echantillonnage de 5x sur Source A equilibre presque
-exactement le volume de texte (donc de signal gradient) entre les deux
-sources sur une epoque, sans avoir a fusionner les fichiers sources
-(qui restent distincts sur disque).
+Sur-echantillonnage Source A -- 67 exemples (diffs de code) contre 1435
+exemples Source B (dialogue, apres nettoyage session 4 -- 1470 avant) :
+volume total en caracteres quasi au ratio 5:1 (564969 Source A vs 2657959
+Source B) -- facteur de sur-echantillonnage de 5x conserve inchange, toujours
+justifie apres le nettoyage (ratio reel ~4.70, 5x reste la valeur la plus
+proche).
+
+SESSION 4 -- deux corrections suite au verdict qualitatif de reel_v1
+(cf. VERDICT_EVALUATION_QUALITATIVE.md) :
+
+1. Nettoyage Source B (voir scripts/build_source_b.py) : 35 paires retirees
+   ou l'instruction/output contenait un collage brut de transcript Claude
+   Code (bullets "●"/"⎿", "Bash command", "Write(fichier)", etc.), + les
+   bullets isoles residuels nettoyes des paires gardees.
+
+2. **completion_only_loss=True sur un dataset prompt/completion** (nouveau)
+   -- LA correction la plus probable du tag `<tool_call>` vide observe sur
+   8/8 prompts en session 3. Diagnostic : le texte "</tool_call>" n'apparait
+   nulle part dans Source A/B (verifie), donc pas une fuite litterale de
+   donnees -- mais le run reel_v1 calculait la loss sur la sequence ENTIERE
+   (input utilisateur + reponse assistant, `dataset_text_field="text"` sans
+   masquage), pas seulement sur la reponse. Le cote instruction de certaines
+   paires Source B contient justement ce genre de bruit d'interface -- le
+   modele a donc aussi ete supervise a "predire" ce bruit textuel cote
+   utilisateur, ce qui plausiblement generalise vers un tic de
+   debut-de-reponse.
+   Tentative initiale avec le format conversationnel trl standard (colonne
+   "messages" + `assistant_only_loss=True`) -- rejetee par le SFTTrainer
+   patche d'Unsloth (`RuntimeError: You must specify a formatting_func`,
+   ce wrapper ne reconnait que "text"/"prompt"+"completion"/deja-tokenise,
+   pas "messages"). Bascule sur le format **prompt/completion** natif de trl
+   (colonnes "prompt" = chat template applique avec add_generation_prompt=True
+   sur le tour utilisateur seul, "completion" = reponse assistant brute) +
+   `completion_only_loss=True`, explicitement supporte par ce meme wrapper
+   (`do_prompt_completion` dans `_prepare_dataset`).
 """
 import argparse
 import json
@@ -73,6 +98,10 @@ def load_jsonl(path):
 
 
 def build_mixed_dataset(tokenizer):
+    """Format prompt/completion -- requis par completion_only_loss=True sous
+    le SFTTrainer patche d'Unsloth (voir docstring module). "prompt" = chat
+    template applique (add_generation_prompt=True) sur le tour utilisateur
+    seul ; "completion" = reponse assistant brute, non re-templatee."""
     from datasets import Dataset
 
     source_a = load_jsonl(SOURCE_A)
@@ -82,21 +111,21 @@ def build_mixed_dataset(tokenizer):
     rng = random.Random(SEED)
     rng.shuffle(mixed)
 
-    texts = []
+    prompts, completions = [], []
     for r in mixed:
         user_content = r["instruction"]
         if r.get("input"):
             user_content += "\n\n" + r["input"]
-        messages = [
-            {"role": "user", "content": user_content},
-            {"role": "assistant", "content": r["output"]},
-        ]
-        text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
-        texts.append(text)
+        prompt = tokenizer.apply_chat_template(
+            [{"role": "user", "content": user_content}],
+            tokenize=False, add_generation_prompt=True,
+        )
+        prompts.append(prompt)
+        completions.append(r["output"])
 
     print(f"dataset_mixe: {len(mixed)} exemples "
           f"({len(source_a)}x{OVERSAMPLE_A}={len(source_a) * OVERSAMPLE_A} Source A + {len(source_b)} Source B)")
-    return Dataset.from_dict({"text": texts})
+    return Dataset.from_dict({"prompt": prompts, "completion": completions})
 
 
 def main():
@@ -157,10 +186,10 @@ def main():
         save_steps=args.save_steps,
         save_strategy="steps",
         report_to="none",
-        dataset_text_field="text",
         max_length=MAX_SEQ_LENGTH,
         packing=False,
         bf16=True,
+        completion_only_loss=True,
     )
 
     trainer = SFTTrainer(

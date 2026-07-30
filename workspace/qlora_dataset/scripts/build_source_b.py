@@ -136,6 +136,60 @@ PERSONAL_PATTERNS = [
     re.compile(r"horaires? d'ouverture", re.I),
 ]
 
+# Session 4 -- artefacts d'interface/outil (transcripts Claude Code colles
+# tels quels par l'utilisateur dans Claude.ai, decouverts en diagnostiquant
+# le tag <tool_call> vide systematique observe sur l'adapter reel_v1).
+# Verification faite : le texte "</tool_call>" lui-meme n'apparait NULLE
+# PART dans le dataset (ni instruction ni output) -- l'hypothese initiale
+# ("transcript brut fuite dans l'output assistant") ne tient donc pas telle
+# quelle. Ce qui est reellement present : le cote INSTRUCTION (humain) de
+# plusieurs paires contient des blocs colles de sortie Claude Code brute
+# (bullets "●"/"⎿" -- convention d'affichage de Claude Code TUI -- "Bash
+# command", "Write(fichier)", "Searched for N pattern", "ran N shell
+# command", etc.). Le script d'entrainement (train_qlora.py) de la session 3
+# calculait la loss sur la sequence ENTIERE (input+output, pas de
+# assistant_only_loss) -- le modele a donc aussi ete supervise a "predire"
+# ce bruit cote instruction, ce qui explique plus precisement l'artefact
+# observe que la fuite cote output. Les deux corrections (nettoyage donnees
+# + assistant_only_loss=True dans train_qlora.py) sont appliquees ensemble.
+#
+# Marqueurs FORTS : un seul suffit a exclure la paire (bloc de transcript
+# substantiel, pas une simple citation ponctuelle).
+TOOL_ARTIFACT_STRONG_PATTERNS = [
+    re.compile(r"</?tool_call>"),
+    re.compile(r"\bBash command\b"),
+    re.compile(r"\bCoalescing\b"),
+    re.compile(r"Tip: Run claude"),
+    re.compile(r"wrote \d+ memor"),
+    re.compile(r"\bran \d+ shell command"),
+    re.compile(r"\bWrote \d+ line"),
+    re.compile(r"\bListed \d+ director"),
+    re.compile(r"Searched for \d+ pattern"),
+    re.compile(r"\b(Write|Edit|Read|Bash|Grep|Glob)\([^)]{2,80}\)"),
+    re.compile(r"completed \(exit code \d+\)"),
+    re.compile(r"\bbackground command\b", re.I),
+    re.compile(r"almost done thinking"),
+]
+# Marqueur FAIBLE : le bullet "●"/"⎿" seul apparait aussi comme simple
+# citation ponctuelle d'une ligne de reponse Claude Code dans un message par
+# ailleurs parfaitement redige (verifie manuellement : ~90% des occurrences
+# isolees sont ce cas, pas du bruit) -- n'exclut la paire qu'a partir de 3
+# occurrences (signe d'un veritable collage de plusieurs echanges de
+# transcript), sinon la paire est gardee et seuls les caracteres eux-memes
+# sont nettoyes (aucune valeur semantique, juste un marqueur visuel de TUI).
+TOOL_ARTIFACT_WEAK_PATTERN = re.compile(r"[●⎿]")
+TOOL_ARTIFACT_WEAK_THRESHOLD = 3
+
+
+def has_tool_artifact(text: str) -> bool:
+    if any(p.search(text) for p in TOOL_ARTIFACT_STRONG_PATTERNS):
+        return True
+    return len(TOOL_ARTIFACT_WEAK_PATTERN.findall(text)) >= TOOL_ARTIFACT_WEAK_THRESHOLD
+
+
+def clean_stray_markers(text: str) -> str:
+    return TOOL_ARTIFACT_WEAK_PATTERN.sub("", text)
+
 
 def get_text(m: dict) -> str:
     blocks = m.get("content") or []
@@ -158,6 +212,7 @@ def main():
     skipped_short = 0
     skipped_empty_conv = 0
     skipped_excluded_conv = 0
+    skipped_tool_artifact = 0
 
     excluded_preview = []
 
@@ -209,6 +264,14 @@ def main():
                     i = j if j > i else i + 1
                     continue
 
+                if has_tool_artifact(human_text) or has_tool_artifact(assistant_text):
+                    skipped_tool_artifact += 1
+                    i = j if j > i else i + 1
+                    continue
+
+                human_text = clean_stray_markers(human_text)
+                assistant_text = clean_stray_markers(assistant_text)
+
                 record = {
                     "instruction": human_text,
                     "input": "",
@@ -233,6 +296,7 @@ def main():
     print(f"paires_gardees={kept}")
     print(f"paires_exclues_personnel={skipped_personal}")
     print(f"paires_exclues_trop_courtes={skipped_short}")
+    print(f"paires_exclues_artefact_outil={skipped_tool_artifact}")
 
 
 if __name__ == "__main__":

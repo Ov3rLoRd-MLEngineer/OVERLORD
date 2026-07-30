@@ -1,27 +1,45 @@
 """
-Evaluation qualitative de l'adapter QLoRA reel_v1 (workspace/qlora_dataset/
-training/runs/reel_v1/adapter_final/) contre le modele de base
+Evaluation qualitative d'un adapter QLoRA contre le modele de base
 unsloth/Qwen3-4B-Instruct-2507, sur les memes prompts, meme decodage
-deterministe (greedy, pas de sampling) pour une comparaison equitable.
+deterministe (greedy + repetition_penalty/no_repeat_ngram_size, pas de
+sampling) pour une comparaison equitable.
 
 Pas de metrique automatique : ce script se contente de generer les deux
 jeux de reponses et de les ecrire cote a cote dans un fichier markdown.
 Le jugement qualitatif (ton, structure, conventions projet) est fait a la
 lecture, pas ici.
+
+Session 4 -- ADAPTER_PATH/OUT_PATH pointent sur reel_v2 (dataset nettoye +
+completion_only_loss) pour comparaison directe avec le rapport de la
+session 3 (eval_baseline_vs_adapter.md, adapter reel_v1) sans l'ecraser.
+GPU par defaut passe a la RTX 5060 Ti (contrainte de cette session).
 """
 import json
 import os
 import time
 
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")  # RTX 5080 pour cette session
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")  # RTX 5060 Ti pour cette session
 os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
 
 REPO_ROOT = r"D:\OVERLORD"
 BASE_MODEL = "unsloth/Qwen3-4B-Instruct-2507"
-ADAPTER_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "runs", "reel_v1", "adapter_final")
-OUT_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "eval_baseline_vs_adapter.md")
+ADAPTER_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "runs", "reel_v2", "adapter_final")
+OUT_PATH = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "eval_baseline_vs_adapter_v2.md")
 MAX_SEQ_LENGTH = 3072
 MAX_NEW_TOKENS = 500
+# Session 3 (verdict precedent) : greedy pur, sans penalite, a produit une
+# boucle degenerative (meme paragraphe repete 5x sur le prompt "etat des
+# lieux"). Deux garde-fous ajoutes, cumulatifs :
+# - repetition_penalty=1.15 : penalite moderee (fourchette usuelle 1.1-1.3
+#   recommandee) -- decourage la reutilisation de tokens deja emis sans
+#   interdire les repetitions legitimes de vocabulaire projet (segnet,
+#   ComfyUI, noms de fichiers reels reapparaissant naturellement).
+# - no_repeat_ngram_size=4 : interdit strictement la reapparition d'un
+#   4-gramme deja vu -- cible directement le mode de defaillance observe
+#   (paragraphe entier recopie a l'identique), que repetition_penalty seul
+#   n'empeche pas forcement s'il est trop faible.
+REPETITION_PENALTY = 1.15
+NO_REPEAT_NGRAM_SIZE = 4
 
 # 4 prompts style Source A (tache de code / diff, conventions du projet),
 # 4 prompts style Source B (diagnostic/rapport conversationnel) -- inspires
@@ -60,6 +78,8 @@ def generate(model, tokenizer, prompt_text):
         temperature=None,
         top_p=None,
         top_k=None,
+        repetition_penalty=REPETITION_PENALTY,
+        no_repeat_ngram_size=NO_REPEAT_NGRAM_SIZE,
         pad_token_id=tokenizer.eos_token_id,
     )
     text = tokenizer.decode(out[0][inputs.shape[1]:], skip_special_tokens=True)
