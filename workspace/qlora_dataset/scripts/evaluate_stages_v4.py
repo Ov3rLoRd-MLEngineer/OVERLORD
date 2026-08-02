@@ -17,6 +17,7 @@ les tests/evaluations ponctuels (~2x plus rapide, confirme empiriquement sur
 reel_v3 et sur ce run), la RTX 5060 Ti restant dediee a l'inference LLM de
 service (ex. Ollama en fallback local), pas aux benchmarks one-shot.
 """
+import argparse
 import json
 import os
 import time
@@ -26,12 +27,10 @@ os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
 
 REPO_ROOT = r"D:\OVERLORD"
 BASE_MODEL = "unsloth/Qwen3-4B-Instruct-2507"
-STAGE1_ADAPTER = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training_stage1",
-                               "runs", "stage1_commitpack_full", "adapter_stage1")
-STAGE2_ADAPTER = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training_stage2",
-                               "runs", "stage2_instructions_full", "adapter_stage2_final")
-OUT_MD = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training", "eval_baseline_vs_stages_v4.md")
-OUT_JSON = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "evaluation_comparative_v4_resultats.json")
+DEFAULT_STAGE1_ADAPTER = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training_stage1",
+                                       "runs", "stage1_commitpack_full", "adapter_stage1")
+DEFAULT_STAGE2_ADAPTER = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training_stage2",
+                                       "runs", "stage2_instructions_full", "adapter_stage2_final")
 
 MAX_SEQ_LENGTH = 3072
 MAX_NEW_TOKENS = 500
@@ -92,6 +91,24 @@ def run_all_prompts(model, tokenizer, label):
 def main():
     from unsloth import FastLanguageModel
     from peft import PeftModel
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--stage1_adapter", type=str, default=DEFAULT_STAGE1_ADAPTER)
+    parser.add_argument("--stage2_adapter", type=str, default=DEFAULT_STAGE2_ADAPTER)
+    parser.add_argument("--label", type=str, default="v4",
+                         help="Suffixe des fichiers de sortie (ex: v4, v5) -- evite d'ecraser un rapport precedent.")
+    args = parser.parse_args()
+
+    STAGE1_ADAPTER = args.stage1_adapter
+    STAGE2_ADAPTER = args.stage2_adapter
+    OUT_MD = os.path.join(REPO_ROOT, "workspace", "qlora_dataset", "training",
+                           f"eval_baseline_vs_stages_{args.label}.md")
+    OUT_JSON = os.path.join(REPO_ROOT, "workspace", "qlora_dataset",
+                             f"evaluation_comparative_{args.label}_resultats.json")
+    if os.path.exists(OUT_MD):
+        raise FileExistsError(
+            f"{OUT_MD} existe deja -- choisis un --label different pour ne pas l'ecraser."
+        )
 
     print(f"[{time.strftime('%H:%M:%S')}] Chargement du modele de base {BASE_MODEL}...")
     model, tokenizer = FastLanguageModel.from_pretrained(
