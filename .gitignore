@@ -15,6 +15,10 @@ workspace/qlora_dataset/_qa/
 # regenerables a la demande, jamais commites. Les scripts restent suivis.
 workspace/qlora_dataset/training/runs/
 workspace/qlora_dataset/training/logs/
+# Pipeline Stage 1 (CommitPack) / Stage 2 (personnalisation), meme
+# raisonnement -- checkpoints/adapters binaires, jamais commites.
+workspace/qlora_dataset/training_stage1/
+workspace/qlora_dataset/training_stage2/
 
 # Datasets et checkpoints SegNet generes -- jamais commites (binaires, des
 # milliers de fichiers). Les .gitkeep deja suivis dans ces dossiers ne sont

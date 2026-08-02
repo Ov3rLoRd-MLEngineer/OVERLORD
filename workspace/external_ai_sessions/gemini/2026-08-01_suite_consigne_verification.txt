@@ -1,0 +1,7 @@
+vérifie que ce qui suit à bien été fait et est cohérent avec ce que tu voulais faire.
+vérifie les fichiers créers, leurs code, et assure toi que tout est ok.
+
+actuellement, des data base sont en cour de téléchargement (commitpack 3.8To à 58% au moins 24h restant pour le telecharger sur le G:) et est déjà téléchargé (the_stack 2.23To (v1 ?) sur G: / commitpackft, commitpackft_python_subset, evol-codealpaca-v1 et OpenCodeInstruct sur E:
+G: étant utilisé en écriture, tu peux pour selectionner ce qui est requis dans ces datas de E: en plus des datas déjà retenus pour les prochains entrainements 
+
+consigne de sécurité et prudence habituelles.

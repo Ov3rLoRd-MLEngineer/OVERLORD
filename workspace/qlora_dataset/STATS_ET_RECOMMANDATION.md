@@ -115,3 +115,18 @@ Sortie : `E:\data\commitpackft_python_subset\dataset_source_commitpack_python.js
 ### Statut
 
 Préparation de données uniquement -- **aucun entraînement lancé** sur ce sous-ensemble. Script réexécutable (`py -3.12 workspace/qlora_dataset/scripts/build_source_commitpack_python.py`) une fois les 4 autres bases externes (OpenCodeInstruct, Stack v2/v3, CodeAlpaca, Evol-Instruct-Code) confirmées présentes et complètes, sur le même principe -- non fait dans cette session (hors périmètre de la consigne, qui ne visait que CommitPack).
+
+## Session 2026-08-02 -- Sous-ensembles evol-codealpaca-v1 et OpenCodeInstruct
+
+Suite de la préparation externe, mêmes principes que CommitPackFT/Python (taille cible 2000, `ast.parse()` validé, `SECRET_PATTERNS`, `PERSONAL_PATTERNS` volontairement pas appliqué -- sources publiques tierces, même raisonnement documenté ci-dessus).
+
+| Source | Candidats lus | Filtre principal | Retenus (avant échantillonnage) | Sous-ensemble final |
+|---|---|---|---|---|
+| `evol-codealpaca-v1` (`E:\data\evol-codealpaca-v1\train.jsonl`, 111272 ex. total) | 111272 | fence ```` ```python ```` explicite (pas de champ `lang`) + `ast.parse()` | 49319 | **2000** |
+| `OpenCodeInstruct` (NVIDIA, `E:\data\OpenCodeInstruct\data\`, ~5M ex. total, 50 shards parquet) | 200000 (2 premiers shards sur 50 -- largement suffisant, voir docstring du script) | `average_test_score == 1.0` (tous les tests unitaires générés passent) + fence Python + `ast.parse()` | 79676 | **2000** |
+
+Écarts notés : `evol-codealpaca-v1` est multi-langage sans champ dédié (~45% Python d'après un échantillon de 20000, filtré sur le fence markdown explicite pour rester fiable plutôt que deviner) ; `OpenCodeInstruct` porte un score de qualité mesuré par exemple (`average_test_score`), filtre plus fort qu'une simple validation syntaxique -- utilisé en filtre principal plutôt qu'un seuil arbitraire.
+
+Scan `PERSONAL_PATTERNS` (référence uniquement, non appliqué en filtre) : 23/2000 (evol-codealpaca) et 22/2000 (OpenCodeInstruct), taux comparable à CommitPackFT (~9.5%) -- cohérent avec des métadonnées d'auteurs publics dans du code/docstrings, pas une fuite de données personnelles de l'utilisateur.
+
+Sorties : `E:\data\evol_codealpaca_python_subset\` et `E:\data\opencodeinstruct_python_subset\` (SSD dédié) + copies de référence versionnées dans `workspace/qlora_dataset/`. **Aucun entraînement lancé sur ces deux sous-ensembles** -- préparation uniquement, en attente d'une décision sur leur intégration au Stage 1 (actuellement CommitPack seul).
