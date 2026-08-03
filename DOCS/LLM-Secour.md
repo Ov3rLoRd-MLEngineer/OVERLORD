@@ -72,6 +72,78 @@ d'exemple concret de ce qui peut mal tourner :
    Toujours versionner/horodater un nouveau run, ou vérifier explicitement
    qu'un dossier de sortie n'existe pas déjà avant d'écrire dedans.
 
+## Modèles de secours locaux pour Aider (génération de code)
+
+Trois modèles locaux Ollama disponibles pour router des tâches de code vers
+Aider quand Claude Code n'est pas disponible (quota épuisé). Lancement via
+`workspace/scripts/aider_devstral.bat` pour le profil devstral ; les autres
+utilisent le profil par défaut du dépôt (`~/.aider.conf.yml` :
+`ollama_chat/qwen3-coder:30b-a3b-q4_K_M`, voir
+`DOCS/MD/SETUP_AGENT_LOCAL_AIDER_QWEN3CODER.md`).
+
+| Modèle | Rôle | num_ctx | Statut validé |
+|---|---|---|---|
+| `qwen3-coder:30b-a3b-q4_K_M` | Défaut du dépôt, premier jet sur tâches cadrées | 32768 | **Fiable** — plusieurs "Applied edit to..." confirmés sur historique réel (`.aider.chat.history.md`), voir `SETUP_AGENT_LOCAL_AIDER_QWEN3CODER.md` §5 |
+| `ov3rlord-coder-stage2v2` | Fine-tune QLoRA maison (style Ov3rLoRd) | 32768 | Fiabilité **factuelle** non garantie sur les détails précis du projet (confabulation documentée, voir `VERDICT_EVALUATION_QUALITATIVE_V5.md` / mémoire `qlora-local-llm-effort`) — à coupler avec le RAG (`DOCS/RAG_SOURCES.md`), pas à utiliser seul pour des faits précis. Pas testé pour la fiabilité d'application de diff cette session. |
+| `qwen2.5-coder:14b-instruct-q4_K_M` | Alternative plus légère (9 Go) que qwen3-coder | Non plafonné explicitement dans `~/.aider.model.settings.yml` — à faire avant usage réel (même piège `std::bad_alloc` que qwen3-coder si le num_ctx par défaut du modèle est trop grand) | **Non testé cette session** (modèle présent dans `ollama list`, jamais exercé sur une tâche réelle via Aider) — à valider avant adoption, ne pas présumer fiable sur la seule base de sa présence locale |
+| `devstral:24b` | Alternative de secours (14 Go) | 16384 (`~/.aider.model.settings.yml`, pas 32768 — VRAM 5060 Ti trop juste avec un modèle de cette taille) | **⚠️ Cassé avec Aider sur cette machine, 3/3 tests échoués** — voir limite connue ci-dessous. **Ne pas router de tâche réelle dessus tant que non corrigé.** |
+
+### Limite connue critique — devstral:24b émet des fences markdown à 4 backticks
+
+Testé le 2026-08-03 sur une tâche minimale et réelle (ajouter un commentaire
+d'une ligne dans `gpu_cost_estimate.py`, fichier non critique) : **3
+tentatives sur 3 ont échoué silencieusement**, avec les deux `--edit-format`
+concernés (`whole`, celui choisi par défaut par Aider pour ce modèle, et
+`diff`/SEARCH-REPLACE, forcé explicitement pour un second essai) :
+
+- Le modèle produit un texte de réponse cohérent et correct sur le fond (le
+  commentaire proposé était pertinent, en français correctement accentué
+  dans `.aider.chat.history.md` — le rendu console mojibake observé dans le
+  terminal était un artefact d'affichage, pas une corruption réelle du
+  texte).
+- **Mais il entoure systématiquement son bloc de code de 4 backticks
+  (` ```` `) au lieu des 3 attendus par le parseur Aider** (confirmé par
+  `grep` direct sur `.aider.chat.history.md` : les fences des sessions
+  qwen3-coder passées sont à 3 backticks, celles de devstral à 4, dans le
+  même fichier). Résultat : Aider ne reconnaît pas le bloc comme une
+  édition, n'affiche **aucune erreur**, ne modifie **aucun fichier sur
+  disque**, ne crée **aucun commit** — juste un message de chat normal.
+  Reproduit à l'identique même après avoir explicitement demandé au modèle
+  d'utiliser des triple-backticks dans le prompt.
+- **Piège de la même famille que celui déjà documenté pour qwen3-coder**
+  (mémoire `aider-qwen3coder-setup` : succès affiché dans le terminal, mais
+  rien d'appliqué en réalité) — confirme la règle "toujours vérifier `git
+  status`/`git log`/le fichier réel après un run Aider, jamais se fier au
+  texte affiché", ici avec une cause racine précise identifiée (longueur de
+  fence) plutôt qu'un artefact de rendu terminal.
+- **Vérifié aussi que le GPU pinning fonctionne correctement** pendant ces
+  tests (`nvidia-smi` : devstral chargé à 13,9 Go sur la RTX 5060 Ti,
+  RTX 5080 non touchée) — le problème est uniquement le format de sortie du
+  modèle, pas l'infrastructure GPU/Ollama.
+- Non testé : post-traitement de la réponse du modèle pour normaliser les
+  fences avant qu'Aider ne les parse (nécessiterait de patcher Aider
+  lui-même ou d'écrire un wrapper, hors périmètre d'une simple config Aider).
+
+**Recommandation** : ne pas router de tâche réelle vers `devstral:24b` via
+Aider sur cette machine tant que ce comportement n'est pas corrigé ou
+contourné. `workspace/scripts/aider_devstral.bat` reste en place
+(fonctionnel pour discuter/lire du code, juste pas pour appliquer des
+edits) au cas où une future version d'Ollama/Aider ou un changement de
+prompt système résoudrait le problème — à retester avant réactivation.
+
+### Critère de routage (une fois devstral fiable, ou en l'état pour les deux autres)
+
+- **Tâche de code cadrée, fichier(s) identifié(s), pas de raisonnement
+  architectural** → `qwen3-coder:30b-a3b-q4_K_M` (seul confirmé fiable
+  aujourd'hui).
+- **Question factuelle précise sur le projet** → coupler avec le RAG
+  (`agents/infra/rag_query.py`) quel que soit le modèle, ne jamais faire
+  confiance à `ov3rlord-coder-stage2v2` seul sur ce point.
+- **Tâches multi-fichiers complexes** → à éviter pour tous les modèles
+  locaux listés ici, quel que soit le num_ctx — réservé à Claude Code
+  (raisonnement multi-étapes, voir `SETUP_AGENT_LOCAL_AIDER_QWEN3CODER.md`
+  §4).
+
 ## Où trouver l'état du chantier QLoRA (personnalisation LLM local)
 
 `workspace/qlora_dataset/STATS_ET_RECOMMANDATION.md` -- volumétrie et
