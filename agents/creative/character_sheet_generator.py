@@ -1,0 +1,523 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
+"""
+character_sheet_generator.py V1.2 -- Generateur de Bible Visuelle Personnages
+Studio Ov3rLoRd
+V1.2 :
+  - Prompts studio corrects (1girl, nom, no background, naked pour passe production)
+  - 9 poses : face, profil, dos, trois-quarts x2, dessus + 3 expressions
+  - _build_workflow() utilise le bon prompt selon mode (reference vs production)
+  - lora_weight 0.75, negatif renforce (plugsuit, extra fingers)
+"""
+
+import sys
+import json
+import time
+import logging
+import hashlib
+import requests
+from pathlib import Path
+from typing import Optional
+
+_BASE_DIR = Path(__file__).resolve().parent.parent
+if str(_BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(_BASE_DIR))
+
+try:
+    from overlord_utils import safe_json_parse
+    UTILS_OK = True
+except ImportError:
+    try:
+        from agents.overlord_utils import safe_json_parse
+        UTILS_OK = True
+    except ImportError:
+        UTILS_OK = False
+
+COMFY_URL      = "http://127.0.0.1:8188"
+CHARACTERS_DIR = Path("workspace/characters")
+TIMEOUT_PROMPT = 30
+TIMEOUT_POLL   = 120
+POLL_INTERVAL  = 3
+
+# ── Profils personnages ───────────────────────────────────────────────
+PRESET_CHARACTERS = {
+    "asuka": {
+        "name":        "asuka",
+        "display":     "Asuka Langley Soryu",
+        "lora":        "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+        "lora_weight": 0.75,
+        # Passe REFERENCE (fiche technique)
+        "base_positive": (
+            "1girl, Asuka Langley Soryu, orange hair, blue eyes, "
+            "no background, white background, "
+            "anime style, masterpiece, best quality, highly detailed, sharp focus"
+        ),
+        # Passe PRODUCTION (layering studio -- corps nu avant ajout vetements)
+        "base_positive_production": (
+            "1girl, Asuka Langley Soryu, orange hair, blue eyes, "
+            "naked, no background, "
+            "anime style, masterpiece, best quality, highly detailed, sharp focus"
+        ),
+        "negative": (
+            "multiple girls, wrong hair color, blue hair, bad anatomy, "
+            "extra fingers, six fingers, deformed hands, missing fingers, "
+            "plugsuit, clothes, uniform, bodysuit, suit, dressed, "
+            "deformed, watermark, signature, blurry, low quality, "
+            "multiple people, extra limbs, text, logo"
+        ),
+        "cfg":       7.0,
+        "steps":     35,
+        "width":     1344,
+        "height":    1984,
+        "sampler":   "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "vae":       "taesdxl",
+    },
+    "rei": {
+        "name":        "rei",
+        "display":     "Rei Ayanami",
+        "lora":        "",
+        "lora_weight": 0.75,
+        "base_positive": (
+            "1girl, Rei Ayanami, blue hair, red eyes, pale skin, "
+            "no background, white background, "
+            "anime style, masterpiece, best quality, highly detailed, sharp focus"
+        ),
+        "base_positive_production": (
+            "1girl, Rei Ayanami, blue hair, red eyes, pale skin, "
+            "naked, no background, "
+            "anime style, masterpiece, best quality, highly detailed, sharp focus"
+        ),
+        "negative": (
+            "multiple girls, wrong hair color, auburn hair, bad anatomy, "
+            "extra fingers, six fingers, deformed hands, missing fingers, "
+            "plugsuit, clothes, uniform, bodysuit, suit, dressed, "
+            "deformed, watermark, signature, blurry, low quality, "
+            "multiple people, extra limbs, text, logo"
+        ),
+        "cfg":       7.0,
+        "steps":     35,
+        "width":     1344,
+        "height":    1984,
+        "sampler":   "dpmpp_2m_sde",
+        "scheduler": "karras",
+        "vae":       "taesdxl",
+    },
+}
+
+# ── Poses (style settei DAO studio) ──────────────────────────────────
+# Vues structurelles : face, profil, dos, 3/4 x2, dessus
+# Expressions : neutre, colere, tristesse (pour acting_intent)
+POSE_DEFINITIONS = {
+    # ── Vues structurelles ──
+    "face": {
+        "suffix":   "front view, facing viewer, full body, standing straight, arms at sides, neutral expression, character turnaround",
+        "filename": "{name}_face.png",
+        "label":    "Face",
+    },
+    "profile_left": {
+        "suffix":   "side view, profile, facing left, full body, standing straight, arms at sides, character turnaround",
+        "filename": "{name}_profile_left.png",
+        "label":    "Profil gauche",
+    },
+    "back": {
+        "suffix":   "back view, seen from behind, full body, standing straight, arms at sides, character turnaround",
+        "filename": "{name}_back.png",
+        "label":    "Dos",
+    },
+    "threequarters_front": {
+        "suffix":   "three quarter view, 45 degree angle, facing slightly right, full body, standing, dynamic pose",
+        "filename": "{name}_threequarters_front.png",
+        "label":    "Trois-quarts face",
+    },
+    "threequarters_back": {
+        "suffix":   "three quarter back view, 45 degree angle, seen from behind slightly, full body, standing",
+        "filename": "{name}_threequarters_back.png",
+        "label":    "Trois-quarts dos",
+    },
+    "top_down": {
+        "suffix":   "top down view, birds eye view, directly above, full body, standing, architectural view",
+        "filename": "{name}_top_down.png",
+        "label":    "Dessus",
+    },
+    # ── Expressions ──
+    "expression_neutral": {
+        "suffix":   "portrait, close up face, neutral expression, looking at viewer, calm, expressionless",
+        "filename": "{name}_expr_neutral.png",
+        "label":    "Expression neutre",
+    },
+    "expression_anger": {
+        "suffix":   "portrait, close up face, angry expression, rage, intense gaze, frowning, yelling, defiant",
+        "filename": "{name}_expr_anger.png",
+        "label":    "Expression colere",
+    },
+    "expression_sadness": {
+        "suffix":   "portrait, close up face, sad expression, tears, melancholy, downcast eyes, grief, suppressed emotion",
+        "filename": "{name}_expr_sadness.png",
+        "label":    "Expression tristesse",
+    },
+}
+
+# Sous-ensemble rapide pour --quick
+QUICK_POSES = ["face", "profile_left", "expression_neutral"]
+
+
+# ── Helpers ComfyUI ───────────────────────────────────────────────────
+
+def _comfy_post(endpoint: str, payload: dict, logger: logging.Logger) -> dict:
+    try:
+        r = requests.post(COMFY_URL + endpoint, json=payload, timeout=TIMEOUT_PROMPT)
+        r.raise_for_status()
+        return r.json() if r.text else {}
+    except requests.exceptions.ConnectionError:
+        logger.error("[CSG] ComfyUI inaccessible sur %s", COMFY_URL)
+        return {}
+    except Exception as e:
+        logger.error("[CSG] Erreur POST %s : %s", endpoint, e)
+        return {}
+
+
+def _wait_for_image(prompt_id: str, output_path: Path,
+                    logger: logging.Logger) -> bool:
+    elapsed = 0
+    while elapsed < TIMEOUT_POLL:
+        time.sleep(POLL_INTERVAL)
+        elapsed += POLL_INTERVAL
+        try:
+            r = requests.get(COMFY_URL + "/history/" + prompt_id, timeout=10)
+            history = r.json()
+        except Exception:
+            continue
+        if prompt_id not in history:
+            continue
+        outputs = history[prompt_id].get("outputs", {})
+        for node_id, node_out in outputs.items():
+            for img_info in node_out.get("images", []):
+                filename  = img_info.get("filename", "")
+                subfolder = img_info.get("subfolder", "")
+                if not filename:
+                    continue
+                try:
+                    img_r = requests.get(
+                        COMFY_URL + "/view",
+                        params={"filename": filename, "subfolder": subfolder,
+                                "type": "output"},
+                        timeout=30
+                    )
+                    if img_r.status_code == 200:
+                        output_path.parent.mkdir(parents=True, exist_ok=True)
+                        output_path.write_bytes(img_r.content)
+                        logger.info("[CSG] Image sauvegardee : %s", output_path.name)
+                        return True
+                except Exception as e:
+                    logger.warning("[CSG] Erreur telechargement : %s", e)
+    logger.error("[CSG] Timeout %ds pour prompt_id=%s", TIMEOUT_POLL, prompt_id)
+    return False
+
+
+def _build_workflow(char: dict, pose: dict, seed: int,
+                    production_mode: bool = False) -> dict:
+    """
+    Workflow ComfyUI pour une pose.
+    production_mode=True  -> base_positive_production (naked, no bg)
+    production_mode=False -> base_positive (reference sheet)
+    """
+    if production_mode and char.get("base_positive_production"):
+        base = char["base_positive_production"]
+    else:
+        base = char["base_positive"]
+
+    positive_prompt = base + ", " + pose["suffix"]
+
+    workflow = {
+        "1": {
+            "class_type": "CheckpointLoaderSimple",
+            "inputs": {"ckpt_name": "fabricatedXL_v70.safetensors"}
+        },
+        "2": {
+            "class_type": "CLIPTextEncode",
+            "inputs": {"text": positive_prompt, "clip": ["1", 1]}
+        },
+        "3": {
+            "class_type": "CLIPTextEncode",
+            "inputs": {"text": char["negative"], "clip": ["1", 1]}
+        },
+        "4": {
+            "class_type": "EmptyLatentImage",
+            "inputs": {
+                "width":      char["width"],
+                "height":     char["height"],
+                "batch_size": 1
+            }
+        },
+        "5": {
+            "class_type": "KSampler",
+            "inputs": {
+                "model":        ["1", 0],
+                "positive":     ["2", 0],
+                "negative":     ["3", 0],
+                "latent_image": ["4", 0],
+                "seed":         seed,
+                "steps":        char["steps"],
+                "cfg":          char["cfg"],
+                "sampler_name": char["sampler"],
+                "scheduler":    char["scheduler"],
+                "denoise":      1.0
+            }
+        },
+        "6": {
+            "class_type": "VAEDecode",
+            "inputs": {"samples": ["5", 0], "vae": ["1", 2]}
+        },
+        "7": {
+            "class_type": "SaveImage",
+            "inputs": {
+                "images":          ["6", 0],
+                "filename_prefix": "csg_ref"
+            }
+        }
+    }
+
+    if char.get("lora"):
+        workflow["8"] = {
+            "class_type": "LoraLoader",
+            "inputs": {
+                "model":          ["1", 0],
+                "clip":           ["1", 1],
+                "lora_name":      char["lora"],
+                "strength_model": char["lora_weight"],
+                "strength_clip":  char["lora_weight"],
+            }
+        }
+        workflow["5"]["inputs"]["model"] = ["8", 0]
+        workflow["2"]["inputs"]["clip"]  = ["8", 1]
+        workflow["3"]["inputs"]["clip"]  = ["8", 1]
+
+    return workflow
+
+
+# ── API principale ────────────────────────────────────────────────────
+
+def generate_character_sheet(
+    character_name:  str,
+    char_config:     Optional[dict] = None,
+    seed:            Optional[int]  = None,
+    output_dir:      Optional[Path] = None,
+    production_mode: bool = False,
+    quick:           bool = False,
+    poses_filter:    Optional[list] = None,
+    logger:          Optional[logging.Logger] = None
+) -> dict:
+    """
+    Genere les poses de reference pour un personnage.
+
+    Args:
+        character_name  : asuka, rei, ou nom libre avec char_config.
+        char_config     : Config custom (remplace PRESET_CHARACTERS).
+        seed            : Seed fixe. None = derive du nom (reproductible).
+        output_dir      : Defaut workspace/characters/
+        production_mode : True = prompts naked/no bg pour passe layering studio.
+        quick           : True = 3 poses seulement (face, profil, expression neutre).
+        poses_filter    : Liste de cles de poses specifiques.
+        logger          : Logger optionnel.
+
+    Returns:
+        dict : name, poses, sheet_path, seed, success.
+    """
+    if logger is None:
+        logger = logging.getLogger("character_sheet_generator")
+
+    out_dir = output_dir or CHARACTERS_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    char = char_config or PRESET_CHARACTERS.get(character_name.lower())
+    if not char:
+        logger.error("[CSG] Personnage inconnu : %s", character_name)
+        return {"success": False, "name": character_name, "error": "unknown_character"}
+
+    if seed is None:
+        seed = int(hashlib.md5(char["name"].encode()).hexdigest()[:8], 16) % (2**32)
+
+    if poses_filter:
+        poses_to_gen = {k: v for k, v in POSE_DEFINITIONS.items() if k in poses_filter}
+    elif quick:
+        poses_to_gen = {k: POSE_DEFINITIONS[k] for k in QUICK_POSES}
+    else:
+        poses_to_gen = POSE_DEFINITIONS
+
+    mode_label = "PRODUCTION" if production_mode else "REFERENCE"
+    logger.info("[CSG] %s | seed=%d | %d poses | mode=%s",
+                char["display"], seed, len(poses_to_gen), mode_label)
+
+    # Liberer VRAM
+    try:
+        requests.post(COMFY_URL + "/interrupt", timeout=5)
+        requests.post(COMFY_URL + "/queue", json={"clear": True}, timeout=5)
+        requests.post(COMFY_URL + "/free",
+                      json={"unload_models": False, "free_memory": True}, timeout=10)
+        logger.info("[CSG] VRAM liberee")
+    except Exception:
+        pass
+
+    results = {}
+    all_ok  = True
+
+    for pose_key, pose_def in poses_to_gen.items():
+        filename = pose_def["filename"].format(name=char["name"])
+        out_path = out_dir / filename
+        label    = pose_def["label"]
+
+        logger.info("[CSG] Pose %s (%s)...", label, filename)
+
+        workflow  = _build_workflow(char, pose_def, seed,
+                                    production_mode=production_mode)
+        response  = _comfy_post("/prompt", {"prompt": workflow}, logger)
+        prompt_id = response.get("prompt_id")
+
+        if not prompt_id:
+            logger.error("[CSG] Pas de prompt_id pour pose %s", label)
+            results[pose_key] = {"success": False, "path": None, "label": label}
+            all_ok = False
+            continue
+
+        logger.info("[CSG] prompt_id=%s | attente...", prompt_id)
+        ok = _wait_for_image(prompt_id, out_path, logger)
+
+        results[pose_key] = {
+            "success":  ok,
+            "path":     str(out_path) if ok else None,
+            "filename": filename,
+            "label":    label,
+        }
+        if not ok:
+            all_ok = False
+
+    sheet = {
+        "name":            char["name"],
+        "display":         char.get("display", char["name"]),
+        "seed":            seed,
+        "cfg":             char["cfg"],
+        "steps":           char["steps"],
+        "sampler":         char["sampler"],
+        "scheduler":       char["scheduler"],
+        "vae":             char["vae"],
+        "lora":            char.get("lora", ""),
+        "lora_weight":     char.get("lora_weight", 0.75),
+        "width":           char["width"],
+        "height":          char["height"],
+        "checkpoint":      "fabricatedXL_v70.safetensors",
+        "production_mode": production_mode,
+        "poses":           results,
+        "success":         all_ok,
+    }
+
+    sheet_path = out_dir / (char["name"] + "_sheet.json")
+    try:
+        sheet_path.write_text(
+            json.dumps(sheet, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        logger.info("[CSG] Fiche : %s", sheet_path.name)
+    except Exception as e:
+        logger.warning("[CSG] Sauvegarde echouee : %s", e)
+
+    sheet["sheet_path"] = str(sheet_path)
+    ok_count = sum(1 for v in results.values() if v["success"])
+    logger.info("[CSG] %s -- %s (%d/%d poses)",
+                char["display"], "OK" if all_ok else "PARTIEL",
+                ok_count, len(poses_to_gen))
+    return sheet
+
+
+def generate_all_presets(production_mode: bool = False,
+                          quick: bool = False,
+                          logger: Optional[logging.Logger] = None) -> dict:
+    """Genere les fiches de tous les personnages predefinis."""
+    if logger is None:
+        logger = logging.getLogger("character_sheet_generator")
+    results = {}
+    for name in PRESET_CHARACTERS:
+        logger.info("[CSG] === %s ===", name)
+        results[name] = generate_character_sheet(
+            name, production_mode=production_mode, quick=quick, logger=logger
+        )
+    ok_count = sum(1 for r in results.values() if r.get("success"))
+    logger.info("[CSG] %d/%d fiches OK", ok_count, len(results))
+    return results
+
+
+def load_character_sheet(character_name: str,
+                          output_dir: Optional[Path] = None) -> Optional[dict]:
+    """Charge une fiche existante depuis le disque."""
+    out_dir    = output_dir or CHARACTERS_DIR
+    sheet_path = out_dir / (character_name.lower() + "_sheet.json")
+    if not sheet_path.exists():
+        return None
+    try:
+        return json.loads(sheet_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+# ── CLI standalone ────────────────────────────────────────────────────
+if __name__ == "__main__":
+    import argparse
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)-8s] %(message)s"
+    )
+    log_cli = logging.getLogger("character_sheet_generator")
+
+    parser = argparse.ArgumentParser(
+        description="Character Sheet Generator V1.2 -- Ov3rLoRd"
+    )
+    parser.add_argument("--character",  type=str, default="asuka")
+    parser.add_argument("--seed",       type=int, default=None)
+    parser.add_argument("--all",        action="store_true",
+                        help="Generer toutes les fiches preset")
+    parser.add_argument("--list",       action="store_true",
+                        help="Lister personnages et poses disponibles")
+    parser.add_argument("--production", action="store_true",
+                        help="Mode production : naked no bg pour layering studio")
+    parser.add_argument("--quick",      action="store_true",
+                        help="3 poses seulement : face, profil, expression neutre")
+    parser.add_argument("--poses",      type=str, default=None,
+                        help="Poses specifiques separees par virgule : face,back,expression_anger")
+    args = parser.parse_args()
+
+    if args.list:
+        print("Personnages :")
+        for k, v in PRESET_CHARACTERS.items():
+            print(f"  {k:12s} -> {v['display']}")
+        print("\nPoses disponibles :")
+        for k, v in POSE_DEFINITIONS.items():
+            print(f"  {k:25s} -> {v['label']}")
+        sys.exit(0)
+
+    poses_filter = [p.strip() for p in args.poses.split(",")] if args.poses else None
+
+    if args.all:
+        results = generate_all_presets(
+            production_mode=args.production,
+            quick=args.quick,
+            logger=log_cli
+        )
+        for name, r in results.items():
+            print(f"  {name:12s} [{'OK' if r.get('success') else 'ECHEC'}]")
+    else:
+        result = generate_character_sheet(
+            character_name=args.character,
+            seed=args.seed,
+            production_mode=args.production,
+            quick=args.quick,
+            poses_filter=poses_filter,
+            logger=log_cli
+        )
+        print(json.dumps(result, indent=2, ensure_ascii=False, default=str))

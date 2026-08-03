@@ -1,0 +1,351 @@
+# ██████╗ ██╗   ██╗██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗
+# ██╔═══██╗██║   ██║╚════██╗██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+# ██║   ██║██║   ██║ █████╔╝██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+# ██║   ██║╚██╗ ██╔╝ ╚═══██╗██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+# ╚██████╔╝ ╚████╔╝ ██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+# ╚═════╝   ╚═══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+# Ov3rLoRd -- pipeline de production anime autonome (ComfyUI)
+# https://github.com/Ov3rLoRd-MLEngineer
+#
+"""
+agents/postprod.py — Agent Post-Production V1.49
+Assemblage video (ffmpeg), TTS, lip-sync, mixage final.
+Publie le chemin de la video finale sur le context_bus.
+Dependances : pip install gTTS pydub
+              ffmpeg dans le PATH (https://ffmpeg.org)
+"""
+
+import json
+import logging
+import subprocess
+import shutil
+import sys
+import io
+from pathlib import Path
+from datetime import datetime
+
+if hasattr(sys.stdout, 'buffer') and getattr(sys.stdout, 'encoding','').lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
+try:
+    from gtts import gTTS
+    GTTS_OK = True
+except ImportError:
+    GTTS_OK = False
+
+try:
+    from agents.context_bus import get_bus
+    BUS_OK = True
+except ImportError:
+    BUS_OK = False
+
+try:
+    from agents.pacing_engine import build_manifest_from_storyboard
+    PACING_OK = True
+except Exception:
+    PACING_OK = False
+
+POSTPROD_DIR     = Path("workspace/postprod")
+EXPORTS_DIR      = Path("workspace/exports")
+VIDEO_FPS        = 24
+FRAME_DURATION_S = 3
+AUDIO_SAMPLE_RATE= 44100
+
+FFMPEG_PRESETS = {
+    "anime_720p":  ["-vf","scale=1280:720", "-c:v","libx264","-crf","18","-preset","fast"],
+    "anime_1080p": ["-vf","scale=1920:1080","-c:v","libx264","-crf","16","-preset","fast"],
+    "anime_4k":    ["-vf","scale=3840:2160","-c:v","libx264","-crf","14","-preset","slow"],
+    "short_web":   ["-vf","scale=1080:1920","-c:v","libx264","-crf","20","-preset","fast"],
+    "nvenc_1080p": ["-vf","scale=1920:1080","-c:v","h264_nvenc","-preset","p4","-cq","18"],
+}
+
+
+def check_ffmpeg(logger: logging.Logger = None) -> bool:
+    log = logger or logging.getLogger("postprod")
+    if shutil.which("ffmpeg") is None:
+        log.error("ffmpeg non trouve dans le PATH. Telecharge depuis https://ffmpeg.org")
+        return False
+    return True
+
+
+def images_to_video(image_paths: list, output_path: str,
+                    fps: int = VIDEO_FPS, preset: str = "anime_1080p",
+                    audio_path: str = None, durations: list = None,
+                    logger: logging.Logger = None) -> bool:
+    log = logger or logging.getLogger("postprod.video")
+    if not check_ffmpeg(log):
+        return False
+
+    POSTPROD_DIR.mkdir(parents=True, exist_ok=True)
+    concat_file = POSTPROD_DIR / f"concat_{datetime.now().strftime('%H%M%S')}.txt"
+
+    with open(concat_file, "w", encoding="utf-8") as f:
+        for i, img_path in enumerate(image_paths):
+            duration = durations[i] if durations and i < len(durations) else FRAME_DURATION_S
+            f.write(f"file '{Path(img_path).resolve()}'\n")
+            f.write(f"duration {duration}\n")
+        if image_paths:
+            f.write(f"file '{Path(image_paths[-1]).resolve()}'\n")
+
+    preset_args = FFMPEG_PRESETS.get(preset, FFMPEG_PRESETS["anime_1080p"])
+    cmd = ["ffmpeg","-y","-f","concat","-safe","0","-i",str(concat_file)]
+    if audio_path and Path(audio_path).exists():
+        cmd += ["-i", str(audio_path), "-c:a","aac","-shortest"]
+    cmd += preset_args + ["-pix_fmt","yuv420p", str(output_path)]
+
+    log.info(f"[VIDEO] Assemblage {len(image_paths)} images -> {output_path}")
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        if result.returncode == 0:
+            log.info(f"[VIDEO] OK Video creee : {output_path}")
+            concat_file.unlink(missing_ok=True)
+            return True
+        log.error(f"[VIDEO] ffmpeg erreur : {result.stderr[-500:]}")
+        return False
+    except subprocess.TimeoutExpired:
+        log.error("[VIDEO] Timeout ffmpeg (300s)")
+        return False
+    except Exception as e:
+        log.error(f"[VIDEO] Erreur : {e}")
+        return False
+
+
+def generate_tts(text: str, output_path: str, lang: str = "fr",
+                 logger: logging.Logger = None) -> bool:
+    log = logger or logging.getLogger("postprod.tts")
+    if not GTTS_OK:
+        log.warning("gTTS non installe — pip install gTTS")
+        return False
+    try:
+        gTTS(text=text, lang=lang, slow=False).save(str(output_path))
+        log.info(f"[TTS] Audio genere -> {output_path}")
+        return True
+    except Exception as e:
+        log.error(f"[TTS] Erreur gTTS : {e}")
+        return False
+
+
+def generate_tts_elevenlabs(text: str, output_path: str, api_key: str,
+                             voice_id: str = "21m00Tcm4TlvDq8ikWAM",
+                             logger: logging.Logger = None) -> bool:
+    import requests as req
+    log = logger or logging.getLogger("postprod.tts_xl")
+    try:
+        resp = req.post(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+            headers={"xi-api-key": api_key, "Content-Type": "application/json"},
+            json={"text": text, "model_id": "eleven_multilingual_v2",
+                  "voice_settings": {"stability":0.5,"similarity_boost":0.75}},
+            timeout=60
+        )
+        if resp.status_code == 200:
+            Path(output_path).write_bytes(resp.content)
+            log.info(f"[TTS-XL] Audio genere -> {output_path}")
+            return True
+        log.error(f"[TTS-XL] HTTP {resp.status_code}: {resp.text[:200]}")
+        return False
+    except Exception as e:
+        log.error(f"[TTS-XL] Erreur : {e}")
+        return False
+
+
+def apply_lipsync(image_path: str, audio_path: str, output_path: str,
+                  sadtalker_path: str = "SadTalker",
+                  logger: logging.Logger = None) -> bool:
+    log = logger or logging.getLogger("postprod.lipsync")
+    sadtalker        = Path(sadtalker_path)
+    inference_script = sadtalker / "inference.py"
+
+    if not sadtalker.exists():
+        log.warning(f"[LIPSYNC] SadTalker non trouve a {sadtalker_path}")
+        return False
+    if not inference_script.exists():
+        log.error(f"[LIPSYNC] inference.py introuvable dans {sadtalker_path}")
+        return False
+
+    cmd = [
+        "python", str(inference_script),
+        "--driven_audio", str(audio_path),
+        "--source_image", str(image_path),
+        "--result_dir",   str(Path(output_path).parent),
+        "--still","--preprocess","crop",
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True,
+                                timeout=600, cwd=str(sadtalker))
+        if result.returncode == 0:
+            log.info("[LIPSYNC] OK Lip-sync termine")
+            return True
+        log.error(f"[LIPSYNC] Erreur : {result.stderr[-500:]}")
+        return False
+    except Exception as e:
+        log.error(f"[LIPSYNC] Exception : {e}")
+        return False
+
+
+def mix_audio(voice_path: str, music_path: str, output_path: str,
+              voice_volume: float = 1.0, music_volume: float = 0.3,
+              logger: logging.Logger = None) -> bool:
+    log = logger or logging.getLogger("postprod.mix")
+    if not check_ffmpeg(log):
+        return False
+    if not Path(voice_path).exists():
+        log.error(f"[MIX] Voix introuvable : {voice_path}")
+        return False
+    if not Path(music_path).exists():
+        log.warning("[MIX] Musique introuvable — voix seule")
+        shutil.copy(voice_path, output_path)
+        return True
+
+    cmd = [
+        "ffmpeg","-y","-i",str(voice_path),"-i",str(music_path),
+        "-filter_complex",
+        f"[0:a]volume={voice_volume}[v];[1:a]volume={music_volume}[m];[v][m]amix=inputs=2:duration=first[out]",
+        "-map","[out]","-c:a","aac",str(output_path)
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result.returncode == 0:
+            log.info(f"[MIX] OK Audio mixe -> {output_path}")
+            return True
+        log.error(f"[MIX] ffmpeg erreur : {result.stderr[-300:]}")
+        return False
+    except Exception as e:
+        log.error(f"[MIX] Exception : {e}")
+        return False
+
+
+def run_postprod(shotlist: dict, image_dir: Path = None,
+                 dialogue_lines: list = None, music_path: str = None,
+                 export_preset: str = "anime_1080p", tts_lang: str = "fr",
+                 logger: logging.Logger = None) -> dict:
+    log = logger or logging.getLogger("postprod")
+    log.info(f"[POST-PROD] Pipeline demarre — preset={export_preset}")
+
+    POSTPROD_DIR.mkdir(parents=True, exist_ok=True)
+    EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    ts     = datetime.now().strftime("%Y%m%d_%H%M%S")
+    title  = shotlist.get("project_title","untitled").replace(" ","_")[:30]
+    result = {"title": title, "timestamp": ts, "files": {}}
+
+    # Résolution du dossier images — priorité : paramètre > bus > archive glob
+    if not image_dir and BUS_OK:
+        try:
+            bus_dir = get_bus().read("production.image_dir")
+            if bus_dir and Path(bus_dir).exists():
+                image_dir = Path(bus_dir)
+                log.info(f"[POST-PROD] Dossier images depuis bus : {image_dir}")
+        except Exception:
+            pass
+
+    if not image_dir or not Path(image_dir).exists():
+        # Dernier recours : prendre le run_id le plus récent dans workspace/archive/
+        archive_root = Path("workspace/archive")
+        if archive_root.exists():
+            runs = sorted(archive_root.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
+            if runs:
+                image_dir = runs[0]
+                log.info(f"[POST-PROD] Dossier images archive recent : {image_dir}")
+
+    if not image_dir or not Path(image_dir).exists():
+        log.error("[POST-PROD] Impossible de trouver le dossier images")
+        return result
+
+    shots = shotlist.get("shots", [])
+    if not shots:
+        log.warning("[POST-PROD] Aucun shot dans la shotlist — fallback toutes images")
+
+    # V2.20 : charger le pacing manifest si disponible
+    pacing_shots = {}
+    if PACING_OK:
+        try:
+            _run_id_pp    = shotlist.get("run_id", "")
+            _manifest_path = Path("workspace/reports") / f"pacing_{_run_id_pp}.json"
+            if _run_id_pp and _manifest_path.exists():
+                import json as _json
+                _mf          = _json.loads(_manifest_path.read_text(encoding="utf-8"))
+                pacing_shots = {s["shot_id"]: s for s in _mf.get("shots", [])}
+                log.info(f"[POST-PROD] Pacing manifest : {len(pacing_shots)} shots charges")
+        except Exception as _pe:
+            log.warning(f"[POST-PROD] Pacing manifest non charge : {_pe}")
+
+    image_paths = []
+    durations   = []
+    for shot in shots:
+        shot_id    = shot.get("shot_id","")
+        candidates = list(Path(image_dir).glob(f"*{shot_id}*"))
+        if candidates:
+            image_paths.append(str(candidates[0]))
+        # Priorite : pacing manifest > shot duration_seconds > defaut
+        if shot_id in pacing_shots:
+            durations.append(pacing_shots[shot_id]["duration_s"])
+        else:
+            durations.append(shot.get("duration_seconds", FRAME_DURATION_S))
+
+    if not image_paths:
+        image_paths = sorted([str(p) for p in Path(image_dir).glob("*.png")] +
+                      [str(p) for p in Path(image_dir).glob("*.jpg")] +
+                      [str(p) for p in Path(image_dir).glob("*.webp")])
+        durations   = [FRAME_DURATION_S] * len(image_paths)
+        log.warning(f"[POST-PROD] Fallback : {len(image_paths)} images alpha")
+
+    if not image_paths:
+        log.error("[POST-PROD] Aucune image trouvee")
+        return result
+
+    # TTS
+    audio_path = None
+    if dialogue_lines:
+        full_script = " ... ".join(dialogue_lines)
+        tts_path    = str(POSTPROD_DIR / f"{ts}_voice.mp3")
+        if generate_tts(full_script, tts_path, lang=tts_lang, logger=log):
+            audio_path = tts_path
+            result["files"]["voice"] = tts_path
+
+    # Mixage audio
+    if audio_path and music_path and Path(music_path).exists():
+        mixed_path = str(POSTPROD_DIR / f"{ts}_mixed.aac")
+        if mix_audio(audio_path, music_path, mixed_path, logger=log):
+            audio_path = mixed_path
+            result["files"]["audio_mixed"] = mixed_path
+
+    # Assemblage video
+    export_path = str(EXPORTS_DIR / f"{ts}_{title}.mp4")
+    ok = images_to_video(
+        image_paths=image_paths, output_path=export_path,
+        fps=VIDEO_FPS, preset=export_preset,
+        audio_path=audio_path, durations=durations, logger=log
+    )
+
+    if ok:
+        result["files"]["video"] = export_path
+        log.info(f"[POST-PROD] OK Export final -> {export_path}")
+
+        # Publier sur le context_bus
+        if BUS_OK:
+            try:
+                bus = get_bus()
+                bus.write("postprod.video",        export_path,          agent_id="postprod")
+                bus.write("postprod.status",       "done",               agent_id="postprod")
+                bus.write("postprod.preset",       export_preset,        agent_id="postprod")
+                bus.write("postprod.image_count",  len(image_paths),     agent_id="postprod")
+                bus.write("postprod.image_dir",    str(image_dir),       agent_id="postprod")
+            except Exception as e:
+                log.warning(f"[POST-PROD] Publication bus echouee : {e}")
+    else:
+        log.error("[POST-PROD] Echec assemblage video")
+        if BUS_OK:
+            try:
+                get_bus().write("postprod.status", "error", agent_id="postprod")
+            except Exception:
+                pass
+
+    return result
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    print("Post-prod agent charge.")
+    print(f"ffmpeg disponible : {check_ffmpeg()}")
+    print(f"gTTS disponible   : {GTTS_OK}")
