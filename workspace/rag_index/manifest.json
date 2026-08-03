@@ -1,12 +1,13 @@
 {
   "model": "intfloat/multilingual-e5-small",
   "embedding_dim": 384,
-  "num_chunks": 269,
+  "num_chunks": 307,
   "sources": {
     "CLAUDE.md": "00a750b0636f857f",
+    "CLAUDE-english.md": "0f477fdfb320c123",
     "DOCS/INDEX.md": "36f75da72e7a052b",
     "DOCS/LLM-Secour.md": "645325a5f4ca22bb",
-    "DOCS/RAG_SOURCES.md": "08650cda5e3c9b1e",
+    "DOCS/RAG_SOURCES.md": "3f155351ce6804b2",
     "RAPPORT_AUDIT_PIPELINE_AOUT2026.md": "e3a431a0796c42cc",
     "RAPPORT_IDEES_HISTORIQUE_V150_V227.md": "d1f3116665105241",
     "DOCS/MD/Audit de maturité technique 2026 — Pipeline anime IA.md": "95c64c06e1bc6314",
@@ -16,6 +17,6 @@
     "DOCS/MD/QC_ANATOMIQUE_AUDIT_LICENCES_20260729.md": "622c7f56323a8ecb"
   },
   "skipped_sources": [],
-  "built_at": "2026-08-03T02:14:34",
+  "built_at": "2026-08-03T20:55:04",
   "device": "cpu"
 }

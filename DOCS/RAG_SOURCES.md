@@ -10,6 +10,15 @@ laisserait trop peu de place pour le code réel et la conversation.
 **Noyau toujours chargé** (`.aider.conf.yml`, ~7000 tokens) : `CLAUDE.md`,
 `DOCS/INDEX.md`, `DOCS/LLM-Secour.md`, ce fichier.
 
+**Indexé par le RAG sémantique** (`agents/infra/rag_indexer.py`, en plus du
+noyau ci-dessus) : `CLAUDE-english.md` — traduction anglaise de `CLAUDE.md`,
+ajoutée le 2026-08-03 pour combler l'angle mort cross-lingue documenté dans
+`workspace/qlora_dataset/HANDOFF_2026-08-03.md` (une question posée en
+français dont la réponse n'existe qu'en anglais dans `CLAUDE.md` était mal
+retrouvée par la recherche hybride). Une requête en anglais peut désormais
+retrouver directement le passage pertinent dans `CLAUDE-english.md` plutôt
+que de dépendre de la correspondance BM25/sémantique cross-langue.
+
 **Le reste : à charger à la demande** avec `/read-only <chemin>` dans une
 session Aider, selon le sujet de la tâche en cours.
 

@@ -59,6 +59,7 @@ CHUNK_MAX_CHARS = 900
 # (noyau toujours charge + rapports d'audit + rapports de veille DOCS/MD/).
 SOURCES = [
     "CLAUDE.md",
+    "CLAUDE-english.md",
     "DOCS/INDEX.md",
     "DOCS/LLM-Secour.md",
     "DOCS/RAG_SOURCES.md",
