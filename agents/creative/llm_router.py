@@ -4,6 +4,12 @@ Lit config/llm_endpoints.json et route chaque appel vers le modele le plus
 adapte au type de tache, avec repli automatique sur fallback_llm() (sequence
 complete Ollama puis GLM/Anthropic selon le mode configure) si l'appel direct
 au modele cible echoue ou renvoie une reponse vide.
+
+Avant chaque appel, injecte automatiquement dans le system prompt les
+passages RAG les plus pertinents pour la question (agents/infra/rag_query.py,
+voir DOCS/RAG_SOURCES.md) -- degrade silencieusement (aucun contexte injecte,
+appel LLM inchange) si l'index est absent ou la recherche echoue, conformement
+a ADR-009 (le routage LLM ne doit jamais bloquer sur une dependance annexe).
 """
 import logging
 
@@ -21,7 +27,19 @@ except ImportError:
     _load_llm_endpoints_config = None
     _get_ollama_endpoint = None
 
+try:
+    from agents.infra.rag_query import retrieve as _rag_retrieve, format_context as _rag_format_context, RagIndexMissing
+    RAG_OK = True
+except ImportError:
+    RAG_OK = False
+    _rag_retrieve = None
+    _rag_format_context = None
+    RagIndexMissing = Exception
+
 log = logging.getLogger("llm_router")
+
+RAG_TOP_K = 3
+RAG_MAX_CHARS_PER_PASSAGE = 500
 
 # Modele Ollama cible par type de tache.
 TASK_MODELS = {
@@ -42,6 +60,30 @@ def _glm_enabled() -> bool:
         return False
 
 
+def _with_rag_context(prompt: str, system: str, logger: logging.Logger) -> str:
+    """Precede `system` d'un bloc de contexte projet pertinent pour `prompt`
+    (recherche hybride semantique+BM25, agents/infra/rag_query.py). Retourne
+    `system` inchange si l'index RAG est absent ou si la recherche echoue --
+    jamais d'exception propagee jusqu'a l'appelant (voir ADR-009)."""
+    if not RAG_OK:
+        return system
+    try:
+        passages = _rag_retrieve(prompt, top_k=RAG_TOP_K)
+    except RagIndexMissing:
+        return system
+    except Exception as e:
+        logger.debug(f"[ROUTER] RAG indisponible ({str(e)[:100]}) -- appel sans contexte injecte")
+        return system
+
+    context_block = _rag_format_context(passages, max_chars_per_passage=RAG_MAX_CHARS_PER_PASSAGE)
+    if not context_block:
+        return system
+    logger.debug(f"[ROUTER] RAG : {len(passages)} passage(s) injecte(s) dans le system prompt")
+    prefix = ("Contexte projet pertinent (extrait automatiquement du depot, "
+              "peut etre incomplet ou hors-sujet) :\n" + context_block + "\n\n")
+    return prefix + system
+
+
 def call(task_type: str, prompt: str, system: str = None,
           max_tokens: int = 1500, logger: logging.Logger = None) -> str:
     """
@@ -57,6 +99,10 @@ def call(task_type: str, prompt: str, system: str = None,
     repli automatique sur fallback_llm() (sequence Ollama complete puis
     GLM/Anthropic selon le mode configure).
 
+    `system` est precede automatiquement d'un contexte RAG pertinent pour
+    `prompt` avant l'appel (voir _with_rag_context / agents/infra/rag_query.py) --
+    aucun effet si l'index n'existe pas encore sur cette machine.
+
     Returns:
         str : reponse du LLM, ou "" si le routage ET le repli echouent.
     """
@@ -66,6 +112,7 @@ def call(task_type: str, prompt: str, system: str = None,
         return ""
 
     system = system or ""
+    system = _with_rag_context(prompt, system, _log)
     use_glm = task_type == "complex" and _glm_enabled()
 
     if use_glm:
