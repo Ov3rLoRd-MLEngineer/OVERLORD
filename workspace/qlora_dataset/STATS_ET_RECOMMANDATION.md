@@ -130,3 +130,29 @@ Suite de la préparation externe, mêmes principes que CommitPackFT/Python (tail
 Scan `PERSONAL_PATTERNS` (référence uniquement, non appliqué en filtre) : 23/2000 (evol-codealpaca) et 22/2000 (OpenCodeInstruct), taux comparable à CommitPackFT (~9.5%) -- cohérent avec des métadonnées d'auteurs publics dans du code/docstrings, pas une fuite de données personnelles de l'utilisateur.
 
 Sorties : `E:\data\evol_codealpaca_python_subset\` et `E:\data\opencodeinstruct_python_subset\` (SSD dédié) + copies de référence versionnées dans `workspace/qlora_dataset/`. **Aucun entraînement lancé sur ces deux sous-ensembles** -- préparation uniquement, en attente d'une décision sur leur intégration au Stage 1 (actuellement CommitPack seul).
+
+## Session 2026-08-03 -- Sous-ensemble Python du "vrai" CommitPack (pas CommitPackFT)
+
+### Écart consigne / état réel
+
+La consigne supposait un export Parquet avec un schéma déjà instruction/diff, sur la base du dataset CommitPackFT déjà traité. Vérification faite avant codage (comme demandé) : `E:\data\commitpack\python\` est en réalité **du JSONL brut** (458 shards, ~524 Mo chacun, 223.45 Go au total), avec le **même schéma de colonnes que CommitPackFT** (`commit`/`subject`/`message`/`old_contents`/`new_contents`/`old_file`/`new_file`/`repos`/`license`/`lang`/`returncode`/`stderr`) mais **aucun filtrage préalable** (c'est le corpus CommitPack complet, pas la version "FT" déjà nettoyée). C'est le "vrai" CommitPack 3.8 To (toutes langues) annoncé en attente de téléchargement dans `HANDOFF_2026-08-02.md` -- atterri directement sur `E:` (SSD dédié), comme CommitPackFT l'avait fait, pas sur le HDD `G:` supposé par la consigne d'origine. `E:\data\commitpack\python-traceback\` (1 shard, 15 Ko) exclu du périmètre après vérification : son champ `lang` vaut `"Python traceback"`, pas `"Python"` -- ce sont des dumps de traceback, pas du code source.
+
+Nom de script et de sortie volontairement distincts de l'existant (`build_source_commitpack_full_python.py` / `dataset_source_commitpack_full_python.jsonl`, suffixe `_full_`) pour ne jamais écraser `dataset_source_commitpack_python.jsonl` (CommitPackFT, 2000 ex., déjà entraîné dans `training_stage1/runs/stage1_commitpack_full/`).
+
+### Filtrage et résultat
+
+Contrairement à toutes les sources précédentes (cible fixe choisie à l'avance), **aucun cap artificiel** n'a été appliqué au filtrage lui-même -- le volume final est décidé par les filtres de qualité, un sous-échantillonnage n'intervenant qu'en aval si le résultat dépasse 150 000 exemples.
+
+- **Filtres** : `lang=="Python"` (0 rejet -- déjà vrai vu le répertoire source), sujet non trivial, `old_contents != new_contents`, `ast.parse()` validé sur `new_contents` (obligatoire), diff plafonné à 20000 caractères, `SECRET_PATTERNS`. Dédoublonnage par hash de commit **intra-shard seulement** (les 458 shards sont des partitions disjointes du même export, pas de recouvrement attendu).
+- **Volume brut lu** : 6 429 891 lignes (commits) sur les 458 shards.
+- **Rejets** : `skipped_invalid_python=1 354 976` (21.1% -- nettement plus élevé que les 8.5% de CommitPackFT, cohérent avec le fait que CommitPack brut n'est pas pré-nettoyé), `skipped_nochange=400 336`, `skipped_trivial=27 334`, `skipped_size=25 394`, `skipped_secret=458`, `skipped_duplicate=0`.
+- **Total retenu avant sous-échantillonnage** : **4 621 393 exemples** (71.9% du volume lu) -- très au-dessus du seuil de 150 000, sous-échantillonnage déclenché.
+- **Classification du type de commit** : heuristique (CommitPack n'a pas de champ structuré) -- préfixe conventionnel (`feat:`/`fix:`/`refactor:`/`perf:`) en priorité, sinon mots-clés anglais sur le sujet, sinon `other`. Répartition naturelle sur les 4.6M exemples retenus : `other` 60.4%, `fix` 19.9%, `feat` 17.1%, `refactor` 2.2%, `perf` 0.4% -- la part élevée d'`other` reflète le style réel des messages de commit open source (peu de convention stricte type Conventional Commits), pas un défaut du classifieur.
+- **Sous-échantillonnage par réservoir stratifié** (Algorithme R, une passe supplémentaire bon marché sur les fichiers déjà filtrés) : cible proportionnelle à la répartition réelle par type jusqu'à 150 000 au total (`feat=25611, fix=29854, refactor=3341, perf=544, other=90650`) -- diversité préservée plutôt qu'une troncature aux X premiers exemples lus (biaisée par l'ordre des shards).
+- **Durée** : 3358.1s (~56 min), 8 processus parallèles (12 coeurs logiques disponibles, 4 laissés libres pour ne pas affamer le Stage1 TheStack alors en cours sur la RTX 5080 avec délestage CPU).
+
+Sortie : `E:\data\commitpack_full_python_subset\dataset_source_commitpack_full_python.jsonl` (SSD dédié) + copie de référence versionnée `workspace/qlora_dataset/dataset_source_commitpack_full_python.jsonl` -- **150 000 lignes, 323 Mo**, vérifiées sur disque (comptage de lignes aux deux emplacements, structure JSON et répartition par type recomptées depuis le fichier réel, pas seulement lues dans les logs de la console).
+
+### Statut
+
+Préparation de données uniquement -- **aucun entraînement lancé** sur ce sous-ensemble. Décision d'intégration au Stage 1 (à la place ou en complément de The Stack / CommitPackFT) non prise, hors périmètre de cette tâche.
