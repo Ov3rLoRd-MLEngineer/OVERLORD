@@ -40,7 +40,7 @@ except ImportError:
         BUS_OK = False
 
 try:
-    from agents.core import get_v110, CircuitBreakerRegistry
+    from agents.core_legacy import get_v110, CircuitBreakerRegistry
     V110_OK = True
 except ImportError:
     V110_OK = False
