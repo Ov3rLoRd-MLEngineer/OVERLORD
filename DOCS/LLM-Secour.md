@@ -86,7 +86,7 @@ utilisent le profil par défaut du dépôt (`~/.aider.conf.yml` :
 | `qwen3-coder:30b-a3b-q4_K_M` | Défaut du dépôt, premier jet sur tâches cadrées | 32768 | **Fiable** — plusieurs "Applied edit to..." confirmés sur historique réel (`.aider.chat.history.md`), voir `SETUP_AGENT_LOCAL_AIDER_QWEN3CODER.md` §5 |
 | `ov3rlord-coder-stage2v2` | Fine-tune QLoRA maison (style Ov3rLoRd) | 32768 | Fiabilité **factuelle** non garantie sur les détails précis du projet (confabulation documentée, voir `VERDICT_EVALUATION_QUALITATIVE_V5.md` / mémoire `qlora-local-llm-effort`) — à coupler avec le RAG (`DOCS/RAG_SOURCES.md`), pas à utiliser seul pour des faits précis. Pas testé pour la fiabilité d'application de diff cette session. |
 | `qwen2.5-coder:14b-instruct-q4_K_M` | Alternative plus légère (9 Go) que qwen3-coder | Non plafonné explicitement dans `~/.aider.model.settings.yml` — à faire avant usage réel (même piège `std::bad_alloc` que qwen3-coder si le num_ctx par défaut du modèle est trop grand) | **Non testé cette session** (modèle présent dans `ollama list`, jamais exercé sur une tâche réelle via Aider) — à valider avant adoption, ne pas présumer fiable sur la seule base de sa présence locale |
-| `devstral:24b` | Alternative de secours (14 Go) | 16384 (`~/.aider.model.settings.yml`, pas 32768 — VRAM 5060 Ti trop juste avec un modèle de cette taille) | **⚠️ Cassé avec Aider sur cette machine, 3/3 tests échoués** — voir limite connue ci-dessous. **Ne pas router de tâche réelle dessus tant que non corrigé.** |
+| `devstral:24b` | Alternative de secours (14 Go) | 16384 (`~/.aider.model.settings.yml`, pas 32768 — VRAM 5060 Ti trop juste avec un modèle de cette taille) | **⚠️ Cassé avec Aider** (3/3 tests échoués, fences 4 backticks) — voir limite connue ci-dessous. **Utilisable en contournement via `workspace/scripts/devstral_agent.py`** (appel direct API Ollama, pas de fence markdown, diff calculé par `difflib` — testé réellement, fonctionne, voir section dédiée). |
 
 ### Limite connue critique — devstral:24b émet des fences markdown à 4 backticks
 
@@ -130,6 +130,40 @@ contourné. `workspace/scripts/aider_devstral.bat` reste en place
 (fonctionnel pour discuter/lire du code, juste pas pour appliquer des
 edits) au cas où une future version d'Ollama/Aider ou un changement de
 prompt système résoudrait le problème — à retester avant réactivation.
+
+### Contournement fonctionnel — `workspace/scripts/devstral_agent.py`
+
+Ajouté le 2026-08-03 : wrapper CLI qui appelle directement l'API Ollama
+(`/api/chat`, sans passer par Aider) et **contourne le bug ci-dessus en ne
+dépendant d'aucune fence markdown** — le modèle est instruit de répondre
+entre deux marqueurs texte simples (`===DEVSTRAL_FILE_BEGIN===`/
+`===DEVSTRAL_FILE_END===`), et c'est le script lui-même qui calcule le
+diff unifié final via `difflib.unified_diff()`, pas le modèle. Le diff
+affiché est donc toujours bien formé quel que soit le nombre de backticks
+que le modèle choisit.
+
+Usage :
+```
+py -3.12 workspace/scripts/devstral_agent.py --target <fichier> --task <fichier_tache.txt> [--context <fichier> ...] [--yes]
+```
+
+**Testé réellement (pas simulé)** sur une copie de `gpu_cost_estimate.py`
+(commentaire d'une ligne demandé) : diff généré et appliqué avec succès,
+vérifié sur disque après coup (`grep` sur le fichier modifié). Testé aussi
+le chemin de refus (`n` à la confirmation, avec `--context CLAUDE.md`) :
+diff affiché mais fichier inchangé, vérifié par hash SHA1 avant/après.
+
+**Limite connue** : contrairement à un vrai diff ciblé (SEARCH/REPLACE),
+le modèle régénère le **fichier entier** à chaque appel — testé deux fois
+sur la même tâche, les deux runs ont introduit une modification
+incidente non demandée (suppression de lignes vides entre définitions de
+fonctions, style PEP8 différent) en plus du changement demandé. Ce n'est
+pas un bug du script (le diff reflète fidèlement ce que le modèle a
+réellement renvoyé) mais un risque inhérent à l'approche "fichier entier"
+— **toujours lire le diff affiché avant de confirmer**, ne pas supposer
+que seul le changement demandé sera présent. `--yes` (application sans
+confirmation) est donc déconseillé en usage interactif, réservé à un
+usage scripté où le diff est vérifié par un autre moyen (lint, tests).
 
 ### Critère de routage (une fois devstral fiable, ou en l'état pour les deux autres)
 
