@@ -219,3 +219,146 @@ démo animée si l'objectif reste d'actualité.
 pendant sa rédaction. Voir `RAPPORT_IDEES_HISTORIQUE_V150_V227.md` §3 pour
 l'analyse historique complète et `RAPPORT_AUDIT_PIPELINE_AOUT2026.md` §5
 pour le contexte d'audit plus large.*
+
+---
+
+## 7. Suite — 2026-08-04, session de levée des 3 blocages (Brief Pipeline.txt)
+
+RTX 5060 Ti dédiée à toute la session (RTX 5080 occupée par
+`stage2_commitpack_full`, jamais touchée — voir `gpu_usage_log.csv` si
+loggué). ComfyUI relancé manuellement, pinné `CUDA_VISIBLE_DEVICES=
+GPU-cb196733-cc69-2fae-2eed-f363c2fd2219` (RTX 5060 Ti), confirmé via
+`/system_stats` (`cuda:0` renvoyé = "NVIDIA GeForce RTX 5060 Ti").
+
+### Blocage 1 — reformulation confirmée, rien à extraire
+
+Vérification disque : `DEMO/frames/lineart_1024x1024/` contient déjà 38
+fichiers (`lineart_0000.png`…`lineart_0037.png`), correspondant 1:1 à
+`DEMO/frames/mixamo_raw/` (38 fichiers, décalage d'index 1 attendu :
+`0001.png`…`0038.png`). Tous non vides, pixels non-blancs mesurés entre
+112k et 137k par frame — pas de fichier tronqué/corrompu. **Rien à
+compléter** : le dataset lineart couvre déjà 100% des frames sources
+Mixamo disponibles. La confusion "38/1008" du rapport historique
+correspond bien à la reformulation du §2 : c'est un problème de bouclage
+(Blocage 3), pas d'extraction manquante.
+
+Point de traçabilité trouvé en vérifiant : `agents/production_video/
+lineart_extractor.py` (le seul script d'extraction lineart du dépôt) cible
+par défaut la piste Kling abandonnée (`video_frames` → sortie 910x512) et
+n'a **pas** produit `lineart_1024x1024/` — ce dossier a été généré par un
+autre moyen (probablement le rendu Blender manuel, cf. Blocage 2
+ci-dessous, qui produit lineart+squelette+beauty ensemble). Aucun script
+dans le dépôt ne documente cette génération 1024x1024 ; à garder en tête
+si le cycle doit être régénéré depuis Blender un jour.
+
+### Blocage 2 — fichiers sources retrouvés, diagnostic revu (utilisateur : `E:\Blender\Running.fbx` + `E:\Blender\asuka run.blend`)
+
+Le plan initial (§2, rédigé le 2026-08-03) supposait qu'aucun fichier 3D
+n'était disponible localement et qu'un aller-retour mixamo.com serait
+nécessaire — **recherche disque limitée à `D:\` à l'époque, le dossier
+`E:\Blender\` n'avait pas été vérifié**. L'utilisateur a communiqué en
+cours de session l'emplacement réel : `E:\Blender\Running.fbx` (59 Mo,
+animation Mixamo) et `E:\Blender\asuka run.blend` (214 Mo, scène complète
+avec le personnage "Sophie" rigué).
+
+Blender 5.1 est installé (`C:\Program Files\Blender Foundation\Blender
+5.1\blender.exe`, déjà utilisé par `handsegnet/blender3d_prototype/`).
+Inspection **lecture seule** (`blender.exe -b "asuka run.blend" -P
+inspect_script.py`, aucune sauvegarde, aucune modification de la scène) :
+
+- Objets : `Armature.002` (65 os) + 6 mesh (`Ch22_Body`, `Ch22_Eyelashes`,
+  `Ch22_Hair`, `Ch22_Pants`, `Ch22_Shirt`, `Ch22_Sneakers`) + caméra + light.
+- **`Ch22_Body` (le corps du personnage) a un rig bras gauche complet** :
+  tous les groupes de vertices `mixamorig2:LeftShoulder` →
+  `LeftForeArm` → `LeftHand` → doigts (Thumb/Index/Middle/Ring/Pinky)
+  sont présents. Le squelette (`Armature.002`) a aussi la chaîne complète
+  bras gauche + doigts. **Le rig du corps n'est pas cassé.**
+- **Anomalie réelle trouvée** : `Ch22_Shirt` (le hoodie) a des groupes de
+  vertices pour `LeftShoulder`/`LeftArm`/`LeftForeArm` mais **PAS pour
+  `LeftHand`** — la manche ne suit donc pas la déformation de la main.
+  Effet probable : clipping/décrochage visuel de la manche autour du
+  poignet gauche sur certaines poses, pas un bras manquant à proprement
+  parler.
+- 3 actions présentes (`mixamo.com`, `.001` : frames 1-35 ; `.002` :
+  frames 1-39) — le cycle 38 frames actuellement rendu correspond
+  vraisemblablement à l'action `.002` (39 frames dans la timeline, proche
+  du compte réel).
+
+**Reformulation du blocage** : la description historique ("bras gauche
+manquant à cause des vêtements") ne correspond pas à un rig cassé sur le
+mesh du corps — c'est soit (a) un artefact de clipping localisé de la
+manche du hoodie autour du poignet, soit (b) un artefact apparu côté
+génération SDXL/ControlNet (le modèle a parfois du mal à rendre un membre
+partiellement occlus par la vue de profil), pas forcément un défaut du
+fichier `.blend` lui-même. Les frames `mixamo_raw` inspectées visuellement
+cette session (0001, 0010, 0020) montrent un bras avant-plan cohérent
+frame à frame ; le seul défaut visuel repéré est une texture de peau
+rougeâtre/tachée sur la main avant-plan de la frame 0020, plus proche d'un
+glitch de shading que d'un membre absent.
+
+**Décision de ne pas aller plus loin cette session** : corriger le
+clipping de manche (repeindre les poids de `Ch22_Shirt`) ou changer
+d'action/caméra nécessite un retour visuel dans l'UI Blender (pas
+faisable de façon fiable en headless sans risquer une modification
+silencieusement fausse de la scène) — hors du périmètre "intégration et
+câblage uniquement" de cette session, et l'instruction de session est
+explicite sur ne pas improviser de substitution 3D. **Aucune modification
+apportée à `E:\Blender\asuka run.blend` ni `Running.fbx`** — inspection
+strictement lecture seule.
+
+**Prochaine étape recommandée** (à trancher par l'utilisateur) : ouvrir
+`E:\Blender\asuka run.blend` dans l'UI Blender, visualiser les 3 actions
+image par image côté manche gauche, et soit (a) repeindre le vertex group
+`LeftHand` sur `Ch22_Shirt` pour qu'elle suive la main, soit (b) masquer
+`Ch22_Shirt` sur les frames où le clipping est visible et regénérer
+seulement le lineart/squelette de ces frames, soit (c) constater que le
+défaut n'existe que côté génération SDXL (auquel cas ce n'est pas un
+problème Blender du tout, et le smoke test de cette session — 4/4 frames
+propres, voir §8 — suggère que ce pourrait bien être le cas puisqu'aucun
+défaut de bras n'y est visible).
+
+### Blocage 3 — `cycle_detector.py` construit et testé
+
+Voir `agents/production_video/cycle_detector.py` (nouveau fichier).
+Reconstruit des keypoints depuis la palette couleur OpenPose des PNG
+squelettes DWPose (aucun JSON de keypoints disponible sur cette machine —
+seulement des rendus PNG dans `DEMO/frames/skeletons_1024x1024/`),
+compare frame N vs N+24 par distance L2 normalisée (recentrée/mise à
+l'échelle sur le buste ; articulations manquantes ignorées plutôt que de
+fausser le score — utile puisque `LEye`/`LEar` sont absentes sur les 38
+frames, profil constant, et `Neck` absent sur la frame 0036 spécifiquement).
+
+Résultat sur les 38 frames Mixamo disponibles : **meilleur cycle frames
+0013→0037 (24 frames), score de drift 0.2074, 16/18 articulations
+comparées**. Résultat écrit dans `DEMO/frames/cycle_best.json` (non
+versionné, comme le reste de `DEMO/`).
+
+### Tâche 4 — câblage bout en bout, bug supplémentaire trouvé et corrigé
+
+En testant le cycle sélectionné, `batch_controlnet.py` ne trouvait **aucun
+squelette** (`glob` sur le pattern `overlord_skeleton_frame_*_*.png`,
+nommage de l'ancienne piste Kling — nos fichiers réels sont nommés
+`skeleton_NNNN.png`, convention Mixamo). Deuxième bug trouvé en creusant :
+`_REPO_ROOT` dans `batch_controlnet.py` et `motion_mask_generator.py`
+remontait seulement 2 niveaux de dossier — correct quand ces fichiers
+vivaient à `agents/X.py` avant la réorg Phase C, faux depuis leur
+déplacement vers `agents/production_video/X.py` (3 niveaux sous la
+racine) : `import config` échouait silencieusement, dégradant
+`motion_mask_generator` en mode désactivé sans erreur visible. Les deux
+corrigés (voir commit `4eee086`) — probable que d'autres fichiers de
+`agents/production_video/` aient le même bug de `_REPO_ROOT`
+(`frames_to_video.py`, `session_manager.py` pas vérifiés cette session,
+hors périmètre puisque non nécessaires à cette tâche).
+
+**Smoke test (4 frames, 13→16)** : 4/4 générées, 0 échec, mode
+`motion_mask` actif dès la frame 14 (confirme que le fix `_REPO_ROOT`
+fonctionne réellement, pas juste que l'import ne crashe plus), SSIM
+watchdog 0.99-1.00, IPAdapter rolling actif. Vérifié visuellement sur
+disque (`D:\Ov3rLoRd AI\ComfyUI\output\asuka_run\frame_0013..0016_*.png`) :
+personnage cohérent, pose fidèle au squelette, **aucun défaut de bras
+visible**.
+
+**Cycle complet (24 frames, 13→37, skip-existing réutilise les 4 du smoke
+test)** lancé via `start cmd /k` après validation du smoke test — voir
+`HANDOFF_2026-08-03.md` pour le statut final et le compte de frames sur
+disque en fin de session.
