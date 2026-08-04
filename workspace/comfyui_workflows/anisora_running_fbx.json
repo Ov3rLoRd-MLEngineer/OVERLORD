@@ -1,0 +1,143 @@
+{
+  "1": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "Index-Anisora-V3.2-High-Q4_0.gguf"
+    },
+    "_meta": { "title": "Unet Loader (GGUF) - High Noise" }
+  },
+  "2": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "Index-Anisora-V3.2-Low-Q4_K_M.gguf"
+    },
+    "_meta": { "title": "Unet Loader (GGUF) - Low Noise" }
+  },
+  "3": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": ["1", 0],
+      "shift": 8.0
+    },
+    "_meta": { "title": "ModelSamplingSD3 - High Noise" }
+  },
+  "4": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": ["2", 0],
+      "shift": 8.0
+    },
+    "_meta": { "title": "ModelSamplingSD3 - Low Noise" }
+  },
+  "5": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan"
+    },
+    "_meta": { "title": "CLIPLoader (umt5-xxl fp8 scaled)" }
+  },
+  "6": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    },
+    "_meta": { "title": "VAELoader (Wan 2.1 VAE, reutilisee par AniSora V3.2 14B)" }
+  },
+  "7": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mixamo_running_frame0001.png"
+    },
+    "_meta": { "title": "LoadImage - DEMO/frames/mixamo_raw/0001.png (frame 1 du cycle 38 frames)" }
+  },
+  "8": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["5", 0],
+      "text": "anime girl running, dynamic motion, consistent character, smooth animation, side view, detailed background"
+    },
+    "_meta": { "title": "CLIPTextEncode - positive" }
+  },
+  "9": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["5", 0],
+      "text": "static, still image, blurry, distorted, extra limbs, low quality, watermark, text"
+    },
+    "_meta": { "title": "CLIPTextEncode - negative" }
+  },
+  "10": {
+    "class_type": "WanImageToVideo",
+    "inputs": {
+      "positive": ["8", 0],
+      "negative": ["9", 0],
+      "vae": ["6", 0],
+      "width": 480,
+      "height": 720,
+      "length": 37,
+      "batch_size": 1,
+      "start_image": ["7", 0]
+    },
+    "_meta": { "title": "WanImageToVideo - 480x720 (aspect source 1024x1536), 37 frames (contrainte 4k+1, cf tache 3)" }
+  },
+  "11": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": ["3", 0],
+      "positive": ["10", 0],
+      "negative": ["10", 1],
+      "latent_image": ["10", 2],
+      "add_noise": "enable",
+      "noise_seed": 1234567890,
+      "steps": 8,
+      "cfg": 3.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 4,
+      "return_with_leftover_noise": "enable"
+    },
+    "_meta": { "title": "KSamplerAdvanced - High Noise (steps 0-4/8)" }
+  },
+  "12": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": ["4", 0],
+      "positive": ["10", 0],
+      "negative": ["10", 1],
+      "latent_image": ["11", 0],
+      "add_noise": "disable",
+      "noise_seed": 1234567890,
+      "steps": 8,
+      "cfg": 3.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 4,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    },
+    "_meta": { "title": "KSamplerAdvanced - Low Noise (steps 4-8/8)" }
+  },
+  "13": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["12", 0],
+      "vae": ["6", 0]
+    },
+    "_meta": { "title": "VAEDecode" }
+  },
+  "14": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["13", 0],
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "anisora_running_fbx",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    },
+    "_meta": { "title": "Video Combine - mp4 8fps" }
+  }
+}

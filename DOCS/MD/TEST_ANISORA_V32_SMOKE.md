@@ -103,8 +103,110 @@ frame 0022). AniSora genere les 16 frames en un seul passage de diffusion
 (traitement joint, pas de chainage sequentiel), coherent avec le retour
 utilisateur sur AnimateDiff evitant structurellement ce type de degradation.
 
-## Verdict
+## Verdict (smoke test I2V simple)
 
 **Concluant** -- aucun des criteres d'arret (artefacts majeurs, OOM, temps
 > 15 min) n'est atteint. 93.4 s est tres en dessous du seuil. Tache 4
 (running.fbx) lancee.
+
+## running.fbx
+
+Source : `E:\Blender\asuka run.blend` (Blender 5.1.2 headless, inspection puis
+rendu **lecture seule**, aucune sauvegarde du `.blend`). Scene : cam `Camera`,
+armature `Armature`, meshes `Ch22_Body/Shirt/Pants/Sneakers/Hair/Eyelashes`,
+`frame_start=1`/`frame_end=39`, moteur EEVEE, resolution 1024x1536. 38 frames
+sources deja rendues en amont dans `DEMO/frames/mixamo_raw/0001.png..0038.png`
+(memes frames que celles ayant servi a `cycle_detector.py`).
+
+### Pose -- deja disponible, pas de nouveau rendu necessaire
+
+`DEMO/frames/skeletons_1024x1024/skeleton_0000..0037.png` couvre deja les 38
+frames completes (genere lors d'une session precedente via `pose_generator.py`
+/ DWPose ComfyUI, pas via un rig toyxyz -- aucune trace d'un tel addon/rig
+dans le `.blend` inspecte). Fallback DWPose de la consigne donc deja satisfait,
+aucun travail Blender necessaire pour la pose.
+
+### Depth -- pivot Blender -> DepthAnythingV2 (ComfyUI), valide par l'utilisateur
+
+Tentative initiale : rendu Z-depth directement depuis le compositeur Blender
+(`Render Layers` -> `Map Range` -> `File Output`, EXR puis normalisation
+Python vers PNG avec une plage fixe 9.0-10.8 -- distance camera-personnage
+mesuree stable sur les 38 frames via un pre-scan des bounding box). **Abandonnee
+apres plusieurs echecs d'API** : Blender 5.1 a retire `Scene.node_tree` (remplace
+par `Scene.compositing_node_group`, nouveau type `NodeTree` a creer
+explicitement), le node `CompositorNodeMapRange` n'existe plus dans la liste des
+types compositeur disponibles (erreur `Type de noeud non-defini`), et meme apres
+contournement (via `CompositorNodeCombineColor` + format `OPEN_EXR_MULTILAYER`,
+seul format accepte pour ce montage), le rendu animation ne produisait **aucun**
+fichier compositeur sur disque (seule la passe couleur par defaut via
+`scene.render.filepath` s'ecrivait) malgre des noeuds/liens verifies corrects et
+`use_compositing=True` -- td la nouvelle architecture "compositeur temps reel
+GPU" de Blender 4.2+/5.x semble ne pas executer le graphe de File Output de la
+meme facon en rendu batch headless. Diagnostic approfondi non poursuivi
+(cout/benefice defavorable face a une alternative fiable disponible).
+
+**Pivot** : `DepthAnythingV2Preprocessor` (ComfyUI, `comfyui_controlnet_aux`,
+deja installe) applique en un seul batch sur les 38 frames couleur de
+`mixamo_raw/` via `VHS_LoadImagesPath` (chargement dossier entier en un
+tenseur IMAGE batch) -> traitement batch GPU (checkpoint `depth_anything_v2_vitl.pth`,
+telecharge automatiquement au premier appel) -> `SaveImage`. Resultat copie/renomme
+vers `DEMO/frames/mixamo_depth/depth_0000.png..depth_0037.png`. Choix
+techniquement defendable au-dela du simple contournement : les ControlNet depth
+(y compris ceux utilises par l'ecosysteme Wan/AniSora) sont entraines sur des
+sorties d'estimateurs monoculaires type MiDaS/DepthAnything, pas sur des
+Z-buffers 3D bruts -- une carte DepthAnything est donc plus "in-distribution"
+pour un futur ControlNet depth qu'un Z-pass Blender brut.
+
+**Validation utilisateur** (2026-08-04, en session) : les 38 cartes de
+profondeur confirmees correctes -- premier plan/arriere-plan clairement
+separes ; si un membre (bras) venait a disparaitre lors d'une future generation
+conditionnee, la source depth n'en serait pas responsable.
+
+### Generation -- fallback I2V (pas de checkpoint AniSora Fun Control disponible)
+
+`Wan22FunControlToVideo` (node core ComfyUI, permettrait d'injecter
+`control_video`) necessite un checkpoint **specifiquement entraine** pour ce
+mecanisme de concatenation de canaux de controle -- confirme absent du depot
+`QuantStack/Index-Anisora-V3.2-GGUF` (seuls les poids High/Low de base y sont
+publies). Utiliser les poids AniSora de base avec ce node produirait un
+resultat non defini (canaux de controle jamais vus a l'entrainement) -- fallback
+explicitement prevu par la consigne : I2V simple, premiere frame comme ancrage.
+**Consequence importante** : les passes depth/pose preparees ci-dessus ne sont
+**pas utilisees comme conditionnement reel** dans ce run -- elles sont pretes
+pour un futur run Fun Control si un checkpoint compatible devient disponible,
+mais le mouvement genere ici est **improvise par le modele** (image d'ancrage
++ prompt texte), pas la reproduction litterale du cycle de course Mixamo.
+
+Workflow : `workspace/comfyui_workflows/anisora_running_fbx.json` -- meme
+architecture que le smoke test (High/Low + ModelSamplingSD3 + KSamplerAdvanced
+en 2 passes), keyframe = `DEMO/frames/mixamo_raw/0001.png`, resolution
+480x720 (aspect source 1024x1536 preserve), `length=37` (pas 38 : contrainte
+VAE video decouverte en tache 3, seules les longueurs `4k+1` produisent un
+nombre de frames exact -- 37 est la valeur la plus proche de 38 satisfaisant
+cette contrainte, conforme a l'annexe "ne jamais couper le cycle, reduire
+resolution/steps si besoin, pas le nombre de frames" ; ici aucune reduction du
+compte de frames n'a ete faite, seul l'arrondi impose par le VAE s'applique).
+
+**Resultat** : succes, aucune erreur de noeud. Temps reel 174.9 s (< 3 min,
+tres en dessous du seuil de 15 min). VRAM crete ~10.16 Go/16 Go, aucun OOM.
+Fichier `D:\Ov3rLoRd AI\ComfyUI\output\anisora_running_fbx_00001.mp4` (480x720,
+8 fps, **37 frames exactement** -- confirme la formule de decodage VAE
+`(latents-1)*4+1`). Inspection visuelle (frames 0, 12, 24, 36 extraites via
+ffmpeg) : mouvement de course fluide et physiquement plausible, personnage
+stable sur les 4 frames echantillonnees, aucun artefact majeur. **Observation
+notable** : le style reste proche du rendu 3D/photorealiste de la source Mixamo
+(pas de conversion vers un style anime malgre le prompt positif "anime girl
+running") -- comportement attendu en I2V a CFG modere (3.5) : l'image d'ancrage
+domine fortement l'apparence, le prompt texte pilote surtout le mouvement/contexte,
+pas un transfert de style fort.
+
+### Verdict running.fbx
+
+**Concluant sur le plan technique** (pas d'OOM, temps tres court, mouvement
+coherent) mais **limite fonctionnelle importante a garder en tete** : sans
+checkpoint AniSora Fun Control, ce pipeline ne peut pas actuellement driver la
+generation par la choregraphie Mixamo exacte -- seulement l'amorcer par une
+image. Prochaine etape naturelle si ce type de controle precis est requis :
+chercher/entrainer une variante Fun Control d'AniSora, ou evaluer `WanVaceToVideo`
+(egalement liste dans `nodes_wan.py`, mecanisme de controle different -- non
+explore cette session, hors perimetre).
