@@ -1,0 +1,86 @@
+{
+  "1": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "anisora_style_anchor_test_00001.mp4"
+    },
+    "_meta": { "title": "LoadVideo - anisora ancrage stylise (37 frames, 480x720)" }
+  },
+  "2": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": ["1", 0]
+    },
+    "_meta": { "title": "GetVideoComponents" }
+  },
+  "3": {
+    "class_type": "SeedVR2LoadDiTModel",
+    "inputs": {
+      "model": "seedvr2_ema_7b-Q4_K_M.gguf",
+      "device": "cuda:0",
+      "blocks_to_swap": 24,
+      "swap_io_components": true,
+      "offload_device": "cpu",
+      "cache_model": false,
+      "attention_mode": "sdpa"
+    },
+    "_meta": { "title": "SeedVR2LoadDiTModel - 7B Q4_K_M GGUF, block_swap=24" }
+  },
+  "4": {
+    "class_type": "SeedVR2LoadVAEModel",
+    "inputs": {
+      "model": "ema_vae_fp16.safetensors",
+      "device": "cuda:0",
+      "encode_tiled": true,
+      "encode_tile_size": 1024,
+      "encode_tile_overlap": 128,
+      "decode_tiled": true,
+      "decode_tile_size": 768,
+      "decode_tile_overlap": 128,
+      "tile_debug": "false",
+      "offload_device": "cpu",
+      "cache_model": false
+    },
+    "_meta": { "title": "SeedVR2LoadVAEModel - VAE tiling active (encode+decode)" }
+  },
+  "5": {
+    "class_type": "SeedVR2VideoUpscaler",
+    "inputs": {
+      "image": ["2", 0],
+      "dit": ["3", 0],
+      "vae": ["4", 0],
+      "seed": 42,
+      "resolution": 960,
+      "max_resolution": 0,
+      "batch_size": 37,
+      "uniform_batch_size": true,
+      "color_correction": "lab",
+      "temporal_overlap": 0,
+      "prepend_frames": 0,
+      "input_noise_scale": 0,
+      "latent_noise_scale": 0,
+      "offload_device": "cpu",
+      "enable_debug": true
+    },
+    "_meta": { "title": "SeedVR2VideoUpscaler - 960x1440 (2x depuis 480x720)" }
+  },
+  "6": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": ["5", 0],
+      "audio": ["2", 1],
+      "fps": ["2", 2]
+    },
+    "_meta": { "title": "CreateVideo" }
+  },
+  "7": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["6", 0],
+      "filename_prefix": "Anisora Test/anisora_upscaled/anisora_upscaled",
+      "format": "auto",
+      "codec": "auto"
+    },
+    "_meta": { "title": "SaveVideo - 960x1440" }
+  }
+}

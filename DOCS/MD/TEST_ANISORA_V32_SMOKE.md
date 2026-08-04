@@ -308,3 +308,86 @@ echantillonnees), calibration de la frontiere High/Low noise (toujours 50/50
 arbitraire), et combinaison de cet ancrage stylise avec un conditionnement
 pose/depth reel (bloque par l'absence de checkpoint Fun Control, cf.
 `running.fbx` ci-dessus).
+
+## SeedVR2 upscale
+
+Date : 2026-08-04/05, session `BRIEF_SESSION_PIPELINE_04082026.md` (Bureau),
+tache 2. RTX 5080 (`CUDA_VISIBLE_DEVICES=GPU-b4d632fb-...`, meme instance que
+les tests AniSora precedents, redemarree une fois pour charger le nouveau
+custom node -- restart demande explicitement a l'utilisateur avant action, cf.
+CLAUDE.md sur les process GPU).
+
+**Installation** : `ComfyUI-SeedVR2_VideoUpscaler` (numz) clone directement
+(non trouve dans le registre local de ComfyUI-Manager -- `cm-cli.py
+simple-show all | grep seedvr` sans resultat -- existence/URL du repo GitHub
+verifiees avant clonage). Dependances Python cassees/absentes corrigees dans
+le `python_embeded` partage : `diffusers` 0.27.2 -> 0.39.0 (l'ancienne version
+etait deja incompatible avec `huggingface_hub` 1.17.0 installe --
+`cached_download` retire, import qui echouait donc deja avant cette tache),
+`peft` et `rotary_embedding_torch` installes (absents). 4 nodes SeedVR2
+confirmes enregistres apres redemarrage (`/object_info`) :
+`SeedVR2VideoUpscaler`, `SeedVR2LoadDiTModel`, `SeedVR2LoadVAEModel`,
+`SeedVR2TorchCompileSettings`.
+
+**Modeles** : variante **7B Q4_K_M GGUF** (`seedvr2_ema_7b-Q4_K_M.gguf`,
+repo `AInVFX/SeedVR2_comfyUI`) + VAE `ema_vae_fp16.safetensors` (repo
+`numz/SeedVR2_comfyUI`, defaut du registre) -- telechargement **automatique**
+au premier run (`download_weight()` appele par le node `SeedVR2VideoUpscaler`
+lui-meme), pas d'action manuelle necessaire. Verifies sur disque apres coup :
+4,76 Go (DiT) + 501 Mo (VAE) dans `ComfyUI/models/SEEDVR2/`.
+
+**Workflow** : `workspace/comfyui_workflows/anisora_seedvr2_upscale.json` --
+reprend l'architecture de l'exemple officiel du repo
+(`LoadVideo`+`GetVideoComponents` -> `SeedVR2VideoUpscaler` ->
+`CreateVideo`+`SaveVideo`, nodes core ComfyUI). `blocks_to_swap=24`
+(block swap demande par la consigne), `encode_tiled`/`decode_tiled=true`
+(VAE tiling actif, demande par la consigne), `resolution=960` (le parametre
+du node est la dimension du **petit cote** en pixels, ratio source preserve
+automatiquement -- source 480x720 (petit cote 480) x2 = 960, donne
+exactement 960x1440 sans calcul manuel de la grande dimension).
+
+**Source** : `anisora_style_anchor_test_00001.mp4` (meilleure sequence
+AniSora de la session, cf. section "Ancrage stylise SDXL" ci-dessus), copiee
+dans `ComfyUI/input/`.
+
+**Resultat** : succes, aucune erreur de noeud. **260,3 s** au total
+(`execution_start` -> `execution_success`, inclut le telechargement des
+~5,26 Go de modeles au premier run -- pas seulement le calcul). VRAM crete
+non echantillonnee en continu (RTX 5080 a 14,1 Go/16 Go observe pendant le
+calcul, une seule mesure ponctuelle -- pas un profilage complet comme les
+tests precedents). Fichier
+`D:\Ov3rLoRd AI\ComfyUI\output\Anisora Test\anisora_upscaled\anisora_upscaled_00001_.mp4` :
+**960x1440 exactement confirme par `ffprobe`** (2x la resolution source
+480x720), **37 frames exactes preservees** (aucune perte lors de l'upscale),
+8 fps inchange.
+
+**Inspection visuelle** (frames 0, 18, 36 extraites via `ffmpeg`, comparees
+aux memes frames de la source 480x720) : **amelioration nette et reelle de
+la qualite**, pas un simple redimensionnement flou -- texture du jean
+(plis/coutures nettement plus definis), contours plus nets sur les cheveux et
+le visage, ombrage plus detaille sur le hoodie et les sneakers. Design du
+personnage parfaitement conserve sur les 3 frames (aucune derive d'identite
+introduite par l'upscale), aucun artefact visible (pas de dedoublement de
+contour, pas de "plastique" typique d'un upscale mal regle).
+
+### Verdict SeedVR2 upscale
+
+**Concluant** -- installation fonctionnelle (apres correctifs de dependances),
+upscale 2x reussi sans OOM, resolution/nombre de frames exacts, et gain de
+qualite visuelle reel et net a l'inspection. Bon candidat pour la derniere
+etape du pipeline cible documente dans `PLAN_COHERENCE_TEMPORELLE_AOUT2026.md`
+("SeedVR2 7B (upscale 2x, block_swap=24, VAE tiling)").
+
+### Ce qui reste ouvert
+
+1. **VRAM non profilee en continu** (un seul point de mesure pendant le
+   calcul) -- a refaire avec un echantillonnage regulier si un chiffre de
+   crete fiable est necessaire.
+2. **`diffusers` mis a jour dans l'environnement partage** (`python_embeded`,
+   pas un venv isole) -- 0.27.2 etait deja casse avant cette tache (import
+   echouait avec `huggingface_hub` 1.17.0), donc pas une regression
+   introduite ici, mais a garder en tete si un autre custom node epinglait
+   silencieusement l'ancienne version sans jamais l'importer explicitement.
+3. **Un seul test, une seule resolution cible (960x1440)** -- pas de test a
+   d'autres facteurs d'upscale ni sur une sequence plus longue (chaine SVI
+   multi-clips par exemple).
