@@ -39,6 +39,19 @@ session Aider, selon le sujet de la tâche en cours.
 | `Pipeline lineart -N&B - color after.md` | Pipeline lineart N&B puis colorisation | ~5200 |
 | `QC_ANATOMIQUE_AUDIT_LICENCES_20260729.md` | QC anatomique + audit licences (2026-07-29) | ~2400 |
 
+## Arborescence, ADRs, limitations et diagnostics (ajoutés le 2026-08-05)
+
+| Fichier | Sujet |
+|---|---|
+| `workspace/rag_index/sources/arborescence_projet.md` | Inventaire brut (chemins + tailles) de `D:\OVERLORD\` sur 2 niveaux, tous `.py`/`.md`/`.json` significatifs — généré automatiquement, sans description par fichier (anti-hallucination), utile pour la recherche par nom/emplacement de fichier |
+| `DOCS/ADR_OVERLORD.md` | Décisions d'architecture formelles (sampler, VAE, seeds, config...) |
+| `DOCS/ADR_MUSIC.md` | ADR-012 synthèse musicale (MusicGen) |
+| `DOCS/ADR_TTS.md` | ADR TTS (Coqui) |
+| `LIMITATIONS_CONNUES.md` | Limitations connues des modèles génératifs (pas des bugs pipeline) — à consulter avant de rouvrir une investigation sur une image "ratée" |
+| `workspace/qlora_dataset/VERDICT_COMMITPACK.md` | Verdict évaluation qualitative CommitPack (3 modèles, colonnes à noter manuellement) |
+| `footsegnet/controlnet/DIAGNOSTIC_MODE_COLLAPSE_20260728.md` | Diagnostic mode collapse Control-LoRA FootSegNet (2026-07-28) |
+| `DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md` | Plan anti-dérive stylistique vidéo (SVI, ColorMatch, limite ~37 frames structurelle) |
+
 ## Usage recommandé
 
 - Diagnostic/architecture pipeline → `RAPPORT_AUDIT_PIPELINE_AOUT2026.md`.

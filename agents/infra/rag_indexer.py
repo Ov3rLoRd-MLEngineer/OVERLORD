@@ -70,6 +70,16 @@ SOURCES = [
     "DOCS/MD/Regional Prompting.md",
     "DOCS/MD/Pipeline lineart -N&B - color after.md",
     "DOCS/MD/QC_ANATOMIQUE_AUDIT_LICENCES_20260729.md",
+    # Ajoutes le 2026-08-05 (tache "RAG coverage augmentation") -- arborescence
+    # projet, ADRs, limitations connues, verdicts/diagnostics recents.
+    "workspace/rag_index/sources/arborescence_projet.md",
+    "DOCS/ADR_OVERLORD.md",
+    "DOCS/ADR_MUSIC.md",
+    "DOCS/ADR_TTS.md",
+    "LIMITATIONS_CONNUES.md",
+    "workspace/qlora_dataset/VERDICT_COMMITPACK.md",
+    "footsegnet/controlnet/DIAGNOSTIC_MODE_COLLAPSE_20260728.md",
+    "DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md",
 ]
 
 

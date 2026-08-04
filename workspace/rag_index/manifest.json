@@ -1,22 +1,30 @@
 {
   "model": "intfloat/multilingual-e5-small",
   "embedding_dim": 384,
-  "num_chunks": 307,
+  "num_chunks": 515,
   "sources": {
-    "CLAUDE.md": "00a750b0636f857f",
+    "CLAUDE.md": "630e914458403864",
     "CLAUDE-english.md": "0f477fdfb320c123",
     "DOCS/INDEX.md": "36f75da72e7a052b",
-    "DOCS/LLM-Secour.md": "645325a5f4ca22bb",
-    "DOCS/RAG_SOURCES.md": "3f155351ce6804b2",
+    "DOCS/LLM-Secour.md": "9deab79a17957cf0",
+    "DOCS/RAG_SOURCES.md": "5f228cd01573efea",
     "RAPPORT_AUDIT_PIPELINE_AOUT2026.md": "e3a431a0796c42cc",
     "RAPPORT_IDEES_HISTORIQUE_V150_V227.md": "d1f3116665105241",
     "DOCS/MD/Audit de maturité technique 2026 — Pipeline anime IA.md": "95c64c06e1bc6314",
     "DOCS/MD/Prompt engineering robuste anti-hallucination pour un pipeline SDXL ComfyUI de datasets synthétiques.md": "9884d12b071f6712",
     "DOCS/MD/Regional Prompting.md": "cd8094df0026be7b",
     "DOCS/MD/Pipeline lineart -N&B - color after.md": "892290c5f013d7e2",
-    "DOCS/MD/QC_ANATOMIQUE_AUDIT_LICENCES_20260729.md": "622c7f56323a8ecb"
+    "DOCS/MD/QC_ANATOMIQUE_AUDIT_LICENCES_20260729.md": "622c7f56323a8ecb",
+    "workspace/rag_index/sources/arborescence_projet.md": "b70de1e7c59d5007",
+    "DOCS/ADR_OVERLORD.md": "344512372ea98800",
+    "DOCS/ADR_MUSIC.md": "d3931c60630800b6",
+    "DOCS/ADR_TTS.md": "f19e520a9ecb4261",
+    "LIMITATIONS_CONNUES.md": "0dc8144e002954a5",
+    "workspace/qlora_dataset/VERDICT_COMMITPACK.md": "36cbb8369b8c33a4",
+    "footsegnet/controlnet/DIAGNOSTIC_MODE_COLLAPSE_20260728.md": "4238a0544ba0cec8",
+    "DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md": "c78c1e3933e9210b"
   },
   "skipped_sources": [],
-  "built_at": "2026-08-03T20:55:04",
+  "built_at": "2026-08-05T00:37:23",
   "device": "cpu"
 }

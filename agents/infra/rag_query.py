@@ -154,9 +154,25 @@ def retrieve(query: str, top_k: int = 5) -> list[dict]:
     return results
 
 
+# Garde-fou anti-extrapolation (ajoute 2026-08-05, tache "RAG coverage
+# augmentation") -- injecte avec le contexte recupere pour que le modele
+# refuse explicitement de deviner quand aucun chunk ne repond a la question,
+# plutot que de combler le vide en extrapolant/confabulant sur le corpus
+# projet (meme discipline que la regle CLAUDE.md sur les faux verdicts
+# auto-generes -- ne jamais presenter une extrapolation comme un fait sourci).
+NO_MATCH_INSTRUCTION = (
+    "Si aucun des passages ci-dessous ne repond a la question posee, "
+    "reponds explicitement \"Information non disponible dans le contexte "
+    "projet\" plutot que d'extrapoler ou de deviner a partir de connaissances "
+    "generales."
+)
+
+
 def format_context(passages: list[dict], max_chars_per_passage: int = 600) -> str:
     """Formate une liste de passages (sortie de retrieve()) en bloc de contexte
-    textuel compact, pret a etre injecte dans un system prompt LLM."""
+    textuel compact, pret a etre injecte dans un system prompt LLM. Prefixe
+    par NO_MATCH_INSTRUCTION pour eviter que le modele ne comble par
+    extrapolation l'absence de passage pertinent (cf. commentaire ci-dessus)."""
     if not passages:
         return ""
     blocks = []
@@ -166,7 +182,7 @@ def format_context(passages: list[dict], max_chars_per_passage: int = 600) -> st
             text = text[:max_chars_per_passage].rsplit(" ", 1)[0] + "..."
         heading = f" ({p['heading']})" if p.get("heading") else ""
         blocks.append(f"[{p['source']}{heading}]\n{text}")
-    return "\n\n".join(blocks)
+    return NO_MATCH_INSTRUCTION + "\n\n" + "\n\n".join(blocks)
 
 
 if __name__ == "__main__":
