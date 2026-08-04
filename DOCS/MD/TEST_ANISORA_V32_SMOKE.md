@@ -210,3 +210,101 @@ image. Prochaine etape naturelle si ce type de controle precis est requis :
 chercher/entrainer une variante Fun Control d'AniSora, ou evaluer `WanVaceToVideo`
 (egalement liste dans `nodes_wan.py`, mecanisme de controle different -- non
 explore cette session, hors perimetre).
+
+## Ancrage stylise SDXL
+
+Date : 2026-08-04, meme journee que le smoke test et running.fbx ci-dessus.
+Objectif : tester si ancrer AniSora sur une image **deja stylisee anime**
+(plutot qu'un rendu SDXL proche du photorealisme ou un rendu 3D Mixamo brut)
+ameliore le maintien du style sur l'ensemble du cycle -- hypothese directement
+issue de l'observation `running.fbx` ci-dessus ("l'image d'ancrage domine
+fortement l'apparence en I2V a CFG modere, pas le prompt texte seul").
+
+RTX 5080 verifiee libre au debut de cette tache (`nvidia-smi`, 0 MiB/0 %).
+ComfyUI non actif au demarrage (arrete en fin de session precedente) --
+relance via `D:\Ov3rLoRd AI\_launch_comfyui_5080.bat` (`start cmd /k`, fenetre
+dediee visible), confirme pinne RTX 5080 via `/system_stats`
+(`cuda:0 NVIDIA GeForce RTX 5080`).
+
+**Image d'ancrage** : `D:\Ov3rLoRd AI\ComfyUI\output\mask_test__00001_.png`
+(1024x1536, meme ratio 2:3 que la keyframe `running.fbx`) -- deja un rendu
+SDXL stylise anime du personnage cible (cheveux roux, pince rouge, hoodie
+noir/gris, jean bleu, sneakers rouge/blanc, vue de profil, fond blanc),
+trouvee sur disque et fournie telle quelle par la consigne (origine/session de
+generation anterieure non retracee, hors perimetre de cette tache). Copiee
+vers `ComfyUI/input/anisora_style_anchor_keyframe.png`.
+
+**Workflow** : `workspace/comfyui_workflows/anisora_i2v_style_anchor.json` --
+derive de `anisora_i2v_minimal.json` (meme architecture 14 noeuds :
+`UnetLoaderGGUF` High/Low + `ModelSamplingSD3` shift=8 + `WanImageToVideo` +
+`KSamplerAdvanced` 2 passes 4+4/8 steps + `VAEDecode` + `VHS_VideoCombine`).
+Ecarts : keyframe ci-dessus, prompt positif
+`"anime girl running, dynamic motion, consistent character, smooth animation,
+side view, white background, orange hair, red hair clip, black hoodie, blue
+jeans, red white sneakers"`, prompt negatif
+`"realistic, 3d render, blurry, deformed"`, resolution 480x720 (ratio source
+preserve, comme `running.fbx`), `length=37` (38 frames "cycle complet"
+demandees, arrondi a la contrainte VAE video `4k+1` deja documentee ci-dessus
+-- meme convention que `running.fbx`, 37 est la valeur `4k+1` la plus proche
+de 38 par valeur inferieure).
+
+**Lancement et resultat** : soumis via l'API `POST /prompt`
+(`prompt_id e912e7fa-6499-408b-ad97-c2c2ab59915a`), aucune erreur de noeud.
+**182.5 s** (`execution_start` -> `execution_success`). **VRAM crete ~9.0 Go
+sur 16 Go** (echantillonnage `nvidia-smi` toutes les 15 s pendant le run,
+pic a 8987 MiB) -- aucun OOM. Fichier
+`D:\Ov3rLoRd AI\ComfyUI\output\anisora_style_anchor_test_00001.mp4`
+(480x720, 8 fps, **37 frames exactes** confirme par `ffprobe`
+`-count_frames`, coherent avec la formule de decodage VAE deja etablie).
+
+### Inspection visuelle comparative (vs `anisora_running_fbx_00001`)
+
+5 frames extraites via `ffmpeg` sur `anisora_style_anchor_test_00001.mp4`
+(indices 0/9/18/27/36, couvrant l'ensemble des 37 frames) et 4 frames sur
+`anisora_running_fbx_00001.mp4` (indices 0/12/24/36, deja extraites en
+reference dans la section precedente) -- inspectees directement.
+
+- **Style anime maintenu ?** Oui, nettement et de facon stable sur les 5
+  frames echantillonnees : cheveux roux + pince rouge, hoodie noir/gris, jean
+  bleu, sneakers rouge/blanc, fond blanc quasi uniforme, rendu "cel-shaded"
+  anime coherent de la premiere a la derniere frame. **Contraste net avec
+  `running_fbx_00001`** (memes prompts positif "anime girl running" +
+  negatif) : ce dernier reste visiblement photorealiste/3D sur ses 4 frames
+  de reference (peau, texture jean/legging brillante, pas de contour
+  cel-shade) -- confirme l'hypothese de session : c'est le **style de l'image
+  d'ancrage**, pas le prompt texte, qui pilote le rendu en I2V a CFG modere
+  (3.5) sur ce pipeline.
+- **Drift ?** Minimal sur les 5 frames observees. Couleur des cheveux, de la
+  pince, du hoodie, du jean et des sneakers stable du debut (f0) a la fin
+  (f36), aucun glissement de teinte ni changement de design du personnage
+  perceptible. Legere variation locale du contour gris/noir de la manche du
+  hoodie entre frames (f9 vs f18), dans la marge normale d'un rendu
+  frame-par-frame, pas un drift progressif cumulatif comme celui documente
+  pour Pipeline A (`PLAN_PIPELINE_A_DEMO_30S.md` §7).
+- **Pieds/mains coherents ?** Pieds : oui sur toutes les frames
+  echantillonnees -- sneakers rouge/blanc anatomiquement correctes et
+  reconnaissables, aucune fusion ni deformation visible pendant les
+  differentes phases d'appui/extension de la foulee. Mains : globalement
+  correctes (cinq doigts distincts sur f0/f9/f27/f36) ; **f18** montre une
+  main en leger flou/agregat de doigts (mouvement de bras rapide, main en
+  amorce de balancement) sans doigt surnumeraire ni fusion grossiere --
+  comparable aux limites deja cataloguees dans `LIMITATIONS_CONNUES.md`, pas
+  un nouvel echec distinct.
+
+### Verdict ancrage stylise SDXL
+
+**Concluant, meilleur resultat qualitatif de style des trois tests AniSora de
+cette session** (smoke test `frame_0013` SDXL proche photoreal, `running.fbx`
+Mixamo 3D, ancrage stylise ci-dessus). Confirme que le maintien du style anime
+en I2V AniSora sur ce pipeline depend fortement du style de l'image
+d'ancrage -- ancrer sur une image deja stylisee anime est le levier qui
+fonctionne, pas une reformulation du prompt texte seul. Aucun signe d'OOM, de
+degradation progressive (type Pipeline A) ni de defaut majeur pieds/mains sur
+les frames echantillonnees.
+
+**Non teste dans cette tache** (hors perimetre, une seule generation
+demandee) : inspection frame-par-frame exhaustive (37/37, seulement 5
+echantillonnees), calibration de la frontiere High/Low noise (toujours 50/50
+arbitraire), et combinaison de cet ancrage stylise avec un conditionnement
+pose/depth reel (bloque par l'absence de checkpoint Fun Control, cf.
+`running.fbx` ci-dessus).
