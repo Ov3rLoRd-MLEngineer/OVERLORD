@@ -359,6 +359,81 @@ personnage cohérent, pose fidèle au squelette, **aucun défaut de bras
 visible**.
 
 **Cycle complet (24 frames, 13→37, skip-existing réutilise les 4 du smoke
-test)** lancé via `start cmd /k` après validation du smoke test — voir
-`HANDOFF_2026-08-03.md` pour le statut final et le compte de frames sur
-disque en fin de session.
+test)** lancé via `start cmd /k` après validation du smoke test. **Les 24
+fichiers sont bien présents sur disque** (`frame_0013_00001_.png` →
+`frame_0036_00001_.png`, confirmé par l'utilisateur via capture d'écran —
+mon propre script de comptage avait un motif de glob buggé, `[12]` au lieu
+de `[123]`, qui m'a fait sous-estimer la progression réelle en cours de
+run) — **mais le résultat n'est PAS utilisable en l'état.**
+
+### Post-mortem qualité — le smoke test 4 frames ne représentait pas le cycle complet
+
+Constat utilisateur (capture d'écran) confirmé par relecture des frames
+sur disque : la pose reste quasi figée d'une frame à l'autre ("pas de
+mouvement") et le remplissage couleur se désagrège progressivement en
+bruit/confettis à partir d'environ la frame 0022, sévère dès 0030-0036 —
+la structure (lineart) survit, la couleur non.
+
+**Cause racine identifiée** (lecture de `denoise_estimator.py` +
+`motion_mask_generator.py`, aucune modification appliquée) :
+
+- `batch_controlnet.py` appelle `estimate_denoise(..., use_qwen=False)` —
+  le scoring QwenVL (plus riche) est explicitement désactivé, seul le
+  fallback PIL (`compute_structural_diff`) est actif.
+- Ce fallback compte la fraction de pixels qui changent sur tout le
+  canevas 256×144 entre deux squelettes. Un squelette est un trait fin sur
+  fond noir : même un changement de pose important ne touche qu'une
+  petite fraction des pixels totaux → le score reste chroniquement bas
+  (~0.05-0.1) quel que soit le mouvement réel du personnage.
+- Mappé sur `DENOISE_MIN=0.05 → DENOISE_MAX=0.40`, ça donne les
+  denoise=0.067-0.072 observés dans les logs du smoke test.
+- Avec `STEPS=40`, denoise≈0.07 ne fait tourner le sampler que ~2,8 pas
+  réels — insuffisant pour que `KSampler`+`DifferentialDiffusion`
+  résolve proprement la couleur dans la zone masquée. La frame N+1 est
+  générée à partir d'une frame N déjà légèrement bruitée (chaînage N-1),
+  donc le bruit s'accumule à chaque itération plutôt que de se corriger.
+
+**Pourquoi le smoke test (frames 13-16) n'a rien montré** : la frame 0013
+était en réalité un txt2img pur guidé par ControlNet+Lineart (pas de
+`prev_path` disponible à ce moment — `GLOBAL_ANCHOR` absent du disque),
+donc aucun risque d'accumulation. Le chaînage N-1 (et donc la dégradation)
+ne commence qu'à partir de la frame 0014 — visible seulement en
+poursuivant bien au-delà des 4 frames testées. **Erreur de méthode de ma
+part** : conclure "smoke test réussi" sur 4 frames sans avoir observé au
+moins une dizaine de frames chaînées était prématuré pour un pipeline dont
+le risque connu (watchdog SSIM, cf. V1.3/V1.4) est justement la dérive
+cumulative frame-à-frame.
+
+**Remarque utilisateur, à retenir pour la suite** : ce test n'utilise pas
+AnimateDiff (confirmé — aucun node/motion module AnimateDiff dans
+`batch_controlnet.py` ni `motion_mask_generator.py`, uniquement
+KSampler+ControlNet+DifferentialDiffusion par frame). Pipeline A est conçu
+comme option *concurrente* à AnimateDiff (cf. §6), pas un complément.
+L'utilisateur rapporte qu'AnimateDiff évitait structurellement ce type de
+dégradation par le passé, précisément parce qu'il traite les frames
+ensemble via son module de mouvement temporel plutôt que de chaîner
+frame N-1 → frame N en img2img/inpaint séquentiel — ce qui correspond
+exactement au mécanisme de dérive identifié ci-dessus. Confirme que le
+problème n'est pas qu'une histoire de calibration de constante : le
+chaînage N-1 est structurellement fragile pour ce type de rendu, avec ou
+sans denoise mieux calibré.
+
+**Décision de fin de session (utilisateur)** : ne pas relancer de run GPU
+supplémentaire cette session — cycle actuel conservé tel quel sur disque
+à titre de preuve/diagnostic, décision sur la suite (recalibrer le
+denoise, forcer img2img_fallback, ou basculer sur AnimateDiff pour la
+génération multi-frame) remise à une session ultérieure.
+
+**Pistes pour la suite, par ordre de risque croissant** :
+1. Relever `DENOISE_MIN` (ex. 0.05→0.18-0.20) dans `denoise_estimator.py`
+   — fix ciblé, rapide à tester, mais mitige sans éliminer le problème
+   structurel du chaînage N-1.
+2. Forcer le chemin `img2img_fallback` (denoise fixe 0.20, déjà démontré
+   propre en pratique sur la frame 0013 en mode txt2img) plutôt que
+   `motion_mask` — évite le chemin jamais calibré, reste du chaînage N-1
+   mais avec un denoise plus généreux et fixe.
+3. Basculer la génération multi-frame sur AnimateDiff (changement
+   d'architecture, hors périmètre "câblage" — AnimateDiff reste un
+   pipeline manuel jamais automatisé selon
+   `RAPPORT_AUDIT_PIPELINE_AOUT2026.md`) — option la plus lourde mais la
+   seule qui adresse la cause structurelle plutôt que la mitiger.
