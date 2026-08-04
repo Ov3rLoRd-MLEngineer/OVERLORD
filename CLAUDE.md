@@ -159,3 +159,14 @@ date_iso,gpu,duree_minutes,module,description,cout_estime_usd,estime_retroactif
 `cout_estime_usd` = `duree_minutes/60 × tarif horaire de référence` — les RTX 5080/5060 Ti locales coûtent 0$ en pratique, c'est un équivalent-coût cloud à but de comparaison uniquement (tarifs de référence : A100 ~1,20$/h, H100 ~2,40$/h). Consultable via `py -3.12 gpu_cost_estimate.py` (cumul par GPU/module + équivalent-coût total).
 
 `estime_retroactif` : `false` pour une ligne loguée au moment où le run a tourné (durée connue avec certitude) ; `true` pour une ligne reconstituée après coup depuis des traces indirectes (logs de job scratch, dates de fichiers, throughput extrapolé d'un autre run) — toujours préciser dans `description` la méthode et la marge d'incertitude plutôt que de présenter une durée reconstituée comme une mesure directe.
+
+## Génération vidéo (AniSora / SVI / AnimateDiff)
+
+Conventions issues du diagnostic de dérive stylistique (~37 frames/45s, structurel sur tous les modèles DiT — voir `DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md`) et de la comparaison AnimateDiff/AniSora du 2026-08-04/05 :
+
+- **Depth maps** : préférer `DepthAnythingV2Preprocessor` (ComfyUI) à l'API compositor Blender 5.1 pour l'extraction de cartes de profondeur — l'API compositeur est cassée sur ce poste (`Scene.node_tree` retiré en 5.1, `CompositorNodeMapRange` absent, rendu batch headless ne produit aucun fichier compositeur malgré un graphe correct ; diagnostic détaillé dans `DOCS/MD/TEST_ANISORA_V32_SMOKE.md` section running.fbx). DepthAnythingV2 est aussi plus "in-distribution" pour un ControlNet depth (entraîné sur des sorties monoculaires type MiDaS, pas des Z-buffers 3D bruts) — pas qu'un contournement, un choix techniquement défendable.
+- **SVI LoRA (Stable Video Infinity, anti-drift WAN 2.2 I2V)** : toujours appliquer les DEUX LoRA (HIGH sur l'expert High-noise, LOW sur l'expert Low-noise) — un seul des deux donne un résultat dégradé.
+- **ColorMatch (KJNodes) inter-clips** : toujours en mode **LAB**, pas RGB — meilleur résultat pour le rendu anime (référence = dernière frame stable du clip précédent).
+- **Seed différent obligatoire par clip** dans une chaîne SVI multi-clips — même seed d'un clip à l'autre produit des artefacts de répétition.
+- **Parallélisation GPU pour les passes longues** : AniSora/SVI = génération **séquentielle obligatoire** (chaque clip dépend de la dernière frame du précédent comme ancrage) — ne jamais paralléliser sur les deux GPU. Upscale (SeedVR2), extraction depth/pose et AnimateDiff batch sont parallélisables (RTX 5080 = ordre croissant, RTX 5060 Ti = ordre décroissant, jonction au frame N/2).
+- **Contournements IA préférés aux solutions coûteuses en tokens** quand le résultat final est équivalent (ex. DepthAnythingV2 vs API Blender ci-dessus) — ne pas insister sur une API cassée par principe si une alternative fiable et moins chère en investigation existe déjà dans le dépôt.
