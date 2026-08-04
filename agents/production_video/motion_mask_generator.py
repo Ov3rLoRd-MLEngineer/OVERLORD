@@ -35,7 +35,9 @@ except ImportError:
     HAS_PIL = False
     print("[WARN] Pillow/numpy manquant")
 
-_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# dirname x3 : agents/production_video/X.py -> production_video -> agents -> racine
+# (dirname x2 suffisait avant la reorg Phase C quand ce fichier vivait a agents/X.py)
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 import config

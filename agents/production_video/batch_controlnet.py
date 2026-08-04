@@ -50,7 +50,9 @@ try:
 except ImportError:
     HAS_MOTION_MASK = False
 
-_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# dirname x3 : agents/production_video/X.py -> production_video -> agents -> racine
+# (dirname x2 suffisait avant la reorg Phase C quand ce fichier vivait a agents/X.py)
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 import config
@@ -274,12 +276,23 @@ def copy_to_comfy_input(src_path, name=None):
     return dst_name
 
 def get_skeleton_path(frame_num):
-    """Utilise le répertoire remappé 1344x768 si dispo, sinon source."""
-    name = f"overlord_skeleton_frame_{frame_num + 1:04d}_00001_.png"
-    remap = os.path.join(SKELETONS_REMAP, name)
-    if os.path.exists(remap):
-        return remap
-    return os.path.join(SKELETONS_DIR, name)
+    """Utilise le répertoire remappé 1344x768 si dispo, sinon source.
+
+    Deux conventions de nommage coexistent selon la piste de production :
+    `overlord_skeleton_frame_NNNN_00001_.png` (piste Kling historique,
+    frame_num+1 car 1-indexé côté ComfyUI SaveImage) et `skeleton_NNNN.png`
+    (piste Mixamo actuelle, 0-indexé — cf. DEMO/frames/skeletons_1024x1024/,
+    Blocage 3 de DOCS/MD/PLAN_PIPELINE_A_DEMO_30S.md). On essaie l'ancien
+    nom d'abord (rétrocompatibilité) puis le nouveau, plutôt que de choisir
+    l'un au détriment de l'autre."""
+    legacy_name = f"overlord_skeleton_frame_{frame_num + 1:04d}_00001_.png"
+    mixamo_name = f"skeleton_{frame_num:04d}.png"
+    for base_dir in (SKELETONS_REMAP, SKELETONS_DIR):
+        for name in (legacy_name, mixamo_name):
+            candidate = os.path.join(base_dir, name)
+            if os.path.exists(candidate):
+                return candidate
+    return os.path.join(SKELETONS_REMAP, mixamo_name)
 
 # ── REMBG PIL INLINE ────────────────────────────────────────────────────────────────────────────
 def prepare_prev_for_i2i(img_path: str) -> str:
@@ -524,16 +537,27 @@ def main():
     os.makedirs(COMFY_OUTPUT, exist_ok=True)
 
     # ── Détection squelettes ──────────────────────────────────────────────────
-    # Priorité : répertoire remappé 1344x768, sinon source
+    # Priorité : répertoire remappé 1344x768, sinon source. Deux conventions de
+    # nommage supportées (cf. get_skeleton_path) : essai du nom legacy Kling
+    # d'abord, puis du nom Mixamo actuel (skeleton_NNNN.png) si rien trouvé.
     skel_dir = SKELETONS_REMAP if os.path.isdir(SKELETONS_REMAP) else SKELETONS_DIR
     pattern  = os.path.join(skel_dir, "overlord_skeleton_frame_*_*.png")
     skeletons = sorted(glob.glob(pattern))
 
     if not skeletons:
-        # Fallback source
+        # Fallback source (legacy)
         skel_dir  = SKELETONS_DIR
         pattern   = os.path.join(skel_dir, "overlord_skeleton_frame_*_*.png")
         skeletons = sorted(glob.glob(pattern))
+
+    if not skeletons:
+        # Fallback nommage Mixamo (skeleton_NNNN.png) — remap puis source
+        for candidate_dir in (SKELETONS_REMAP, SKELETONS_DIR):
+            pattern   = os.path.join(candidate_dir, "skeleton_*.png")
+            skeletons = sorted(glob.glob(pattern))
+            if skeletons:
+                skel_dir = candidate_dir
+                break
 
     if not skeletons:
         print(f"[ERREUR] Aucun squelette trouvé dans {skel_dir}")
