@@ -1,0 +1,30 @@
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+                # Copie squelette dans ComfyUI/input
+                skel_filename = os.path.basename(skel_path)
+                copy_to_comfy_input(skel_path, skel_filename)
+==== REPLACE ====
+                # Copie squelette sous nom fixe → force rechargement ComfyUI (cache-buster)
+                copy_to_comfy_input(skel_path, "ov_skeleton_current.png")
+                skel_filename = "ov_skeleton_current.png"
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+                    if ipa_src and os.path.exists(ipa_src):
+                        ref_filename = copy_to_comfy_input(
+                            ipa_src, f"ipa_ref_{frame_num:04d}.png"
+                        )
+==== REPLACE ====
+                    if ipa_src and os.path.exists(ipa_src):
+                        ref_filename = copy_to_comfy_input(
+                            ipa_src, "ov_ipa_ref_current.png"
+                        )
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+    print(f"║   Ov3rLoRd — Batch ControlNet + IPA + Watchdog V1.4         ║")
+==== REPLACE ====
+    print(f"║   Ov3rLoRd — Batch ControlNet + IPA + Watchdog V1.5         ║")
+==== END ====

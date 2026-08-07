@@ -1,0 +1,478 @@
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+CONTROLNET     = "control-lora-openposeXL2-rank256.safetensors"
+VAE            = "taesdxl"
+CLIP_VISION    = "model.safetensors"
+IPADAPTER      = "ip-adapter-plus_sdxl_vit-h.safetensors"
+
+# ── PARAMÈTRES GÉNÉRATION V1.4 ────────────────────────────────────────────────
+CN_STRENGTH    = 0.85   # ✅ Corrigé depuis 1.0 — anti-rigidité
+CN_START       = 0.0
+CN_END         = 0.80   # ✅ Corrigé depuis 1.0 — libère 20% finaux éclairage
+
+IPA_WEIGHT     = 0.70   # ✅ Corrigé depuis 0.5
+IPA_START      = 0.0
+IPA_END        = 0.30   # ✅ Corrigé depuis 1.0 — IPAdapter ancre style seulement
+IPA_WEIGHT_TYPE= "linear"    # ✅ "original" invalide ComfyUI 0.25+
+IPA_EMBEDS     = "K+V"       # ✅ Corrigé depuis "V only"
+
+WIDTH          = 1344
+HEIGHT         = 768
+STEPS          = 40
+CFG            = 6.0
+SAMPLER        = "dpmpp_2m"
+SCHEDULER      = "karras"
+==== REPLACE ====
+CONTROLNET     = "control-lora-openposeXL2-rank256.safetensors"
+CONTROLNET_LA  = "xinsir-controlnet-lineart-sdxl.safetensors"
+LINEART_DIR    = os.path.join(DEMO_DIR, "frames", "lineart_1344x768")
+VAE            = "taesdxl"
+CLIP_VISION    = "model.safetensors"
+IPADAPTER      = "ip-adapter-plus_sdxl_vit-h.safetensors"
+
+# ── PARAMÈTRES GÉNÉRATION V1.7 ────────────────────────────────────────────────
+CN_STRENGTH    = 1.25   # OpenPose
+CN_START       = 0.0
+CN_END         = 0.50
+
+CN_LA_STRENGTH = 1.25   # Lineart
+CN_LA_START    = 0.0
+CN_LA_END      = 0.50
+
+IPA_WEIGHT     = 0.70
+IPA_START      = 0.0
+IPA_END        = 0.30
+IPA_WEIGHT_TYPE= "linear"
+IPA_EMBEDS     = "K+V"
+
+DENOISE_T2I    = 1.00   # Frame 0 — txt2img pur
+DENOISE_I2I    = 0.35   # Frames 1+ — img2img avec n-1
+
+WIDTH          = 1344
+HEIGHT         = 768
+STEPS          = 40
+CFG            = 7.0
+SAMPLER        = "dpmpp_2m"
+SCHEDULER      = "karras"
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+# Seeds par shot (fixer manuellement après test ComfyUI, -1 = auto)
+SEEDS_BY_SHOT = {
+    1: -1,   # Départ sprint      frames 0→143
+    2: -1,   # Visage transition  frames 144→287
+    3: -1,   # Chute              frames 288→431
+    4: -1,   # Relèvement         frames 432→623
+    5: -1,   # Debout             frames 624→815
+    6: -1,   # Reprise jogging    frames 816→1007
+}
+==== REPLACE ====
+# Seeds par shot (fixer manuellement après test ComfyUI, -1 = auto)
+SEEDS_BY_SHOT = {
+    1: 527494254591352,  # Départ sprint      frames 0→143
+    2: -1,               # Visage transition  frames 144→287
+    3: -1,               # Chute              frames 288→431
+    4: -1,               # Relèvement         frames 432→623
+    5: -1,               # Debout             frames 624→815
+    6: -1,               # Reprise jogging    frames 816→1007
+}
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+# ── PROMPTS V1.4 ──────────────────────────────────────────────────────────────
+PROMPT_POS = (
+    "(masterpiece:1.4), (best quality:1.4), (ultra detailed:1.3), (absurdres:1.2), sharp focus, "
+    "1girl, solo, asuka langley soryu, perfect face, angry confident expression, blue eyes, "
+    "flowing red hair, long red hair dramatically swept back by wind, "
+    "iconic red plugsuit, glossy reflective plugsuit, skin-tight plugsuit, detailed plugsuit seams, "
+    "TWO black stripes on thigh only, "
+    "full body, perfect anatomy, side view, running at maximum speed, extreme dynamic running pose, "
+    "leaning aggressively forward, powerful sprint, explosive leg stride, dynamic arm pumping, motion blur, "
+    "heavy speed lines, intense movement, wind pressure effect, sense of extreme velocity, "
+    "anime style, cel shading, bold lines, evangelion aesthetic, vibrant colors, "
+    "pure white background, "
+    "consistent character, same face, same hairstyle, same proportions, same outfit, same colors, "
+    "consistent anime style, fixed camera angle, same perspective"
+)
+PROMPT_NEG = (
+    "worst quality, low quality, blurry, deformed, extra limbs, "
+    "multiple characters, ugly, bad anatomy, watermark, signature, "
+    "realistic, photograph, 3d render, multiple girls, nsfw, "
+    "three stripes, four stripes, stripes on arm"
+)
+==== REPLACE ====
+# ── PROMPTS V1.7 — PonyXL format ─────────────────────────────────────────────
+# Prompt unique pour frames 0→200 (test)
+PROMPT_POS = (
+    "score_9, score_8_up, score_7_up, source_anime, masterpiece, highly detailed, "
+    "1girl, asuka shoryu langley, blue eyes, nike jordan sneakers, hoodie, "
+    "detailed clothing textures, side view, profile, full body, run, "
+    "concentrated expression, pure white background"
+)
+PROMPT_NEG = (
+    "blurry, low quality, deformed, ugly, bad anatomy, bad eyes, bad hand, bad finger, "
+    "extra limbs, watermark, text, logo, cartoon, anime, painting, 3d render, "
+    "child, loli, overexposed, underexposed, plastic skin"
+)
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+def build_workflow(skeleton_filename, output_prefix, seed, ref_image_filename=None):
+    """
+    Workflow SDXL + LoRA + ControlNet OpenPose + IPAdapter.
+    V1.4 : CN strength 0.85 / end 0.80 / IPA end 0.30 / weight_type original.
+    """
+    w = {
+        "1": {
+            "class_type": "CheckpointLoaderSimple",
+            "inputs": {"ckpt_name": CHECKPOINT}
+        },
+        "2": {
+            "class_type": "LoraLoader",
+            "inputs": {
+                "model": ["1", 0], "clip": ["1", 1],
+                "lora_name": LORA,
+                "strength_model": LORA_WEIGHT,
+                "strength_clip":  LORA_WEIGHT,
+            }
+        },
+        "3": {
+            "class_type": "CLIPTextEncode",
+            "inputs": {"text": PROMPT_POS, "clip": ["2", 1]}
+        },
+        "4": {
+            "class_type": "CLIPTextEncode",
+            "inputs": {"text": PROMPT_NEG, "clip": ["2", 1]}
+        },
+        "5": {
+            "class_type": "LoadImage",
+            "inputs": {"image": skeleton_filename, "upload": "image"}
+        },
+        "6": {
+            "class_type": "ControlNetLoader",
+            "inputs": {"control_net_name": CONTROLNET}
+        },
+        "7": {
+            # ✅ V1.4 : ControlNetApplyAdvanced avec start/end exposés
+            "class_type": "ControlNetApplyAdvanced",
+            "inputs": {
+                "positive":      ["3", 0],
+                "negative":      ["4", 0],
+                "control_net":   ["6", 0],
+                "image":         ["5", 0],
+                "strength":      CN_STRENGTH,
+                "start_percent": CN_START,
+                "end_percent":   CN_END,
+            }
+        },
+        "8": {
+            "class_type": "EmptyLatentImage",
+            "inputs": {"width": WIDTH, "height": HEIGHT, "batch_size": 1}
+        },
+        "10": {
+            "class_type": "VAELoader",
+            "inputs": {"vae_name": VAE}
+        },
+        "11": {
+            "class_type": "VAEDecode",
+            "inputs": {"samples": ["9", 0], "vae": ["10", 0]}
+        },
+        "12": {
+            "class_type": "SaveImage",
+            "inputs": {
+                "images": ["11", 0],
+                "filename_prefix": output_prefix,
+            }
+        },
+    }
+
+    if ref_image_filename:
+        w["13"] = {
+            "class_type": "LoadImage",
+            "inputs": {"image": ref_image_filename, "upload": "image"}
+        }
+        w["14"] = {
+            "class_type": "CLIPVisionLoader",
+            "inputs": {"clip_name": CLIP_VISION}
+        }
+        w["15"] = {
+            "class_type": "IPAdapterModelLoader",
+            "inputs": {"ipadapter_file": IPADAPTER}
+        }
+        w["16"] = {
+            "class_type": "IPAdapterAdvanced",
+            "inputs": {
+                "model":          ["2", 0],
+                "ipadapter":      ["15", 0],
+                "image":          ["13", 0],
+                "clip_vision":    ["14", 0],
+                "weight":         IPA_WEIGHT,
+                "weight_type":    IPA_WEIGHT_TYPE,  # ✅ "original" vs "linear"
+                "combine_embeds": "concat",
+                "start_at":       IPA_START,
+                "end_at":         IPA_END,           # ✅ 0.30 vs 1.0
+                "embeds_scaling": IPA_EMBEDS,        # ✅ "K+V" vs "V only"
+            }
+        }
+        w["9"] = {
+            "class_type": "KSampler",
+            "inputs": {
+                "model":         ["16", 0],
+                "positive":      ["7", 0],
+                "negative":      ["7", 1],
+                "latent_image":  ["8", 0],
+                "seed": seed, "steps": STEPS, "cfg": CFG,
+                "sampler_name": SAMPLER, "scheduler": SCHEDULER,
+                "denoise": 1.0
+            }
+        }
+    else:
+        w["9"] = {
+            "class_type": "KSampler",
+            "inputs": {
+                "model":         ["2", 0],
+                "positive":      ["7", 0],
+                "negative":      ["7", 1],
+                "latent_image":  ["8", 0],
+                "seed": seed, "steps": STEPS, "cfg": CFG,
+                "sampler_name": SAMPLER, "scheduler": SCHEDULER,
+                "denoise": 1.0
+            }
+        }
+
+    return w
+==== REPLACE ====
+def get_lineart_filename(frame_num):
+    """Retourne le nom du fichier lineart pour la frame donnée."""
+    return f"lineart_{frame_num:04d}.png"
+
+def build_workflow(skeleton_filename, output_prefix, seed,
+                   ref_image_filename=None, lineart_filename=None,
+                   prev_image_filename=None):
+    """
+    Workflow V1.7 :
+    - CLIP Skip (-2)
+    - ControlNet OpenPose + ControlNet Lineart en série
+    - txt2img (frame 0, denoise=1.0) ou img2img (frames 1+, denoise=0.35 + n-1)
+    - IPA optionnel (ref_image_filename)
+    """
+    w = {
+        "1": {
+            "class_type": "CheckpointLoaderSimple",
+            "inputs": {"ckpt_name": CHECKPOINT}
+        },
+        "2": {
+            "class_type": "LoraLoader",
+            "inputs": {
+                "model": ["1", 0], "clip": ["1", 1],
+                "lora_name": LORA,
+                "strength_model": LORA_WEIGHT,
+                "strength_clip":  LORA_WEIGHT,
+            }
+        },
+        # CLIP Skip -2
+        "20": {
+            "class_type": "CLIPSetLastLayer",
+            "inputs": {"clip": ["2", 1], "stop_at_clip_layer": -2}
+        },
+        "3": {
+            "class_type": "CLIPTextEncode",
+            "inputs": {"text": PROMPT_POS, "clip": ["20", 0]}
+        },
+        "4": {
+            "class_type": "CLIPTextEncode",
+            "inputs": {"text": PROMPT_NEG, "clip": ["20", 0]}
+        },
+        # OpenPose skeleton
+        "5": {
+            "class_type": "LoadImage",
+            "inputs": {"image": skeleton_filename, "upload": "image"}
+        },
+        "6": {
+            "class_type": "ControlNetLoader",
+            "inputs": {"control_net_name": CONTROLNET}
+        },
+        "7": {
+            "class_type": "ControlNetApplyAdvanced",
+            "inputs": {
+                "positive":      ["3", 0],
+                "negative":      ["4", 0],
+                "control_net":   ["6", 0],
+                "image":         ["5", 0],
+                "strength":      CN_STRENGTH,
+                "start_percent": CN_START,
+                "end_percent":   CN_END,
+            }
+        },
+        "10": {
+            "class_type": "VAELoader",
+            "inputs": {"vae_name": VAE}
+        },
+        "11": {
+            "class_type": "VAEDecode",
+            "inputs": {"samples": ["9", 0], "vae": ["10", 0]}
+        },
+        "12": {
+            "class_type": "SaveImage",
+            "inputs": {
+                "images": ["11", 0],
+                "filename_prefix": output_prefix,
+            }
+        },
+    }
+
+    # ── ControlNet Lineart (chaîné après OpenPose) ──────────────────────────
+    if lineart_filename:
+        w["17"] = {
+            "class_type": "LoadImage",
+            "inputs": {"image": lineart_filename, "upload": "image"}
+        }
+        w["18"] = {
+            "class_type": "ControlNetLoader",
+            "inputs": {"control_net_name": CONTROLNET_LA}
+        }
+        w["19"] = {
+            "class_type": "ControlNetApplyAdvanced",
+            "inputs": {
+                "positive":      ["7", 0],
+                "negative":      ["7", 1],
+                "control_net":   ["18", 0],
+                "image":         ["17", 0],
+                "strength":      CN_LA_STRENGTH,
+                "start_percent": CN_LA_START,
+                "end_percent":   CN_LA_END,
+            }
+        }
+        cn_out = "19"
+    else:
+        cn_out = "7"
+
+    # ── img2img : Load Image n-1 → VAEEncode → latent ───────────────────────
+    if prev_image_filename:
+        w["21"] = {
+            "class_type": "LoadImage",
+            "inputs": {"image": prev_image_filename, "upload": "image"}
+        }
+        w["22"] = {
+            "class_type": "VAEEncode",
+            "inputs": {"pixels": ["21", 0], "vae": ["10", 0]}
+        }
+        latent_src = ["22", 0]
+        denoise = DENOISE_I2I
+    else:
+        w["8"] = {
+            "class_type": "EmptyLatentImage",
+            "inputs": {"width": WIDTH, "height": HEIGHT, "batch_size": 1}
+        }
+        latent_src = ["8", 0]
+        denoise = DENOISE_T2I
+
+    # ── IPAdapter (optionnel) ───────────────────────────────────────────────
+    if ref_image_filename:
+        w["13"] = {
+            "class_type": "LoadImage",
+            "inputs": {"image": ref_image_filename, "upload": "image"}
+        }
+        w["14"] = {
+            "class_type": "CLIPVisionLoader",
+            "inputs": {"clip_name": CLIP_VISION}
+        }
+        w["15"] = {
+            "class_type": "IPAdapterModelLoader",
+            "inputs": {"ipadapter_file": IPADAPTER}
+        }
+        w["16"] = {
+            "class_type": "IPAdapterAdvanced",
+            "inputs": {
+                "model":          ["2", 0],
+                "ipadapter":      ["15", 0],
+                "image":          ["13", 0],
+                "clip_vision":    ["14", 0],
+                "weight":         IPA_WEIGHT,
+                "weight_type":    IPA_WEIGHT_TYPE,
+                "combine_embeds": "concat",
+                "start_at":       IPA_START,
+                "end_at":         IPA_END,
+                "embeds_scaling": IPA_EMBEDS,
+            }
+        }
+        model_src = ["16", 0]
+    else:
+        model_src = ["2", 0]
+
+    # ── KSampler ────────────────────────────────────────────────────────────
+    w["9"] = {
+        "class_type": "KSampler",
+        "inputs": {
+            "model":         model_src,
+            "positive":      [cn_out, 0],
+            "negative":      [cn_out, 1],
+            "latent_image":  latent_src,
+            "seed": seed, "steps": STEPS, "cfg": CFG,
+            "sampler_name": SAMPLER, "scheduler": SCHEDULER,
+            "denoise": denoise
+        }
+    }
+
+    return w
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+    print(f"║   Ov3rLoRd — Batch ControlNet + IPA + Watchdog V1.6         ║")
+==== REPLACE ====
+    print(f"║   Ov3rLoRd — Batch ControlNet + IPA + Watchdog V1.7         ║")
+==== END ====
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+                # Source IPAdapter
+                ref_filename = None
+                if use_ipa:
+                    if args.ipa_source == "anchor" and anchor_path:
+                        ipa_src = anchor_path
+                    else:
+                        # rolling : frame N-1, fallback ancre globale
+                        ipa_src = prev_path or anchor_path
+                    if ipa_src and os.path.exists(ipa_src):
+                        ref_filename = copy_to_comfy_input(
+                            ipa_src, "ov_ipa_ref_current.png"
+                        )
+
+                workflow = build_workflow(skel_filename, output_prefix, seed, ref_filename)
+==== REPLACE ====
+                # Source IPAdapter
+                ref_filename = None
+                if use_ipa:
+                    if args.ipa_source == "anchor" and anchor_path:
+                        ipa_src = anchor_path
+                    else:
+                        ipa_src = prev_path or anchor_path
+                    if ipa_src and os.path.exists(ipa_src):
+                        ref_filename = copy_to_comfy_input(
+                            ipa_src, "ov_ipa_ref_current.png"
+                        )
+
+                # Lineart — cache-buster nom fixe
+                la_name = get_lineart_filename(frame_num)
+                la_path = os.path.join(LINEART_DIR, la_name)
+                lineart_filename = None
+                if os.path.exists(la_path):
+                    copy_to_comfy_input(la_path, "ov_lineart_current.png")
+                    lineart_filename = "ov_lineart_current.png"
+
+                # Image n-1 pour img2img (frames 1+)
+                prev_img_filename = None
+                if frame_num > 0 and prev_path and os.path.exists(prev_path):
+                    copy_to_comfy_input(prev_path, "ov_prev_frame_current.png")
+                    prev_img_filename = "ov_prev_frame_current.png"
+
+                workflow = build_workflow(
+                    skel_filename, output_prefix, seed,
+                    ref_image_filename=ref_filename,
+                    lineart_filename=lineart_filename,
+                    prev_image_filename=prev_img_filename,
+                )
+==== END ====

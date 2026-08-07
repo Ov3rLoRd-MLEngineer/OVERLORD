@@ -1,0 +1,150 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {"title": "Charger Checkpoint"},
+    "inputs": {
+      "ckpt_name": "fabricatedXL_v70.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LoraLoader",
+    "_meta": {"title": "Charger LoRA Asuka"},
+    "inputs": {
+      "model": ["1", 0],
+      "clip": ["1", 1],
+      "lora_name": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+      "strength_model": 0.75,
+      "strength_clip": 0.75
+    }
+  },
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "_meta": {"title": "Prompt Positif"},
+    "inputs": {
+      "clip": ["2", 1],
+      "text": "(masterpiece:1.4), (best quality:1.4), (ultra detailed:1.3), (absurdres:1.2), sharp focus, 1girl, solo, asuka langley soryu, perfect face, angry confident expression, blue eyes, flowing red hair, long red hair dramatically swept back by wind, iconic red plugsuit, glossy reflective plugsuit, skin-tight plugsuit, detailed plugsuit seams, TWO black stripes on thigh only, full body, perfect anatomy, side view, running at maximum speed, extreme dynamic running pose, leaning aggressively forward, powerful sprint, explosive leg stride, dynamic arm pumping, motion blur, heavy speed lines, intense movement, wind pressure effect, sense of extreme velocity, anime style, cel shading, bold lines, evangelion aesthetic, vibrant colors, pure white background, consistent character, same face, same hairstyle, same proportions, same outfit, same colors, consistent anime style, fixed camera angle, same perspective"
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "_meta": {"title": "Prompt Négatif"},
+    "inputs": {
+      "clip": ["2", 1],
+      "text": "worst quality, low quality, blurry, deformed, extra limbs, multiple characters, ugly, bad anatomy, watermark, signature, realistic, photograph, 3d render, multiple girls, nsfw, three stripes, four stripes, stripes on arm"
+    }
+  },
+  "5": {
+    "class_type": "LoadImage",
+    "_meta": {"title": "Squelette DWPose"},
+    "inputs": {
+      "image": "overlord_skeleton_frame_0000_00001_.png",
+      "upload": "image"
+    }
+  },
+  "6": {
+    "class_type": "ControlNetLoader",
+    "_meta": {"title": "Charger ControlNet OpenPose"},
+    "inputs": {
+      "control_net_name": "control-lora-openposeXL2-rank256.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "ControlNetApplyAdvanced",
+    "_meta": {"title": "Appliquer ControlNet"},
+    "inputs": {
+      "positive": ["3", 0],
+      "negative": ["4", 0],
+      "control_net": ["6", 0],
+      "image": ["5", 0],
+      "strength": 0.85,
+      "start_percent": 0.0,
+      "end_percent": 0.8
+    }
+  },
+  "8": {
+    "class_type": "EmptyLatentImage",
+    "_meta": {"title": "Latent 1344x768"},
+    "inputs": {
+      "width": 1344,
+      "height": 768,
+      "batch_size": 1
+    }
+  },
+  "9": {
+    "class_type": "LoadImage",
+    "_meta": {"title": "Ancre IPAdapter (frame 0)"},
+    "inputs": {
+      "image": "frame_0000_00001_.png",
+      "upload": "image"
+    }
+  },
+  "10": {
+    "class_type": "CLIPVisionLoader",
+    "_meta": {"title": "CLIP Vision"},
+    "inputs": {
+      "clip_name": "CLIP-ViT-H-14-laion2B-s32B-b79K.safetensors"
+    }
+  },
+  "11": {
+    "class_type": "IPAdapterModelLoader",
+    "_meta": {"title": "IPAdapter Loader"},
+    "inputs": {
+      "ipadapter_file": "ip-adapter-faceid-plusv2_sdxl.bin"
+    }
+  },
+  "12": {
+    "class_type": "IPAdapterAdvanced",
+    "_meta": {"title": "IPAdapter Advanced"},
+    "inputs": {
+      "model": ["2", 0],
+      "ipadapter": ["11", 0],
+      "image": ["9", 0],
+      "clip_vision": ["10", 0],
+      "weight": 0.70,
+      "weight_type": "linear",
+      "combine_embeds": "concat",
+      "start_at": 0.0,
+      "end_at": 0.30,
+      "embeds_scaling": "K+V"
+    }
+  },
+  "13": {
+    "class_type": "KSampler",
+    "_meta": {"title": "KSampler"},
+    "inputs": {
+      "model": ["12", 0],
+      "positive": ["7", 0],
+      "negative": ["7", 1],
+      "latent_image": ["8", 0],
+      "seed": 0,
+      "steps": 40,
+      "cfg": 6.0,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0
+    }
+  },
+  "14": {
+    "class_type": "VAELoader",
+    "_meta": {"title": "VAE taesdxl"},
+    "inputs": {
+      "vae_name": "taesdxl"
+    }
+  },
+  "15": {
+    "class_type": "VAEDecode",
+    "_meta": {"title": "VAE Decode"},
+    "inputs": {
+      "samples": ["13", 0],
+      "vae": ["14", 0]
+    }
+  },
+  "16": {
+    "class_type": "SaveImage",
+    "_meta": {"title": "Sauvegarder"},
+    "inputs": {
+      "images": ["15", 0],
+      "filename_prefix": "asuka_seed_test/frame_test"
+    }
+  }
+}

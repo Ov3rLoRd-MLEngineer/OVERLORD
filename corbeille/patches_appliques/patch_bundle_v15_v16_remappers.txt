@@ -1,0 +1,146 @@
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+                # Copie squelette dans ComfyUI/input
+                skel_filename = os.path.basename(skel_path)
+                copy_to_comfy_input(skel_path, skel_filename)
+==== REPLACE ====
+                # Copie squelette sous nom fixe → force rechargement ComfyUI (cache-buster)
+                copy_to_comfy_input(skel_path, "ov_skeleton_current.png")
+                skel_filename = "ov_skeleton_current.png"
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+                    if ipa_src and os.path.exists(ipa_src):
+                        ref_filename = copy_to_comfy_input(
+                            ipa_src, f"ipa_ref_{frame_num:04d}.png"
+                        )
+==== REPLACE ====
+                    if ipa_src and os.path.exists(ipa_src):
+                        ref_filename = copy_to_comfy_input(
+                            ipa_src, "ov_ipa_ref_current.png"
+                        )
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+IPA_WEIGHT_TYPE= "original"  # ✅ Corrigé depuis "linear"
+==== REPLACE ====
+IPA_WEIGHT_TYPE= "linear"    # ✅ "original" invalide ComfyUI 0.25+
+==== END ====
+
+==== FILE: agents\skeleton_remapper.py ====
+==== FIND ====
+    img = Image.open(skeleton_path).convert("RGBA")
+    arr = np.array(img)
+
+    # Détection bounding box du contenu (pixels non-noirs)
+    # On teste sur les 3 canaux RGB combinés
+    rgb = arr[:, :, :3]
+    mask = np.any(rgb > 15, axis=2)
+
+    rows = np.any(mask, axis=1)
+    cols = np.any(mask, axis=0)
+
+    if not rows.any():
+        # Squelette vide → image noire cible
+        result = Image.new("RGB", (target_w, target_h), (0, 0, 0))
+        if output_path:
+            result.save(output_path)
+        return result
+
+    rmin, rmax = int(np.where(rows)[0][0]),  int(np.where(rows)[0][-1])
+    cmin, cmax = int(np.where(cols)[0][0]),  int(np.where(cols)[0][-1])
+
+    # Crop du contenu
+    content = img.crop((cmin, rmin, cmax + 1, rmax + 1))
+    cw = cmax - cmin + 1
+    ch = rmax - rmin + 1
+
+    # Mise à l'échelle proportionnelle avec padding
+    max_w = int(target_w * padding_ratio)
+    max_h = int(target_h * padding_ratio)
+    scale = min(max_w / cw, max_h / ch)
+
+    new_w = max(1, int(cw * scale))
+    new_h = max(1, int(ch * scale))
+    resized = content.resize((new_w, new_h), Image.LANCZOS)
+
+    # Centrage avec biais vertical optionnel
+    px = (target_w - new_w) // 2
+    py = int((target_h - new_h) * vertical_bias)
+
+    result = Image.new("RGB", (target_w, target_h), (0, 0, 0))
+    result.paste(resized.convert("RGB"), (px, py))
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== REPLACE ====
+    img = Image.open(skeleton_path).convert("RGB")
+    result = img.resize((target_w, target_h), Image.LANCZOS)
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== END ====
+
+==== FILE: agents\lineart_remapper.py ====
+==== FIND ====
+    img = Image.open(lineart_path).convert("RGB")
+    arr = np.array(img)
+
+    # Détection bounding box du contenu (pixels non-blancs = traits)
+    # Un pixel est "blanc" si tous ses canaux RGB > 240
+    mask = np.any(arr < 240, axis=2)
+
+    rows = np.any(mask, axis=1)
+    cols = np.any(mask, axis=0)
+
+    if not rows.any():
+        # Lineart vide → image blanche cible
+        result = Image.new("RGB", (target_w, target_h), (255, 255, 255))
+        if output_path:
+            result.save(output_path)
+        return result
+
+    rmin, rmax = int(np.where(rows)[0][0]),  int(np.where(rows)[0][-1])
+    cmin, cmax = int(np.where(cols)[0][0]),  int(np.where(cols)[0][-1])
+
+    # Crop du contenu
+    content = img.crop((cmin, rmin, cmax + 1, rmax + 1))
+    cw = cmax - cmin + 1
+    ch = rmax - rmin + 1
+
+    # Mise à l'échelle proportionnelle avec padding
+    max_w = int(target_w * padding_ratio)
+    max_h = int(target_h * padding_ratio)
+    scale = min(max_w / cw, max_h / ch)
+
+    new_w = max(1, int(cw * scale))
+    new_h = max(1, int(ch * scale))
+    resized = content.resize((new_w, new_h), Image.LANCZOS)
+
+    # Centrage avec biais vertical optionnel
+    px = (target_w - new_w) // 2
+    py = int((target_h - new_h) * vertical_bias)
+
+    # Fond blanc
+    result = Image.new("RGB", (target_w, target_h), (255, 255, 255))
+    result.paste(resized, (px, py))
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== REPLACE ====
+    img = Image.open(lineart_path).convert("RGB")
+    result = img.resize((target_w, target_h), Image.LANCZOS)
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== END ====

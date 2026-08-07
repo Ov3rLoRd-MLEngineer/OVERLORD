@@ -1,0 +1,177 @@
+==== FILE: agents\skeleton_remapper.py ====
+==== FIND ====
+def resize_skeleton_to_target(
+    skeleton_path: str,
+    target_w: int = 1344,
+    target_h: int = 768,
+    output_path: str | None = None,
+    padding_ratio: float = 0.85,
+    vertical_bias: float = 0.50,
+) -> Image.Image:
+    """
+    Extrait le contenu du squelette DWPose (fond noir), le redimensionne
+    proportionnellement et le centre dans une image target_w x target_h.
+
+    Args:
+        padding_ratio  : fraction de la surface cible occupée (0.85 = 85%)
+        vertical_bias  : 0.5 = centré, 0.4 = légèrement haut, 0.6 = bas
+    """
+    img = Image.open(skeleton_path).convert("RGBA")
+    arr = np.array(img)
+
+    # Détection bounding box du contenu (pixels non-noirs)
+    # On teste sur les 3 canaux RGB combinés
+    rgb = arr[:, :, :3]
+    mask = np.any(rgb > 15, axis=2)
+
+    rows = np.any(mask, axis=1)
+    cols = np.any(mask, axis=0)
+
+    if not rows.any():
+        # Squelette vide → image noire cible
+        result = Image.new("RGB", (target_w, target_h), (0, 0, 0))
+        if output_path:
+            result.save(output_path)
+        return result
+
+    rmin, rmax = int(np.where(rows)[0][0]),  int(np.where(rows)[0][-1])
+    cmin, cmax = int(np.where(cols)[0][0]),  int(np.where(cols)[0][-1])
+
+    # Crop du contenu
+    content = img.crop((cmin, rmin, cmax + 1, rmax + 1))
+    cw = cmax - cmin + 1
+    ch = rmax - rmin + 1
+
+    # Mise à l'échelle proportionnelle avec padding
+    max_w = int(target_w * padding_ratio)
+    max_h = int(target_h * padding_ratio)
+    scale = min(max_w / cw, max_h / ch)
+
+    new_w = max(1, int(cw * scale))
+    new_h = max(1, int(ch * scale))
+    resized = content.resize((new_w, new_h), Image.LANCZOS)
+
+    # Centrage avec biais vertical optionnel
+    px = (target_w - new_w) // 2
+    py = int((target_h - new_h) * vertical_bias)
+
+    result = Image.new("RGB", (target_w, target_h), (0, 0, 0))
+    result.paste(resized.convert("RGB"), (px, py))
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== REPLACE ====
+def resize_skeleton_to_target(
+    skeleton_path: str,
+    target_w: int = 1344,
+    target_h: int = 768,
+    output_path: str | None = None,
+    padding_ratio: float = 0.85,
+    vertical_bias: float = 0.50,
+) -> Image.Image:
+    """
+    Upscale direct 910x512 → target_w x target_h (LANCZOS).
+    Pas de bounding box, pas de recentrage — position spatiale préservée.
+    padding_ratio et vertical_bias conservés pour compatibilité CLI mais ignorés.
+    """
+    img = Image.open(skeleton_path).convert("RGB")
+    result = img.resize((target_w, target_h), Image.LANCZOS)
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== END ====
+
+==== FILE: agents\lineart_remapper.py ====
+==== FIND ====
+def remap_lineart_to_target(
+    lineart_path: str,
+    target_w: int = 1344,
+    target_h: int = 768,
+    output_path: str | None = None,
+    padding_ratio: float = 0.85,
+    vertical_bias: float = 0.50,
+) -> Image.Image:
+    """
+    Extrait le contenu de la carte lineart (fond blanc, traits noirs),
+    le redimensionne proportionnellement et le centre dans target_w x target_h.
+
+    Miroir exact de skeleton_remapper mais pour fond blanc :
+        - Squelette  : pixels NON-NOIRS  sur fond noir
+        - Lineart    : pixels NON-BLANCS sur fond blanc
+
+    Args:
+        padding_ratio  : fraction de la surface cible occupée (0.85 = 85%)
+        vertical_bias  : 0.5 = centré, 0.4 = légèrement haut, 0.6 = bas
+    """
+    img = Image.open(lineart_path).convert("RGB")
+    arr = np.array(img)
+
+    # Détection bounding box du contenu (pixels non-blancs = traits)
+    # Un pixel est "blanc" si tous ses canaux RGB > 240
+    mask = np.any(arr < 240, axis=2)
+
+    rows = np.any(mask, axis=1)
+    cols = np.any(mask, axis=0)
+
+    if not rows.any():
+        # Lineart vide → image blanche cible
+        result = Image.new("RGB", (target_w, target_h), (255, 255, 255))
+        if output_path:
+            result.save(output_path)
+        return result
+
+    rmin, rmax = int(np.where(rows)[0][0]),  int(np.where(rows)[0][-1])
+    cmin, cmax = int(np.where(cols)[0][0]),  int(np.where(cols)[0][-1])
+
+    # Crop du contenu
+    content = img.crop((cmin, rmin, cmax + 1, rmax + 1))
+    cw = cmax - cmin + 1
+    ch = rmax - rmin + 1
+
+    # Mise à l'échelle proportionnelle avec padding
+    max_w = int(target_w * padding_ratio)
+    max_h = int(target_h * padding_ratio)
+    scale = min(max_w / cw, max_h / ch)
+
+    new_w = max(1, int(cw * scale))
+    new_h = max(1, int(ch * scale))
+    resized = content.resize((new_w, new_h), Image.LANCZOS)
+
+    # Centrage avec biais vertical optionnel
+    px = (target_w - new_w) // 2
+    py = int((target_h - new_h) * vertical_bias)
+
+    # Fond blanc
+    result = Image.new("RGB", (target_w, target_h), (255, 255, 255))
+    result.paste(resized, (px, py))
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== REPLACE ====
+def remap_lineart_to_target(
+    lineart_path: str,
+    target_w: int = 1344,
+    target_h: int = 768,
+    output_path: str | None = None,
+    padding_ratio: float = 0.85,
+    vertical_bias: float = 0.50,
+) -> Image.Image:
+    """
+    Upscale direct 910x512 → target_w x target_h (LANCZOS).
+    Pas de bounding box, pas de recentrage — position spatiale préservée.
+    padding_ratio et vertical_bias conservés pour compatibilité CLI mais ignorés.
+    """
+    img = Image.open(lineart_path).convert("RGB")
+    result = img.resize((target_w, target_h), Image.LANCZOS)
+
+    if output_path:
+        result.save(output_path)
+
+    return result
+==== END ====

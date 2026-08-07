@@ -1,0 +1,137 @@
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+DENOISE_T2I    = 1.00   # Frame 0 — txt2img pur
+DENOISE_I2I    = 0.35   # Frames 1+ — img2img avec n-1
+==== REPLACE ====
+DENOISE_T2I    = 1.00   # Frame 0 — txt2img pur
+DENOISE_I2I    = 0.35   # Frames 1+ — img2img avec n-1
+
+# RemBg PIL inline — seuil détection fond clair (0-255)
+# 240 = blanc quasi-pur. Baisser si fond gris foncé.
+REMBG_THRESHOLD = 240
+# Taille carré IPA pour CLIPImageProcessor (letterbox padding)
+IPA_SQUARE_SIZE = 768
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+        w["13"] = {
+            "class_type": "LoadImage",
+            "inputs": {"image": ref_image_filename, "upload": "image"}
+        }
+        w["14"] = {
+            "class_type": "CLIPVisionLoader",
+            "inputs": {"clip_name": CLIP_VISION}
+        }
+        w["15"] = {
+            "class_type": "IPAdapterModelLoader",
+            "inputs": {"ipadapter_file": IPADAPTER}
+        }
+        w["16"] = {
+            "class_type": "IPAdapterAdvanced",
+            "inputs": {
+                "model":          ["2", 0],
+                "ipadapter":      ["15", 0],
+                "image":          ["13", 0],
+                "clip_vision":    ["14", 0],
+                "weight":         IPA_WEIGHT,
+                "weight_type":    IPA_WEIGHT_TYPE,
+                "combine_embeds": "concat",
+                "start_at":       IPA_START,
+                "end_at":         IPA_END,
+                "embeds_scaling": IPA_EMBEDS,
+            }
+        }
+        model_src = ["16", 0]
+==== REPLACE ====
+        w["13"] = {
+            "class_type": "LoadImage",
+            "inputs": {"image": ref_image_filename, "upload": "image"}
+        }
+        w["14"] = {
+            "class_type": "CLIPVisionLoader",
+            "inputs": {"clip_name": CLIP_VISION}
+        }
+        # PrepImageForClipVision — letterbox pad au lieu de crop centre
+        # Préserve les proportions 1344x768 sans découper le personnage
+        w["23"] = {
+            "class_type": "PrepImageForClipVision",
+            "inputs": {
+                "image":         ["13", 0],
+                "interpolation": "LANCZOS",
+                "crop_position": "pad",
+                "sharpening":    0.0
+            }
+        }
+        w["15"] = {
+            "class_type": "IPAdapterModelLoader",
+            "inputs": {"ipadapter_file": IPADAPTER}
+        }
+        w["16"] = {
+            "class_type": "IPAdapterAdvanced",
+            "inputs": {
+                "model":          ["2", 0],
+                "ipadapter":      ["15", 0],
+                "image":          ["23", 0],
+                "clip_vision":    ["14", 0],
+                "weight":         IPA_WEIGHT,
+                "weight_type":    IPA_WEIGHT_TYPE,
+                "combine_embeds": "concat",
+                "start_at":       IPA_START,
+                "end_at":         IPA_END,
+                "embeds_scaling": IPA_EMBEDS,
+            }
+        }
+        model_src = ["16", 0]
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+                # Image n-1 pour img2img (frames 1+)
+                prev_img_filename = None
+                if frame_num > 0 and prev_path and os.path.exists(prev_path):
+                    copy_to_comfy_input(prev_path, "ov_prev_frame_current.png")
+                    prev_img_filename = "ov_prev_frame_current.png"
+==== REPLACE ====
+                # Image n-1 pour img2img (frames 1+)
+                # RemBg PIL inline avant VAEEncode — élimine le bruit de fond
+                prev_img_filename = None
+                if frame_num > 0 and prev_path and os.path.exists(prev_path):
+                    cleaned = prepare_prev_for_i2i(prev_path)
+                    copy_to_comfy_input(cleaned, "ov_prev_frame_current.png")
+                    prev_img_filename = "ov_prev_frame_current.png"
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+# ── WORKFLOW BUILDER V1.4 ─────────────────────────────────────────────────────
+==== REPLACE ====
+# ── REMBG PIL INLINE ──────────────────────────────────────────────────────────
+def prepare_prev_for_i2i(img_path: str) -> str:
+    """
+    Isole le personnage sur fond blanc pur avant VAEEncode img2img.
+    Supprime le bruit de fond accumulé sans modèle externe.
+    Retourne le chemin d'un fichier temporaire dans COMFY_INPUT.
+    """
+    if not HAS_PIL:
+        return img_path
+    try:
+        img = Image.open(img_path).convert("RGBA")
+        arr = __import__("numpy").array(img)
+        # Masque fond clair : pixel "blanc" si R+G+B > seuil*3
+        r, g, b = arr[:,:,0], arr[:,:,1], arr[:,:,2]
+        is_bg = (r.astype(int) + g.astype(int) + b.astype(int)) > (REMBG_THRESHOLD * 3)
+        # Fond → blanc pur, personnage conservé
+        result = arr.copy()
+        result[is_bg] = [255, 255, 255, 255]
+        out_img = Image.fromarray(result).convert("RGB")
+        # Sauvegarde temporaire
+        tmp_path = os.path.join(COMFY_INPUT, "_rembg_tmp.png")
+        out_img.save(tmp_path)
+        return tmp_path
+    except Exception as e:
+        print(f"[WARN] prepare_prev_for_i2i: {e} — fallback original")
+        return img_path
+
+# ── WORKFLOW BUILDER V1.4 ─────────────────────────────────────────────────────
+==== END ====

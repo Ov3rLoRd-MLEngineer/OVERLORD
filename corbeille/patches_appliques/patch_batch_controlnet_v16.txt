@@ -1,0 +1,13 @@
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+IPA_WEIGHT_TYPE= "original"  # ✅ Corrigé depuis "linear"
+==== REPLACE ====
+IPA_WEIGHT_TYPE= "linear"    # ✅ "original" invalide ComfyUI 0.25+
+==== END ====
+
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+    print(f"║   Ov3rLoRd — Batch ControlNet + IPA + Watchdog V1.5         ║")
+==== REPLACE ====
+    print(f"║   Ov3rLoRd — Batch ControlNet + IPA + Watchdog V1.6         ║")
+==== END ====

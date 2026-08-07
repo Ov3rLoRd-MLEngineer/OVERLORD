@@ -1,0 +1,124 @@
+{
+  "1": {
+    "class_type": "LowVRAMCheckpointLoader",
+    "inputs": {
+      "ckpt_name": "ltx/ltx-video-2b-v0.9.5.safetensors"
+    },
+    "_meta": {"title": "Charger modele LTXV 2B"}
+  },
+  "2": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "anime girl running at full speed, red tight bodysuit plugsuit, wide shot, full body, white background, single character, starts crouched at starting line, explosive acceleration, powerful strides, dynamic motion, speed lines, hair flowing backward, athletic pose, smooth animation, masterpiece quality"
+    },
+    "_meta": {"title": "Prompt Positif"}
+  },
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "worst quality, low quality, deformed, extra limbs, multiple characters, complex background, static pose, blurry, ugly"
+    },
+    "_meta": {"title": "Prompt Negatif"}
+  },
+  "4": {
+    "class_type": "EmptyLTXVLatentVideo",
+    "inputs": {
+      "width": 768,
+      "height": 512,
+      "length": 97,
+      "batch_size": 1
+    },
+    "_meta": {"title": "Latent vide 6s 24fps"}
+  },
+  "5": {
+    "class_type": "LTXVConditioning",
+    "inputs": {
+      "positive": ["2", 0],
+      "negative": ["3", 0],
+      "vae": ["1", 2],
+      "latent": ["4", 0],
+      "frame_rate": 24
+    },
+    "_meta": {"title": "Conditioning LTXV"}
+  },
+  "6": {
+    "class_type": "LTXVScheduler",
+    "inputs": {
+      "steps": 25,
+      "max_shift": 2.05,
+      "base_shift": 0.95,
+      "stretch": true,
+      "terminal": 0.1,
+      "latent": ["4", 0]
+    },
+    "_meta": {"title": "Scheduler LTXV"}
+  },
+  "7": {
+    "class_type": "STGGuiderNode",
+    "inputs": {
+      "model": ["1", 0],
+      "positive": ["5", 0],
+      "negative": ["5", 1],
+      "cfg": 3.0,
+      "stg_scale": 1.0,
+      "stg_rescale": 0.7,
+      "stg_mode": "attention_values",
+      "stg_block_idx": 8
+    },
+    "_meta": {"title": "STG Guider"}
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "_meta": {"title": "Sampler Select"}
+  },
+  "9": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 42
+    },
+    "_meta": {"title": "Noise"}
+  },
+  "10": {
+    "class_type": "LTXVBaseSampler",
+    "inputs": {
+      "model": ["1", 0],
+      "vae": ["1", 2],
+      "guider": ["7", 0],
+      "sampler": ["8", 0],
+      "sigmas": ["6", 0],
+      "noise": ["9", 0],
+      "latent_image": ["4", 0],
+      "width": 768,
+      "height": 512,
+      "num_frames": 97,
+      "strength": 1.0
+    },
+    "_meta": {"title": "Sampler LTXV"}
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["10", 0],
+      "vae": ["1", 2]
+    },
+    "_meta": {"title": "Decode VAE"}
+  },
+  "12": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["11", 0],
+      "frame_rate": 24,
+      "loop_count": 0,
+      "filename_prefix": "ltxv_asuka_run",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    },
+    "_meta": {"title": "Sauvegarder video MP4"}
+  }
+}

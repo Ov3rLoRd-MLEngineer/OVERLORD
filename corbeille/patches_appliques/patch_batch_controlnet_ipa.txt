@@ -1,0 +1,8 @@
+==== FILE: agents\batch_controlnet.py ====
+==== FIND ====
+CLIP_VISION    = "CLIP-ViT-bigG-14-laion2B-39B-b160k.safetensors"
+IPADAPTER      = "ip-adapter-faceid-plusv2_sdxl.bin"
+==== REPLACE ====
+CLIP_VISION    = "model.safetensors"
+IPADAPTER      = "ip-adapter-plus_sdxl_vit-h.safetensors"
+==== END ====
