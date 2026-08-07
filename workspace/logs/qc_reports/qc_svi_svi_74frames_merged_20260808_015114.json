@@ -1,0 +1,70 @@
+{
+  "video": "DEMO\\output\\svi_74frames_merged.mp4",
+  "model": "qwen2.5vl:7b",
+  "frames_requested": [
+    1,
+    10,
+    20,
+    30,
+    37
+  ],
+  "frames_analyzed": [
+    1,
+    10,
+    20,
+    30,
+    37
+  ],
+  "frames_missing_extraction": [],
+  "aborted_due_to_ram": false,
+  "frames_skipped_ram": [],
+  "ram_used_gb_start": 14.7,
+  "ram_limit_gb": 26.0,
+  "elapsed_s": 20.3,
+  "pass_count": 5,
+  "total_analyzed": 5,
+  "results": {
+    "1": {
+      "pass": true,
+      "score": 1.0,
+      "defects": [],
+      "drift_severity": "none",
+      "notes": "The frame appears to be a clean anime-style animation with no visible color drift, desaturation, vignetting, or sharpness loss. The character's identity and motion are consistent."
+    },
+    "10": {
+      "pass": true,
+      "score": 1.0,
+      "defects": [],
+      "drift_severity": "none",
+      "notes": "The frame appears to be a clean anime-style animation with no visible defects such as color drift, vignetting, loss of sharpness, character identity drift, or motion artifacts."
+    },
+    "20": {
+      "pass": true,
+      "score": 1.0,
+      "defects": [],
+      "drift_severity": "none",
+      "notes": "The frame appears to be a clean anime-style animation with no visible defects such as color drift, vignetting, loss of sharpness, character identity drift, or motion artifacts."
+    },
+    "30": {
+      "pass": true,
+      "score": 1.0,
+      "defects": [],
+      "drift_severity": "none",
+      "notes": "The frame appears to be temporally coherent with no visible color drift, desaturation, purple/magenta vignetting, loss of sharpness, character identity drift, or duplicated/repeated motion artifacts."
+    },
+    "37": {
+      "pass": true,
+      "score": 1.0,
+      "defects": [],
+      "drift_severity": "none",
+      "notes": "The frame appears to be a clean anime-style animation with no visible color drift, desaturation, vignetting, or sharpness loss. The character's identity and motion are consistent."
+    }
+  },
+  "drift_progression": {
+    "1": "none",
+    "10": "none",
+    "20": "none",
+    "30": "none",
+    "37": "none"
+  }
+}

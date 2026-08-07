@@ -128,6 +128,11 @@ diagnostics_archive/
 # images de preprocesseur regenerees a chaque run, jamais commitees.
 workspace/controlnet_test/
 
+# Frames extraites par visual_qc_svi.py (tache 3, 2026-08-08) --
+# regenerables a chaque run depuis la video source. Les rapports JSON/MD
+# de workspace/logs/qc_reports/ restent suivis (petits, valeur d'historique).
+workspace/logs/qc_reports/_frames_*/
+
 # Export de donnees externe (dossier fourni par l'utilisateur hors pipeline,
 # statut/sensibilite non qualifies -- jamais commite par prudence).
 DOCS/data claude 001/
