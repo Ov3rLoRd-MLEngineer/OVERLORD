@@ -1,7 +1,7 @@
 {
   "model": "intfloat/multilingual-e5-small",
   "embedding_dim": 384,
-  "num_chunks": 515,
+  "num_chunks": 682,
   "sources": {
     "CLAUDE.md": "630e914458403864",
     "CLAUDE-english.md": "0f477fdfb320c123",
@@ -22,9 +22,17 @@
     "LIMITATIONS_CONNUES.md": "0dc8144e002954a5",
     "workspace/qlora_dataset/VERDICT_COMMITPACK.md": "36cbb8369b8c33a4",
     "footsegnet/controlnet/DIAGNOSTIC_MODE_COLLAPSE_20260728.md": "4238a0544ba0cec8",
-    "DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md": "c78c1e3933e9210b"
+    "DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md": "c78c1e3933e9210b",
+    "workspace/rag_index/sources/agents_arborescence_phase_c.md": "24302c244bcf1060",
+    "DOCS/MD/HANDOFF_2026-08-04.md": "1bc698e429e2e010",
+    "DOCS/MD/TEST_SVI_04082026.md": "99384c63afe1e380",
+    "DOCS/MD/TEST_SVI_2CLIPS.md": "30955b016d810854",
+    "DOCS/MD/COMPARAISON_ANIMATEDIFF_VS_ANISORA.md": "66dd750f5a80441e",
+    "DOCS/MD/TEST_ANISORA_V32_SMOKE.md": "506c2e7b4fc44ad8",
+    "DOCS/MD/PLAN_PIPELINE_A_DEMO_30S.md": "0616554266d73474",
+    "DOCS/MD/Dépasser la limite de cohérence temporelle.md": "3bd39e911f3ac56f"
   },
   "skipped_sources": [],
-  "built_at": "2026-08-05T00:37:23",
+  "built_at": "2026-08-05T02:30:07",
   "device": "cpu"
 }

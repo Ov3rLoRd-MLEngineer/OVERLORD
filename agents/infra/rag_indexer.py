@@ -80,6 +80,18 @@ SOURCES = [
     "workspace/qlora_dataset/VERDICT_COMMITPACK.md",
     "footsegnet/controlnet/DIAGNOSTIC_MODE_COLLAPSE_20260728.md",
     "DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md",
+    # Ajoutes le 2026-08-05 (session suivante, tache "RAG 515 -> 600+ chunks") --
+    # sous-arborescence agents/ post-Phase-C (angle mort de la generation
+    # precedente, qui ne descendait pas dans les sous-dossiers) + couverture
+    # des termes techniques recents SVI/ColorMatch/AniSora V3.2.
+    "workspace/rag_index/sources/agents_arborescence_phase_c.md",
+    "DOCS/MD/HANDOFF_2026-08-04.md",
+    "DOCS/MD/TEST_SVI_04082026.md",
+    "DOCS/MD/TEST_SVI_2CLIPS.md",
+    "DOCS/MD/COMPARAISON_ANIMATEDIFF_VS_ANISORA.md",
+    "DOCS/MD/TEST_ANISORA_V32_SMOKE.md",
+    "DOCS/MD/PLAN_PIPELINE_A_DEMO_30S.md",
+    "DOCS/MD/Dépasser la limite de cohérence temporelle.md",
 ]
 
 

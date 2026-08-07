@@ -52,6 +52,19 @@ session Aider, selon le sujet de la tâche en cours.
 | `footsegnet/controlnet/DIAGNOSTIC_MODE_COLLAPSE_20260728.md` | Diagnostic mode collapse Control-LoRA FootSegNet (2026-07-28) |
 | `DOCS/MD/PLAN_COHERENCE_TEMPORELLE_AOUT2026.md` | Plan anti-dérive stylistique vidéo (SVI, ColorMatch, limite ~37 frames structurelle) |
 
+## Session pipeline SVI/AnimateDiff/RAG (ajoutés le 2026-08-05, tâche "RAG 515 → 600+ chunks")
+
+| Fichier | Sujet |
+|---|---|
+| `workspace/rag_index/sources/agents_arborescence_phase_c.md` | Sous-dossiers `agents/` post-réorg Phase C (généré — angle mort de `arborescence_projet.md`, qui ne descend pas dans les sous-dossiers) |
+| `DOCS/MD/HANDOFF_2026-08-04.md` | Handoff session AnimateDiff 32f/SeedVR2/SVI/RAG (2026-08-04/05) |
+| `DOCS/MD/TEST_SVI_04082026.md` | Test SVI 2.0 Pro 2 clips (CFG/steps, ColorMatchV2, motion frame) |
+| `DOCS/MD/TEST_SVI_2CLIPS.md` | Fusion ffmpeg des 2 clips SVI, rapport technique pré-validation visuelle |
+| `DOCS/MD/COMPARAISON_ANIMATEDIFF_VS_ANISORA.md` | Comparaison directe AnimateDiff vs AniSora (verdict, OOM/fix `--lowvram`) |
+| `DOCS/MD/TEST_ANISORA_V32_SMOKE.md` | Smoke test AniSora V3.2 (ancrage stylisé SDXL, SeedVR2 upscale) |
+| `DOCS/MD/PLAN_PIPELINE_A_DEMO_30S.md` | Plan pipeline A démo 30s (bugs `_REPO_ROOT` post-Phase-C, `cycle_detector.py`) |
+| `DOCS/MD/Dépasser la limite de cohérence temporelle.md` | Veille état de l'art 2026 (SVI, infinite video generation) |
+
 ## Usage recommandé
 
 - Diagnostic/architecture pipeline → `RAPPORT_AUDIT_PIPELINE_AOUT2026.md`.
