@@ -75,6 +75,11 @@ footsegnet/dataset/premasks/*
 diagnostics_archive/bottes_generiques/dataset/
 **/dataset/wildcard_fix_validation/
 .aider*
+# Exception ciblee : config Aider versionnee (contexte injecte CLAUDE.md +
+# DOCS/INDEX.md, cf. DOCS/MD/PROCEDURE_FALLBACK_LLM.md) -- pas les fichiers
+# ephemeres (.aider.chat.history.md, .aider.input.history, .aider.tags.cache.v4).
+!.aider.conf.yml
+!.aider.model.settings.yml
 
 # handsegnet/prototype_circle_sam.py -- masques de test regeneres a chaque
 # run, jamais commites (comparaison visuelle locale entre strategies).

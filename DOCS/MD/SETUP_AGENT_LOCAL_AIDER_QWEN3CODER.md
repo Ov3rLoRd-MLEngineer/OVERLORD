@@ -184,9 +184,125 @@ Unsloth (single-GPU) ne convient pas — il faudra Axolotl ou Torchtune. Pas
 d'action requise maintenant, aucun fine-tuning de Qwen3-Coder n'est prévu à
 ce stade (usage tel quel).
 
+## 1bis. Injection de contexte de base (2026-07-29)
+
+Objectif : que qwen3-coder ait accès aux mêmes conventions de base que
+Claude Code sans qu'on ait à les rappeler à chaque tâche.
+
+**Mécanisme retenu : config Aider locale au dépôt**, pas
+`agents/llm_router.py` (ce fichier n'a aucun mécanisme d'injection de
+contexte — c'est un simple routeur de modèle par type de tâche pour les
+appels LLM internes du pipeline, sans rapport avec le contexte Aider).
+
+- `D:\OVERLORD\.aider.conf.yml` — surcharge la config globale quand Aider
+  est lancé depuis ce dépôt (`aider --help` : recherche `.aider.conf.yml`
+  dans git root, cwd, ou home — le dépôt gagne). Contient `model:` (dupliqué
+  de la config globale par précaution) et `read: [CLAUDE.md, DOCS/INDEX.md]`
+  — équivalent à passer `--read` deux fois à chaque lancement.
+- `D:\OVERLORD\.aider.model.settings.yml` — duplique le plafond `num_ctx:
+  32768` de la config globale, même raison de précaution.
+- `DOCS/INDEX.md` (nouveau) — point d'entrée court vers la documentation de
+  référence (ADR, LIMITATIONS_CONNUES, dernier CONTEXTE_OVERLORD, playbooks
+  de publication) — complète `CLAUDE.md`, ne le remplace pas.
+- **`.aider*` est gitignoré globalement** (historique de chat, cache de
+  tags) — exceptions ciblées ajoutées dans `.gitignore` pour ces deux
+  fichiers de config précis, pas les fichiers éphémères.
+- **Vérifié fonctionnel** : le log Aider confirme
+  `Added CLAUDE.md to the chat (read-only)` et
+  `Added DOCS\INDEX.md to the chat (read-only)` à chaque lancement depuis ce
+  dépôt, sans argument `--read` explicite.
+
+## 1ter. Test de fiabilité approfondi (2026-07-29) — verdict revu à la baisse
+
+Tâche de test : demander à qwen3-coder de créer un script utilitaire
+(`agents/disk_free_check.py`, vérification d'espace disque) **sans**
+rappeler les conventions du projet (ast.parse, py -3.12, en-tête ASCII) —
+objectif : voir si le contexte injecté (§1bis) suffit à les faire respecter
+spontanément, et vérifier la fiabilité sur une tâche réelle en mode
+non-interactif (`--yes-always --message`).
+
+**3 tentatives, 3 échecs à produire un fichier réellement écrit et commité**
+— alors que le modèle a généré du code Python valide et correct dans au
+moins 2 des 3 réponses :
+
+1. **Git Bash** : crash direct (`UnicodeEncodeError: 'charmap' codec` dans
+   le rendu Rich/legacy Windows console d'Aider) avant même d'atteindre
+   l'étape d'application de l'édition. Fichier resté à 0 octet.
+2. **PowerShell natif** (hypothèse du §2 : "lancer depuis cmd.exe éviterait
+   l'artefact terminal") : pas de crash, exit code 0 — mais le fichier est
+   resté à 0 octet quand même, aucun commit. Le modèle a bien généré du code
+   complet et fonctionnel (visible dans le log), mais Aider ne l'a pas
+   appliqué sur le disque.
+3. **PowerShell + `--no-pretty`** (rendu texte brut, hypothèse que le
+   rendu Rich corrompt le texte parsé pour l'édition) : le modèle a produit
+   cette fois un bloc de code correctement fenêté (```` ```python ... ``` ````,
+   le format attendu par l'edit-format "whole"). Mais une **deuxième
+   réponse du modèle dans le même run** l'a fait dérailler : qwen3-coder a
+   halluciné que la conversation n'avait pas de demande de modification
+   ("Cependant, je ne vois pas de demande de modification dans votre
+   message"), niant sa propre réponse précédente — résultat : aucune
+   édition appliquée, fichier vide.
+
+**Vérification faite systématiquement sur le disque + `git log`/`git
+status`, jamais sur la seule sortie terminal** (leçon du §2, confirmée
+indispensable une nouvelle fois — le terminal a affiché exit code 0 et du
+code apparemment valide dans les 3 cas, alors que 3/3 n'ont produit aucun
+résultat exploitable).
+
+**Ce constat contredit le verdict optimiste du §5** (test précédent sur
+`agents/gpu_vram_check.py`, déclaré réussi avec seulement des reprises
+liées à l'artefact terminal). Cause exacte de la régression non
+identifiée avec certitude (version d'Aider, état d'Ollama, ou différence
+de tâche) — **pas d'explication inventée ici**, seulement le constat
+reproduit 3 fois ce jour.
+
+**Verdict honnête révisé** :
+- **Fiable** : l'injection de contexte elle-même (§1bis) — confirmée
+  fonctionnelle à chaque lancement.
+- **Pas fiable actuellement** : le mode non-interactif `--yes-always
+  --message` pour obtenir un résultat appliqué et commité de façon
+  reproductible — 0/3 sur ce test, malgré une qualité de génération de code
+  correcte quand elle atteint effectivement le modèle. **Ne pas compter
+  dessus comme relais de secours automatisé en l'état** pour des tâches où
+  personne ne vérifie le résultat produit.
+- **Non testé** : le mode interactif (chat REPL classique, tour par tour,
+  où l'humain confirme chaque édition avant de continuer) — pourrait être
+  plus fiable puisqu'il évite le double-tour observé en tentative 3, mais
+  cela change aussi la promesse initiale ("relais de secours capable de
+  reprendre des tâches" sous-entend une certaine autonomie) — à tester
+  avant de considérer ce mécanisme opérationnel pour un vrai cas d'urgence.
+- **Ce qui reste probablement vrai** (non invalidé par ce test, cf. §4) :
+  sur des tâches bien cadrées et de petite taille, quand le mécanisme
+  fonctionne, la qualité de sortie de qwen3-coder est correcte. Le problème
+  observé aujourd'hui est un problème d'**application/fiabilité de l'outil
+  Aider dans cet environnement**, pas de qualité du modèle sous-jacent.
+- **Ce qui ne marchera probablement jamais bien** (jugement, pas mesuré
+  aujourd'hui) : diagnostic multi-étapes, décisions sur des cas ambigus
+  nécessitant un jugement contextuel (comme les vérifications de licence ou
+  la qualification de defaults génératifs traitées cette nuit/ce jour) —
+  hors du périmètre pour lequel ce mécanisme a même été envisagé.
+
+## 1quater. Cause racine identifiée + wrapper de fiabilisation (2026-07-29, session 2)
+
+Suite du §1ter, même jour, session dédiée à la fiabilisation. Diagnostic
+complet et statut à jour désormais dans
+`DOCS/MD/PROCEDURE_FALLBACK_LLM.md` §0 — ne pas dupliquer ici, juste le
+résumé : le crash Git Bash était un problème d'encodage stdout (`cp1252`
+par défaut dès que la sortie est redirigée, fix `PYTHONIOENCODING=utf-8`) ;
+le fichier vide silencieux (Git Bash **et** PowerShell) vient d'une
+fragilité probabiliste du parseur d'édition d'Aider face à qwen3-coder, pas
+d'un problème d'environnement — non éliminée à la source, mais absorbée de
+façon fiable par un wrapper de vérification+relance
+(`agents/aider_fallback_run.py`, 9/9 tâches de validation réussies en ≤2
+tentatives). **Le mécanisme est déclaré fiable via ce wrapper, pas en appel
+direct à `aider.exe`.**
+
 ## Rappel
 
 Objectif réaliste : réduction de la dépendance à l'abonnement Claude Code sur
 les tâches routinières, pas suppression totale — les tâches complexes (comme
 le diagnostic Control-LoRA en cours) restent mieux traitées directement par
-Claude Code.
+Claude Code. **Mise à jour 2026-07-29 (session 2) : fiable pour les tâches
+routinières via `agents/aider_fallback_run.py` — voir §1quater et
+`DOCS/MD/PROCEDURE_FALLBACK_LLM.md`. Ne pas utiliser Aider en appel direct
+sans le wrapper.**
