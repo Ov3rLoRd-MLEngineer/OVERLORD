@@ -1,0 +1,227 @@
+[
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\baby.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 20657,
+    "unique_bones": 165,
+    "max_frame": 6250,
+    "camera_frame_count": 0,
+    "center_amplitude": 39.5682
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\bajiquan.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 1218,
+    "unique_bones": 140,
+    "max_frame": 335,
+    "camera_frame_count": 0,
+    "center_amplitude": 31.2187
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\circulation.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 25975,
+    "unique_bones": 140,
+    "max_frame": 5639,
+    "camera_frame_count": 0,
+    "center_amplitude": 16.0071
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\elect.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 26474,
+    "unique_bones": 212,
+    "max_frame": 5544,
+    "camera_frame_count": 0,
+    "center_amplitude": 44.9171
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\foxsay.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 12595,
+    "unique_bones": 211,
+    "max_frame": 2244,
+    "camera_frame_count": 0,
+    "center_amplitude": 15.4326
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\fuwari.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 28359,
+    "unique_bones": 247,
+    "max_frame": 8945,
+    "camera_frame_count": 0,
+    "center_amplitude": 17.4431
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\galaxy.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 10049,
+    "unique_bones": 141,
+    "max_frame": 2634,
+    "camera_frame_count": 0,
+    "center_amplitude": 9.8192
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\gravity.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 26728,
+    "unique_bones": 229,
+    "max_frame": 6780,
+    "camera_frame_count": 0,
+    "center_amplitude": 22.1542
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\heartbeat.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 38420,
+    "unique_bones": 119,
+    "max_frame": 9277,
+    "camera_frame_count": 0,
+    "center_amplitude": 38.4811
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\help.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 38845,
+    "unique_bones": 115,
+    "max_frame": 8219,
+    "camera_frame_count": 0,
+    "center_amplitude": 72.9279
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\honey_miku.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 16376,
+    "unique_bones": 140,
+    "max_frame": 6684,
+    "camera_frame_count": 0,
+    "center_amplitude": 20.6391
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\hp.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 19771,
+    "unique_bones": 211,
+    "max_frame": 3869,
+    "camera_frame_count": 0,
+    "center_amplitude": 14.8308
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\jikan.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 16784,
+    "unique_bones": 142,
+    "max_frame": 3600,
+    "camera_frame_count": 0,
+    "center_amplitude": 21.4342
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\lipstick.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 17516,
+    "unique_bones": 250,
+    "max_frame": 4089,
+    "camera_frame_count": 0,
+    "center_amplitude": 13.0635
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\motion123.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 30493,
+    "unique_bones": 114,
+    "max_frame": 7934,
+    "camera_frame_count": 0,
+    "center_amplitude": 58.2361
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\neko.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 18084,
+    "unique_bones": 226,
+    "max_frame": 6330,
+    "camera_frame_count": 0,
+    "center_amplitude": 25.9178
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\nekomimi.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 28846,
+    "unique_bones": 140,
+    "max_frame": 7054,
+    "camera_frame_count": 0,
+    "center_amplitude": 18.612
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\shakeit.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 28837,
+    "unique_bones": 131,
+    "max_frame": 3580,
+    "camera_frame_count": 0,
+    "center_amplitude": 33.4079
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\snow.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 24227,
+    "unique_bones": 154,
+    "max_frame": 7237,
+    "camera_frame_count": 0,
+    "center_amplitude": 49.1291
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\soba.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 11182,
+    "unique_bones": 157,
+    "max_frame": 8195,
+    "camera_frame_count": 0,
+    "center_amplitude": 26.4741
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\tokino.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 8036,
+    "unique_bones": 135,
+    "max_frame": 3645,
+    "camera_frame_count": 0,
+    "center_amplitude": 4.1482
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\walk.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 4322,
+    "unique_bones": 282,
+    "max_frame": 1009,
+    "camera_frame_count": 0,
+    "center_amplitude": 3.5273
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\wavefile_v2.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 14160,
+    "unique_bones": 140,
+    "max_frame": 2809,
+    "camera_frame_count": 0,
+    "center_amplitude": 17.8381
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\yuki.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 34344,
+    "unique_bones": 177,
+    "max_frame": 6212,
+    "camera_frame_count": 0,
+    "center_amplitude": 13.5702
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\github_bear0830_mmd\\yume.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 26234,
+    "unique_bones": 238,
+    "max_frame": 6352,
+    "camera_frame_count": 0,
+    "center_amplitude": 18.2191
+  }
+]

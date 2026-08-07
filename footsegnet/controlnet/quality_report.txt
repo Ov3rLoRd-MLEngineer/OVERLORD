@@ -1,0 +1,628 @@
+FootSegNet -> Control-LoRA — tri qualité des paires (image, masque)
+seuils couverture masque : min=0.5%  max=20.0%
+615 image(s) analysée(s)
+
+exploitable telle quelle : 429
+à corriger manuellement  : 186
+à exclure                : 0
+
+── À EXCLURE (0) ───────────────────────────────
+
+── À CORRIGER MANUELLEMENT (186) ─────────────────
+  footsegnet_00013  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 21.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00017  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 11.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00019  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00031  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00041  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00045  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 12.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00059  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00061  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00065  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 23.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00078  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 19.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00104  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00105  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 19.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00109  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00110  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00126  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 25.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00140  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 18.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00156  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00157  —  masque manuel fragmenté en 4 composantes connexes, composante minoritaire = 5.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00172  —  masque manuel fragmenté en 4 composantes connexes, composante minoritaire = 8.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00174  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00175  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 3.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00188  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 20.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00196  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00205  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 7.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00210  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 6.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00212  —  masque manuel fragmenté en 4 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00219  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00227  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 7.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00251  —  masque manuel fragmenté en 5 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00255  —  masque manuel fragmenté en 7 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00262  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00272  —  masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00274  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00278  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00287  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 2.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00317  —  masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 25.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage
+  footsegnet_00327  —  masque fragmenté en 8 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00329  —  masque fragmenté en 3 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00330  —  masque fragmenté en 6 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00332  —  masque fragmenté en 6 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00333  —  masque fragmenté en 6 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00335  —  masque fragmenté en 4 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00336  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00338  —  masque fragmenté en 16 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00340  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00342  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00343  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 15.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00346  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00348  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 3.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00349  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00350  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00351  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00354  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00355  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00356  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00357  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00361  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00362  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00368  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00370  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 16.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00371  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00377  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00379  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00381  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 25.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00384  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00385  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00386  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 21.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00388  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 3.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00390  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00393  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 9.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00394  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00395  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 2.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00398  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00401  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00402  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00405  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00412  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00413  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00417  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00418  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00419  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 10.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00421  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00422  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00424  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00425  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00426  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00430  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 2.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00431  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00434  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00435  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00438  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00439  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 4.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00441  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00442  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00445  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00446  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00449  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00454  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00455  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00456  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 2.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00460  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00461  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00462  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00464  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00465  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00467  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00469  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00470  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00475  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00479  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 23.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00480  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00482  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00483  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00486  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00490  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00493  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00494  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 9.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00495  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00497  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00498  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00500  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00502  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00506  —  masque très petit (0.47% < 0.5%) — pied/chaussure probablement occlus ou bbox mal centrée
+  footsegnet_00507  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00510  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00511  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00512  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 4.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00513  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00515  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 23.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00518  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00520  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00525  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00526  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00527  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 2.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00528  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 3.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00530  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00531  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00532  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00534  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00535  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00536  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00538  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00539  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00543  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00546  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00549  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00552  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00553  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00558  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00560  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00561  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00563  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 17.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00567  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 5.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00568  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00572  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00577  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00578  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00583  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00584  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00586  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00588  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 25.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00589  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 2.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00590  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 19.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00591  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00595  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00596  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00599  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00600  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00601  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00602  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 4.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00603  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00604  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 16.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00606  —  masque très petit (0.41% < 0.5%) — pied/chaussure probablement occlus ou bbox mal centrée
+  footsegnet_00609  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00610  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 5.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00612  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 22.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00614  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00615  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 4.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00617  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 1.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00619  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00623  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00627  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00628  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+  footsegnet_00629  —  bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage
+  footsegnet_00633  —  masque très petit (0.44% < 0.5%) — pied/chaussure probablement occlus ou bbox mal centrée
+  footsegnet_00636  —  masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)
+
+── EXPLOITABLE TELLE QUELLE (429) ────────────────
+  footsegnet_00000  —  masque manuel (vérité terrain), couverture 1.53%
+  footsegnet_00001  —  masque manuel (vérité terrain), couverture 1.69%
+  footsegnet_00002  —  masque manuel (vérité terrain), couverture 1.92%
+  footsegnet_00003  —  masque manuel (vérité terrain), couverture 6.98%
+  footsegnet_00004  —  masque manuel (vérité terrain), couverture 1.95%
+  footsegnet_00007  —  masque manuel (vérité terrain), couverture 0.84%
+  footsegnet_00009  —  masque manuel (vérité terrain), couverture 1.29%
+  footsegnet_00010  —  masque manuel (vérité terrain), couverture 0.67%
+  footsegnet_00011  —  masque manuel (vérité terrain), couverture 4.22%
+  footsegnet_00012  —  masque manuel (vérité terrain), couverture 1.63%
+  footsegnet_00014  —  masque manuel (vérité terrain), couverture 2.60%
+  footsegnet_00015  —  masque manuel (vérité terrain), couverture 2.26%
+  footsegnet_00016  —  masque manuel (vérité terrain), couverture 0.81%
+  footsegnet_00018  —  masque manuel (vérité terrain), couverture 2.19%
+  footsegnet_00020  —  masque manuel (vérité terrain), couverture 4.99%
+  footsegnet_00022  —  masque manuel (vérité terrain), couverture 2.23%
+  footsegnet_00023  —  masque manuel (vérité terrain), couverture 2.11%
+  footsegnet_00024  —  masque manuel (vérité terrain), couverture 2.01%
+  footsegnet_00025  —  masque manuel (vérité terrain), couverture 1.23%
+  footsegnet_00026  —  masque manuel (vérité terrain), couverture 1.95%
+  footsegnet_00027  —  masque manuel (vérité terrain), couverture 3.11%
+  footsegnet_00028  —  masque manuel (vérité terrain), couverture 1.71%
+  footsegnet_00029  —  masque manuel (vérité terrain), couverture 1.96%
+  footsegnet_00030  —  masque manuel (vérité terrain), couverture 1.78%
+  footsegnet_00032  —  masque manuel (vérité terrain), couverture 6.37%
+  footsegnet_00033  —  masque manuel (vérité terrain), couverture 1.90%
+  footsegnet_00034  —  masque manuel (vérité terrain), couverture 1.31%
+  footsegnet_00035  —  masque manuel (vérité terrain), couverture 1.56%
+  footsegnet_00036  —  masque manuel (vérité terrain), couverture 1.51%
+  footsegnet_00037  —  masque manuel (vérité terrain), couverture 1.08%
+  footsegnet_00038  —  masque manuel (vérité terrain), couverture 1.30%
+  footsegnet_00039  —  masque manuel (vérité terrain), couverture 2.61%
+  footsegnet_00040  —  masque manuel (vérité terrain), couverture 1.61%
+  footsegnet_00042  —  masque manuel (vérité terrain), couverture 3.44%
+  footsegnet_00043  —  masque manuel (vérité terrain), couverture 2.84%
+  footsegnet_00046  —  masque manuel (vérité terrain), couverture 1.64%
+  footsegnet_00047  —  masque manuel (vérité terrain), couverture 0.94%
+  footsegnet_00048  —  masque manuel (vérité terrain), couverture 5.34%
+  footsegnet_00049  —  masque manuel (vérité terrain), couverture 1.90%
+  footsegnet_00050  —  masque manuel (vérité terrain), couverture 1.13%
+  footsegnet_00051  —  masque manuel (vérité terrain), couverture 0.98%
+  footsegnet_00052  —  masque manuel (vérité terrain), couverture 2.39%
+  footsegnet_00053  —  masque manuel (vérité terrain), couverture 1.91%
+  footsegnet_00055  —  masque manuel (vérité terrain), couverture 2.08%
+  footsegnet_00056  —  masque manuel (vérité terrain), couverture 6.66%
+  footsegnet_00057  —  masque manuel (vérité terrain), couverture 2.60%
+  footsegnet_00058  —  masque manuel (vérité terrain), couverture 2.19%
+  footsegnet_00060  —  masque manuel (vérité terrain), couverture 1.96%
+  footsegnet_00062  —  masque manuel (vérité terrain), couverture 3.50%
+  footsegnet_00063  —  masque manuel (vérité terrain), couverture 1.15%
+  footsegnet_00064  —  masque manuel (vérité terrain), couverture 1.70%
+  footsegnet_00066  —  masque manuel (vérité terrain), couverture 0.84%
+  footsegnet_00067  —  masque manuel (vérité terrain), couverture 1.59%
+  footsegnet_00068  —  masque manuel (vérité terrain), couverture 3.07%
+  footsegnet_00069  —  masque manuel (vérité terrain), couverture 1.93%
+  footsegnet_00071  —  masque manuel (vérité terrain), couverture 1.55%
+  footsegnet_00072  —  masque manuel (vérité terrain), couverture 1.10%
+  footsegnet_00073  —  masque manuel (vérité terrain), couverture 1.85%
+  footsegnet_00074  —  masque manuel (vérité terrain), couverture 0.62%
+  footsegnet_00075  —  masque manuel (vérité terrain), couverture 1.65%
+  footsegnet_00076  —  masque manuel (vérité terrain), couverture 2.39%
+  footsegnet_00077  —  masque manuel (vérité terrain), couverture 6.15%
+  footsegnet_00079  —  masque manuel (vérité terrain), couverture 1.37%
+  footsegnet_00081  —  masque manuel (vérité terrain), couverture 2.10%
+  footsegnet_00082  —  masque manuel (vérité terrain), couverture 4.64%
+  footsegnet_00083  —  masque manuel (vérité terrain), couverture 6.13%
+  footsegnet_00084  —  masque manuel (vérité terrain), couverture 1.67%
+  footsegnet_00085  —  masque manuel (vérité terrain), couverture 4.11%
+  footsegnet_00086  —  masque manuel (vérité terrain), couverture 7.12%
+  footsegnet_00087  —  masque manuel (vérité terrain), couverture 3.76%
+  footsegnet_00088  —  masque manuel (vérité terrain), couverture 1.79%
+  footsegnet_00090  —  masque manuel (vérité terrain), couverture 9.96%
+  footsegnet_00091  —  masque manuel (vérité terrain), couverture 6.62%
+  footsegnet_00092  —  masque manuel (vérité terrain), couverture 1.18%
+  footsegnet_00093  —  masque manuel (vérité terrain), couverture 3.27%
+  footsegnet_00094  —  masque manuel (vérité terrain), couverture 2.31%
+  footsegnet_00095  —  masque manuel (vérité terrain), couverture 1.80%
+  footsegnet_00096  —  masque manuel (vérité terrain), couverture 0.72%
+  footsegnet_00097  —  masque manuel (vérité terrain), couverture 1.49%
+  footsegnet_00099  —  masque manuel (vérité terrain), couverture 0.99%
+  footsegnet_00100  —  masque manuel (vérité terrain), couverture 1.70%
+  footsegnet_00101  —  masque manuel (vérité terrain), couverture 1.12%
+  footsegnet_00102  —  masque manuel (vérité terrain), couverture 1.75%
+  footsegnet_00103  —  masque manuel (vérité terrain), couverture 1.69%
+  footsegnet_00106  —  masque manuel (vérité terrain), couverture 1.00%
+  footsegnet_00107  —  masque manuel (vérité terrain), couverture 2.07%
+  footsegnet_00108  —  masque manuel (vérité terrain), couverture 1.81%
+  footsegnet_00111  —  masque manuel (vérité terrain), couverture 1.56%
+  footsegnet_00112  —  masque manuel (vérité terrain), couverture 3.49%
+  footsegnet_00113  —  masque manuel (vérité terrain), couverture 1.69%
+  footsegnet_00114  —  masque manuel (vérité terrain), couverture 2.20%
+  footsegnet_00115  —  masque manuel (vérité terrain), couverture 0.69%
+  footsegnet_00116  —  masque manuel (vérité terrain), couverture 1.19%
+  footsegnet_00117  —  masque manuel (vérité terrain), couverture 3.12%
+  footsegnet_00118  —  masque manuel (vérité terrain), couverture 5.80%
+  footsegnet_00119  —  masque manuel (vérité terrain), couverture 1.70%
+  footsegnet_00120  —  masque manuel (vérité terrain), couverture 1.31%
+  footsegnet_00121  —  masque manuel (vérité terrain), couverture 2.47%
+  footsegnet_00122  —  masque manuel (vérité terrain), couverture 9.32%
+  footsegnet_00123  —  masque manuel (vérité terrain), couverture 2.77%
+  footsegnet_00127  —  masque manuel (vérité terrain), couverture 1.00%
+  footsegnet_00128  —  masque manuel (vérité terrain), couverture 0.99%
+  footsegnet_00129  —  masque manuel (vérité terrain), couverture 4.09%
+  footsegnet_00130  —  masque manuel (vérité terrain), couverture 2.77%
+  footsegnet_00131  —  masque manuel (vérité terrain), couverture 0.78%
+  footsegnet_00132  —  masque manuel (vérité terrain), couverture 15.02%
+  footsegnet_00133  —  masque manuel (vérité terrain), couverture 5.12%
+  footsegnet_00134  —  masque manuel (vérité terrain), couverture 1.82%
+  footsegnet_00135  —  masque manuel (vérité terrain), couverture 1.51%
+  footsegnet_00137  —  masque manuel (vérité terrain), couverture 3.69%
+  footsegnet_00138  —  masque manuel (vérité terrain), couverture 1.54%
+  footsegnet_00139  —  masque manuel (vérité terrain), couverture 1.98%
+  footsegnet_00141  —  masque manuel (vérité terrain), couverture 1.72%
+  footsegnet_00142  —  masque manuel (vérité terrain), couverture 3.34%
+  footsegnet_00143  —  masque manuel (vérité terrain), couverture 3.21%
+  footsegnet_00144  —  masque manuel (vérité terrain), couverture 2.40%
+  footsegnet_00146  —  masque manuel (vérité terrain), couverture 1.14%
+  footsegnet_00148  —  masque manuel (vérité terrain), couverture 1.04%
+  footsegnet_00149  —  masque manuel (vérité terrain), couverture 2.95%
+  footsegnet_00150  —  masque manuel (vérité terrain), couverture 4.23%
+  footsegnet_00152  —  masque manuel (vérité terrain), couverture 5.91%
+  footsegnet_00153  —  masque manuel (vérité terrain), couverture 1.24%
+  footsegnet_00154  —  masque manuel (vérité terrain), couverture 3.49%
+  footsegnet_00155  —  masque manuel (vérité terrain), couverture 1.46%
+  footsegnet_00158  —  masque manuel (vérité terrain), couverture 16.68%
+  footsegnet_00159  —  masque manuel (vérité terrain), couverture 8.09%
+  footsegnet_00160  —  masque manuel (vérité terrain), couverture 2.77%
+  footsegnet_00161  —  masque manuel (vérité terrain), couverture 8.61%
+  footsegnet_00162  —  masque manuel (vérité terrain), couverture 2.96%
+  footsegnet_00163  —  masque manuel (vérité terrain), couverture 0.69%
+  footsegnet_00164  —  masque manuel (vérité terrain), couverture 2.06%
+  footsegnet_00165  —  masque manuel (vérité terrain), couverture 4.51%
+  footsegnet_00166  —  masque manuel (vérité terrain), couverture 2.54%
+  footsegnet_00167  —  masque manuel (vérité terrain), couverture 1.38%
+  footsegnet_00168  —  masque manuel (vérité terrain), couverture 0.98%
+  footsegnet_00170  —  masque manuel (vérité terrain), couverture 0.98%
+  footsegnet_00171  —  masque manuel (vérité terrain), couverture 0.94%
+  footsegnet_00173  —  masque manuel (vérité terrain), couverture 2.51%
+  footsegnet_00176  —  masque manuel (vérité terrain), couverture 3.86%
+  footsegnet_00177  —  masque manuel (vérité terrain), couverture 0.88%
+  footsegnet_00178  —  masque manuel (vérité terrain), couverture 1.18%
+  footsegnet_00179  —  masque manuel (vérité terrain), couverture 3.78%
+  footsegnet_00180  —  masque manuel (vérité terrain), couverture 4.87%
+  footsegnet_00181  —  masque manuel (vérité terrain), couverture 1.68%
+  footsegnet_00182  —  masque manuel (vérité terrain), couverture 3.70%
+  footsegnet_00183  —  masque manuel (vérité terrain), couverture 2.70%
+  footsegnet_00184  —  masque manuel (vérité terrain), couverture 1.77%
+  footsegnet_00185  —  masque manuel (vérité terrain), couverture 1.75%
+  footsegnet_00186  —  masque manuel (vérité terrain), couverture 1.41%
+  footsegnet_00187  —  masque manuel (vérité terrain), couverture 0.70%
+  footsegnet_00189  —  masque manuel (vérité terrain), couverture 2.04%
+  footsegnet_00190  —  masque manuel (vérité terrain), couverture 1.02%
+  footsegnet_00191  —  masque manuel (vérité terrain), couverture 2.03%
+  footsegnet_00192  —  masque manuel (vérité terrain), couverture 3.30%
+  footsegnet_00193  —  masque manuel (vérité terrain), couverture 3.08%
+  footsegnet_00197  —  masque manuel (vérité terrain), couverture 2.22%
+  footsegnet_00198  —  masque manuel (vérité terrain), couverture 1.66%
+  footsegnet_00199  —  masque manuel (vérité terrain), couverture 1.44%
+  footsegnet_00200  —  masque manuel (vérité terrain), couverture 1.95%
+  footsegnet_00201  —  masque manuel (vérité terrain), couverture 4.01%
+  footsegnet_00203  —  masque manuel (vérité terrain), couverture 0.97%
+  footsegnet_00204  —  masque manuel (vérité terrain), couverture 3.84%
+  footsegnet_00206  —  masque manuel (vérité terrain), couverture 5.30%
+  footsegnet_00207  —  masque manuel (vérité terrain), couverture 2.05%
+  footsegnet_00208  —  masque manuel (vérité terrain), couverture 2.55%
+  footsegnet_00209  —  masque manuel (vérité terrain), couverture 5.92%
+  footsegnet_00211  —  masque manuel (vérité terrain), couverture 1.06%
+  footsegnet_00213  —  masque manuel (vérité terrain), couverture 3.10%
+  footsegnet_00214  —  masque manuel (vérité terrain), couverture 3.91%
+  footsegnet_00215  —  masque manuel (vérité terrain), couverture 1.69%
+  footsegnet_00216  —  masque manuel (vérité terrain), couverture 5.90%
+  footsegnet_00217  —  masque manuel (vérité terrain), couverture 5.26%
+  footsegnet_00218  —  masque manuel (vérité terrain), couverture 1.46%
+  footsegnet_00220  —  masque manuel (vérité terrain), couverture 0.90%
+  footsegnet_00221  —  masque manuel (vérité terrain), couverture 1.64%
+  footsegnet_00222  —  masque manuel (vérité terrain), couverture 2.86%
+  footsegnet_00223  —  masque manuel (vérité terrain), couverture 0.96%
+  footsegnet_00224  —  masque manuel (vérité terrain), couverture 4.77%
+  footsegnet_00225  —  masque manuel (vérité terrain), couverture 0.91%
+  footsegnet_00226  —  masque manuel (vérité terrain), couverture 3.10%
+  footsegnet_00228  —  masque manuel (vérité terrain), couverture 2.17%
+  footsegnet_00229  —  masque manuel (vérité terrain), couverture 3.46%
+  footsegnet_00230  —  masque manuel (vérité terrain), couverture 1.23%
+  footsegnet_00231  —  masque manuel (vérité terrain), couverture 2.24%
+  footsegnet_00232  —  masque manuel (vérité terrain), couverture 2.23%
+  footsegnet_00233  —  masque manuel (vérité terrain), couverture 1.39%
+  footsegnet_00235  —  masque manuel (vérité terrain), couverture 4.39%
+  footsegnet_00236  —  masque manuel (vérité terrain), couverture 4.09%
+  footsegnet_00237  —  masque manuel (vérité terrain), couverture 0.87%
+  footsegnet_00238  —  masque manuel (vérité terrain), couverture 1.08%
+  footsegnet_00239  —  masque manuel (vérité terrain), couverture 4.93%
+  footsegnet_00240  —  masque manuel (vérité terrain), couverture 1.30%
+  footsegnet_00241  —  masque manuel (vérité terrain), couverture 2.48%
+  footsegnet_00242  —  masque manuel (vérité terrain), couverture 2.33%
+  footsegnet_00243  —  masque manuel (vérité terrain), couverture 1.39%
+  footsegnet_00244  —  masque manuel (vérité terrain), couverture 2.10%
+  footsegnet_00245  —  masque manuel (vérité terrain), couverture 1.82%
+  footsegnet_00246  —  masque manuel (vérité terrain), couverture 2.00%
+  footsegnet_00247  —  masque manuel (vérité terrain), couverture 1.92%
+  footsegnet_00248  —  masque manuel (vérité terrain), couverture 1.53%
+  footsegnet_00249  —  masque manuel (vérité terrain), couverture 4.74%
+  footsegnet_00250  —  masque manuel (vérité terrain), couverture 2.50%
+  footsegnet_00252  —  masque manuel (vérité terrain), couverture 1.58%
+  footsegnet_00253  —  masque manuel (vérité terrain), couverture 0.43%
+  footsegnet_00254  —  masque manuel (vérité terrain), couverture 1.49%
+  footsegnet_00256  —  masque manuel (vérité terrain), couverture 0.58%
+  footsegnet_00257  —  masque manuel (vérité terrain), couverture 4.29%
+  footsegnet_00258  —  masque manuel (vérité terrain), couverture 1.78%
+  footsegnet_00259  —  masque manuel (vérité terrain), couverture 5.31%
+  footsegnet_00260  —  masque manuel (vérité terrain), couverture 2.69%
+  footsegnet_00261  —  masque manuel (vérité terrain), couverture 3.68%
+  footsegnet_00263  —  masque manuel (vérité terrain), couverture 3.07%
+  footsegnet_00264  —  masque manuel (vérité terrain), couverture 1.68%
+  footsegnet_00265  —  masque manuel (vérité terrain), couverture 1.66%
+  footsegnet_00266  —  masque manuel (vérité terrain), couverture 2.33%
+  footsegnet_00267  —  masque manuel (vérité terrain), couverture 4.59%
+  footsegnet_00268  —  masque manuel (vérité terrain), couverture 0.72%
+  footsegnet_00270  —  masque manuel (vérité terrain), couverture 3.11%
+  footsegnet_00271  —  masque manuel (vérité terrain), couverture 1.25%
+  footsegnet_00275  —  masque manuel (vérité terrain), couverture 2.46%
+  footsegnet_00276  —  masque manuel (vérité terrain), couverture 2.90%
+  footsegnet_00277  —  masque manuel (vérité terrain), couverture 1.87%
+  footsegnet_00279  —  masque manuel (vérité terrain), couverture 2.69%
+  footsegnet_00280  —  masque manuel (vérité terrain), couverture 0.82%
+  footsegnet_00281  —  masque manuel (vérité terrain), couverture 2.91%
+  footsegnet_00282  —  masque manuel (vérité terrain), couverture 1.64%
+  footsegnet_00283  —  masque manuel (vérité terrain), couverture 0.87%
+  footsegnet_00284  —  masque manuel (vérité terrain), couverture 0.82%
+  footsegnet_00285  —  masque manuel (vérité terrain), couverture 14.29%
+  footsegnet_00286  —  masque manuel (vérité terrain), couverture 5.28%
+  footsegnet_00288  —  masque manuel (vérité terrain), couverture 5.21%
+  footsegnet_00289  —  masque manuel (vérité terrain), couverture 0.48%
+  footsegnet_00290  —  masque manuel (vérité terrain), couverture 0.90%
+  footsegnet_00291  —  masque manuel (vérité terrain), couverture 3.37%
+  footsegnet_00292  —  masque manuel (vérité terrain), couverture 6.25%
+  footsegnet_00293  —  masque manuel (vérité terrain), couverture 1.40%
+  footsegnet_00294  —  masque manuel (vérité terrain), couverture 1.88%
+  footsegnet_00295  —  masque manuel (vérité terrain), couverture 2.97%
+  footsegnet_00296  —  masque manuel (vérité terrain), couverture 1.00%
+  footsegnet_00297  —  masque manuel (vérité terrain), couverture 1.99%
+  footsegnet_00298  —  masque manuel (vérité terrain), couverture 1.43%
+  footsegnet_00299  —  masque manuel (vérité terrain), couverture 3.51%
+  footsegnet_00300  —  masque manuel (vérité terrain), couverture 1.52%
+  footsegnet_00301  —  masque manuel (vérité terrain), couverture 2.06%
+  footsegnet_00304  —  masque manuel (vérité terrain), couverture 0.63%
+  footsegnet_00305  —  masque manuel (vérité terrain), couverture 0.60%
+  footsegnet_00306  —  masque manuel (vérité terrain), couverture 1.78%
+  footsegnet_00307  —  masque manuel (vérité terrain), couverture 2.33%
+  footsegnet_00308  —  masque manuel (vérité terrain), couverture 0.83%
+  footsegnet_00309  —  masque manuel (vérité terrain), couverture 1.95%
+  footsegnet_00310  —  masque manuel (vérité terrain), couverture 2.10%
+  footsegnet_00311  —  masque manuel (vérité terrain), couverture 4.40%
+  footsegnet_00312  —  masque manuel (vérité terrain), couverture 1.15%
+  footsegnet_00314  —  masque manuel (vérité terrain), couverture 2.82%
+  footsegnet_00315  —  masque manuel (vérité terrain), couverture 2.27%
+  footsegnet_00316  —  masque manuel (vérité terrain), couverture 1.23%
+  footsegnet_00318  —  masque manuel (vérité terrain), couverture 3.33%
+  footsegnet_00319  —  masque manuel (vérité terrain), couverture 2.37%
+  footsegnet_00321  —  masque manuel (vérité terrain), couverture 0.63%
+  footsegnet_00322  —  masque manuel (vérité terrain), couverture 5.08%
+  footsegnet_00323  —  masque manuel (vérité terrain), couverture 1.87%
+  footsegnet_00324  —  masque manuel (vérité terrain), couverture 17.01%
+  footsegnet_00325  —  masque manuel (vérité terrain), couverture 2.25%
+  footsegnet_00326  —  masque manuel (vérité terrain), couverture 3.00%
+  footsegnet_00328  —  bbox DWPose, masque de couverture plausible (1.50%)
+  footsegnet_00331  —  bbox DWPose, masque de couverture plausible (1.58%)
+  footsegnet_00334  —  bbox DWPose, masque de couverture plausible (1.48%)
+  footsegnet_00337  —  bbox DWPose, masque de couverture plausible (1.00%)
+  footsegnet_00339  —  bbox DWPose, masque de couverture plausible (0.69%)
+  footsegnet_00341  —  bbox DWPose, masque de couverture plausible (0.50%)
+  footsegnet_00344  —  bbox DWPose, masque de couverture plausible (1.87%)
+  footsegnet_00345  —  bbox DWPose, masque de couverture plausible (8.73%)
+  footsegnet_00347  —  bbox DWPose, masque de couverture plausible (2.75%)
+  footsegnet_00352  —  bbox DWPose, masque de couverture plausible (1.98%)
+  footsegnet_00353  —  bbox DWPose, masque de couverture plausible (2.48%)
+  footsegnet_00358  —  bbox DWPose, masque de couverture plausible (0.50%)
+  footsegnet_00359  —  bbox DWPose, masque de couverture plausible (1.92%)
+  footsegnet_00360  —  bbox DWPose, masque de couverture plausible (6.12%)
+  footsegnet_00363  —  bbox DWPose, masque de couverture plausible (1.14%)
+  footsegnet_00364  —  bbox DWPose, masque de couverture plausible (4.20%)
+  footsegnet_00365  —  bbox DWPose, masque de couverture plausible (2.05%)
+  footsegnet_00366  —  bbox DWPose, masque de couverture plausible (2.34%)
+  footsegnet_00367  —  bbox DWPose, masque de couverture plausible (2.97%)
+  footsegnet_00369  —  bbox DWPose, masque de couverture plausible (2.04%)
+  footsegnet_00372  —  bbox DWPose, masque de couverture plausible (3.03%)
+  footsegnet_00373  —  bbox DWPose, masque de couverture plausible (1.35%)
+  footsegnet_00374  —  bbox DWPose, masque de couverture plausible (2.17%)
+  footsegnet_00375  —  bbox DWPose, masque de couverture plausible (5.57%)
+  footsegnet_00376  —  bbox DWPose, masque de couverture plausible (1.67%)
+  footsegnet_00378  —  bbox DWPose, masque de couverture plausible (1.13%)
+  footsegnet_00380  —  bbox DWPose, masque de couverture plausible (1.41%)
+  footsegnet_00382  —  bbox DWPose, masque de couverture plausible (3.97%)
+  footsegnet_00383  —  bbox DWPose, masque de couverture plausible (2.80%)
+  footsegnet_00387  —  bbox DWPose, masque de couverture plausible (1.69%)
+  footsegnet_00389  —  bbox DWPose, masque de couverture plausible (2.20%)
+  footsegnet_00391  —  bbox DWPose, masque de couverture plausible (5.09%)
+  footsegnet_00392  —  bbox DWPose, masque de couverture plausible (1.62%)
+  footsegnet_00396  —  bbox DWPose, masque de couverture plausible (2.17%)
+  footsegnet_00397  —  bbox DWPose, masque de couverture plausible (1.85%)
+  footsegnet_00399  —  bbox DWPose, masque de couverture plausible (3.02%)
+  footsegnet_00400  —  bbox DWPose, masque de couverture plausible (3.75%)
+  footsegnet_00403  —  bbox DWPose, masque de couverture plausible (3.14%)
+  footsegnet_00404  —  bbox DWPose, masque de couverture plausible (3.06%)
+  footsegnet_00406  —  bbox DWPose, masque de couverture plausible (2.64%)
+  footsegnet_00407  —  bbox DWPose, masque de couverture plausible (1.72%)
+  footsegnet_00408  —  bbox DWPose, masque de couverture plausible (1.52%)
+  footsegnet_00409  —  bbox DWPose, masque de couverture plausible (1.73%)
+  footsegnet_00410  —  bbox DWPose, masque de couverture plausible (1.95%)
+  footsegnet_00411  —  bbox DWPose, masque de couverture plausible (2.20%)
+  footsegnet_00414  —  bbox DWPose, masque de couverture plausible (1.47%)
+  footsegnet_00415  —  bbox DWPose, masque de couverture plausible (0.73%)
+  footsegnet_00416  —  bbox DWPose, masque de couverture plausible (0.88%)
+  footsegnet_00420  —  bbox DWPose, masque de couverture plausible (1.42%)
+  footsegnet_00423  —  bbox DWPose, masque de couverture plausible (2.16%)
+  footsegnet_00427  —  bbox DWPose, masque de couverture plausible (1.89%)
+  footsegnet_00428  —  bbox DWPose, masque de couverture plausible (1.60%)
+  footsegnet_00429  —  bbox DWPose, masque de couverture plausible (2.20%)
+  footsegnet_00432  —  bbox DWPose, masque de couverture plausible (2.18%)
+  footsegnet_00433  —  bbox DWPose, masque de couverture plausible (0.81%)
+  footsegnet_00436  —  bbox DWPose, masque de couverture plausible (1.29%)
+  footsegnet_00437  —  bbox DWPose, masque de couverture plausible (1.38%)
+  footsegnet_00440  —  bbox DWPose, masque de couverture plausible (1.44%)
+  footsegnet_00443  —  bbox DWPose, masque de couverture plausible (1.79%)
+  footsegnet_00444  —  bbox DWPose, masque de couverture plausible (3.20%)
+  footsegnet_00447  —  bbox DWPose, masque de couverture plausible (1.82%)
+  footsegnet_00448  —  bbox DWPose, masque de couverture plausible (0.68%)
+  footsegnet_00450  —  bbox DWPose, masque de couverture plausible (0.95%)
+  footsegnet_00451  —  bbox DWPose, masque de couverture plausible (3.91%)
+  footsegnet_00452  —  bbox DWPose, masque de couverture plausible (2.28%)
+  footsegnet_00453  —  bbox DWPose, masque de couverture plausible (0.75%)
+  footsegnet_00457  —  bbox DWPose, masque de couverture plausible (2.88%)
+  footsegnet_00458  —  bbox DWPose, masque de couverture plausible (1.37%)
+  footsegnet_00459  —  bbox DWPose, masque de couverture plausible (1.46%)
+  footsegnet_00463  —  bbox DWPose, masque de couverture plausible (2.16%)
+  footsegnet_00466  —  bbox DWPose, masque de couverture plausible (3.37%)
+  footsegnet_00468  —  bbox DWPose, masque de couverture plausible (1.60%)
+  footsegnet_00471  —  bbox DWPose, masque de couverture plausible (1.72%)
+  footsegnet_00472  —  bbox DWPose, masque de couverture plausible (1.40%)
+  footsegnet_00473  —  bbox DWPose, masque de couverture plausible (2.05%)
+  footsegnet_00474  —  bbox DWPose, masque de couverture plausible (2.93%)
+  footsegnet_00476  —  bbox DWPose, masque de couverture plausible (2.12%)
+  footsegnet_00477  —  bbox DWPose, masque de couverture plausible (2.02%)
+  footsegnet_00478  —  bbox DWPose, masque de couverture plausible (6.55%)
+  footsegnet_00481  —  bbox DWPose, masque de couverture plausible (2.37%)
+  footsegnet_00484  —  bbox DWPose, masque de couverture plausible (2.77%)
+  footsegnet_00485  —  bbox DWPose, masque de couverture plausible (1.22%)
+  footsegnet_00487  —  bbox DWPose, masque de couverture plausible (2.00%)
+  footsegnet_00488  —  bbox DWPose, masque de couverture plausible (1.61%)
+  footsegnet_00489  —  bbox DWPose, masque de couverture plausible (1.14%)
+  footsegnet_00491  —  bbox DWPose, masque de couverture plausible (1.12%)
+  footsegnet_00492  —  bbox DWPose, masque de couverture plausible (1.61%)
+  footsegnet_00496  —  bbox DWPose, masque de couverture plausible (0.98%)
+  footsegnet_00499  —  bbox DWPose, masque de couverture plausible (0.51%)
+  footsegnet_00501  —  bbox DWPose, masque de couverture plausible (2.20%)
+  footsegnet_00503  —  bbox DWPose, masque de couverture plausible (2.42%)
+  footsegnet_00504  —  bbox DWPose, masque de couverture plausible (2.30%)
+  footsegnet_00505  —  bbox DWPose, masque de couverture plausible (3.48%)
+  footsegnet_00508  —  bbox DWPose, masque de couverture plausible (3.92%)
+  footsegnet_00509  —  bbox DWPose, masque de couverture plausible (1.30%)
+  footsegnet_00514  —  bbox DWPose, masque de couverture plausible (1.21%)
+  footsegnet_00516  —  bbox DWPose, masque de couverture plausible (2.03%)
+  footsegnet_00517  —  bbox DWPose, masque de couverture plausible (0.57%)
+  footsegnet_00519  —  bbox DWPose, masque de couverture plausible (0.96%)
+  footsegnet_00521  —  bbox DWPose, masque de couverture plausible (1.92%)
+  footsegnet_00522  —  bbox DWPose, masque de couverture plausible (2.47%)
+  footsegnet_00523  —  bbox DWPose, masque de couverture plausible (2.53%)
+  footsegnet_00524  —  bbox DWPose, masque de couverture plausible (1.02%)
+  footsegnet_00529  —  bbox DWPose, masque de couverture plausible (0.90%)
+  footsegnet_00533  —  bbox DWPose, masque de couverture plausible (2.44%)
+  footsegnet_00537  —  bbox DWPose, masque de couverture plausible (1.17%)
+  footsegnet_00540  —  bbox DWPose, masque de couverture plausible (2.04%)
+  footsegnet_00541  —  bbox DWPose, masque de couverture plausible (2.55%)
+  footsegnet_00542  —  bbox DWPose, masque de couverture plausible (4.52%)
+  footsegnet_00544  —  bbox DWPose, masque de couverture plausible (1.54%)
+  footsegnet_00545  —  bbox DWPose, masque de couverture plausible (1.16%)
+  footsegnet_00547  —  bbox DWPose, masque de couverture plausible (1.23%)
+  footsegnet_00548  —  bbox DWPose, masque de couverture plausible (0.92%)
+  footsegnet_00550  —  bbox DWPose, masque de couverture plausible (2.07%)
+  footsegnet_00551  —  bbox DWPose, masque de couverture plausible (3.07%)
+  footsegnet_00554  —  bbox DWPose, masque de couverture plausible (1.66%)
+  footsegnet_00555  —  bbox DWPose, masque de couverture plausible (1.66%)
+  footsegnet_00556  —  bbox DWPose, masque de couverture plausible (1.27%)
+  footsegnet_00557  —  bbox DWPose, masque de couverture plausible (2.48%)
+  footsegnet_00559  —  bbox DWPose, masque de couverture plausible (1.29%)
+  footsegnet_00562  —  bbox DWPose, masque de couverture plausible (1.59%)
+  footsegnet_00564  —  bbox DWPose, masque de couverture plausible (1.96%)
+  footsegnet_00565  —  bbox DWPose, masque de couverture plausible (2.44%)
+  footsegnet_00566  —  bbox DWPose, masque de couverture plausible (2.63%)
+  footsegnet_00569  —  bbox DWPose, masque de couverture plausible (2.60%)
+  footsegnet_00570  —  bbox DWPose, masque de couverture plausible (0.67%)
+  footsegnet_00571  —  bbox DWPose, masque de couverture plausible (2.30%)
+  footsegnet_00573  —  bbox DWPose, masque de couverture plausible (2.98%)
+  footsegnet_00574  —  bbox DWPose, masque de couverture plausible (1.93%)
+  footsegnet_00575  —  bbox DWPose, masque de couverture plausible (2.42%)
+  footsegnet_00576  —  bbox DWPose, masque de couverture plausible (4.41%)
+  footsegnet_00579  —  bbox DWPose, masque de couverture plausible (1.27%)
+  footsegnet_00580  —  bbox DWPose, masque de couverture plausible (1.98%)
+  footsegnet_00581  —  bbox DWPose, masque de couverture plausible (1.12%)
+  footsegnet_00582  —  bbox DWPose, masque de couverture plausible (1.20%)
+  footsegnet_00585  —  bbox DWPose, masque de couverture plausible (7.96%)
+  footsegnet_00587  —  bbox DWPose, masque de couverture plausible (1.31%)
+  footsegnet_00592  —  bbox DWPose, masque de couverture plausible (1.40%)
+  footsegnet_00593  —  bbox DWPose, masque de couverture plausible (1.51%)
+  footsegnet_00594  —  bbox DWPose, masque de couverture plausible (1.57%)
+  footsegnet_00597  —  bbox DWPose, masque de couverture plausible (2.30%)
+  footsegnet_00598  —  bbox DWPose, masque de couverture plausible (1.65%)
+  footsegnet_00605  —  bbox DWPose, masque de couverture plausible (3.97%)
+  footsegnet_00607  —  bbox DWPose, masque de couverture plausible (1.56%)
+  footsegnet_00608  —  bbox DWPose, masque de couverture plausible (3.20%)
+  footsegnet_00611  —  bbox DWPose, masque de couverture plausible (1.24%)
+  footsegnet_00613  —  bbox DWPose, masque de couverture plausible (1.69%)
+  footsegnet_00616  —  bbox DWPose, masque de couverture plausible (2.22%)
+  footsegnet_00618  —  bbox DWPose, masque de couverture plausible (1.00%)
+  footsegnet_00620  —  bbox DWPose, masque de couverture plausible (1.03%)
+  footsegnet_00621  —  bbox DWPose, masque de couverture plausible (3.56%)
+  footsegnet_00622  —  bbox DWPose, masque de couverture plausible (1.77%)
+  footsegnet_00624  —  bbox DWPose, masque de couverture plausible (2.67%)
+  footsegnet_00625  —  bbox DWPose, masque de couverture plausible (0.87%)
+  footsegnet_00626  —  bbox DWPose, masque de couverture plausible (1.16%)
+  footsegnet_00630  —  bbox DWPose, masque de couverture plausible (0.90%)
+  footsegnet_00631  —  bbox DWPose, masque de couverture plausible (1.50%)
+  footsegnet_00632  —  bbox DWPose, masque de couverture plausible (1.70%)
+  footsegnet_00634  —  bbox DWPose, masque de couverture plausible (2.57%)
+  footsegnet_00635  —  bbox DWPose, masque de couverture plausible (0.98%)
+  footsegnet_00637  —  bbox DWPose, masque de couverture plausible (2.08%)
+  footsegnet_00638  —  bbox DWPose, masque de couverture plausible (1.22%)
+  footsegnet_00639  —  bbox DWPose, masque de couverture plausible (0.80%)
+  footsegnet_00640  —  bbox DWPose, masque de couverture plausible (1.06%)
+  footsegnet_00641  —  bbox DWPose, masque de couverture plausible (3.20%)

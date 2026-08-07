@@ -1,0 +1,407 @@
+[
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH FLOOR MEDIUM CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 371,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH FLOOR SHORT CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 371,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH FLOOR TALL CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 371,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH STAND MEDIUM CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 377,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH STAND SHORT CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 377,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH STAND TALL CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 377,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH TDA FLOOR CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 371,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Catch Catch cam by ok mmd\\CATCH CATCH TDA STAND CAMERA.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 377,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Dance hall\\Foor Motion8000.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 1,
+    "unique_bones": 1,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Doodle Dance MMD Meme\\Camera.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 1,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_Doodle Dance MMD Meme\\Motion.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 3257,
+    "unique_bones": 191,
+    "max_frame": 338,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_LADY CRAZY_camera_2040-3062\\camera01_2040-3062.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 68,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_LADY CRAZY_camera_2040-3062\\camera02_2040-3062.vmd",
+    "class": "camera_only",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 68,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_MMD PDF JoyPolis Miku Miku Ni Shite Ageru Stage DL\\MMD PDF JoyPolis Miku Miku Ni Shite Ageru Stage DL\\Light.vmd",
+    "class": "empty",
+    "bone_frame_count": 0,
+    "unique_bones": 0,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\1_L.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 177,
+    "unique_bones": 177,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 5.1829
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\1_R.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 157,
+    "unique_bones": 157,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 3.356
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\2_L.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 344,
+    "unique_bones": 336,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 2.7872
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\2_R.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 2.7663
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\3_L.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 149,
+    "unique_bones": 149,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 4.3732
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\3_R.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 158,
+    "unique_bones": 158,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 3.2
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\4_L.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 3.2237
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack27\\R_R.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 344,
+    "unique_bones": 336,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 1.7146
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\1.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 344,
+    "unique_bones": 336,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.75
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\2.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 344,
+    "unique_bones": 336,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.4243
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\3.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 329,
+    "unique_bones": 329,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.75
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\4.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 158,
+    "unique_bones": 158,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\5.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 344,
+    "unique_bones": 336,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\6.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 343,
+    "unique_bones": 335,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 11.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_PosePack28\\7.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 290,
+    "unique_bones": 210,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 9.2
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\Naruto oc.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 8.8523
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\elfen-lied.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.728
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\hageshi.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 8.1905
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\kairi-battle.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\lucia.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.8107
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\phainon.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\pose1.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier__created_by_metra_philia__pose_pack_38_by_metra_philia_dlq0twu\\sora-pose.vmd",
+    "class": "static_pose",
+    "bone_frame_count": 192,
+    "unique_bones": 192,
+    "max_frame": 0,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.0
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\Cry.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 5534,
+    "unique_bones": 148,
+    "max_frame": 114,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.1778
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\I must pee pee.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 8255,
+    "unique_bones": 148,
+    "max_frame": 164,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.3499
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\Look at my muscle.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 5279,
+    "unique_bones": 148,
+    "max_frame": 156,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.3877
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\Salvadora da dance.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 14363,
+    "unique_bones": 185,
+    "max_frame": 333,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.8624
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\Scared reaction.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 4242,
+    "unique_bones": 185,
+    "max_frame": 84,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.2212
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\Smell yumi.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 6575,
+    "unique_bones": 148,
+    "max_frame": 138,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.085
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\exciting reaction.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 3886,
+    "unique_bones": 217,
+    "max_frame": 77,
+    "camera_frame_count": 0,
+    "center_amplitude": 0.4802
+  },
+  {
+    "path": "E:\\Data Demo\\_extracted\\atrier_motion_pack_2_by_kefast_dcneqrj\\Motion Pack 2\\up the ladder.vmd",
+    "class": "dynamic",
+    "bone_frame_count": 5213,
+    "unique_bones": 148,
+    "max_frame": 121,
+    "camera_frame_count": 0,
+    "center_amplitude": 1.2204
+  }
+]

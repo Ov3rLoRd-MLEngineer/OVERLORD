@@ -1,0 +1,247 @@
+{
+  "_comment": "File d'attente des VMD pour la boucle autonome miku_demo_30s (v2, v3...). v1 = 'Look at my muscle.vmd' (deja utilise, cf. generation_log.csv). Project DIVA exclu (licence non-commerciale/non-redistribuable, cf. CLAUDE.md). Poses statiques et VMD camera-only exclus (pas des motions de personnage). MAJ 2026-08-07 (session nuit, priorite 4) : +25 VMD dynamiques telecharges depuis github.com/bear0830/mmd (collection communautaire PMD/VMD, pas de fichier LICENSE explicite -- meme statut que le reste du pool MMD fan-redistribue deja utilise, seul Project DIVA est exclu explicitement). Seuls 9 VMD dynamiques existaient auparavant dans E:/Data Demo/_extracted (le reste = poses statiques PosePack27/28 + metra_philia, ou VMD camera-only) -- cf. workspace/scripts/vmd_audit.py/vmd_audit_result.json pour le detail de classification.",
+  "used": [
+    "Look at my muscle.vmd",
+    "Salvadora da dance.vmd",
+    "Motion.vmd (Doodle Dance MMD Meme)",
+    "I must pee pee.vmd",
+    "Smell yumi.vmd",
+    "up the ladder.vmd",
+    "exciting reaction.vmd",
+    "Scared reaction.vmd",
+    "Cry.vmd"
+  ],
+  "queue": [
+    {
+      "name": "Salvadora da dance.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/Salvadora da dance.vmd",
+      "frames_30fps": 333,
+      "duration_s": 11.1,
+      "note": "motion dansee, dense - bon candidat pour v2 (variete visuelle)"
+    },
+    {
+      "name": "Motion.vmd (Doodle Dance MMD Meme)",
+      "path": "E:/Data Demo/_extracted/atrier_Doodle Dance MMD Meme/Motion.vmd",
+      "frames_30fps": 338,
+      "duration_s": 11.27,
+      "note": "motion dansee, dense"
+    },
+    {
+      "name": "I must pee pee.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/I must pee pee.vmd",
+      "frames_30fps": 165,
+      "duration_s": 5.5,
+      "note": "idle -> agitation -> idle"
+    },
+    {
+      "name": "Smell yumi.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/Smell yumi.vmd",
+      "frames_30fps": 138,
+      "duration_s": 4.6,
+      "note": "non analyse en detail (posture)"
+    },
+    {
+      "name": "up the ladder.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/up the ladder.vmd",
+      "frames_30fps": null,
+      "duration_s": null,
+      "note": "non mesure - a verifier avec vmd_info.py avant usage"
+    },
+    {
+      "name": "exciting reaction.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/exciting reaction.vmd",
+      "frames_30fps": 114,
+      "duration_s": 3.8,
+      "note": "reaction courte"
+    },
+    {
+      "name": "Scared reaction.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/Scared reaction.vmd",
+      "frames_30fps": 79,
+      "duration_s": 2.6,
+      "note": "reaction courte"
+    },
+    {
+      "name": "Cry.vmd",
+      "path": "E:/Data Demo/_extracted/atrier_motion_pack_2_by_kefast_dcneqrj/Motion Pack 2/Cry.vmd",
+      "frames_30fps": null,
+      "duration_s": null,
+      "note": "reaction courte, non mesure precisement"
+    },
+    {
+      "name": "baby.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/baby.vmd",
+      "frames_30fps": 6250,
+      "duration_s": 208.33,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 165 bones animes, amplitude centre=39.5682, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "bajiquan.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/bajiquan.vmd",
+      "frames_30fps": 335,
+      "duration_s": 11.17,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 140 bones animes, amplitude centre=31.2187, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "circulation.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/circulation.vmd",
+      "frames_30fps": 5639,
+      "duration_s": 187.97,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 140 bones animes, amplitude centre=16.0071, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "elect.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/elect.vmd",
+      "frames_30fps": 5544,
+      "duration_s": 184.8,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 212 bones animes, amplitude centre=44.9171, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "foxsay.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/foxsay.vmd",
+      "frames_30fps": 2244,
+      "duration_s": 74.8,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 211 bones animes, amplitude centre=15.4326, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "fuwari.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/fuwari.vmd",
+      "frames_30fps": 8945,
+      "duration_s": 298.17,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 247 bones animes, amplitude centre=17.4431, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "galaxy.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/galaxy.vmd",
+      "frames_30fps": 2634,
+      "duration_s": 87.8,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 141 bones animes, amplitude centre=9.8192, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "gravity.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/gravity.vmd",
+      "frames_30fps": 6780,
+      "duration_s": 226.0,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 229 bones animes, amplitude centre=22.1542, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "heartbeat.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/heartbeat.vmd",
+      "frames_30fps": 9277,
+      "duration_s": 309.23,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 119 bones animes, amplitude centre=38.4811, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "help.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/help.vmd",
+      "frames_30fps": 8219,
+      "duration_s": 273.97,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 115 bones animes, amplitude centre=72.9279, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "honey_miku.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/honey_miku.vmd",
+      "frames_30fps": 6684,
+      "duration_s": 222.8,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 140 bones animes, amplitude centre=20.6391, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "hp.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/hp.vmd",
+      "frames_30fps": 3869,
+      "duration_s": 128.97,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 211 bones animes, amplitude centre=14.8308, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "jikan.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/jikan.vmd",
+      "frames_30fps": 3600,
+      "duration_s": 120.0,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 142 bones animes, amplitude centre=21.4342, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "lipstick.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/lipstick.vmd",
+      "frames_30fps": 4089,
+      "duration_s": 136.3,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 250 bones animes, amplitude centre=13.0635, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "motion123.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/motion123.vmd",
+      "frames_30fps": 7934,
+      "duration_s": 264.47,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 114 bones animes, amplitude centre=58.2361, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "neko.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/neko.vmd",
+      "frames_30fps": 6330,
+      "duration_s": 211.0,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 226 bones animes, amplitude centre=25.9178, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "nekomimi.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/nekomimi.vmd",
+      "frames_30fps": 7054,
+      "duration_s": 235.13,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 140 bones animes, amplitude centre=18.612, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "shakeit.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/shakeit.vmd",
+      "frames_30fps": 3580,
+      "duration_s": 119.33,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 131 bones animes, amplitude centre=33.4079, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "snow.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/snow.vmd",
+      "frames_30fps": 7237,
+      "duration_s": 241.23,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 154 bones animes, amplitude centre=49.1291, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "soba.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/soba.vmd",
+      "frames_30fps": 8195,
+      "duration_s": 273.17,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 157 bones animes, amplitude centre=26.4741, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "tokino.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/tokino.vmd",
+      "frames_30fps": 3645,
+      "duration_s": 121.5,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 135 bones animes, amplitude centre=4.1482, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "walk.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/walk.vmd",
+      "frames_30fps": 1009,
+      "duration_s": 33.63,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 282 bones animes, amplitude centre=3.5273, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "wavefile_v2.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/wavefile_v2.vmd",
+      "frames_30fps": 2809,
+      "duration_s": 93.63,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 140 bones animes, amplitude centre=17.8381, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "yuki.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/yuki.vmd",
+      "frames_30fps": 6212,
+      "duration_s": 207.07,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 177 bones animes, amplitude centre=13.5702, classe dynamic (vmd_audit.py)"
+    },
+    {
+      "name": "yume.vmd",
+      "path": "E:/Data Demo/_extracted/github_bear0830_mmd/yume.vmd",
+      "frames_30fps": 6352,
+      "duration_s": 211.73,
+      "note": "telecharge github.com/bear0830/mmd (2026-08-07, session nuit priorite 4) -- 238 bones animes, amplitude centre=18.2191, classe dynamic (vmd_audit.py)"
+    }
+  ]
+}

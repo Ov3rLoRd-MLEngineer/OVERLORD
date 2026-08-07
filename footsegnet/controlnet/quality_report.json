@@ -1,0 +1,5214 @@
+[
+  {
+    "stem": "footsegnet_00000",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.53%",
+    "mask_source": "manual",
+    "mask_pct": 1.5316645304361978,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00001",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.69%",
+    "mask_source": "manual",
+    "mask_pct": 1.689592997233073,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00002",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.92%",
+    "mask_source": "manual",
+    "mask_pct": 1.9193013509114583,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00003",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.98%",
+    "mask_source": "manual",
+    "mask_pct": 6.977907816569011,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00004",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.95%",
+    "mask_source": "manual",
+    "mask_pct": 1.9524892171223958,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00007",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.84%",
+    "mask_source": "manual",
+    "mask_pct": 0.8357365926106771,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00009",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.29%",
+    "mask_source": "manual",
+    "mask_pct": 1.2875239054361978,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00010",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.67%",
+    "mask_source": "manual",
+    "mask_pct": 0.6669998168945312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00011",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.22%",
+    "mask_source": "manual",
+    "mask_pct": 4.221153259277344,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00012",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.63%",
+    "mask_source": "manual",
+    "mask_pct": 1.626141866048177,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00013",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 21.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.5665054321289062,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 21.6
+  },
+  {
+    "stem": "footsegnet_00014",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.60%",
+    "mask_source": "manual",
+    "mask_pct": 2.6038487752278643,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00015",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.26%",
+    "mask_source": "manual",
+    "mask_pct": 2.262369791666667,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00016",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.81%",
+    "mask_source": "manual",
+    "mask_pct": 0.8136749267578125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00017",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 11.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.2992223103841147,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 11.8
+  },
+  {
+    "stem": "footsegnet_00018",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.19%",
+    "mask_source": "manual",
+    "mask_pct": 2.185312906901042,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00019",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.5390396118164062,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00020",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.99%",
+    "mask_source": "manual",
+    "mask_pct": 4.989878336588541,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00022",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.23%",
+    "mask_source": "manual",
+    "mask_pct": 2.2291819254557295,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00023",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.11%",
+    "mask_source": "manual",
+    "mask_pct": 2.106221516927083,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00024",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.01%",
+    "mask_source": "manual",
+    "mask_pct": 2.0140329996744795,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00025",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.23%",
+    "mask_source": "manual",
+    "mask_pct": 1.2347539265950522,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00026",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.95%",
+    "mask_source": "manual",
+    "mask_pct": 1.9483566284179688,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00027",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.11%",
+    "mask_source": "manual",
+    "mask_pct": 3.114000956217448,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00028",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.71%",
+    "mask_source": "manual",
+    "mask_pct": 1.714642842610677,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00029",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.96%",
+    "mask_source": "manual",
+    "mask_pct": 1.96075439453125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00030",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.78%",
+    "mask_source": "manual",
+    "mask_pct": 1.778093973795573,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00031",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 4.978370666503906,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00032",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.37%",
+    "mask_source": "manual",
+    "mask_pct": 6.372261047363281,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00033",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.90%",
+    "mask_source": "manual",
+    "mask_pct": 1.8982569376627605,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00034",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.31%",
+    "mask_source": "manual",
+    "mask_pct": 1.3088862101236978,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00035",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.56%",
+    "mask_source": "manual",
+    "mask_pct": 1.5594482421875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00036",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.51%",
+    "mask_source": "manual",
+    "mask_pct": 1.509984334309896,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00037",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.08%",
+    "mask_source": "manual",
+    "mask_pct": 1.0782241821289062,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00038",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.30%",
+    "mask_source": "manual",
+    "mask_pct": 1.2996673583984375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00039",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.61%",
+    "mask_source": "manual",
+    "mask_pct": 2.612813313802083,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00040",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.61%",
+    "mask_source": "manual",
+    "mask_pct": 1.6074498494466145,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00041",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 11.028798421223957,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00042",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.44%",
+    "mask_source": "manual",
+    "mask_pct": 3.4383773803710938,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00043",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.84%",
+    "mask_source": "manual",
+    "mask_pct": 2.83660888671875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00045",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 12.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.216761271158854,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 12.6
+  },
+  {
+    "stem": "footsegnet_00046",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.64%",
+    "mask_source": "manual",
+    "mask_pct": 1.6354878743489583,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00047",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.94%",
+    "mask_source": "manual",
+    "mask_pct": 0.9363810221354166,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00048",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.34%",
+    "mask_source": "manual",
+    "mask_pct": 5.338478088378906,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00049",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.90%",
+    "mask_source": "manual",
+    "mask_pct": 1.8981297810872395,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00050",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.13%",
+    "mask_source": "manual",
+    "mask_pct": 1.1293411254882812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00051",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.98%",
+    "mask_source": "manual",
+    "mask_pct": 0.9812037150065104,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00052",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.39%",
+    "mask_source": "manual",
+    "mask_pct": 2.3871739705403643,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00053",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.91%",
+    "mask_source": "manual",
+    "mask_pct": 1.9100189208984375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00055",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.08%",
+    "mask_source": "manual",
+    "mask_pct": 2.080980936686198,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00056",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.66%",
+    "mask_source": "manual",
+    "mask_pct": 6.660270690917969,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00057",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.60%",
+    "mask_source": "manual",
+    "mask_pct": 2.5957107543945312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00058",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.19%",
+    "mask_source": "manual",
+    "mask_pct": 2.19268798828125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00059",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 0.8213678995768229,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00060",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.96%",
+    "mask_source": "manual",
+    "mask_pct": 1.9640604654947917,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00061",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 0.6684621175130208,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00062",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.50%",
+    "mask_source": "manual",
+    "mask_pct": 3.4999847412109375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00063",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.15%",
+    "mask_source": "manual",
+    "mask_pct": 1.1491775512695312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00064",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.70%",
+    "mask_source": "manual",
+    "mask_pct": 1.6977945963541667,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00065",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 23.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 4.78967030843099,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 23.7
+  },
+  {
+    "stem": "footsegnet_00066",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.84%",
+    "mask_source": "manual",
+    "mask_pct": 0.8376439412434896,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00067",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.59%",
+    "mask_source": "manual",
+    "mask_pct": 1.589202880859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00068",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.07%",
+    "mask_source": "manual",
+    "mask_pct": 3.071085611979167,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00069",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.93%",
+    "mask_source": "manual",
+    "mask_pct": 1.9283294677734375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00071",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.55%",
+    "mask_source": "manual",
+    "mask_pct": 1.554997762044271,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00072",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.10%",
+    "mask_source": "manual",
+    "mask_pct": 1.1002222696940103,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00073",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.85%",
+    "mask_source": "manual",
+    "mask_pct": 1.8527984619140625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00074",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.62%",
+    "mask_source": "manual",
+    "mask_pct": 0.6169637044270833,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00075",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.65%",
+    "mask_source": "manual",
+    "mask_pct": 1.6508738199869792,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00076",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.39%",
+    "mask_source": "manual",
+    "mask_pct": 2.39410400390625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00077",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.15%",
+    "mask_source": "manual",
+    "mask_pct": 6.153424580891928,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00078",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 19.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 3.298823038736979,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 19.9
+  },
+  {
+    "stem": "footsegnet_00079",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.37%",
+    "mask_source": "manual",
+    "mask_pct": 1.3654708862304688,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00081",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.10%",
+    "mask_source": "manual",
+    "mask_pct": 2.102216084798177,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00082",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.64%",
+    "mask_source": "manual",
+    "mask_pct": 4.643758138020834,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00083",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.13%",
+    "mask_source": "manual",
+    "mask_pct": 6.129264831542969,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00084",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.67%",
+    "mask_source": "manual",
+    "mask_pct": 1.6729354858398438,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00085",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.11%",
+    "mask_source": "manual",
+    "mask_pct": 4.112434387207031,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00086",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 7.12%",
+    "mask_source": "manual",
+    "mask_pct": 7.1158091227213545,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00087",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.76%",
+    "mask_source": "manual",
+    "mask_pct": 3.7551244099934897,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00088",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.79%",
+    "mask_source": "manual",
+    "mask_pct": 1.786359151204427,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00090",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 9.96%",
+    "mask_source": "manual",
+    "mask_pct": 9.95928446451823,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00091",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.62%",
+    "mask_source": "manual",
+    "mask_pct": 6.6168467203776045,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00092",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.18%",
+    "mask_source": "manual",
+    "mask_pct": 1.176325480143229,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00093",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.27%",
+    "mask_source": "manual",
+    "mask_pct": 3.2663345336914062,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00094",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.31%",
+    "mask_source": "manual",
+    "mask_pct": 2.3140589396158857,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00095",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.80%",
+    "mask_source": "manual",
+    "mask_pct": 1.801300048828125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00096",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.72%",
+    "mask_source": "manual",
+    "mask_pct": 0.7204055786132812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00097",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.49%",
+    "mask_source": "manual",
+    "mask_pct": 1.489384969075521,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00099",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.99%",
+    "mask_source": "manual",
+    "mask_pct": 0.994110107421875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00100",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.70%",
+    "mask_source": "manual",
+    "mask_pct": 1.700592041015625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00101",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.12%",
+    "mask_source": "manual",
+    "mask_pct": 1.1214574178059897,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00102",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.75%",
+    "mask_source": "manual",
+    "mask_pct": 1.749420166015625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00103",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.69%",
+    "mask_source": "manual",
+    "mask_pct": 1.6876220703125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00104",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 0.9388605753580729,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00105",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 19.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.3211568196614585,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 19.4
+  },
+  {
+    "stem": "footsegnet_00106",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.00%",
+    "mask_source": "manual",
+    "mask_pct": 1.0036468505859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00107",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.07%",
+    "mask_source": "manual",
+    "mask_pct": 2.0737330118815107,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00108",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.81%",
+    "mask_source": "manual",
+    "mask_pct": 1.8124898274739583,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00109",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 2.135785420735677,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00110",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 8.393414815266926,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00111",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.56%",
+    "mask_source": "manual",
+    "mask_pct": 1.5609105428059897,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00112",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.49%",
+    "mask_source": "manual",
+    "mask_pct": 3.4892400105794272,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00113",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.69%",
+    "mask_source": "manual",
+    "mask_pct": 1.688830057779948,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00114",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.20%",
+    "mask_source": "manual",
+    "mask_pct": 2.1978378295898438,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00115",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.69%",
+    "mask_source": "manual",
+    "mask_pct": 0.6898244222005208,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00116",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.19%",
+    "mask_source": "manual",
+    "mask_pct": 1.190058390299479,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00117",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.12%",
+    "mask_source": "manual",
+    "mask_pct": 3.1157811482747393,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00118",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.80%",
+    "mask_source": "manual",
+    "mask_pct": 5.796241760253906,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00119",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.70%",
+    "mask_source": "manual",
+    "mask_pct": 1.6997019449869792,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00120",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.31%",
+    "mask_source": "manual",
+    "mask_pct": 1.3088226318359375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00121",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.47%",
+    "mask_source": "manual",
+    "mask_pct": 2.47039794921875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00122",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 9.32%",
+    "mask_source": "manual",
+    "mask_pct": 9.318923950195312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00123",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.77%",
+    "mask_source": "manual",
+    "mask_pct": 2.7740478515625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00126",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 25.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 11.303456624348957,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 25.3
+  },
+  {
+    "stem": "footsegnet_00127",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.00%",
+    "mask_source": "manual",
+    "mask_pct": 0.9990692138671875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00128",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.99%",
+    "mask_source": "manual",
+    "mask_pct": 0.9882609049479166,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00129",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.09%",
+    "mask_source": "manual",
+    "mask_pct": 4.08782958984375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00130",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.77%",
+    "mask_source": "manual",
+    "mask_pct": 2.7723948160807295,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00131",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.78%",
+    "mask_source": "manual",
+    "mask_pct": 0.7847468058268229,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00132",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 15.02%",
+    "mask_source": "manual",
+    "mask_pct": 15.022722880045572,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00133",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.12%",
+    "mask_source": "manual",
+    "mask_pct": 5.115763346354166,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00134",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.82%",
+    "mask_source": "manual",
+    "mask_pct": 1.8157323201497395,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00135",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.51%",
+    "mask_source": "manual",
+    "mask_pct": 1.5087127685546875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00137",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.69%",
+    "mask_source": "manual",
+    "mask_pct": 3.688176472981771,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00138",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.54%",
+    "mask_source": "manual",
+    "mask_pct": 1.5415191650390625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00139",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.98%",
+    "mask_source": "manual",
+    "mask_pct": 1.9802093505859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00140",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 18.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 2.9877344767252607,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 18.9
+  },
+  {
+    "stem": "footsegnet_00141",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.72%",
+    "mask_source": "manual",
+    "mask_pct": 1.717821756998698,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00142",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.34%",
+    "mask_source": "manual",
+    "mask_pct": 3.343073527018229,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00143",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.21%",
+    "mask_source": "manual",
+    "mask_pct": 3.2126744588216147,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00144",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.40%",
+    "mask_source": "manual",
+    "mask_pct": 2.398681640625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00146",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.14%",
+    "mask_source": "manual",
+    "mask_pct": 1.1444091796875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00148",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.04%",
+    "mask_source": "manual",
+    "mask_pct": 1.0396957397460938,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00149",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.95%",
+    "mask_source": "manual",
+    "mask_pct": 2.9526392618815107,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00150",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.23%",
+    "mask_source": "manual",
+    "mask_pct": 4.233741760253906,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00152",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.91%",
+    "mask_source": "manual",
+    "mask_pct": 5.91278076171875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00153",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.24%",
+    "mask_source": "manual",
+    "mask_pct": 1.2363433837890625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00154",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.49%",
+    "mask_source": "manual",
+    "mask_pct": 3.4881591796875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00155",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.46%",
+    "mask_source": "manual",
+    "mask_pct": 1.4556884765625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00156",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 3.1613032023111978,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00157",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 4 composantes connexes, composante minoritaire = 5.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 3.653717041015625,
+    "box_source": "",
+    "components": 4,
+    "minority_ratio_pct": 5.3
+  },
+  {
+    "stem": "footsegnet_00158",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 16.68%",
+    "mask_source": "manual",
+    "mask_pct": 16.679318745930992,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00159",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 8.09%",
+    "mask_source": "manual",
+    "mask_pct": 8.090845743815105,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00160",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.77%",
+    "mask_source": "manual",
+    "mask_pct": 2.7677536010742188,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00161",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 8.61%",
+    "mask_source": "manual",
+    "mask_pct": 8.607673645019531,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00162",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.96%",
+    "mask_source": "manual",
+    "mask_pct": 2.9603958129882812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00163",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.69%",
+    "mask_source": "manual",
+    "mask_pct": 0.6910324096679688,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00164",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.06%",
+    "mask_source": "manual",
+    "mask_pct": 2.059491475423177,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00165",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.51%",
+    "mask_source": "manual",
+    "mask_pct": 4.506556193033854,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00166",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.54%",
+    "mask_source": "manual",
+    "mask_pct": 2.5407155354817705,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00167",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.38%",
+    "mask_source": "manual",
+    "mask_pct": 1.3774871826171875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00168",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.98%",
+    "mask_source": "manual",
+    "mask_pct": 0.9798049926757812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00170",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.98%",
+    "mask_source": "manual",
+    "mask_pct": 0.975799560546875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00171",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.94%",
+    "mask_source": "manual",
+    "mask_pct": 0.9380976359049479,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00172",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 4 composantes connexes, composante minoritaire = 8.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 5.270512898763021,
+    "box_source": "",
+    "components": 4,
+    "minority_ratio_pct": 8.8
+  },
+  {
+    "stem": "footsegnet_00173",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.51%",
+    "mask_source": "manual",
+    "mask_pct": 2.50701904296875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00174",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 2.0824432373046875,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 22.9
+  },
+  {
+    "stem": "footsegnet_00175",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 3.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 3.2064437866210938,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 3.7
+  },
+  {
+    "stem": "footsegnet_00176",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.86%",
+    "mask_source": "manual",
+    "mask_pct": 3.8576761881510415,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00177",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.88%",
+    "mask_source": "manual",
+    "mask_pct": 0.8823394775390625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00178",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.18%",
+    "mask_source": "manual",
+    "mask_pct": 1.1808395385742188,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00179",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.78%",
+    "mask_source": "manual",
+    "mask_pct": 3.778711954752604,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00180",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.87%",
+    "mask_source": "manual",
+    "mask_pct": 4.865837097167969,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00181",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.68%",
+    "mask_source": "manual",
+    "mask_pct": 1.6761144002278645,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00182",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.70%",
+    "mask_source": "manual",
+    "mask_pct": 3.7037531534830728,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00183",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.70%",
+    "mask_source": "manual",
+    "mask_pct": 2.7009963989257812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00184",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.77%",
+    "mask_source": "manual",
+    "mask_pct": 1.7747243245442708,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00185",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.75%",
+    "mask_source": "manual",
+    "mask_pct": 1.7450968424479167,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00186",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.41%",
+    "mask_source": "manual",
+    "mask_pct": 1.4095306396484375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00187",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.70%",
+    "mask_source": "manual",
+    "mask_pct": 0.6966272989908855,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00188",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 20.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 10.936800638834637,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 20.2
+  },
+  {
+    "stem": "footsegnet_00189",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.04%",
+    "mask_source": "manual",
+    "mask_pct": 2.043596903483073,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00190",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.02%",
+    "mask_source": "manual",
+    "mask_pct": 1.0193506876627603,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00191",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.03%",
+    "mask_source": "manual",
+    "mask_pct": 2.0250320434570312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00192",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.30%",
+    "mask_source": "manual",
+    "mask_pct": 3.2995223999023438,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00193",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.08%",
+    "mask_source": "manual",
+    "mask_pct": 3.0790328979492188,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00196",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 3.0173619588216143,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00197",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.22%",
+    "mask_source": "manual",
+    "mask_pct": 2.2246678670247393,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00198",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.66%",
+    "mask_source": "manual",
+    "mask_pct": 1.6596476236979167,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00199",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.44%",
+    "mask_source": "manual",
+    "mask_pct": 1.440556844075521,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00200",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.95%",
+    "mask_source": "manual",
+    "mask_pct": 1.9521713256835938,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00201",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.01%",
+    "mask_source": "manual",
+    "mask_pct": 4.007275899251303,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00203",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.97%",
+    "mask_source": "manual",
+    "mask_pct": 0.9668350219726562,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00204",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.84%",
+    "mask_source": "manual",
+    "mask_pct": 3.8407007853190103,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00205",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 7.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 4.201380411783854,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 7.9
+  },
+  {
+    "stem": "footsegnet_00206",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.30%",
+    "mask_source": "manual",
+    "mask_pct": 5.303446451822916,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00207",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.05%",
+    "mask_source": "manual",
+    "mask_pct": 2.048174540201823,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00208",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.55%",
+    "mask_source": "manual",
+    "mask_pct": 2.5519053141276045,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00209",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.92%",
+    "mask_source": "manual",
+    "mask_pct": 5.920664469401041,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00210",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 6.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 11.472256978352863,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 6.1
+  },
+  {
+    "stem": "footsegnet_00211",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.06%",
+    "mask_source": "manual",
+    "mask_pct": 1.0576883951822915,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00212",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 4 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 13.12249501546224,
+    "box_source": "",
+    "components": 4,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00213",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.10%",
+    "mask_source": "manual",
+    "mask_pct": 3.104400634765625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00214",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.91%",
+    "mask_source": "manual",
+    "mask_pct": 3.9112091064453125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00215",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.69%",
+    "mask_source": "manual",
+    "mask_pct": 1.6913731892903645,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00216",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.90%",
+    "mask_source": "manual",
+    "mask_pct": 5.896695454915365,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00217",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.26%",
+    "mask_source": "manual",
+    "mask_pct": 5.257352193196615,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00218",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.46%",
+    "mask_source": "manual",
+    "mask_pct": 1.4616012573242188,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00219",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 4.5040130615234375,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 22.1
+  },
+  {
+    "stem": "footsegnet_00220",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.90%",
+    "mask_source": "manual",
+    "mask_pct": 0.9003957112630209,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00221",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.64%",
+    "mask_source": "manual",
+    "mask_pct": 1.6384124755859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00222",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.86%",
+    "mask_source": "manual",
+    "mask_pct": 2.863566080729167,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00223",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.96%",
+    "mask_source": "manual",
+    "mask_pct": 0.9618759155273438,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00224",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.77%",
+    "mask_source": "manual",
+    "mask_pct": 4.77301279703776,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00225",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.91%",
+    "mask_source": "manual",
+    "mask_pct": 0.9122848510742188,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00226",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.10%",
+    "mask_source": "manual",
+    "mask_pct": 3.095245361328125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00227",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 7.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 2.9216766357421875,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 7.7
+  },
+  {
+    "stem": "footsegnet_00228",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.17%",
+    "mask_source": "manual",
+    "mask_pct": 2.1674474080403643,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00229",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.46%",
+    "mask_source": "manual",
+    "mask_pct": 3.4619013468424478,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00230",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.23%",
+    "mask_source": "manual",
+    "mask_pct": 1.226933797200521,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00231",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.24%",
+    "mask_source": "manual",
+    "mask_pct": 2.2386550903320312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00232",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.23%",
+    "mask_source": "manual",
+    "mask_pct": 2.228101094563802,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00233",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.39%",
+    "mask_source": "manual",
+    "mask_pct": 1.393890380859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00235",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.39%",
+    "mask_source": "manual",
+    "mask_pct": 4.393641153971354,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00236",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.09%",
+    "mask_source": "manual",
+    "mask_pct": 4.08789316813151,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00237",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.87%",
+    "mask_source": "manual",
+    "mask_pct": 0.8742650349934896,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00238",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.08%",
+    "mask_source": "manual",
+    "mask_pct": 1.0820388793945312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00239",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.93%",
+    "mask_source": "manual",
+    "mask_pct": 4.929415384928385,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00240",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.30%",
+    "mask_source": "manual",
+    "mask_pct": 1.2980779012044272,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00241",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.48%",
+    "mask_source": "manual",
+    "mask_pct": 2.4773279825846357,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00242",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.33%",
+    "mask_source": "manual",
+    "mask_pct": 2.3334503173828125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00243",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.39%",
+    "mask_source": "manual",
+    "mask_pct": 1.3858795166015625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00244",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.10%",
+    "mask_source": "manual",
+    "mask_pct": 2.1032333374023438,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00245",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.82%",
+    "mask_source": "manual",
+    "mask_pct": 1.8156051635742188,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00246",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.00%",
+    "mask_source": "manual",
+    "mask_pct": 1.9982020060221355,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00247",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.92%",
+    "mask_source": "manual",
+    "mask_pct": 1.9179662068684895,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00248",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.53%",
+    "mask_source": "manual",
+    "mask_pct": 1.5260696411132812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00249",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.74%",
+    "mask_source": "manual",
+    "mask_pct": 4.736900329589844,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00250",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.50%",
+    "mask_source": "manual",
+    "mask_pct": 2.499071756998698,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00251",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 5 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 4.198392232259115,
+    "box_source": "",
+    "components": 5,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00252",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.58%",
+    "mask_source": "manual",
+    "mask_pct": 1.5790303548177083,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00253",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.43%",
+    "mask_source": "manual",
+    "mask_pct": 0.43061574300130206,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00254",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.49%",
+    "mask_source": "manual",
+    "mask_pct": 1.4873504638671875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00255",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 7 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 6.055005391438803,
+    "box_source": "",
+    "components": 7,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00256",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.58%",
+    "mask_source": "manual",
+    "mask_pct": 0.5842208862304688,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00257",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.29%",
+    "mask_source": "manual",
+    "mask_pct": 4.287274678548178,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00258",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.78%",
+    "mask_source": "manual",
+    "mask_pct": 1.7786661783854167,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00259",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.31%",
+    "mask_source": "manual",
+    "mask_pct": 5.31152089436849,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00260",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.69%",
+    "mask_source": "manual",
+    "mask_pct": 2.693430582682292,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00261",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.68%",
+    "mask_source": "manual",
+    "mask_pct": 3.679656982421875,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00262",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 4.649480183919271,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 22.3
+  },
+  {
+    "stem": "footsegnet_00263",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.07%",
+    "mask_source": "manual",
+    "mask_pct": 3.065745035807292,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00264",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.68%",
+    "mask_source": "manual",
+    "mask_pct": 1.6823450724283855,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00265",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.66%",
+    "mask_source": "manual",
+    "mask_pct": 1.660919189453125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00266",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.33%",
+    "mask_source": "manual",
+    "mask_pct": 2.3324966430664062,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00267",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.59%",
+    "mask_source": "manual",
+    "mask_pct": 4.594294230143229,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00268",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.72%",
+    "mask_source": "manual",
+    "mask_pct": 0.716845194498698,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00270",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.11%",
+    "mask_source": "manual",
+    "mask_pct": 3.105672200520833,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00271",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.25%",
+    "mask_source": "manual",
+    "mask_pct": 1.2483596801757812,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00272",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 3 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 3.1085968017578125,
+    "box_source": "",
+    "components": 3,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00274",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.1455535888671875,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 0.8
+  },
+  {
+    "stem": "footsegnet_00275",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.46%",
+    "mask_source": "manual",
+    "mask_pct": 2.4611155192057295,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00276",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.90%",
+    "mask_source": "manual",
+    "mask_pct": 2.895673116048177,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00277",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.87%",
+    "mask_source": "manual",
+    "mask_pct": 1.8726348876953125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00278",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 22.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 2.476946512858073,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 22.9
+  },
+  {
+    "stem": "footsegnet_00279",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.69%",
+    "mask_source": "manual",
+    "mask_pct": 2.6910781860351562,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00280",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.82%",
+    "mask_source": "manual",
+    "mask_pct": 0.8244832356770834,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00281",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.91%",
+    "mask_source": "manual",
+    "mask_pct": 2.907562255859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00282",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.64%",
+    "mask_source": "manual",
+    "mask_pct": 1.6424814860026042,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00283",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.87%",
+    "mask_source": "manual",
+    "mask_pct": 0.8676528930664062,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00284",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.82%",
+    "mask_source": "manual",
+    "mask_pct": 0.8169809977213541,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00285",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 14.29%",
+    "mask_source": "manual",
+    "mask_pct": 14.287630716959635,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00286",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.28%",
+    "mask_source": "manual",
+    "mask_pct": 5.280113220214844,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00287",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 2.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 1.0180791219075522,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 2.3
+  },
+  {
+    "stem": "footsegnet_00288",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.21%",
+    "mask_source": "manual",
+    "mask_pct": 5.211702982584635,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00289",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.48%",
+    "mask_source": "manual",
+    "mask_pct": 0.4797617594401042,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00290",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.90%",
+    "mask_source": "manual",
+    "mask_pct": 0.9049097696940104,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00291",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.37%",
+    "mask_source": "manual",
+    "mask_pct": 3.365961710611979,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00292",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 6.25%",
+    "mask_source": "manual",
+    "mask_pct": 6.254768371582031,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00293",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.40%",
+    "mask_source": "manual",
+    "mask_pct": 1.400121053059896,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00294",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.88%",
+    "mask_source": "manual",
+    "mask_pct": 1.8817901611328125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00295",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.97%",
+    "mask_source": "manual",
+    "mask_pct": 2.974383036295573,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00296",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.00%",
+    "mask_source": "manual",
+    "mask_pct": 1.0036468505859375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00297",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.99%",
+    "mask_source": "manual",
+    "mask_pct": 1.9945144653320312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00298",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.43%",
+    "mask_source": "manual",
+    "mask_pct": 1.4318466186523438,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00299",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.51%",
+    "mask_source": "manual",
+    "mask_pct": 3.5053888956705728,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00300",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.52%",
+    "mask_source": "manual",
+    "mask_pct": 1.5218734741210938,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00301",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.06%",
+    "mask_source": "manual",
+    "mask_pct": 2.057647705078125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00304",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.63%",
+    "mask_source": "manual",
+    "mask_pct": 0.6341934204101562,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00305",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.60%",
+    "mask_source": "manual",
+    "mask_pct": 0.6033579508463542,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00306",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.78%",
+    "mask_source": "manual",
+    "mask_pct": 1.7796834309895833,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00307",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.33%",
+    "mask_source": "manual",
+    "mask_pct": 2.332305908203125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00308",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.83%",
+    "mask_source": "manual",
+    "mask_pct": 0.8282979329427084,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00309",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.95%",
+    "mask_source": "manual",
+    "mask_pct": 1.953125,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00310",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.10%",
+    "mask_source": "manual",
+    "mask_pct": 2.099927266438802,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00311",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 4.40%",
+    "mask_source": "manual",
+    "mask_pct": 4.396565755208334,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00312",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.15%",
+    "mask_source": "manual",
+    "mask_pct": 1.1461257934570312,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00314",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.82%",
+    "mask_source": "manual",
+    "mask_pct": 2.8228123982747393,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00315",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.27%",
+    "mask_source": "manual",
+    "mask_pct": 2.26898193359375,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00316",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.23%",
+    "mask_source": "manual",
+    "mask_pct": 1.2329737345377603,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00317",
+    "category": "a_corriger",
+    "reason": "masque manuel fragmenté en 2 composantes connexes, composante minoritaire = 25.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage",
+    "mask_source": "manual",
+    "mask_pct": 0.717926025390625,
+    "box_source": "",
+    "components": 2,
+    "minority_ratio_pct": 25.1
+  },
+  {
+    "stem": "footsegnet_00318",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.33%",
+    "mask_source": "manual",
+    "mask_pct": 3.3329010009765625,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00319",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.37%",
+    "mask_source": "manual",
+    "mask_pct": 2.3736953735351562,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00321",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 0.63%",
+    "mask_source": "manual",
+    "mask_pct": 0.6333033243815105,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00322",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 5.08%",
+    "mask_source": "manual",
+    "mask_pct": 5.08276621500651,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00323",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 1.87%",
+    "mask_source": "manual",
+    "mask_pct": 1.8712361653645833,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00324",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 17.01%",
+    "mask_source": "manual",
+    "mask_pct": 17.008272806803383,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00325",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 2.25%",
+    "mask_source": "manual",
+    "mask_pct": 2.252515157063802,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00326",
+    "category": "exploitable",
+    "reason": "masque manuel (vérité terrain), couverture 3.00%",
+    "mask_source": "manual",
+    "mask_pct": 2.9992421468098955,
+    "box_source": ""
+  },
+  {
+    "stem": "footsegnet_00327",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 8 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.28,
+    "box_source": "dwpose",
+    "components": 8,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00328",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.50%)",
+    "mask_source": "auto",
+    "mask_pct": 1.5,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00329",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 3 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.72,
+    "box_source": "dwpose",
+    "components": 3,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00330",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 6 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.48,
+    "box_source": "dwpose",
+    "components": 6,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00331",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.58%)",
+    "mask_source": "auto",
+    "mask_pct": 1.58,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00332",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 6 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.51,
+    "box_source": "dwpose",
+    "components": 6,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00333",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 6 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.35,
+    "box_source": "dwpose",
+    "components": 6,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00334",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.48%)",
+    "mask_source": "auto",
+    "mask_pct": 1.48,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00335",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 4 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.7,
+    "box_source": "dwpose",
+    "components": 4,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00336",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.02,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00337",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.00%)",
+    "mask_source": "auto",
+    "mask_pct": 1.0,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00338",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 16 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.09,
+    "box_source": "dwpose",
+    "components": 16,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00339",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.69%)",
+    "mask_source": "auto",
+    "mask_pct": 0.69,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00340",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.66,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.2
+  },
+  {
+    "stem": "footsegnet_00341",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.50%)",
+    "mask_source": "auto",
+    "mask_pct": 0.5,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00342",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.8,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.6
+  },
+  {
+    "stem": "footsegnet_00343",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 15.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.34,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 15.2
+  },
+  {
+    "stem": "footsegnet_00344",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.87%)",
+    "mask_source": "auto",
+    "mask_pct": 1.87,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00345",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (8.73%)",
+    "mask_source": "auto",
+    "mask_pct": 8.73,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00346",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 4.57,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00347",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.75%)",
+    "mask_source": "auto",
+    "mask_pct": 2.75,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00348",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 3.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.19,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 3.4
+  },
+  {
+    "stem": "footsegnet_00349",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.81,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.5
+  },
+  {
+    "stem": "footsegnet_00350",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.18,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00351",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.19,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.8
+  },
+  {
+    "stem": "footsegnet_00352",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.98%)",
+    "mask_source": "auto",
+    "mask_pct": 1.98,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00353",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.48%)",
+    "mask_source": "auto",
+    "mask_pct": 2.48,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00354",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.96,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.7
+  },
+  {
+    "stem": "footsegnet_00355",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.54,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00356",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.31,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00357",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.92,
+    "box_source": "qwenvl_grounding"
+  },
+  {
+    "stem": "footsegnet_00358",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.50%)",
+    "mask_source": "auto",
+    "mask_pct": 0.5,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00359",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.92%)",
+    "mask_source": "auto",
+    "mask_pct": 1.92,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00360",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (6.12%)",
+    "mask_source": "auto",
+    "mask_pct": 6.12,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00361",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 9.32,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00362",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.6,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.7
+  },
+  {
+    "stem": "footsegnet_00363",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.14%)",
+    "mask_source": "auto",
+    "mask_pct": 1.14,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00364",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (4.20%)",
+    "mask_source": "auto",
+    "mask_pct": 4.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00365",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.05%)",
+    "mask_source": "auto",
+    "mask_pct": 2.05,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00366",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.34%)",
+    "mask_source": "auto",
+    "mask_pct": 2.34,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00367",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.97%)",
+    "mask_source": "auto",
+    "mask_pct": 2.97,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00368",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.06,
+    "box_source": "qwenvl_grounding"
+  },
+  {
+    "stem": "footsegnet_00369",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.04%)",
+    "mask_source": "auto",
+    "mask_pct": 2.04,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00370",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 16.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.67,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 16.3
+  },
+  {
+    "stem": "footsegnet_00371",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.4,
+    "box_source": "qwenvl_grounding"
+  },
+  {
+    "stem": "footsegnet_00372",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.03%)",
+    "mask_source": "auto",
+    "mask_pct": 3.03,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00373",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.35%)",
+    "mask_source": "auto",
+    "mask_pct": 1.35,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00374",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.17%)",
+    "mask_source": "auto",
+    "mask_pct": 2.17,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00375",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (5.57%)",
+    "mask_source": "auto",
+    "mask_pct": 5.57,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00376",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.67%)",
+    "mask_source": "auto",
+    "mask_pct": 1.67,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00377",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.17,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00378",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.13%)",
+    "mask_source": "auto",
+    "mask_pct": 1.13,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00379",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.73,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00380",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.41%)",
+    "mask_source": "auto",
+    "mask_pct": 1.41,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00381",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 25.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.77,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 25.9
+  },
+  {
+    "stem": "footsegnet_00382",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.97%)",
+    "mask_source": "auto",
+    "mask_pct": 3.97,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00383",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.80%)",
+    "mask_source": "auto",
+    "mask_pct": 2.8,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00384",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.53,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00385",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 5.42,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00386",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 21.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.04,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 21.2
+  },
+  {
+    "stem": "footsegnet_00387",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.69%)",
+    "mask_source": "auto",
+    "mask_pct": 1.69,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00388",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 3.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.87,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 3.3
+  },
+  {
+    "stem": "footsegnet_00389",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.20%)",
+    "mask_source": "auto",
+    "mask_pct": 2.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00390",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 6.17,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.7
+  },
+  {
+    "stem": "footsegnet_00391",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (5.09%)",
+    "mask_source": "auto",
+    "mask_pct": 5.09,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00392",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.62%)",
+    "mask_source": "auto",
+    "mask_pct": 1.62,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00393",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 9.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.74,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 9.1
+  },
+  {
+    "stem": "footsegnet_00394",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.65,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 1.0
+  },
+  {
+    "stem": "footsegnet_00395",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 2.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.54,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 2.5
+  },
+  {
+    "stem": "footsegnet_00396",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.17%)",
+    "mask_source": "auto",
+    "mask_pct": 2.17,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00397",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.85%)",
+    "mask_source": "auto",
+    "mask_pct": 1.85,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00398",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.97,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.5
+  },
+  {
+    "stem": "footsegnet_00399",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.02%)",
+    "mask_source": "auto",
+    "mask_pct": 3.02,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00400",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.75%)",
+    "mask_source": "auto",
+    "mask_pct": 3.75,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00401",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.94,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.4
+  },
+  {
+    "stem": "footsegnet_00402",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.27,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00403",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.14%)",
+    "mask_source": "auto",
+    "mask_pct": 3.14,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00404",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.06%)",
+    "mask_source": "auto",
+    "mask_pct": 3.06,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00405",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.97,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00406",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.64%)",
+    "mask_source": "auto",
+    "mask_pct": 2.64,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00407",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.72%)",
+    "mask_source": "auto",
+    "mask_pct": 1.72,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00408",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.52%)",
+    "mask_source": "auto",
+    "mask_pct": 1.52,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00409",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.73%)",
+    "mask_source": "auto",
+    "mask_pct": 1.73,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00410",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.95%)",
+    "mask_source": "auto",
+    "mask_pct": 1.95,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00411",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.20%)",
+    "mask_source": "auto",
+    "mask_pct": 2.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00412",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.43,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.3
+  },
+  {
+    "stem": "footsegnet_00413",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.43,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 0.6
+  },
+  {
+    "stem": "footsegnet_00414",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.47%)",
+    "mask_source": "auto",
+    "mask_pct": 1.47,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00415",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.73%)",
+    "mask_source": "auto",
+    "mask_pct": 0.73,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00416",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.88%)",
+    "mask_source": "auto",
+    "mask_pct": 0.88,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00417",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.68,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00418",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 4.48,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00419",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 10.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.76,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 10.2
+  },
+  {
+    "stem": "footsegnet_00420",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.42%)",
+    "mask_source": "auto",
+    "mask_pct": 1.42,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00421",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.64,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.8
+  },
+  {
+    "stem": "footsegnet_00422",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 4.21,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00423",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.16%)",
+    "mask_source": "auto",
+    "mask_pct": 2.16,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00424",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 13.09,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00425",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.65,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 0.3
+  },
+  {
+    "stem": "footsegnet_00426",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.35,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.8
+  },
+  {
+    "stem": "footsegnet_00427",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.89%)",
+    "mask_source": "auto",
+    "mask_pct": 1.89,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00428",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.60%)",
+    "mask_source": "auto",
+    "mask_pct": 1.6,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00429",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.20%)",
+    "mask_source": "auto",
+    "mask_pct": 2.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00430",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 2.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.49,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 2.2
+  },
+  {
+    "stem": "footsegnet_00431",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.78,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.5
+  },
+  {
+    "stem": "footsegnet_00432",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.18%)",
+    "mask_source": "auto",
+    "mask_pct": 2.18,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00433",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.81%)",
+    "mask_source": "auto",
+    "mask_pct": 0.81,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00434",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.77,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00435",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.71,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00436",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.29%)",
+    "mask_source": "auto",
+    "mask_pct": 1.29,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00437",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.38%)",
+    "mask_source": "auto",
+    "mask_pct": 1.38,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00438",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.46,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.5
+  },
+  {
+    "stem": "footsegnet_00439",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 4.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.67,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 4.2
+  },
+  {
+    "stem": "footsegnet_00440",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.44%)",
+    "mask_source": "auto",
+    "mask_pct": 1.44,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00441",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.39,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.3
+  },
+  {
+    "stem": "footsegnet_00442",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.78,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00443",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.79%)",
+    "mask_source": "auto",
+    "mask_pct": 1.79,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00444",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.20%)",
+    "mask_source": "auto",
+    "mask_pct": 3.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00445",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.09,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.3
+  },
+  {
+    "stem": "footsegnet_00446",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.01,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.9
+  },
+  {
+    "stem": "footsegnet_00447",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.82%)",
+    "mask_source": "auto",
+    "mask_pct": 1.82,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00448",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.68%)",
+    "mask_source": "auto",
+    "mask_pct": 0.68,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00449",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.37,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00450",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.95%)",
+    "mask_source": "auto",
+    "mask_pct": 0.95,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00451",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.91%)",
+    "mask_source": "auto",
+    "mask_pct": 3.91,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00452",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.28%)",
+    "mask_source": "auto",
+    "mask_pct": 2.28,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00453",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.75%)",
+    "mask_source": "auto",
+    "mask_pct": 0.75,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00454",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 4.61,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00455",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.54,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.9
+  },
+  {
+    "stem": "footsegnet_00456",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 2.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.69,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 2.5
+  },
+  {
+    "stem": "footsegnet_00457",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.88%)",
+    "mask_source": "auto",
+    "mask_pct": 2.88,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00458",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.37%)",
+    "mask_source": "auto",
+    "mask_pct": 1.37,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00459",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.46%)",
+    "mask_source": "auto",
+    "mask_pct": 1.46,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00460",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.7,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00461",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 2.99,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00462",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 2.34,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00463",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.16%)",
+    "mask_source": "auto",
+    "mask_pct": 2.16,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00464",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 5.03,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 1.5
+  },
+  {
+    "stem": "footsegnet_00465",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 2.03,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00466",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.37%)",
+    "mask_source": "auto",
+    "mask_pct": 3.37,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00467",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.62,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.3
+  },
+  {
+    "stem": "footsegnet_00468",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.60%)",
+    "mask_source": "auto",
+    "mask_pct": 1.6,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00469",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 5.66,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00470",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.89,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00471",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.72%)",
+    "mask_source": "auto",
+    "mask_pct": 1.72,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00472",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.40%)",
+    "mask_source": "auto",
+    "mask_pct": 1.4,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00473",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.05%)",
+    "mask_source": "auto",
+    "mask_pct": 2.05,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00474",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.93%)",
+    "mask_source": "auto",
+    "mask_pct": 2.93,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00475",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.55,
+    "box_source": "qwenvl_grounding"
+  },
+  {
+    "stem": "footsegnet_00476",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.12%)",
+    "mask_source": "auto",
+    "mask_pct": 2.12,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00477",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.02%)",
+    "mask_source": "auto",
+    "mask_pct": 2.02,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00478",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (6.55%)",
+    "mask_source": "auto",
+    "mask_pct": 6.55,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00479",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 23.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.74,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 23.8
+  },
+  {
+    "stem": "footsegnet_00480",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.81,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00481",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.37%)",
+    "mask_source": "auto",
+    "mask_pct": 2.37,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00482",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.99,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00483",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 7.15,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 1.6
+  },
+  {
+    "stem": "footsegnet_00484",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.77%)",
+    "mask_source": "auto",
+    "mask_pct": 2.77,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00485",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.22%)",
+    "mask_source": "auto",
+    "mask_pct": 1.22,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00486",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.09,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00487",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.00%)",
+    "mask_source": "auto",
+    "mask_pct": 2.0,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00488",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.61%)",
+    "mask_source": "auto",
+    "mask_pct": 1.61,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00489",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.14%)",
+    "mask_source": "auto",
+    "mask_pct": 1.14,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00490",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.44,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00491",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.12%)",
+    "mask_source": "auto",
+    "mask_pct": 1.12,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00492",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.61%)",
+    "mask_source": "auto",
+    "mask_pct": 1.61,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00493",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.73,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.7
+  },
+  {
+    "stem": "footsegnet_00494",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 9.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.66,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 9.2
+  },
+  {
+    "stem": "footsegnet_00495",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 4.87,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.3
+  },
+  {
+    "stem": "footsegnet_00496",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.98%)",
+    "mask_source": "auto",
+    "mask_pct": 0.98,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00497",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.82,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.9
+  },
+  {
+    "stem": "footsegnet_00498",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.95,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00499",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.51%)",
+    "mask_source": "auto",
+    "mask_pct": 0.51,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00500",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.02,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.4
+  },
+  {
+    "stem": "footsegnet_00501",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.20%)",
+    "mask_source": "auto",
+    "mask_pct": 2.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00502",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 5.05,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00503",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.42%)",
+    "mask_source": "auto",
+    "mask_pct": 2.42,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00504",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.30%)",
+    "mask_source": "auto",
+    "mask_pct": 2.3,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00505",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.48%)",
+    "mask_source": "auto",
+    "mask_pct": 3.48,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00506",
+    "category": "a_corriger",
+    "reason": "masque très petit (0.47% < 0.5%) — pied/chaussure probablement occlus ou bbox mal centrée",
+    "mask_source": "auto",
+    "mask_pct": 0.47,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00507",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.58,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00508",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.92%)",
+    "mask_source": "auto",
+    "mask_pct": 3.92,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00509",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.30%)",
+    "mask_source": "auto",
+    "mask_pct": 1.3,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00510",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.88,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00511",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.45,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.3
+  },
+  {
+    "stem": "footsegnet_00512",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 4.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.03,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 4.3
+  },
+  {
+    "stem": "footsegnet_00513",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 5.58,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00514",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.21%)",
+    "mask_source": "auto",
+    "mask_pct": 1.21,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00515",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 23.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.72,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 23.3
+  },
+  {
+    "stem": "footsegnet_00516",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.03%)",
+    "mask_source": "auto",
+    "mask_pct": 2.03,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00517",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.57%)",
+    "mask_source": "auto",
+    "mask_pct": 0.57,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00518",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 2.22,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00519",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.96%)",
+    "mask_source": "auto",
+    "mask_pct": 0.96,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00520",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.31,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00521",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.92%)",
+    "mask_source": "auto",
+    "mask_pct": 1.92,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00522",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.47%)",
+    "mask_source": "auto",
+    "mask_pct": 2.47,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00523",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.53%)",
+    "mask_source": "auto",
+    "mask_pct": 2.53,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00524",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.02%)",
+    "mask_source": "auto",
+    "mask_pct": 1.02,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00525",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.89,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00526",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.46,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.0
+  },
+  {
+    "stem": "footsegnet_00527",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 2.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.67,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 2.3
+  },
+  {
+    "stem": "footsegnet_00528",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 3.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.41,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 3.9
+  },
+  {
+    "stem": "footsegnet_00529",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.90%)",
+    "mask_source": "auto",
+    "mask_pct": 0.9,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00530",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 6.82,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.9
+  },
+  {
+    "stem": "footsegnet_00531",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 4.93,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00532",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 3.86,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00533",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.44%)",
+    "mask_source": "auto",
+    "mask_pct": 2.44,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00534",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.04,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00535",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.82,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 1.1
+  },
+  {
+    "stem": "footsegnet_00536",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.04,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00537",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.17%)",
+    "mask_source": "auto",
+    "mask_pct": 1.17,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00538",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.41,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00539",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.46,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.4
+  },
+  {
+    "stem": "footsegnet_00540",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.04%)",
+    "mask_source": "auto",
+    "mask_pct": 2.04,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00541",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.55%)",
+    "mask_source": "auto",
+    "mask_pct": 2.55,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00542",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (4.52%)",
+    "mask_source": "auto",
+    "mask_pct": 4.52,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00543",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.43,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00544",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.54%)",
+    "mask_source": "auto",
+    "mask_pct": 1.54,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00545",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.16%)",
+    "mask_source": "auto",
+    "mask_pct": 1.16,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00546",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.8,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00547",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.23%)",
+    "mask_source": "auto",
+    "mask_pct": 1.23,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00548",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.92%)",
+    "mask_source": "auto",
+    "mask_pct": 0.92,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00549",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.82,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00550",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.07%)",
+    "mask_source": "auto",
+    "mask_pct": 2.07,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00551",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.07%)",
+    "mask_source": "auto",
+    "mask_pct": 3.07,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00552",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.88,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00553",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.37,
+    "box_source": "qwenvl_grounding"
+  },
+  {
+    "stem": "footsegnet_00554",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.66%)",
+    "mask_source": "auto",
+    "mask_pct": 1.66,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00555",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.66%)",
+    "mask_source": "auto",
+    "mask_pct": 1.66,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00556",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.27%)",
+    "mask_source": "auto",
+    "mask_pct": 1.27,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00557",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.48%)",
+    "mask_source": "auto",
+    "mask_pct": 2.48,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00558",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 2.88,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00559",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.29%)",
+    "mask_source": "auto",
+    "mask_pct": 1.29,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00560",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.13,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00561",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.52,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00562",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.59%)",
+    "mask_source": "auto",
+    "mask_pct": 1.59,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00563",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 17.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.45,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 17.2
+  },
+  {
+    "stem": "footsegnet_00564",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.96%)",
+    "mask_source": "auto",
+    "mask_pct": 1.96,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00565",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.44%)",
+    "mask_source": "auto",
+    "mask_pct": 2.44,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00566",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.63%)",
+    "mask_source": "auto",
+    "mask_pct": 2.63,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00567",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 5.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.7,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 5.4
+  },
+  {
+    "stem": "footsegnet_00568",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.98,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.2
+  },
+  {
+    "stem": "footsegnet_00569",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.60%)",
+    "mask_source": "auto",
+    "mask_pct": 2.6,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00570",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.67%)",
+    "mask_source": "auto",
+    "mask_pct": 0.67,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00571",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.30%)",
+    "mask_source": "auto",
+    "mask_pct": 2.3,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00572",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 4.11,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.3
+  },
+  {
+    "stem": "footsegnet_00573",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.98%)",
+    "mask_source": "auto",
+    "mask_pct": 2.98,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00574",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.93%)",
+    "mask_source": "auto",
+    "mask_pct": 1.93,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00575",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.42%)",
+    "mask_source": "auto",
+    "mask_pct": 2.42,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00576",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (4.41%)",
+    "mask_source": "auto",
+    "mask_pct": 4.41,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00577",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.6% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.44,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 0.6
+  },
+  {
+    "stem": "footsegnet_00578",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.63,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.7
+  },
+  {
+    "stem": "footsegnet_00579",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.27%)",
+    "mask_source": "auto",
+    "mask_pct": 1.27,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00580",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.98%)",
+    "mask_source": "auto",
+    "mask_pct": 1.98,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00581",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.12%)",
+    "mask_source": "auto",
+    "mask_pct": 1.12,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00582",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.20%)",
+    "mask_source": "auto",
+    "mask_pct": 1.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00583",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.16,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00584",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.66,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00585",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (7.96%)",
+    "mask_source": "auto",
+    "mask_pct": 7.96,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00586",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.4,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00587",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.31%)",
+    "mask_source": "auto",
+    "mask_pct": 1.31,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00588",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 25.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.76,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 25.7
+  },
+  {
+    "stem": "footsegnet_00589",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 2.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.03,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 2.4
+  },
+  {
+    "stem": "footsegnet_00590",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 19.2% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.85,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 19.2
+  },
+  {
+    "stem": "footsegnet_00591",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 3.55,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00592",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.40%)",
+    "mask_source": "auto",
+    "mask_pct": 1.4,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00593",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.51%)",
+    "mask_source": "auto",
+    "mask_pct": 1.51,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00594",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.57%)",
+    "mask_source": "auto",
+    "mask_pct": 1.57,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00595",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 6.28,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00596",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.9% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.72,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.9
+  },
+  {
+    "stem": "footsegnet_00597",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.30%)",
+    "mask_source": "auto",
+    "mask_pct": 2.3,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00598",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.65%)",
+    "mask_source": "auto",
+    "mask_pct": 1.65,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00599",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.4% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.92,
+    "box_source": "qwenvl_grounding",
+    "components": 2,
+    "minority_ratio_pct": 0.4
+  },
+  {
+    "stem": "footsegnet_00600",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 2.26,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00601",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.76,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00602",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 4.8% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.23,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 4.8
+  },
+  {
+    "stem": "footsegnet_00603",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.42,
+    "box_source": "qwenvl_grounding_multi(2)",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00604",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 16.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.65,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 16.1
+  },
+  {
+    "stem": "footsegnet_00605",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.97%)",
+    "mask_source": "auto",
+    "mask_pct": 3.97,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00606",
+    "category": "a_corriger",
+    "reason": "masque très petit (0.41% < 0.5%) — pied/chaussure probablement occlus ou bbox mal centrée",
+    "mask_source": "auto",
+    "mask_pct": 0.41,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00607",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.56%)",
+    "mask_source": "auto",
+    "mask_pct": 1.56,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00608",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.20%)",
+    "mask_source": "auto",
+    "mask_pct": 3.2,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00609",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.31,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00610",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 5.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.07,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 5.5
+  },
+  {
+    "stem": "footsegnet_00611",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.24%)",
+    "mask_source": "auto",
+    "mask_pct": 1.24,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00612",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 22.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.23,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 22.7
+  },
+  {
+    "stem": "footsegnet_00613",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.69%)",
+    "mask_source": "auto",
+    "mask_pct": 1.69,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00614",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 1.54,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00615",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 4.7% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.13,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 4.7
+  },
+  {
+    "stem": "footsegnet_00616",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.22%)",
+    "mask_source": "auto",
+    "mask_pct": 2.22,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00617",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 1.3% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 7.36,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 1.3
+  },
+  {
+    "stem": "footsegnet_00618",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.00%)",
+    "mask_source": "auto",
+    "mask_pct": 1.0,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00619",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.5% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 0.76,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.5
+  },
+  {
+    "stem": "footsegnet_00620",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.03%)",
+    "mask_source": "auto",
+    "mask_pct": 1.03,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00621",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.56%)",
+    "mask_source": "auto",
+    "mask_pct": 3.56,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00622",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.77%)",
+    "mask_source": "auto",
+    "mask_pct": 1.77,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00623",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 1.07,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00624",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.67%)",
+    "mask_source": "auto",
+    "mask_pct": 2.67,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00625",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.87%)",
+    "mask_source": "auto",
+    "mask_pct": 0.87,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00626",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.16%)",
+    "mask_source": "auto",
+    "mask_pct": 1.16,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00627",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.01,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00628",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.0% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 3.53,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.0
+  },
+  {
+    "stem": "footsegnet_00629",
+    "category": "a_corriger",
+    "reason": "bbox obtenue par fallback grounding VLM (qwenvl_grounding_multi(2)) — DWPose n'a pas détecté la pose, cadrage à vérifier avant usage",
+    "mask_source": "auto",
+    "mask_pct": 0.28,
+    "box_source": "qwenvl_grounding_multi(2)"
+  },
+  {
+    "stem": "footsegnet_00630",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.90%)",
+    "mask_source": "auto",
+    "mask_pct": 0.9,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00631",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.50%)",
+    "mask_source": "auto",
+    "mask_pct": 1.5,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00632",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.70%)",
+    "mask_source": "auto",
+    "mask_pct": 1.7,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00633",
+    "category": "a_corriger",
+    "reason": "masque très petit (0.44% < 0.5%) — pied/chaussure probablement occlus ou bbox mal centrée",
+    "mask_source": "auto",
+    "mask_pct": 0.44,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00634",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.57%)",
+    "mask_source": "auto",
+    "mask_pct": 2.57,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00635",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.98%)",
+    "mask_source": "auto",
+    "mask_pct": 0.98,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00636",
+    "category": "a_corriger",
+    "reason": "masque fragmenté en 2 composantes connexes, composante minoritaire = 0.1% du total (fragment parasite ou capture partielle probable) — à vérifier avant usage (même si la couverture globale est dans la plage plausible)",
+    "mask_source": "auto",
+    "mask_pct": 2.94,
+    "box_source": "dwpose",
+    "components": 2,
+    "minority_ratio_pct": 0.1
+  },
+  {
+    "stem": "footsegnet_00637",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (2.08%)",
+    "mask_source": "auto",
+    "mask_pct": 2.08,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00638",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.22%)",
+    "mask_source": "auto",
+    "mask_pct": 1.22,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00639",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (0.80%)",
+    "mask_source": "auto",
+    "mask_pct": 0.8,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00640",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (1.06%)",
+    "mask_source": "auto",
+    "mask_pct": 1.06,
+    "box_source": "dwpose"
+  },
+  {
+    "stem": "footsegnet_00641",
+    "category": "exploitable",
+    "reason": "bbox DWPose, masque de couverture plausible (3.20%)",
+    "mask_source": "auto",
+    "mask_pct": 3.2,
+    "box_source": "dwpose"
+  }
+]

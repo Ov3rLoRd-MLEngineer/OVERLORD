@@ -1,0 +1,70 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": { "ckpt_name": "fabricatedXL_v70.safetensors" },
+    "_meta": { "title": "CheckpointLoaderSimple - fabricatedXL_v70" }
+  },
+  "2": {
+    "class_type": "LoraLoader",
+    "inputs": {
+      "model": ["1", 0],
+      "clip": ["1", 1],
+      "lora_name": "asuka-langley-soryuu-classic-ponyxl-lora-nochekaiser.safetensors",
+      "strength_model": 0.75,
+      "strength_clip": 0.75
+    },
+    "_meta": { "title": "LoraLoader - Asuka style proxy (0.75, cf. TEST_WORKFLOW_A_20260806)" }
+  },
+  "3": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "keyframe_previz_source.png" },
+    "_meta": { "title": "LoadImage - rendu Blender previz (pose VMD)" }
+  },
+  "4": {
+    "class_type": "VAEEncode",
+    "inputs": { "pixels": ["3", 0], "vae": ["1", 2] },
+    "_meta": { "title": "VAEEncode" }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["2", 1],
+      "text": "1girl, aqua twin-tail hair, hair clip, grey headset with pink accent, grey sleeveless dress, black thigh-high boots, anime cel shading, dynamic pose, white background, best quality"
+    },
+    "_meta": { "title": "CLIPTextEncode - positive" }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["2", 1],
+      "text": "realistic, 3d render, blurry, deformed, extra limbs, bad anatomy"
+    },
+    "_meta": { "title": "CLIPTextEncode - negative" }
+  },
+  "7": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["2", 0],
+      "positive": ["5", 0],
+      "negative": ["6", 0],
+      "latent_image": ["4", 0],
+      "seed": 583920174,
+      "steps": 40,
+      "cfg": 6.0,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 0.55
+    },
+    "_meta": { "title": "KSampler - img2img denoise=0.55 (cf. TEST_WORKFLOW_A_20260806)" }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": { "samples": ["7", 0], "vae": ["1", 2] },
+    "_meta": { "title": "VAEDecode" }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": { "images": ["8", 0], "filename_prefix": "DemoMiku30s/keyframes/sdxl_keyframe" },
+    "_meta": { "title": "SaveImage" }
+  }
+}
