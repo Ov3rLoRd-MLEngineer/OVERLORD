@@ -148,3 +148,24 @@ pas seulement au premier lancement de session.
 4. Vérifier manuellement (côté utilisateur, pas actionnable par ce script)
    si la RTX 5060 Ti est bien la carte d'affichage active actuellement (§1)
    — impacte la charge de base réelle de "la carte de service".
+
+## 6. Tâche 2 — résultat du test de device splitting (2026-08-08)
+
+Implémenté `agents/production_video/controlnet_preprocess_5060ti.py` : un
+seul graphe ComfyUI avec les 5 préprocesseurs demandés (`DWPreprocessor`,
+`DepthAnythingV2Preprocessor`, `CannyEdgePreprocessor`, `TilePreprocessor`,
+`LineartStandardPreprocessor`) en branches parallèles depuis un `LoadImage`
+commun, soumis à l'instance 8189 (5060 Ti) par défaut.
+
+Test réel (image `DEMO/output_test_kf/svi_test_kf_clip1_last.png`, 512px) :
+5/5 préprocesseurs exécutés en 38,6 s, **VRAM 5060 Ti restée à ~1,1 Go**
+(aucun swap, marge large sur les 16 Go) ; **5080 non sollicitée**
+(0 Mo/0% pendant tout le test, confirmé par `nvidia-smi`). Sorties dans
+`workspace/controlnet_test/` (non versionné, régénérable).
+
+Ces 5 préprocesseurs sont légers (pas de UNet de diffusion complet) — la
+marge VRAM constatée ne dit donc rien sur la charge combinée avec AniSora
+réellement actif sur l'autre carte en parallèle (non testé dans ce run,
+hors périmètre de la tâche 2 telle que formulée : "ControlNet sur CUDA:1,
+AniSora sur CUDA:0" décrit deux charges séparées, pas un test de charge
+simultanée croisée).

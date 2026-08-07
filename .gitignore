@@ -124,6 +124,10 @@ footsegnet/controlnet/dataset/
 # regenerables a la demande, jamais commites.
 diagnostics_archive/
 
+# Sorties de test controlnet_preprocess_5060ti.py (tache 2, 2026-08-08) --
+# images de preprocesseur regenerees a chaque run, jamais commitees.
+workspace/controlnet_test/
+
 # Export de donnees externe (dossier fourni par l'utilisateur hors pipeline,
 # statut/sensibilite non qualifies -- jamais commite par prudence).
 DOCS/data claude 001/
