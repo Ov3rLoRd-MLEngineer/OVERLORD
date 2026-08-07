@@ -11,7 +11,11 @@ pipeline_tag: image-segmentation
 library_name: pytorch
 ---
 
-# HandSegNet
+# HandSegNet — Anime/Illustration Hand Segmentation for ComfyUI
+
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![HuggingFace Model](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-handsegnet--anime--sdxl-yellow)](https://huggingface.co/Ov3rLoRd-MLEngineer/handsegnet-anime-sdxl)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/ov3rlord)
 
 HandSegNet is a **SAM ViT-B fine-tune specialized in segmenting hands on
 anime-style illustrations**. It exists because generic SAM
@@ -21,7 +25,7 @@ fingers, and non-photoreal proportions confuse it in ways it isn't confused
 on photos. HandSegNet fine-tunes only SAM's mask decoder on a small
 hand-annotated anime dataset to fix that, while keeping the rest of SAM
 (image encoder, prompt encoder) frozen and untouched. Same architecture and
-training recipe as [FootSegNet](https://huggingface.co/Ov3rLoRd-MLEngineer/footsegnet)
+training recipe as [FootSegNet](https://huggingface.co/Ov3rLoRd-MLEngineer/footsegnet-anime-sdxl)
 (sibling model, feet/shoes), released earlier from the same pipeline.
 
 It was built as a component of a personal anime image/video generation
@@ -30,8 +34,17 @@ Gumi*), to drive targeted inpainting of hands without disturbing the rest
 of a frame — but
 the model itself is a plain SAM checkpoint with no pipeline-specific code
 baked in, and works standalone for anyone who needs hand masks on
-anime-style images (dataset curation, cutout tools, your own inpainting
-pipeline, etc.).
+anime-style images (dataset curation, cutout tools, ComfyUI custom nodes,
+your own inpainting pipeline, etc.).
+
+### Not to be confused with
+
+This is **not** the academic HandSegNet from the University of Freiburg
+(hand/palmprint segmentation for biometric recognition research). Despite
+the name collision, the two share no code, no dataset, and no research
+lineage — this repo is a SAM fine-tune trained on anime/illustration
+renders for image-generation post-processing (targeted inpainting, cutouts),
+not a biometrics model.
 
 ## Results — read this before trusting the headline number
 
@@ -192,5 +205,5 @@ If HandSegNet is useful to you, consider supporting further development:
 Built on [Segment Anything](https://github.com/facebookresearch/segment-anything)
 (Meta AI, Apache 2.0). Part of the [Ov3rLoRd](https://github.com/g915tlk-design/OVERLORD)
 pipeline (Onibaku Gumi). Code repository:
-[github.com/Ov3rLoRd-MLEngineer/handsegnet](https://github.com/Ov3rLoRd-MLEngineer/handsegnet).
-Sibling model: [FootSegNet](https://huggingface.co/Ov3rLoRd-MLEngineer/footsegnet).
+[github.com/Ov3rLoRd-MLEngineer/handsegnet-anime-sdxl](https://github.com/Ov3rLoRd-MLEngineer/handsegnet-anime-sdxl).
+Sibling model: [FootSegNet](https://huggingface.co/Ov3rLoRd-MLEngineer/footsegnet-anime-sdxl).

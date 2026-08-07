@@ -11,7 +11,11 @@ pipeline_tag: image-segmentation
 library_name: pytorch
 ---
 
-# FootSegNet
+# FootSegNet — Anime/Illustration Foot & Shoe Segmentation for ComfyUI
+
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![HuggingFace Model](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-footsegnet--anime--sdxl-yellow)](https://huggingface.co/Ov3rLoRd-MLEngineer/footsegnet-anime-sdxl)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/ov3rlord)
 
 FootSegNet is a **SAM ViT-B fine-tune specialized in segmenting feet and
 shoes on anime-style illustrations**. It exists because generic SAM
@@ -28,7 +32,16 @@ targeted inpainting of feet/shoes without disturbing the
 rest of a frame — but the model itself is a plain SAM checkpoint with no
 pipeline-specific code baked in, and works standalone for anyone who needs
 foot/shoe masks on anime-style images (dataset curation, cutout tools,
-your own inpainting pipeline, etc.).
+ComfyUI custom nodes, your own inpainting pipeline, etc.).
+
+### Not to be confused with
+
+This is **not** a medical/biometric foot-segmentation model (the kind used
+in academic literature for e.g. diabetic foot ulcer analysis or gait/plantar
+pressure studies). FootSegNet has nothing to do with that domain: it's a SAM
+fine-tune trained purely on anime/illustration renders, meant for
+image-generation post-processing (targeted inpainting, cutouts) — not
+medical imaging or biometrics.
 
 ## Results
 
@@ -145,12 +158,16 @@ Gourlain*.
 ## Support this project
 
 If FootSegNet is useful to you, consider supporting further development:
+[Ko-fi](https://ko-fi.com/ov3rlord)
 
-- Ko-fi: `<placeholder — link to be added>`
-- GitHub Sponsors: `<placeholder — link to be added>`
+(GitHub Sponsors is pending approval — will be added here once available.)
 
 ## Acknowledgements
 
 Built on [Segment Anything](https://github.com/facebookresearch/segment-anything)
 (Meta AI, Apache 2.0). Part of the [Ov3rLoRd](https://github.com/Ov3rLoRd-MLEngineer)
-pipeline.
+pipeline. Code repository:
+[github.com/Ov3rLoRd-MLEngineer/footsegnet-anime-sdxl](https://github.com/Ov3rLoRd-MLEngineer/footsegnet-anime-sdxl).
+Sibling model: [HandSegNet](https://huggingface.co/Ov3rLoRd-MLEngineer/handsegnet-anime-sdxl)
+(hands, same architecture and training recipe, released later from the same
+pipeline).
