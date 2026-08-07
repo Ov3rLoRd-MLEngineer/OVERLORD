@@ -72,7 +72,7 @@ footsegnet/dataset/premasks/*
 !footsegnet/dataset/premasks/prepare_quality_review_folders.py
 
 # Sorties de test generees (memes raisons)
-tests/bottes_generiques/dataset/
+diagnostics_archive/bottes_generiques/dataset/
 **/dataset/wildcard_fix_validation/
 .aider*
 
@@ -93,3 +93,17 @@ handsegnet/pose_capture/tmp/
 # footsegnet/controlnet/eval_checkpoint.py -- images/manifests regeneres a
 # chaque run, jamais commites (comparaison visuelle locale entre checkpoints).
 footsegnet/controlnet/eval_output/
+
+# Artefacts PyInstaller regenerables (voir PROPOSITION_REORGANISATION_FICHIERS.md)
+build/
+dist/
+
+# Sorties/assets binaires generes par le pipeline video/pose (regle projet :
+# "Tout asset -> E:\", jamais versionnes -- ~1.7 Go constate 2026-08-07 non
+# gitignore par erreur, cf. tri git status session du meme jour).
+DEMO/frames/
+DEMO/output/
+DEMO/postprod_test/
+DEMO/video ref/
+workspace/poses/
+workspace/sourcing_cache/
