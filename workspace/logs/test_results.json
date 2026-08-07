@@ -1,30 +1,30 @@
 {
-  "timestamp": "2026-06-19T23:17:04.882306",
+  "timestamp": "2026-08-03T22:21:58.952217",
   "results": [
     {
       "name": "Python version",
       "status": "PASS",
-      "detail": "Python 3.14.6"
+      "detail": "Python 3.12.3"
     },
     {
       "name": "Dossier agents/",
       "status": "PASS",
-      "detail": "D:\\OVERLORD\\agents -- 80 fichiers"
+      "detail": "D:\\OVERLORD\\agents -- 155 fichiers"
     },
     {
       "name": "__init__.py agents",
       "status": "PASS",
-      "detail": "529 octets"
+      "detail": "1711 octets"
     },
     {
       "name": "maestro.py",
       "status": "PASS",
-      "detail": "present (30Ko)"
+      "detail": "present (54Ko)"
     },
     {
       "name": "overlord_utils_utf8.py",
       "status": "PASS",
-      "detail": "present (1Ko)"
+      "detail": "present (2Ko)"
     },
     {
       "name": "Cle API (environ)",
@@ -79,7 +79,7 @@
     {
       "name": "Workspace structure",
       "status": "PASS",
-      "detail": "Dossiers crees : ['narrative']"
+      "detail": "workspace/ structure OK"
     }
   ],
   "summary": {

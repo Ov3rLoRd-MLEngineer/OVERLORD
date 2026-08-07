@@ -11,6 +11,10 @@
     "evangelion battle asuka": {
       "first_seen": "2026-06-23T17:10:29.438017",
       "episodes": 3
+    },
+    "test reorg smoke": {
+      "first_seen": "2026-08-02T06:11:19.987368",
+      "episodes": 1
     }
   },
   "characters": {
@@ -51,7 +55,7 @@
       "description": "hero: Determined, evolving throughout the story.",
       "lora": null,
       "universe": "evangelion battle mecha girl",
-      "appearances": 10,
+      "appearances": 11,
       "first_seen": "2026-06-22T05:49:18.334488"
     },
     "antagonist": {
@@ -59,7 +63,7 @@
       "description": "villain: Powerful and mysterious.",
       "lora": null,
       "universe": "evangelion battle mecha girl",
-      "appearances": 10,
+      "appearances": 11,
       "first_seen": "2026-06-22T05:49:18.334715"
     },
     "the mysterious detective": {
@@ -239,7 +243,19 @@
       ],
       "synopsis": "An unexpected event disrupts the world of evangelion battle asuka. The protagonist must face an unknown threat and discover their true power.",
       "timestamp": "2026-06-23T21:53:05.899554"
+    },
+    {
+      "run_id": "maestro_20260802_061100",
+      "universe": "test reorg smoke",
+      "title": "test reorg smoke: New Chapter",
+      "logline": "A new story unfolds in the world of test reorg smoke.",
+      "genre": [
+        "action",
+        "adventure"
+      ],
+      "synopsis": "An unexpected event disrupts the world of test reorg smoke. The protagonist must face an unknown threat and discover their true power.",
+      "timestamp": "2026-08-02T06:11:19.985527"
     }
   ],
-  "last_update": "2026-06-23T21:53:05.900552"
+  "last_update": "2026-08-02T06:11:19.987368"
 }

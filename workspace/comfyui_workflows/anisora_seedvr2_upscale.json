@@ -79,7 +79,11 @@
       "video": ["6", 0],
       "filename_prefix": "Anisora Test/anisora_upscaled/anisora_upscaled",
       "format": "auto",
-      "codec": "auto"
+      "codec": "auto",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false
     },
     "_meta": { "title": "SaveVideo - 960x1440" }
   }
