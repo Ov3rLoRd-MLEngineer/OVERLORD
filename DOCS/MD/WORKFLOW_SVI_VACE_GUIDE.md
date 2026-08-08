@@ -4,6 +4,13 @@ Tâche 4, 2026-08-08. Ce document explique le workflow
 `workspace/comfyui_workflows/anisora_svi_vace_full.json`, les décisions
 d'architecture qui l'ont façonné, et ses limites actuelles honnêtes.
 
+**Deux implémentations testées côte à côte** (à la demande de l'utilisateur,
+après la décision initiale) — voir §7 pour la comparaison complète :
+- `anisora_svi_vace_full.json` — nodes **natifs ComfyUI** (`UNETLoader`,
+  `Wan22FunControlToVideo`, `KSamplerAdvanced`) — chemin retenu par défaut.
+- `anisora_svi_vace_full_kijai.json` — nodes **`ComfyUI-WanVideoWrapper`**
+  (Kijai) sur le même backbone/mêmes poids.
+
 ## Décision d'architecture : pourquoi ce n'est PAS AniSora + VACE
 
 Demande initiale : combiner AniSora V3.2 + SVI LoRA + VACE Fun Control
@@ -143,3 +150,108 @@ réellement.
   Windows ; corrigé dans le JSON sauvegardé.
 - Aucune autre erreur de graphe (VACE/Fun-Control, SVI LoRA, ColorMatch,
   VHS_VideoCombine tous acceptés du premier coup après le fix de chemin).
+
+## 7. Deuxième implémentation — `ComfyUI-WanVideoWrapper` (Kijai), comparée en réel
+
+Demande explicite de l'utilisateur : tester aussi la voie initialement
+envisagée (installer `ComfyUI-WanVideoWrapper`, déjà cloné dans
+`custom_nodes/` mais non utilisé jusqu'ici) pour comparer les deux
+implémentations sur le **même backbone** (`wan2.2_fun_control_{high,low}_noise_14B_fp8_scaled.safetensors`,
+déjà téléchargé — pas de nouveau téléchargement de checkpoint) et le même
+LoRA SVI.
+
+### Mise en route
+
+- Dépendances installées dans `python_embeded` de ComfyUI (`ftfy`,
+  `accelerate>=1.2.1`, `einops`, `diffusers>=0.33.0`, `peft>=0.17.0`,
+  `sentencepiece`, `protobuf`, `pyloudnorm`, `gguf>=0.17.1`, `opencv-python`,
+  `scipy`) — `pip check` propre après coup, aucun conflit avec les
+  dépendances déjà installées (SeedVR2, etc.).
+- **L'instance ComfyUI doit être relancée** après l'ajout d'un nouveau
+  pack dans `custom_nodes/` — les nodes ne se chargent qu'au démarrage,
+  pas à chaud (`/object_info/<NodeClass>` renvoie `{}` sinon, symptôme
+  qui a fait perdre du temps avant d'identifier la cause).
+- Le fichier checkpoint déjà téléchargé (repackaging **officiel Comfy-Org**)
+  s'est avéré **directement compatible** avec `WanVideoModelLoader` (qui
+  scanne aussi `models/diffusion_models/`) — pas besoin des fichiers
+  spécifiques `..._KJ_fixed.safetensors` de Kijai malgré ce que suggérait
+  l'exemple officiel.
+
+### Construction du graphe — pourquoi pas une conversion automatique de l'exemple officiel
+
+L'exemple officiel `wanvideo_2_2_Fun_control_example_03.json` (64 nodes,
+68 links) est taillé pour un usage différent du nôtre (LoRA de distillation
+Lightning 4-steps, chemin de caméra dessiné à la main via `SplineEditor`
+— non automatisable, GetNode/SetNode comme variables nommées). Une
+tentative de convertisseur générique UI→API (format `nodes+links` du
+frontend vers le format plat attendu par `/prompt`) a été écrite et
+partiellement débuggée (résolution GetNode/SetNode, distinction
+widget-vs-slot par type), mais réutiliser cet exemple précis aurait
+demandé de démêler des éléments hors sujet (splines, LoRA de distillation
+différent du nôtre). **Décision** : construire à la main un graphe minimal
+équivalent à `anisora_svi_vace_full.json`, avec les mêmes poids/LoRA/
+control depth, en utilisant les mêmes vrais noms de champs (vérifiés via
+`/object_info` sur l'instance ComfyUI vivante, pas devinés).
+
+Graphe retenu (`anisora_svi_vace_full_kijai.json`) :
+
+```
+WanVideoModelLoader (HIGH/LOW, memes .safetensors que le chemin natif)
+  -> WanVideoLoraSelectMulti (SVI HIGH/LOW) -> WanVideoSetLoRAs
+CLIPLoader (umt5_xxl, memes poids que le chemin natif)
+  -> CLIPTextEncode positive/negative -> WanVideoTextEmbedBridge
+LoadImage (keyframe) -> WanVideoImageToVideoEncode (embeds)
+VHS_LoadImagesPath (depth Mixamo) -> ImageResizeKJv2 (1024x1536->480x720)
+  -> WanVideoEncode (latents controle)
+WanVideoAddControlEmbeds (embeds + latents) -> WanVideoSampler HIGH -> WanVideoSampler LOW
+  -> WanVideoDecode -> VHS_VideoCombine
+```
+
+### Trois bugs réels trouvés et corrigés en testant (pas en lisant la doc)
+
+1. **`WanVideoTextEncodeCached` rejette le T5 scaled** :
+   `ValueError: Invalid T5 text encoder model, fp8 scaled is not supported
+   by this node` — le fichier `umt5_xxl_fp8_e4m3fn_scaled.safetensors`
+   (qui fonctionne très bien via `CLIPLoader` natif) n'est pas accepté par
+   le loader T5 dédié de WanVideoWrapper. **Corrigé** en réutilisant
+   `CLIPLoader`+`CLIPTextEncode` (chemin natif, déjà prouvé) et en pontant
+   vers l'écosystème Kijai via `WanVideoTextEmbedBridge` — évite un
+   nouveau téléchargement de T5 non-scaled (~11 Go).
+2. **`WanVideoSetLoRAs` incompatible avec `merge_loras=true`** :
+   `Set LoRA node does not use low_mem_load and can't merge LoRAs`.
+   Corrigé : `merge_loras: false` dans les deux `WanVideoLoraSelectMulti`.
+3. **Mismatch de taille de tenseur dans `WanVideoSampler`** (`Expected
+   size 192 but got size 90`) : les frames depth Mixamo sont en
+   1024×1536 natif, jamais redimensionnées avant `WanVideoEncode` (contrairement
+   au chemin natif où `Wan22FunControlToVideo` fait le resize en interne).
+   Corrigé en ajoutant `ImageResizeKJv2` (1024×1536 → 480×720) entre
+   `VHS_LoadImagesPath` et `WanVideoEncode`.
+
+### Résultat réel — succès, mais nettement plus lent et legerement moins propre
+
+Smoke test 8 frames (mêmes seed/CFG/shift/steps que le chemin natif) :
+**succès au bout de 4 tentatives** (les 3 bugs ci-dessus), sortie
+`Anisora Test/svi_vace_smoke_kijai/svi_vace_smoke_kijai_00001.mp4`,
+même résolution 480×720, même quantification VAE (5 frames en sortie
+pour `length=8`, identique au chemin natif, §6).
+
+| | Natif (`Wan22FunControlToVideo`) | Kijai (`WanVideoWrapper`) |
+|---|---|---|
+| Temps total (8 frames) | **~110 s** | **~830 s (~14 min)** |
+| Attention mode | implicite (backend ComfyUI) | `sdpa` (pas de sage-attention installée) |
+| Précision | `default` (auto) | `bf16` explicite |
+| Frame 0 | personnage net, propre | quasi identique (dominé par l'image de depart) |
+| Frame 4 (dernière) | net, aucun artefact visible | **bruit de texture visible sur le jean/les sneakers**, contour des cheveux légèrement dégradé |
+
+**Lecture honnête** : l'écart de qualité constaté sur ce seul run (1 seed,
+8 frames) n'est pas forcément représentatif — `sdpa` vs une attention plus
+rapide/optimisée, et l'absence de `sageattn`/`torch_compile` (non testés,
+dépendances supplémentaires) expliquent probablement l'essentiel de l'écart
+de vitesse, pas nécessairement de qualité. Mais sur ce test précis, le
+chemin natif est strictement meilleur sur les deux axes (plus rapide, plus
+propre) avec **moins de code et moins de dépendances**. **Recommandation** :
+garder `anisora_svi_vace_full.json` (natif) comme chemin par défaut pour
+la suite du pipeline ; le chemin Kijai reste disponible et fonctionnel si
+un besoin futur spécifique à l'écosystème WanVideoWrapper apparaît (ex.
+`sageattn`/`torch.compile` pour la vitesse, VACE modules Kijai si un
+checkpoint AniSora-VACE apparaît un jour).
