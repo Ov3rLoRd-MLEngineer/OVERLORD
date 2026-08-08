@@ -1244,6 +1244,222 @@ def run_pipeline(config: dict = None, from_block: str = None,
     return state
 
 
+# ══════════════════════════════════════════════════════════════════════
+# Orchestration parallele SVI (tache 5, 2026-08-08)
+# CUDA:0 (8188, RTX 5080) genere le clip N (AniSora+SVI) pendant que
+# CUDA:1 (8189, RTX 5060 Ti) post-traite le clip N-1 deja genere
+# (SeedVR2 block_swap=24 + RIFE + QC qwen2.5vl). Handoff par fichier via
+# workspace/pipeline_queue/. Fonction isolee, n'affecte pas la chaine
+# SOURCING->SCENARIO->STORYBOARD->PRODUCTION->POST-PROD->3D existante.
+# Architecture imposee par l'audit tache 1 (DOCS/MD/AUDIT_GPU_ALLOCATION.md
+# §2) : chaque instance ComfyUI est restreinte a une seule carte via
+# CUDA_VISIBLE_DEVICES, donc le parallelisme se fait entre 2 process
+# ComfyUI distincts (8188/8189), pas par un split intra-graphe.
+# ══════════════════════════════════════════════════════════════════════
+
+PIPELINE_QUEUE_DIR      = Path("workspace/pipeline_queue")
+COMFY_URL_GEN           = "http://127.0.0.1:8188"   # RTX 5080 -- generation AniSora+SVI
+COMFY_URL_POSTPROD      = "http://127.0.0.1:8189"   # RTX 5060 Ti -- SeedVR2+RIFE+QC
+PARALLEL_RAM_LIMIT_GB   = 26.0
+
+
+def _comfy_submit_and_wait(comfy_url, workflow, wait_node_ids, timeout_s=600):
+    """Soumet un graphe ComfyUI (format API), attend que tous les
+    wait_node_ids aient produit une sortie dans /history. Retourne le
+    dict 'outputs' complet ou leve TimeoutError/RuntimeError."""
+    import uuid
+    import requests as _requests
+
+    client_id = str(uuid.uuid4())
+    r = _requests.post(f"{comfy_url}/prompt",
+                        json={"prompt": workflow, "client_id": client_id}, timeout=30)
+    r.raise_for_status()
+    resp = r.json()
+    if resp.get("error"):
+        raise RuntimeError(f"ComfyUI a rejete le graphe ({comfy_url}) : {resp['error']}")
+    prompt_id = resp["prompt_id"]
+
+    deadline = time.time() + timeout_s
+    while time.time() < deadline:
+        r = _requests.get(f"{comfy_url}/history/{prompt_id}", timeout=10)
+        if r.status_code == 200:
+            hist = r.json()
+            if prompt_id in hist:
+                outputs = hist[prompt_id].get("outputs", {})
+                if all(str(nid) in outputs for nid in wait_node_ids):
+                    return outputs
+        time.sleep(2)
+    raise TimeoutError(f"ComfyUI n'a pas termine sous {timeout_s}s ({comfy_url}, prompt_id={prompt_id})")
+
+
+def _generate_svi_clip(clip_index, base_seed=111111111, length=8,
+                        keyframe="anisora_style_anchor_keyframe.png"):
+    """Genere un clip via anisora_svi_shot.json (patch seed ADR-008 :
+    base_seed + i*137, longueur parametrable) sur l'instance 5080."""
+    import json as _json
+    import config as _config
+
+    wf_path = Path("workspace/comfyui_workflows/anisora_svi_shot.json")
+    workflow = _json.loads(wf_path.read_text(encoding="utf-8"))
+    seed = base_seed + clip_index * 137  # ADR-008
+    workflow["9"]["inputs"]["image"] = keyframe
+    workflow["16"]["inputs"]["image"] = keyframe
+    workflow["12"]["inputs"]["length"] = length
+    workflow["13"]["inputs"]["noise_seed"] = seed
+    workflow["14"]["inputs"]["noise_seed"] = seed
+    workflow["18"]["inputs"]["filename_prefix"] = f"Anisora Test/parallel_svi/clip_{clip_index:03d}"
+
+    outputs = _comfy_submit_and_wait(COMFY_URL_GEN, workflow, wait_node_ids=["18"], timeout_s=600)
+    entries = outputs["18"].get("gifs", []) or outputs["18"].get("videos", [])
+    if not entries:
+        raise RuntimeError(f"Clip {clip_index} : pas de sortie video du node 18 (VHS_VideoCombine)")
+    entry = entries[0]
+    return _config.COMFYUI_OUTPUT / entry.get("subfolder", "") / entry.get("filename", "")
+
+
+def _postprod_clip(clip_index, video_path, length=8):
+    """SeedVR2 upscale (block_swap=24) + RIFE 2x sur l'instance 5060 Ti,
+    puis QC visuel qwen2.5vl (tache 3, agents/qc_validation/visual_qc_svi.py)."""
+    import config as _config
+
+    workflow = {
+        "1": {"class_type": "VHS_LoadVideoPath", "inputs": {
+            "video": str(video_path), "force_rate": 0, "custom_width": 0, "custom_height": 0,
+            "frame_load_cap": 0, "skip_first_frames": 0, "select_every_nth": 1,
+        }},
+        "2": {"class_type": "SeedVR2LoadDiTModel", "inputs": {
+            "model": "seedvr2_ema_7b-Q4_K_M.gguf", "device": "cuda:0", "blocks_to_swap": 24,
+            "swap_io_components": True, "offload_device": "cpu", "cache_model": False,
+            "attention_mode": "sdpa",
+        }},
+        "3": {"class_type": "SeedVR2LoadVAEModel", "inputs": {
+            "model": "ema_vae_fp16.safetensors", "device": "cuda:0", "encode_tiled": True,
+            "encode_tile_size": 1024, "encode_tile_overlap": 128, "decode_tiled": True,
+            "decode_tile_size": 768, "decode_tile_overlap": 128, "tile_debug": "false",
+            "offload_device": "cpu", "cache_model": False,
+        }},
+        "4": {"class_type": "SeedVR2VideoUpscaler", "inputs": {
+            "image": ["1", 0], "dit": ["2", 0], "vae": ["3", 0], "seed": 42, "resolution": 960,
+            "max_resolution": 0, "batch_size": length, "uniform_batch_size": True,
+            "color_correction": "lab", "temporal_overlap": 0, "prepend_frames": 0,
+            "input_noise_scale": 0, "latent_noise_scale": 0, "offload_device": "cpu",
+            "enable_debug": False,
+        }},
+        "5": {"class_type": "RIFE VFI", "inputs": {
+            "ckpt_name": "rife49.pth", "frames": ["4", 0], "clear_cache_after_n_frames": 10,
+            "multiplier": 2, "fast_mode": True, "ensemble": True, "scale_factor": 1.0,
+            "dtype": "float32", "torch_compile": False, "batch_size": 1,
+        }},
+        "6": {"class_type": "VHS_VideoCombine", "inputs": {
+            "images": ["5", 0], "frame_rate": 16, "loop_count": 0,
+            "filename_prefix": f"Anisora Test/parallel_svi/clip_{clip_index:03d}_upscaled",
+            "format": "video/h264-mp4", "pingpong": False, "save_output": True,
+        }},
+    }
+    outputs = _comfy_submit_and_wait(COMFY_URL_POSTPROD, workflow, wait_node_ids=["6"], timeout_s=900)
+    entries = outputs["6"].get("gifs", []) or outputs["6"].get("videos", [])
+    if not entries:
+        raise RuntimeError(f"Clip {clip_index} : pas de sortie video du node 6 (upscale+RIFE)")
+    entry = entries[0]
+    upscaled_path = _config.COMFYUI_OUTPUT / entry.get("subfolder", "") / entry.get("filename", "")
+
+    qc_report = {}
+    try:
+        from agents.qc_validation.visual_qc_svi import run as _run_qc
+        rife_len = 2 * length - 1  # RIFE_VFI multiplier=2 interpole ENTRE frames (2N-1, pas 2N)
+        qc_frames = sorted(set([0, rife_len // 2, rife_len - 1]))
+        qc_report = _run_qc(str(upscaled_path), frame_indices=qc_frames)
+    except Exception as e:
+        qc_report = {"error": str(e)}
+    return upscaled_path, qc_report
+
+
+def run_parallel_svi_pipeline(n_clips=2, length=8, logger=None):
+    """
+    Boucle pipeline parallele (tache 5) : pendant que CUDA:0 (5080) genere
+    le clip N, CUDA:1 (5060 Ti) post-traite (SeedVR2+RIFE+QC) le clip N-1
+    deja genere. Handoff fichier via workspace/pipeline_queue/
+    (pending_postprod/ -> completed/).
+
+    Monitor RAM systeme (psutil) : si > 26 Go au moment ou la post-prod
+    voudrait demarrer, elle attend la fin de la generation en cours au
+    lieu de tourner en parallele (repli sequentiel automatique).
+    """
+    import json as _json
+    import queue
+    import threading
+    import traceback
+
+    import psutil
+
+    log = logger or logging.getLogger("maestro.parallel_svi")
+    (PIPELINE_QUEUE_DIR / "pending_postprod").mkdir(parents=True, exist_ok=True)
+    (PIPELINE_QUEUE_DIR / "completed").mkdir(parents=True, exist_ok=True)
+
+    postprod_q = queue.Queue()
+    gen_done = threading.Event()
+    errors = []
+
+    def gen_worker():
+        try:
+            for i in range(n_clips):
+                log.info(f"[PARALLEL_SVI][GEN] Clip {i} -- soumission 5080 (8188)...")
+                t0 = time.time()
+                video_path = _generate_svi_clip(i, length=length)
+                log.info(f"[PARALLEL_SVI][GEN] Clip {i} termine en {time.time()-t0:.1f}s -> {video_path}")
+                handoff = PIPELINE_QUEUE_DIR / "pending_postprod" / f"clip_{i:03d}.json"
+                handoff.write_text(_json.dumps({"clip_index": i, "video_path": str(video_path)}),
+                                    encoding="utf-8")
+                postprod_q.put(i)
+        except Exception as e:
+            log.error(f"[PARALLEL_SVI][GEN] Erreur : {e}")
+            errors.append({"stage": "gen", "error": str(e), "trace": traceback.format_exc()})
+        finally:
+            gen_done.set()
+            postprod_q.put(None)
+
+    def postprod_worker():
+        while True:
+            item = postprod_q.get()
+            if item is None:
+                break
+            ram_gb = psutil.virtual_memory().used / (1024 ** 3)
+            if ram_gb > PARALLEL_RAM_LIMIT_GB:
+                log.warning(f"[PARALLEL_SVI][POSTPROD] RAM {ram_gb:.1f} Go > {PARALLEL_RAM_LIMIT_GB} Go "
+                            f"-- repli sequentiel, attente fin generation avant postprod clip {item}")
+                gen_done.wait()
+            handoff = PIPELINE_QUEUE_DIR / "pending_postprod" / f"clip_{item:03d}.json"
+            data = _json.loads(handoff.read_text(encoding="utf-8"))
+            try:
+                log.info(f"[PARALLEL_SVI][POSTPROD] Clip {item} -- soumission 5060Ti (8189)...")
+                t0 = time.time()
+                upscaled_path, qc_report = _postprod_clip(item, data["video_path"], length=length)
+                log.info(f"[PARALLEL_SVI][POSTPROD] Clip {item} termine en {time.time()-t0:.1f}s -> {upscaled_path}")
+                completed = PIPELINE_QUEUE_DIR / "completed" / f"clip_{item:03d}.json"
+                completed.write_text(_json.dumps({
+                    "clip_index": item,
+                    "upscaled_path": str(upscaled_path),
+                    "qc_pass_count": qc_report.get("pass_count"),
+                    "qc_total": qc_report.get("total_analyzed"),
+                }), encoding="utf-8")
+            except Exception as e:
+                log.error(f"[PARALLEL_SVI][POSTPROD] Erreur clip {item} : {e}")
+                errors.append({"stage": "postprod", "clip": item, "error": str(e),
+                                "trace": traceback.format_exc()})
+
+    t_gen = threading.Thread(target=gen_worker, name="svi-gen-5080")
+    t_post = threading.Thread(target=postprod_worker, name="svi-postprod-5060ti")
+    t0 = time.time()
+    t_gen.start()
+    t_post.start()
+    t_gen.join()
+    t_post.join()
+    elapsed = time.time() - t0
+
+    log.info(f"[PARALLEL_SVI] Termine : {n_clips} clips en {elapsed:.1f}s, {len(errors)} erreur(s)")
+    return {"n_clips": n_clips, "elapsed_s": round(elapsed, 1), "errors": errors}
+
+
 # ── CLI ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     try:
@@ -1293,6 +1509,12 @@ if __name__ == "__main__":
                         help="Sauter le Quality Control V2.20 (CLIP+inpaint+pacing)")
     parser.add_argument("--pose",         default="",
                         help="Chemin skeleton OpenPose pour ControlNet")
+    parser.add_argument("--parallel-svi",        type=int, default=0,
+                        help="Mode orchestration parallele (tache 5) : genere N clips SVI sur "
+                             "CUDA:0 (8188) pendant que CUDA:1 (8189) post-traite (SeedVR2+RIFE+QC) "
+                             "le clip precedent. Bypass la chaine SOURCING->...->3D habituelle.")
+    parser.add_argument("--parallel-svi-length", type=int, default=8,
+                        help="Longueur (frames) de chaque clip en mode --parallel-svi (defaut: 8)")
     args = parser.parse_args()
 
     cfg = {}
@@ -1337,6 +1559,20 @@ if __name__ == "__main__":
             logging.getLogger("maestro").info(
                 f"[PLANNER] Dream mode : python agents/dream_mode.py "
                 f"--universes-file {uni_file}")
+
+    if getattr(args, "parallel_svi", 0) > 0:
+        result = run_parallel_svi_pipeline(
+            n_clips=args.parallel_svi,
+            length=getattr(args, "parallel_svi_length", 8),
+            logger=logging.getLogger("maestro.parallel_svi"),
+        )
+        logging.getLogger("maestro.parallel_svi").info(
+            "[PARALLEL_SVI] Resultat : " + json.dumps(result, ensure_ascii=False))
+        try:
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+        except ValueError:
+            pass  # stdout ferme (execution redirigee/detachee) -- deja logue ci-dessus
+        sys.exit(0 if not result["errors"] else 1)
 
     n_batch = getattr(args, "batch", 1)
     if n_batch > 1:
