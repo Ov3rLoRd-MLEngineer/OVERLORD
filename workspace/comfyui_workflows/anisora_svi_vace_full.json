@@ -1,0 +1,173 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "split_files\\diffusion_models\\wan2.2_fun_control_high_noise_14B_fp8_scaled.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "split_files\\diffusion_models\\wan2.2_fun_control_low_noise_14B_fp8_scaled.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "3": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": ["1", 0],
+      "lora_name": "SVI_Wan2.2-I2V-A14B_lora_HIGH_v2.0_rank_128_fp16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "4": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": ["2", 0],
+      "lora_name": "SVI_Wan2.2-I2V-A14B_lora_LOW_v2.0_rank_128_fp16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "5": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": ["3", 0],
+      "shift": 8.0
+    }
+  },
+  "6": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": ["4", 0],
+      "shift": 8.0
+    }
+  },
+  "7": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan"
+    }
+  },
+  "8": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    }
+  },
+  "9": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "anisora_style_anchor_keyframe.png"
+    }
+  },
+  "10": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["7", 0],
+      "text": "anime girl running, dynamic motion, consistent character, smooth animation, side view, white background, orange hair, red hair clip, black hoodie, blue jeans, red white sneakers"
+    }
+  },
+  "11": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["7", 0],
+      "text": "realistic, 3d render, blurry, deformed"
+    }
+  },
+  "20": {
+    "class_type": "VHS_LoadImagesPath",
+    "inputs": {
+      "directory": "D:\\OVERLORD\\DEMO\\frames\\mixamo_depth",
+      "image_load_cap": 37,
+      "skip_first_images": 0,
+      "select_every_nth": 1
+    }
+  },
+  "12": {
+    "class_type": "Wan22FunControlToVideo",
+    "inputs": {
+      "positive": ["10", 0],
+      "negative": ["11", 0],
+      "vae": ["8", 0],
+      "width": 480,
+      "height": 720,
+      "length": 37,
+      "batch_size": 1,
+      "ref_image": ["9", 0],
+      "control_video": ["20", 0]
+    }
+  },
+  "13": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": ["5", 0],
+      "positive": ["12", 0],
+      "negative": ["12", 1],
+      "latent_image": ["12", 2],
+      "add_noise": "enable",
+      "noise_seed": 111111111,
+      "steps": 8,
+      "cfg": 1.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 4,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "14": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": ["6", 0],
+      "positive": ["12", 0],
+      "negative": ["12", 1],
+      "latent_image": ["13", 0],
+      "add_noise": "disable",
+      "noise_seed": 111111111,
+      "steps": 8,
+      "cfg": 1.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 4,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "15": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["14", 0],
+      "vae": ["8", 0]
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "anisora_style_anchor_keyframe.png"
+    }
+  },
+  "17": {
+    "class_type": "ColorMatchV2",
+    "inputs": {
+      "image_target": ["15", 0],
+      "image_ref": ["16", 0],
+      "method": "reinhard_lab_gpu",
+      "strength": 1.0,
+      "multithread": true
+    }
+  },
+  "18": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["17", 0],
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "Anisora Test/svi_vace/svi_vace_clip",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}
