@@ -133,6 +133,10 @@ workspace/controlnet_test/
 # de workspace/logs/qc_reports/ restent suivis (petits, valeur d'historique).
 workspace/logs/qc_reports/_frames_*/
 
+# Etat runtime de l'orchestration parallele (tache 5/7, 2026-08-08) --
+# handoff clips + fichier de controle dashboard, jamais commite.
+workspace/pipeline_queue/
+
 # Export de donnees externe (dossier fourni par l'utilisateur hors pipeline,
 # statut/sensibilite non qualifies -- jamais commite par prudence).
 DOCS/data claude 001/

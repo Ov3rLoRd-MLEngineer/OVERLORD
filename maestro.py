@@ -1258,9 +1258,25 @@ def run_pipeline(config: dict = None, from_block: str = None,
 # ══════════════════════════════════════════════════════════════════════
 
 PIPELINE_QUEUE_DIR      = Path("workspace/pipeline_queue")
+CONTROL_FILE            = PIPELINE_QUEUE_DIR / "control.json"  # ecrit par maestro_dashboard.py (tache 7)
 COMFY_URL_GEN           = "http://127.0.0.1:8188"   # RTX 5080 -- generation AniSora+SVI
 COMFY_URL_POSTPROD      = "http://127.0.0.1:8189"   # RTX 5060 Ti -- SeedVR2+RIFE+QC
 PARALLEL_RAM_LIMIT_GB   = 31.0  # machine = 31.9 Go total -- releve a la demande explicite de l'utilisateur (31 Go observe sans probleme), marge restante minime
+
+
+def _read_control() -> dict:
+    """Lit workspace/pipeline_queue/control.json (ecrit par le dashboard
+    Flask, tache 7). Absent ou illisible -> defauts neutres."""
+    defaults = {"paused": False, "skip_clip": None, "cfg": None, "steps": None}
+    if not CONTROL_FILE.exists():
+        return defaults
+    try:
+        import json as _json
+        data = _json.loads(CONTROL_FILE.read_text(encoding="utf-8"))
+        defaults.update({k: data.get(k, v) for k, v in defaults.items()})
+        return defaults
+    except Exception:
+        return defaults
 
 
 def _comfy_submit_and_wait(comfy_url, workflow, wait_node_ids, timeout_s=600):
@@ -1293,9 +1309,12 @@ def _comfy_submit_and_wait(comfy_url, workflow, wait_node_ids, timeout_s=600):
 
 
 def _generate_svi_clip(clip_index, base_seed=111111111, length=8,
-                        keyframe="anisora_style_anchor_keyframe.png"):
+                        keyframe="anisora_style_anchor_keyframe.png",
+                        cfg=None, steps=None):
     """Genere un clip via anisora_svi_shot.json (patch seed ADR-008 :
-    base_seed + i*137, longueur parametrable) sur l'instance 5080."""
+    base_seed + i*137, longueur parametrable) sur l'instance 5080.
+    cfg/steps : overrides a chaud (dashboard, tache 7) -- None = valeurs
+    du fichier JSON inchangees (CFG 1.5 / 8 steps SVI standard)."""
     import json as _json
     import config as _config
 
@@ -1307,6 +1326,15 @@ def _generate_svi_clip(clip_index, base_seed=111111111, length=8,
     workflow["12"]["inputs"]["length"] = length
     workflow["13"]["inputs"]["noise_seed"] = seed
     workflow["14"]["inputs"]["noise_seed"] = seed
+    if cfg is not None:
+        workflow["13"]["inputs"]["cfg"] = cfg
+        workflow["14"]["inputs"]["cfg"] = cfg
+    if steps is not None:
+        half = max(1, steps // 2)
+        workflow["13"]["inputs"]["steps"] = steps
+        workflow["13"]["inputs"]["end_at_step"] = half
+        workflow["14"]["inputs"]["steps"] = steps
+        workflow["14"]["inputs"]["start_at_step"] = half
     workflow["18"]["inputs"]["filename_prefix"] = f"Anisora Test/parallel_svi/clip_{clip_index:03d}"
 
     outputs = _comfy_submit_and_wait(COMFY_URL_GEN, workflow, wait_node_ids=["18"], timeout_s=600)
@@ -1403,9 +1431,17 @@ def run_parallel_svi_pipeline(n_clips=2, length=8, logger=None):
     def gen_worker():
         try:
             for i in range(n_clips):
+                ctrl = _read_control()
+                while ctrl["paused"]:
+                    log.info("[PARALLEL_SVI][GEN] Pause demandee (dashboard) -- en attente...")
+                    time.sleep(3)
+                    ctrl = _read_control()
+                if ctrl["skip_clip"] == i:
+                    log.info(f"[PARALLEL_SVI][GEN] Clip {i} -- skip demande (dashboard)")
+                    continue
                 log.info(f"[PARALLEL_SVI][GEN] Clip {i} -- soumission 5080 (8188)...")
                 t0 = time.time()
-                video_path = _generate_svi_clip(i, length=length)
+                video_path = _generate_svi_clip(i, length=length, cfg=ctrl["cfg"], steps=ctrl["steps"])
                 log.info(f"[PARALLEL_SVI][GEN] Clip {i} termine en {time.time()-t0:.1f}s -> {video_path}")
                 handoff = PIPELINE_QUEUE_DIR / "pending_postprod" / f"clip_{i:03d}.json"
                 handoff.write_text(_json.dumps({"clip_index": i, "video_path": str(video_path)}),
@@ -1561,12 +1597,14 @@ if __name__ == "__main__":
                 f"--universes-file {uni_file}")
 
     if getattr(args, "parallel_svi", 0) > 0:
+        init()
+        parallel_logger = get_logger("parallel_svi")  # workspace/logs/parallel_svi.log -- tail par le dashboard (tache 7)
         result = run_parallel_svi_pipeline(
             n_clips=args.parallel_svi,
             length=getattr(args, "parallel_svi_length", 8),
-            logger=logging.getLogger("maestro.parallel_svi"),
+            logger=parallel_logger,
         )
-        logging.getLogger("maestro.parallel_svi").info(
+        parallel_logger.info(
             "[PARALLEL_SVI] Resultat : " + json.dumps(result, ensure_ascii=False))
         try:
             print(json.dumps(result, indent=2, ensure_ascii=False))
