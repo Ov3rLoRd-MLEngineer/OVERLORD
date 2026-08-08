@@ -1260,7 +1260,7 @@ def run_pipeline(config: dict = None, from_block: str = None,
 PIPELINE_QUEUE_DIR      = Path("workspace/pipeline_queue")
 COMFY_URL_GEN           = "http://127.0.0.1:8188"   # RTX 5080 -- generation AniSora+SVI
 COMFY_URL_POSTPROD      = "http://127.0.0.1:8189"   # RTX 5060 Ti -- SeedVR2+RIFE+QC
-PARALLEL_RAM_LIMIT_GB   = 26.0
+PARALLEL_RAM_LIMIT_GB   = 31.0  # machine = 31.9 Go total -- releve a la demande explicite de l'utilisateur (31 Go observe sans probleme), marge restante minime
 
 
 def _comfy_submit_and_wait(comfy_url, workflow, wait_node_ids, timeout_s=600):
@@ -1381,7 +1381,7 @@ def run_parallel_svi_pipeline(n_clips=2, length=8, logger=None):
     deja genere. Handoff fichier via workspace/pipeline_queue/
     (pending_postprod/ -> completed/).
 
-    Monitor RAM systeme (psutil) : si > 26 Go au moment ou la post-prod
+    Monitor RAM systeme (psutil) : si > 31 Go au moment ou la post-prod
     voudrait demarrer, elle attend la fin de la generation en cours au
     lieu de tourner en parallele (repli sequentiel automatique).
     """

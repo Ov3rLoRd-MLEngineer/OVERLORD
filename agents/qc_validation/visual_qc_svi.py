@@ -25,7 +25,7 @@ Meme convention d'appel Ollama que visual_validator.py (POST /api/chat,
 image en data URI base64, reponse JSON stricte).
 
 Monitore la RAM systeme (psutil) avant chaque appel -- arrete le traitement
-des frames restantes si > 26 Go (garde-fou explicite tache 3, evite un swap
+des frames restantes si > 31 Go (garde-fou explicite tache 3, evite un swap
 disque pendant un run qwen2.5vl).
 
 Usage :
@@ -51,7 +51,7 @@ if str(_REPO_ROOT) not in sys.path:
 OLLAMA_URL   = "http://127.0.0.1:11434"
 QWEN_MODEL   = "qwen2.5vl:7b"
 REPORTS_DIR  = Path("workspace/logs/qc_reports")
-RAM_LIMIT_GB = 26.0
+RAM_LIMIT_GB = 31.0  # machine = 31.9 Go total (voir gpu_usage_log/AUDIT) -- releve a la demande explicite de l'utilisateur (31 Go observe sans probleme), marge restante minime
 DEFAULT_FRAMES = [1, 10, 20, 30, 37]
 
 log = logging.getLogger("visual_qc_svi")
