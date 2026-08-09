@@ -410,6 +410,63 @@ def run_quality_reviewer():
     test("run_stats empty session",             t_run_stats_empty)
     test("WEIGHTS somme = 1.0",                 t_weights_sum)
 
+
+# ══════════════════════════════════════════════════════════════════════
+# SECTION 6 — QC Validation : format payload Ollama (H-009)
+# ══════════════════════════════════════════════════════════════════════
+def run_qc_validation():
+    print("\n── QC Validation -- format payload Ollama ───────────────────")
+
+    def t_visual_validator_native_ollama_format():
+        # Regression H-009 : visual_validator.py envoyait un payload
+        # OpenAI-style (content = liste de blocs image_url/text) qui
+        # renvoie un 400 sur Ollama -- meme bug trouve+corrige dans
+        # visual_qc_svi.py (voir commit f765a72). Le format natif attendu
+        # est content=string + images=[base64].
+        import tempfile
+        from unittest import mock
+        from agents.qc_validation.visual_validator import VisualValidator
+
+        captured = {}
+
+        class _FakeResponse:
+            def raise_for_status(self):
+                pass
+
+            def json(self):
+                return {"message": {"content": '{"pass": true, "score": 1.0, '
+                                                '"defects": [], "inpaint_zones": [], "notes": ""}'}}
+
+        def _fake_post(url, json=None, timeout=None):
+            captured["payload"] = json
+            return _FakeResponse()
+
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+            f.write(b"\x89PNG\r\n\x1a\nfake-image-bytes")
+            tmp_path = Path(f.name)
+
+        try:
+            vv = VisualValidator()
+            with mock.patch("agents.qc_validation.visual_validator.requests.post", side_effect=_fake_post):
+                vv._call_qwen(tmp_path, role="generic")
+        finally:
+            tmp_path.unlink(missing_ok=True)
+
+        assert "payload" in captured, "requests.post jamais appele"
+        user_msg = captured["payload"]["messages"][1]
+        assert user_msg["role"] == "user"
+        assert isinstance(user_msg["content"], str), (
+            f"content doit etre une string (format natif Ollama), "
+            f"trouve {type(user_msg['content'])} -- regression du bug H-009"
+        )
+        assert "images" in user_msg and isinstance(user_msg["images"], list), (
+            "cle 'images' (liste de base64) absente -- format natif Ollama attendu"
+        )
+        assert len(user_msg["images"]) == 1
+
+    test("visual_validator.py -- format payload Ollama natif", t_visual_validator_native_ollama_format)
+
+
 # ══════════════════════════════════════════════════════════════════════
 # MAIN
 # ══════════════════════════════════════════════════════════════════════
@@ -437,6 +494,7 @@ if __name__ == "__main__":
         run_new_agents()
         run_v170_agents()
         run_quality_reviewer()
+        run_qc_validation()
 
     # Bilan
     total    = len(results)

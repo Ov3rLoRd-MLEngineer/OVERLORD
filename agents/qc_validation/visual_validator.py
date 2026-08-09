@@ -198,14 +198,7 @@ class VisualValidator:
             "model": self.model,
             "messages": [
                 {"role": "system", "content": system},
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "image_url",
-                         "image_url": {"url": f"data:image/png;base64,{img_b64}"}},
-                        {"type": "text", "text": user_msg},
-                    ],
-                },
+                {"role": "user", "content": user_msg, "images": [img_b64]},
             ],
             "stream": False,
         }
