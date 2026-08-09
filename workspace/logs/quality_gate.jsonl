@@ -11,3 +11,7 @@
 {"valid": true, "errors": [], "warnings": [], "node_count": 19, "timestamp": "2026-06-22T07:17:32.914548"}
 {"valid": true, "errors": [], "warnings": [], "node_count": 19, "timestamp": "2026-06-23T01:35:27.395311"}
 {"valid": true, "errors": [], "warnings": [], "node_count": 19, "timestamp": "2026-06-23T03:28:25.803293"}
+{"valid": true, "errors": [], "warnings": ["Node IDs supervisor manquants : ['62', '87', '99', '111', '112', '75', '77', '334', '303', '382', '301', '380', '68']"], "node_count": 2, "timestamp": "2026-08-09T09:26:20.002681"}
+{"valid": false, "errors": ["Node 1 : class_type=None (nœud fantôme)", "Node 2 (KSampler) input[model] -> node 99 INTROUVABLE (lien orphelin)"], "warnings": ["Node IDs supervisor manquants : ['62', '87', '99', '111', '112', '75', '77', '334', '303', '382', '301', '380', '68']"], "node_count": 2, "timestamp": "2026-08-09T09:26:20.002681"}
+{"valid": true, "errors": [], "warnings": ["Node IDs supervisor manquants : ['62', '87', '99', '111', '112', '75', '77', '334', '303', '382', '301', '380', '68']"], "node_count": 2, "timestamp": "2026-08-09T09:26:49.444962"}
+{"valid": false, "errors": ["Node 1 : class_type=None (nœud fantôme)", "Node 2 (KSampler) input[model] -> node 99 INTROUVABLE (lien orphelin)"], "warnings": ["Node IDs supervisor manquants : ['62', '87', '99', '111', '112', '75', '77', '334', '303', '382', '301', '380', '68']"], "node_count": 2, "timestamp": "2026-08-09T09:26:49.444962"}
