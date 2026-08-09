@@ -24,6 +24,16 @@ workspace/qlora_dataset/training/logs/
 # raisonnement -- checkpoints/adapters binaires, jamais commites.
 workspace/qlora_dataset/training_stage1/
 workspace/qlora_dataset/training_stage2/
+# Stage 3 et ses continuations correctives (H-008/H-010/H-011/H-015) --
+# meme raisonnement, oublie lors de l'ajout initial des regles stage1/stage2.
+workspace/qlora_dataset/training_stage3/
+workspace/qlora_dataset/training_stage3b/
+workspace/qlora_dataset/training_stage3c/
+workspace/qlora_dataset/training_stage3d/
+
+# Cache de compilation Unsloth (regenerable, pas de valeur de suivi).
+unsloth_compiled_cache/
+workspace/qlora_dataset/scripts/unsloth_compiled_cache/
 
 # Datasets et checkpoints SegNet generes -- jamais commites (binaires, des
 # milliers de fichiers). Les .gitkeep deja suivis dans ces dossiers ne sont
