@@ -2,6 +2,11 @@ __pycache__/
 *.pyc
 .env
 
+# Binaires d'outils externes (moteur Godot portable, etc.) -- jamais commites,
+# re-telecharges a la demande. Voir godot_project/README.md pour la version
+# exacte et la commande de lancement.
+_tools/
+
 # Dataset QLoRA comportemental (session 2, generes depuis l'historique git +
 # export JSON de conversations Claude.ai) -- volume + contenu potentiellement
 # sensible malgre le filtrage applique, jamais commite. Les scripts de

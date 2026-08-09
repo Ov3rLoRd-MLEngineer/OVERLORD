@@ -1,0 +1,9 @@
+# Godot 4+ editor cache — regenerated on open, never commit.
+.godot/
+
+# Import cache for binary assets (textures, models, vrm) once any exist.
+*.import
+
+# Export artifacts.
+/builds/
+/android/

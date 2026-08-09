@@ -7,21 +7,21 @@ Priorisé le 09/08/2026. Vague = ordre d'exécution. Statuts : 📋 à faire · 
 | ID | Vague | LLM cible | Tâche | Jalon | Dépend de | Statut | Fichier retour |
 |---|---|---|---|---|---|---|---|
 | H-003 | 1 | Manuel (Jérémy, VRoid Studio) | Création neko girl VRoid → export VRM | J1/S1 | — | 📋 | |
-| H-001 | 1 | Claude Code | Setup projet Godot + import godot-vrm | J1/S1 | — | 📋 | |
-| H-002 | 1 | Claude Code (ou DeepSeek 1er jet) | Timing module v1 (PySceneDetect+frame-diff+QwenVL) | J1/S1 | — | 📋 | |
+| H-001 | 1 | Claude Code | Setup projet Godot + import godot-vrm | J1/S1 | — | ✅ | `godot_project/README.md` |
+| H-002 | 1 | Claude Code (ou DeepSeek 1er jet) | Timing module v1 (PySceneDetect+frame-diff+QwenVL) | J1/S1 | — | ✅ | `agents/timing_analysis.py` |
 
 ## Vague 2 — dès qu'une dépendance de vague 1 est prête
 
 | ID | Vague | LLM cible | Tâche | Jalon | Dépend de | Statut | Fichier retour |
 |---|---|---|---|---|---|---|---|
-| H-004 | 2 | Claude Code | Contrôleur manette + caméra libre Godot | J1/S1 | H-001 | 📋 | |
-| H-007 | 2 | Claude Code / Aider | LoRA personnage (dataset VRoid+fabricatedXL, rank 32, 5060 Ti) | J1/S1-S2 | H-003 | 📋 | |
+| H-004 | 2 | Claude Code | Contrôleur manette + caméra libre Godot | J1/S1 | H-001 | ✅ | `godot_project/README.md` (test interactif manette/clavier reel encore a faire par l'utilisateur) |
+| H-007 | 2 | Claude Code / Aider | LoRA personnage (dataset VRoid+fabricatedXL, rank 32, 5060 Ti) | J1/S1-S2 | H-003 | ❌ | `godot_project/README.md` -- bloque : H-003 non livree (aucun .vrm) ET kohya_ss non installe (D:/kohya_ss absent). Scripts ecrits (capture Godot + generate_character_dataset.py) mais jamais executes de bout en bout. Reutilise agents/production_image/lora_trainer.py existant (deja rank 32) plutot qu'un nouveau script d'entrainement. |
 
 ## Vague 3
 
 | ID | Vague | LLM cible | Tâche | Jalon | Dépend de | Statut | Fichier retour |
 |---|---|---|---|---|---|---|---|
-| H-005 | 3 | Claude Code | Recorder de poses + export GLB (VISIBILITY_MODE_INCLUDE_OPTIONAL, fallback VMC→VMC4B) | J1/S1-S2 | H-001, H-004 | 📋 | |
+| H-005 | 3 | Claude Code | Recorder de poses + export GLB (VISIBILITY_MODE_INCLUDE_OPTIONAL, fallback VMC→VMC4B) | J1/S1-S2 | H-001, H-004 | ✅ | `godot_project/README.md` (verdict "export animations OK" sur rig synthetique -- a rejouer avec un vrai VRM+mesh skinne des H-003 termine) |
 | H-006 | 3 | Le Chat (Mistral) + Jérémy | Découpage 8-12 plans previz | J1/S2 | H-002 | 📋 | |
 
 ## Note budget
